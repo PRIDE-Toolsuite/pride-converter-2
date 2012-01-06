@@ -1,0 +1,13 @@
+<objectRuleList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:noNamespaceSchemaLocation="http://www.psidev.info/files/validator/object-rule.xsd">
+    <!-- List of rules that this specific validator should use (Provide class names)-->
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.TaxonCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.InstrumentCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.EmailCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.ProtocolCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModAnnotationCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModDatabaseCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModAccessionCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.DatabaseMappingCheck"/>
+
+</objectRuleList>

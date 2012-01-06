@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report>
+    <SearchResultIdentifier>
+        <hash>LSKJDFGHLSDFKJGHSDLFHLSKDJF</hash>
+        <sourceFilePath>/home/rcote/testfile.xml</sourceFilePath>
+        <timeCreated>2008-09-29T02:49:45</timeCreated>
+    </SearchResultIdentifier>
+    <Metadata>
+        <ExperimentAccession>1</ExperimentAccession>
+        <Title>COFRADIC methionine proteome of unstimulated human blood platelets</Title>
+        <Reference>
+            <RefLine>Martens L, Van Damme P, Van Damme J, Staes A, Timmerman E, Ghesquiere B, Thomas GR, Vandekerckhove
+                J, Gevaert K (2005), ?The human platelet proteome mapped by peptide-centric proteomics: a functional
+                protein profile?, Proteomics, 5, 3193-3204.
+            </RefLine>
+            <additional>
+                <cvParam cvLabel="PubMed" accession="16038019" name="16038019" value=""/>
+                <userParam name="DOI" value="PMID/16038019"/>
+            </additional>
+        </Reference>
+        <ShortLabel>Platelets MetOx</ShortLabel>
+        <Protocol>
+            <ProtocolName>Cofradic</ProtocolName>
+            <ProtocolSteps>
+                <StepDescription>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0001" name="HPLC" value=""/>
+                    <userParam name="Step1" value="Separation"/>
+                </StepDescription>
+                <StepDescription>
+                    <cvParam cvLabel="PRIDE" accession="PRIDE:0002" name="Tandem MS/MS" value=""/>
+                    <userParam name="Step2" value="MS/MS"/>
+                </StepDescription>
+            </ProtocolSteps>
+        </Protocol>
+        <MzDataDescription>
+            <cvLookup cvLabel="DOID" fullName="Human Disease" version="2007-09-19"
+                      address="http://obo.cvs.sourceforge.net/obo/obo/ontology/phenotype/human_disease.obo"/>
+            <cvLookup cvLabel="NEWT" fullName="The NEWT Ontology" version="2006-07-07"
+                      address="http://www.ebi.ac.uk/newt/"/>
+            <cvLookup cvLabel="PRIDE" fullName="The PRIDE Ontology" version="1.0" address="http://www.ebi.ac.uk/pride"/>
+            <cvLookup cvLabel="PSI" fullName="The PSI Ontology" version="1.0.0"
+                      address="http://psidev.sourceforge.net/ontology/"/>
+            <admin>
+                <sampleName>Unstimulated human blood platelets</sampleName>
+                <sampleDescription comment="Unstimulated human blood platelets">
+                    <cvParam cvLabel="CL" accession="CL:0000233" name="platelet" value=""/>
+                    <cvParam cvLabel="NEWT" accession="9606" name="Homo Sapiens" value=""/>
+                    <userParam name="MeSH" value="blood_platelets"/>
+                </sampleDescription>
+                <sourceFile>
+                    <nameOfFile>testFile1.xml</nameOfFile>
+                    <pathToFile>http://www.corp.edu/quae/ventos</pathToFile>
+                    <fileType>XML</fileType>
+                </sourceFile>
+                <contact>
+                    <name>Lennart Martens</name>
+                    <institution>Department of Medical Protein Research (GE07, VIB09), Faculty of Medicine and Health
+                        Sciences, Ghent University and Flanders Interuniversitary Institute for Biotechnology (VIB)
+                    </institution>
+                    <contactInfo>lennart.martens@UGent.be</contactInfo>
+                </contact>
+            </admin>
+            <instrument>
+                <instrumentName>Micromass Q-TOF I</instrumentName>
+                <source>
+                    <cvParam cvLabel="PSI-MS" accession="PSI:1000008" name="Ionization Type" value="ESI"/>
+                </source>
+                <analyzerList count="1">
+                    <analyzer>
+                        <cvParam cvLabel="PSI-MS" accession="PSI:1000010" name="Analyzer Type" value="Quadrupole-TOF"/>
+                        <cvParam cvLabel="PSI-MS" accession="PSI:1000014" name="Accuracy" value="0.3"/>
+                    </analyzer>
+                </analyzerList>
+                <detector>
+                    <!--Zero or more repetitions:-->
+                    <cvParam cvLabel="PSI-MS" accession="PSI:1000026" name="Detector Type" value="MultiChannelPlate"/>
+                </detector>
+                <additional/>
+            </instrument>
+            <dataProcessing>
+                <software completionTime="2018-11-01T05:36:46+00:00">
+                    <name>MassLynx</name>
+                    <version>3.5</version>
+                    <comments>N/A</comments>
+                </software>
+                <processingMethod>
+                    <cvParam cvLabel="PSI-MS" accession="PSI:1000034" name="Charge Deconvolution" value="false"/>
+                    <cvParam cvLabel="PSI-MS" accession="PSI:1000035" name="Peak Processing"
+                             value="CentroidMassSpectrum"/>
+                </processingMethod>
+            </dataProcessing>
+        </MzDataDescription>
+        <ExperimentAdditional>
+            <!--Zero or more repetitions:-->
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000097" name="Project"
+                     value="COFRADIC proteome of unstimulated human blood platelets"/>
+            <!--Zero or more repetitions:-->
+            <userParam name="COFRADICType" value="MethionineCOFRADIC"/>
+        </ExperimentAdditional>
+    </Metadata>
+    <Identifications>
+        <!--Zero or more repetitions:-->
+        <Identification>
+            <Accession>sp|P29375|KDM5A_HUMAN Lysine-specific demethylase 5A OS=Homo sapiens GN=KDM5A PE=1 SV=3
+            </Accession>
+            <CuratedAccession>P29375</CuratedAccession>
+            <UniqueIdentifier>PRIDE:000223548874</UniqueIdentifier>
+            <Peptide>
+                <Sequence>TDMDNQIVVSD#YAQMDR</Sequence>
+                <CuratedSequence>TDMDNQIVVSDYAQMDR</CuratedSequence>
+                <isSpecific>true</isSpecific>
+                <UniqueIdentifier>PRIDE:0123355214887</UniqueIdentifier>
+                <PTM>
+                    <SearchEnginePTMLabel>#</SearchEnginePTMLabel>
+                    <ModAccession>MOD:00048</ModAccession>
+                    <ModDatabase>PSI-MOD</ModDatabase>
+                    <ModDatabaseVersion/>
+                    <FixedModification>false</FixedModification>
+                    <ModMonoDelta>243.029659</ModMonoDelta>
+                    <ModAvgDelta>243.15</ModAvgDelta>
+                    <additional></additional>
+                    <PTMPosition>15</PTMPosition>
+                </PTM>
+            </Peptide>
+            <FastaSequenceReference>1</FastaSequenceReference>
+            <GelBasedData>
+                <Gel>
+                    <GelLink>http://www.sdfsdf.com/gelimage/P29375.jpg</GelLink>
+                    <additional>
+                        <userParam name="Staining" value="Silver"/>
+                    </additional>
+                </Gel>
+                <GelLocation>
+                    <XCoordinate>1.051732</XCoordinate>
+                    <YCoordinate>5.051732</YCoordinate>
+                </GelLocation>
+                <MolecularWeight>1754.2545</MolecularWeight>
+                <pI>5.051732</pI>
+            </GelBasedData>
+        </Identification>
+        <Identification>
+            <Accession>sp|Q0P9X8|PEB1A_CAMJE Major cell-binding factor OS=Campylobacter jejuni
+            </Accession>
+            <CuratedAccession>Q0P9X8</CuratedAccession>
+            <UniqueIdentifier>PRIDE:4657231546</UniqueIdentifier>
+            <Peptide>
+                <Sequence>GDDKKIKLVAVNA</Sequence>
+                <CuratedSequence>GDDKKIKLVAVNA</CuratedSequence>
+                <isSpecific>true</isSpecific>
+                <UniqueIdentifier>PRIDE:2456876513</UniqueIdentifier>
+            </Peptide>
+            <FastaSequenceReference>2</FastaSequenceReference>
+        </Identification>
+    </Identifications>
+    <Fasta sourceDb="UniProt Human" sourceDbVersion="105">
+        <Sequence id="1" accession="P29375">
+            MAGVGPGGYAAEFVPPPECPVFEPSWEEFTDPLSFIGRIRPLAEKTGICKIRPPKDWQPP
+            FACEVKSFRFTPRVQRLNELEAMTRVRLDFLDQLAKFWELQGSTLKIPVVERKILDLYAL
+            SKIVASKGGFEMVTKEKKWSKVGSRLGYLPGKGTGSLLKSHYERILYPYELFQSGVSLMG
+            VQMPNLDLKEKVEPEVLSTDTQTSPEPGTRMNILPKRTRRVKTQSESGDVSRNTELKKLQ
+            IFGAGPKVVGLAMGTKDKEDEVTRRRKVTNRSDAFNMQMRQRKGTLSVNFVDLYVCMFCG
+            RGNNEDKLLLCDGCDDSYHTFCLIPPLPDVPKGDWRCPKCVAEECSKPREAFGFEQAVRE
+            YTLQSFGEMADNFKSDYFNMPVHMVPTELVEKEFWRLVSSIEEDVIVEYGADISSKDFGS
+            GFPVKDGRRKILPEEEEYALSGWNLNNMPVLEQSVLAHINVDISGMKVPWLYVGMCFSSF
+            CWHIEDHWSYSINYLHWGEPKTWYGVPSHAAEQLEEVMRELAPELFESQPDLLHQLVTIM
+            NPNVLMEHGVPVYRTNQCAGEFVVTFPRAYHSGFNQGYNFAEAVNFCTADWLPIGRQCVN
+            HYRRLRRHCVFSHEELIFKMAADPECLDVGLAAMVCKELTLMTEEETRLRESVVQMGVLM
+            SEEEVFELVPDDERQCSACRTTCFLSALTCSCNPERLVCLYHPTDLCPCPMQKKCLRYRY
+            PLEDLPSLLYGVKVRAQSYDTWVSRVTEALSANFNHKKDLIELRVMLEDAEDRKYPENDL
+            FRKLRDAVKEAETCASVAQLLLSKKQKHRQSPDSGRTRTKLTVEELKAFVQQLFSLPCVI
+            SQARQVKNLLDDVEEFHERAQEAMMDETPDSSKLQMLIDMGSSLYVELPELPRLKQELQQ
+            ARWLDEVRLTLSDPQQVTLDVMKKLIDSGVGLAPHHAVEKAMAELQELLTVSERWEEKAK
+            VCLQARPRHSVASLESIVNEAKNIPAFLPNVLSLKEALQKAREWTAKVEAIQSGSNYAYL
+            EQLESLSAKGRPIPVRLEALPQVESQVAAARAWRERTGRTFLKKNSSHTLLQVLSPRTDI
+            GVYGSGKNRRKKVKELIEKEKEKDLDLEPLSDLEEGLEETRDTAMVVAVFKEREQKEIEA
+            MHSLRAANLAKMTMVDRIEEVKFCICRKTASGFMLQCELCKDWFHNSCVPLPKSSSQKKG
+            SSWQAKEVKFLCPLCMRSRRPRLETILSLLVSLQKLPVRLPEGEALQCLTERAMSWQDRA
+            RQALATDELSSALAKLSVLSQRMVEQAAREKTEKIISAELQKAAANPDLQGHLPSFQQSA
+            FNRVVSSVSSSPRQTMDYDDEETDSDEDIRETYGYDMKDTASVKSSSSLEPNLFCDEEIP
+            IKSEEVVTHMWTAPSFCAEHAYSSASKSCSQGSSTPRKQPRKSPLVPRSLEPPVLELSPG
+            AKAQLEELMMVGDLLEVSLDETQHIWRILQATHPPSEDRFLHIMEDDSMEEKPLKVKGKD
+            SSEKKRKRKLEKVEQLFGEGKQKSKELKKMDKPRKKKLKLGADKSKELNKLAKKLAKEEE
+            RKKKKEKAAAAKVELVKESTEKKREKKVLDIPSKYDWSGAEESDDENAVCAAQNCQRPCK
+            DKVDWVQCDGGCDEWFHQVCVGVSPEMAENEDYICINCAKKQGPVSPGPAPPPSFIMSYK
+            LPMEDLKETS
+        </Sequence>
+        <Sequence id="2" accession="Q0P9X8">
+            MVFRKSLLKLAVFALGACVAFSNANAAEGKLESIKSKGQLIVGVKNDVPHYALLDQATGE
+            IKGFEVDVAKLLAKSILGDDKKIKLVAVNAKTRGPLLDNGSVDAVIATFTITPERKRIYN
+            FSEPYYQDAIGLLVLKEKKYKSLADMKGANIGVAQAATTKKAIGEAAKKIGIDVKFSEFP
+            DYPSIKAALDAKRVDAFSVDKSILLGYVDDKSEILPDSFEPQSYGIVTKKDDPAFAKYVD
+            DFVKEHKNEIDALAKKWGL
+        </Sequence>
+        <Sequence id="3" accession="A1VZQ4">
+            MVFRKSLLKLAVFALGACVAFSNANAAEGKLESIKSKGQLIVGVKNDVPHYALLDQATGE
+            IKGFEVDVAKLLAKSILGDDKKIKLVAVNAKTRGPLLDNGSVDAVIATFTITPERKRIYN
+            FSEPYYQDAIGLLVLKEKNYKSLADMKGANIGVAQAATTKKAIGEAAKKIGIDVKFSEFP
+            DYPSIKAALDAKRVDAFSVDKSILLGYVDDKSEILPDSFEPQSYGIVTKKDDPAFAKYVD
+            DFVKEHKNEIDALAKKWGL
+        </Sequence>
+    </Fasta>
+    <PTMs>
+        <PTM>
+            <SearchEnginePTMLabel>#</SearchEnginePTMLabel>
+            <ModAccession>MOD:00048</ModAccession>
+            <ModDatabase>PSI-MOD</ModDatabase>
+            <ModDatabaseVersion/>
+            <FixedModification>false</FixedModification>
+            <ModMonoDelta>243.029659</ModMonoDelta>
+            <ModAvgDelta>243.15</ModAvgDelta>
+            <additional></additional>
+        </PTM>
+        <PTM>
+            <SearchEnginePTMLabel>*</SearchEnginePTMLabel>
+            <ModAccession>MOD:00684</ModAccession>
+            <ModDatabase>PSI-MOD</ModDatabase>
+            <ModDatabaseVersion/>
+            <FixedModification>false</FixedModification>
+            <ModMonoDelta>115.026943</ModMonoDelta>
+            <ModAvgDelta>115.09</ModAvgDelta>
+            <additional></additional>
+        </PTM>
+    </PTMs>
+    <ConfigurationOptions>
+        <Option>
+            <Key>Baz</Key>
+            <Value>Flubu!</Value>
+        </Option>
+        <Option>
+            <Key>Foo</Key>
+            <Value>Bar</Value>
+        </Option>
+        <Option>
+            <Key>TestDAO</Key>
+            <Value>true</Value>
+        </Option>
+    </ConfigurationOptions>
+</Report>

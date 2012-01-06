@@ -1,0 +1,10 @@
+Requirements for Sample:
+1. Create a new sample (*)
+2. Remove a existing sample (*)
+3. Create a simple sample (*)
+4. Create multiple sample (*)
+5. Add CV term for sample (*)
+6. Remove CV term for sample (*)
+7. Add subsample (*)
+8. Remove subsample (*)
+9. Select a existing sample (*)

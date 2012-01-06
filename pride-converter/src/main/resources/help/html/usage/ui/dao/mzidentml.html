@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../css/s.css">
+<title>mzIdentML DAO Options</title>
+</head>
+
+<body class="template">
+	<div id="container">
+
+		<!-- header -->
+		<div id="header">
+			<h1>mzIdentML DAO Options</h1>
+		</div>
+
+		<!-- navigation -->
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			style="border-collapse: collapse;">
+			<tr>
+				<td align="left" class="topicpath"><span
+					style="color: #666666;"><a href="mzml.html">Previous</a> </span> |
+					<a href="xtandem.html">Next</a> | <a href="#topicSeeAlsoTopicsList">See
+						Also</a>
+				</td>
+				<td width="70%" class="topicpath"></td>
+			</tr>
+		</table>
+
+		<!-- table of contents -->
+		<div class="introduction">
+			<p>mzIdentML is the current PSI standard for reporting proteomics
+				results. Detailed information about mzIdentML can be found at the
+				PSI's mzIdentML page http://www.psidev.info/index.php?q=node/453.</p>
+			<p>The MzIdentML DAO is based on jmzidentml. More information on
+				jmzidentml can be found at http://code.google.com/p/jmzidentml/.</p>
+		</div>
+
+		<!-- content -->
+		<div id="content">
+			<div class="section">
+				<h3>Parameters</h3>
+
+				<table class="dao_option_table">
+					<tr>
+						<th>allow identifications only</th>
+						<td>Allows the conversion of mzIdentML files without spectra
+							data. Can be set to "True" or "False". The default value is
+							"False".</td>
+					</tr>
+					<tr>
+						<th>use weighted scoring</th>
+						<td>As protein scores are not directly reported in mzIdentML
+							files two different methods can be used to calculate protein from
+							peptide scores: Either a weighted approach (default) or just
+							adding up the peptide scores. In the weighted approach a
+							peptide's score is evenly split across all proteins the peptide
+							is assigned to.</td>
+					</tr>
+					<tr>
+						<th>report all spectrum identifications</th>
+						<td>By default only ranked one spectrum identifications are
+							reported. If this option is set to true all spectrum
+							identifications irrespective of their rank are reported. Mascot,
+							for example, reports 10 peptide identifications per spectrum by
+							default.</td>
+					</tr>
+					<tr>
+						<th>decoy accession precursor</th>
+						<td>If set any identification with the specified precursor in
+							its identification will be flagged as decoy identification.</td>
+					</tr>
+					<tr>
+						<th>peptide score accession</th>
+						<td>Specifies the accession of the peptide score CV parameter
+							to use to construct the protein scores. If this parameter is not
+							set one of the available peptide scores will be randomly chosen.
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="section">
+				<h3>Details</h3>
+				<p>mzIdentML is considerably more complex than PRIDE XML.
+					Therefore, several compromises have to be taken during the
+					conversion.</p>
+				<h4>Objects converted</h4>
+				<p>The MzIdentML DAO only uses object found at
+					/MzIdentML/SequenceCollection. Thus, all available proteins and
+					peptides as well as all possible assignments between the two are
+					reported. Any protein inference information stored at
+					/MzIdentML/DataCollection/AnalysisData is ignored.</p>
+				<h4>Meta-data</h4>
+				<p>mzIdentML supports different kind of (more detailed) meta-data than PRIDE XML. Any meta-data not supported by PRIDE XML is currently being ignored and nothing is being reported by the DAO. Thus, users have to be extra careful when annotating report files generated through the MzIdentML DAO. </p>
+				<h4>Spectra Data</h4>
+				<p>mzIdentML files do not contain spectra data but only refer to spectra in external peak list files. Currently, the MzIdentML DAO supports spectra data in the following formats: </p>
+				<ul>
+					<li>ms2</li>
+					<li>mgf</li>
+					<li>pkl</li>
+					<li>dta</li>
+					<li>mzML</li>
+					<li>mzXML</li>
+				</ul>
+				<p>The spectra files must not be renamed but have to have the exact same name that is being reported in the mzIdentML file. The MzIdentML DAO expects peak lists file to be in </p>
+				<ul>
+					<li>The path specified in the mzIdentML file </li>
+					<li>The current working directory </li>
+					<li>The same directory the mzIdentML is currently in </li>
+				</ul>
+			</div>
+		</div>
+
+
+		<div id="seealso">
+			<a name="topicSeeAlsoTopicsList"></a>
+
+			<h2>See Also</h2>
+
+			<p>
+				<strong>Other DAO documentations:</strong>
+			</p>
+
+			<ul>
+				<li><a href="mascot.html">Mascot</a></li>
+				<li><a href="mzxml.html">mzXML</a></li>
+				<li><a href="mzml.html">mzML</a></li>
+				<li><a href="xtandem.html">X!Tandem</a></li>
+				<li><a href="ms2.html">MS2</a></li>
+				<li><a href="dta.html">DTA</a></li>
+				<li><a href="pkl.html">PKL</a></li>
+				<li><a href="mgf.html">MGF</a></li>
+				<li><a href="mzdata.html">mzData</a></li>
+			</ul>
+		</div>
+		<div id="footer">
+			<p>
+				Comments, questions, suggestions? See the <a href="feedback.html">Feedback</a>
+				page to contact <strong>PRIDE HelpDesk</strong>
+			</p>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+Requirements for PTM:
+1. List all existing PTMs (*)
+2. Highlight the PTMs has not been annotated (*)
+3. Annotated/Reannotated PTM (*)
+4. Delete PTM ?
+5. Add new PTM ? 
+6. Do user have to annotate all the PTMs ?
+7. Manuel edit values for PTM?  
