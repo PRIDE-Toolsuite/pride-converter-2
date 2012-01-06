@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cvSourceList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="http://www.psidev.info/files/validator/CvSourceList.xsd">
+
+
+    <cvSource source="file"
+              uri="classpath:ontologies/pride_cv.obo"
+              format="OBO"
+              name="PRIDE"
+              identifier="PRIDE"
+              version=""/>
+    <cvSource source="file"
+              uri="classpath:ontologies/psi-ms.obo"
+              format="OBO"
+              name="PSI MS"
+              identifier="MS"
+              version=""/>
+    <cvSource source="file"
+              uri="classpath:ontologies/PSI-MOD.obo"
+              format="OBO"
+              name="PSI MOD"
+              identifier="MOD"
+              version=""/>
+    <cvSource source="file"
+              uri="classpath:ontologies/psi-ms-cv-1.7.2.obo"
+              format="OBO"
+              name="PSI"
+              identifier="PSI"
+              version=""/>
+    <!--<cvSource source="file"-->
+    <!--uri="classpath:ontologies/BrendaTissue.obo"-->
+    <!--format="OBO"-->
+    <!--name="Gene Ontology"-->
+    <!--identifier="GO"-->
+    <!--version=""/>-->
+    <!--<cvSource source="file"-->
+    <!--uri="classpath:ontologies/BrendaTissue.obo"-->
+    <!--format="OBO"-->
+    <!--name="Brenda Tissue Ontology"-->
+    <!--identifier="BTO"-->
+    <!--version=""/>-->
+
+</cvSourceList>

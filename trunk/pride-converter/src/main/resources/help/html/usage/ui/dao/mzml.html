@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" media="all"
+	href="../../../css/s.css">
+<title>mzXML DAO Options</title>
+</head>
+
+<body class="template">
+	<div id="container">
+
+		<!-- header -->
+		<div id="header">
+			<h1>mzXML DAO Options</h1>
+		</div>
+
+		<!-- navigation -->
+		<table width="100%" border="0" cellspacing="0" cellpadding="0"
+			style="border-collapse: collapse;">
+			<tr>
+				<td align="left" class="topicpath"><span
+					style="color: #666666;"><a href="mzxml.html">Previous</a> </span> |
+					<a href="mzidentml.html">Next</a> | <a
+					href="#topicSeeAlsoTopicsList">See Also</a>
+				</td>
+				<td width="70%" class="topicpath"></td>
+			</tr>
+		</table>
+
+		<!-- table of contents -->
+		<div class="introduction">
+			<p>mzML is the current PSI's standard format for MS data. mzML
+				files only contain spectra and chromatograms but no identifications.
+			</p>
+			<p>The mzML DAO is build using the jmzML Java library
+				(http://code.google.com/p/jmzml/). mzML provides a portable and
+				lightweight JAXB-based implementation of the full mzML 1.1 standard
+				format (note that the jmzML version number has no relation to the
+				mzML version number), with considerable tweaks to make the
+				processing of files memory efficient. In particular, mzML files are
+				effectively indexed on the fly and used as swap files, with only
+				requested snippets of data loaded from a file when accessing it.
+				Additionally, internal references in the mzML XML are resolved
+				automatically by jmzML, giving you direct access in the object model
+				to entities that are only referenced by ID in the actual XML file.</p>
+		</div>
+
+		<!-- content -->
+		<div id="content">
+			<div class="section">
+				<h3>Parameters</h3>
+
+				<table class="dao_option_table">
+					<tr>
+						<th>Scan on multiple instruments:</th>
+						<td>PRIDE XML can only report one instrument configuration.
+							If this parameter is set to "True" the converter checks if all
+							the instruments were actually used and if only one was used,
+							reports this configuration in the report file.</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+
+		<div id="seealso">
+			<a name="topicSeeAlsoTopicsList"></a>
+
+			<h2>See Also</h2>
+
+			<p>
+				<strong>Other DAO documentations:</strong>
+			</p>
+
+			<ul>
+				<li><a href="mascot.html">Mascot</a></li>
+				<li><a href="mzxml.html">mzXML</a></li>
+				<li><a href="mzidentml.html">mzIdentML</a></li>
+				<li><a href="xtandem.html">X!Tandem</a></li>
+				<li><a href="ms2.html">MS2</a></li>
+				<li><a href="dta.html">DTA</a></li>
+				<li><a href="pkl.html">PKL</a></li>
+				<li><a href="mgf.html">MGF</a></li>
+				<li><a href="mzdata.html">mzData</a></li>
+			</ul>
+		</div>
+		<div id="footer">
+			<p>
+				Comments, questions, suggestions? See the <a href="feedback.html">Feedback</a>
+				page to contact <strong>PRIDE HelpDesk</strong>
+			</p>
+		</div>
+	</div>
+</body>
+</html>

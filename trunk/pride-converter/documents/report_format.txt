@@ -1,0 +1,94 @@
+experiment
+----------
+
+title
+short_label
+additional params (incl project name, subproject and pride-converter version)
+
+
+protocol
+--------
+protocol title
+(*)protocol steps (list of params per step)
+
+
+(*)references
+----------
+refline
+params (PMID, DOI, etc)
+
+
+mzdata-admin
+-------------------------
+sample comment(*)
+sample name
+sample description params (newt, bto, etc)
+source file
+  type
+  name
+  path
+contacts
+  name
+  info
+  institution
+
+
+mzdata-data processing
+----------------------
+software name
+software version
+software comments
+software completion time (*)
+processing method params
+
+
+mzdata-instrument
+-----------------
+instrument name
+source params
+analyser list (collection of params)
+detector params
+additional params
+
+
+mzdata-spectrum
+---------------
+- can provide a count of all included spectra
+- either include all spectra or only identied ones. Anything else will be handled
+  by pride filter tool
+- keep in mind that DAO should be able to deal with fully-built spectrum object
+
+
+PTMs
+----
+- accession
+- source database
+- mass delta (*)
+- fixed/variable (*)
+
+==============================================================================
+
+after pre-scan, report file would contain fasta sequences of all identifications
+in a block that can be referered to from individual identifications
+
+<fasta>
+  <sequence id=1 accession="P12345">
+    ILIKEPIE
+  </sequence>
+  ...
+</fasta>
+
+
+identifications
+----------------
+  - quantitative shit
+  - 2D shit
+  - additional crap
+  - protein inference - whitelist of peptides
+  - boolean flags
+    - provides fragment ion annotation
+    - provides quantitative information
+    - has 2D coordinates
+    - more? 
+
+

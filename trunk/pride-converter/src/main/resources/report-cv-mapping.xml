@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="https://psidev.svn.sourceforge.net/svnroot/psidev/psi/tools/current/xsl/cv-mapping/CvMappingRules.xsl" type="text/xsl"?>
+<CvMapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://www.psidev.info/files/validator/CvMapping.xsd" modelName="pride.xsd"
+           modelURI="pride.xsd" modelVersion="1.0.0">
+
+    <CvReferenceList>
+        <CvReference cvName="PSI" cvIdentifier="PSI"/>
+        <CvReference cvName="PSI-MS" cvIdentifier="MS"/>
+        <CvReference cvName="PRIDE Ontology" cvIdentifier="PRIDE"/>
+        <!--<CvReference cvName="Brenda" cvIdentifier="BTO"/>-->
+        <!--<CvReference cvName="GO" cvIdentifier="GO"/>-->
+    </CvReferenceList>
+
+    <CvMappingRuleList>
+
+        <!-- <CvMappingRule id="" name="" cvElementPath="" cvTermsCombinationLogic="" scopePath="" requirementLevel="">
+        <CvTerm termAccession="" useTerm="" termName="" isRepeatable="" allowChildren="" cvIdentifierRef="" />
+        </CvMappingRule> -->
+
+        <!-- software from mzML ms-mapping, MIAPE is asking for 5-6 type of software: search engine? -->
+        <!-- <CvMappingRule id="software_must" cvElementPath="/mzML/softwareList/software/cvParam/@accession" requirementLevel="MUST" scopePath="/mzML/softwareList/software" cvTermsCombinationLogic="AND">
+         <CvTerm termAccession="MS:1000531" useTerm="false" termName="software" isRepeatable="false" allowChildren="true" cvIdentifierRef="MS"></CvTerm>
+       </CvMappingRule> -->
+
+
+        <CvMappingRule id="protocol_steps_may"
+                       cvElementPath="/Report/Metadata/Protocol/protocolSteps/stepDescription/cvParam/@accession"
+                       requirementLevel="MAY"
+                       scopePath="/Report/Metadata/Protocol/protocolSteps/stepDescription"
+                       cvTermsCombinationLogic="OR">
+            <CvTerm termAccession="PRIDE:0000001"
+                    useTerm="false"
+                    termName="Protocol step description additional parameter"
+                    isRepeatable="true"
+                    allowChildren="true"
+                    cvIdentifierRef="PRIDE"/>
+        </CvMappingRule>
+
+
+        <!-- contact -->
+
+        <!--software: no cvParams -->
+
+
+        <!--  data processing -->
+        <CvMappingRule id="processingmethod_must"
+                       cvElementPath="/Report/Metadata/MzDataDescription/dataProcessing/processingMethod/cvParam/@accession"
+                       cvTermsCombinationLogic="OR"
+                       scopePath="/Report/Metadata/MzDataDescription/dataProcessing/processingMethod"
+                       requirementLevel="MUST">
+            <CvTerm termAccession="MS:1000452"
+                    useTerm="false"
+                    termName="data transformation"
+                    isRepeatable="true"
+                    allowChildren="true"
+                    cvIdentifierRef="MS"/>
+            <CvTerm termAccession="PSI:1000452"
+                    useTerm="false"
+                    termName="data processing method"
+                    isRepeatable="true"
+                    allowChildren="true"
+                    cvIdentifierRef="PSI"/>
+
+        </CvMappingRule>
+
+
+        <CvMappingRule id="processingmethod_may"
+                       cvElementPath="/Report/Metadata/MzDataDescription/dataProcessing/processingMethod/cvParam/@accession"
+                       cvTermsCombinationLogic="OR"
+                       scopePath="/Report/Metadata/MzDataDescription/dataProcessing/processingMethod"
+                       requirementLevel="MAY">
+            <CvTerm termAccession="MS:1000531"
+                    useTerm="false"
+                    termName="software"
+                    isRepeatable="true"
+                    allowChildren="true"
+                    cvIdentifierRef="MS"/>
+
+        </CvMappingRule>
+
+
+        <!-- source -->
+        <CvMappingRule id="source_must"
+                       cvElementPath="/Report/Metadata/MzDataDescription/instrument/source/cvParam/@accession"
+                       requirementLevel="MUST"
+                       scopePath="/Report/Metadata/MzDataDescription/instrument/source"
+                       cvTermsCombinationLogic="OR">
+            <CvTerm termAccession="MS:1000008"
+                    useTerm="false"
+                    termName="ionization type"
+                    isRepeatable="false"
+                    allowChildren="true"
+                    cvIdentifierRef="MS"/>
+            <CvTerm termAccession="PSI:1000458"
+                    useTerm="false"
+                    termName="Source Description"
+                    isRepeatable="false"
+                    allowChildren="true"
+                    cvIdentifierRef="PSI"/>
+        </CvMappingRule>
+
+        <!-- analyzer -->
+        <CvMappingRule id="analyzer_must"
+                       cvElementPath="/Report/Metadata/MzDataDescription/instrument/analyzerList/analyzer/cvParam/@accession"
+                       requirementLevel="MUST"
+                       scopePath="/Report/Metadata/MzDataDescription/instrument/analyzerList/analyzer"
+                       cvTermsCombinationLogic="OR">
+            <CvTerm termAccession="MS:1000443" useTerm="false" termName="mass analyzer type" isRepeatable="false"
+                    allowChildren="true" cvIdentifierRef="MS"/>
+            <CvTerm termAccession="PSI:1000451" useTerm="false" termName="Analyzer Description" isRepeatable="false"
+                    allowChildren="true" cvIdentifierRef="PSI"/>
+        </CvMappingRule>
+
+        <!-- in pride xml instrument model allowed in the analyzer tag which is not a good practice compared to mzML -->
+        <CvMappingRule id="analyzer_may"
+                       cvElementPath="/Report/Metadata/MzDataDescription/instrument/analyzerList/analyzer/cvParam/@accession"
+                       requirementLevel="MAY"
+                       scopePath="/Report/Metadata/MzDataDescription/instrument/analyzerList/analyzer"
+                       cvTermsCombinationLogic="OR">
+            <CvTerm termAccession="MS:1000480" useTerm="false" termName="mass analyzer attribute" isRepeatable="true"
+                    allowChildren="true" cvIdentifierRef="MS"/>
+            <CvTerm termAccession="PSI:1000031" useTerm="false" termName="Model" isRepeatable="false"
+                    allowChildren="true" cvIdentifierRef="PSI"/>
+            <CvTerm termAccession="PSI:1000076" useTerm="false" termName="Negative Ion Mode" isRepeatable="false"
+                    allowChildren="false" cvIdentifierRef="PSI"/>
+            <CvTerm termAccession="PSI:1000077" useTerm="false" termName="Positive Ion Mode" isRepeatable="false"
+                    allowChildren="false" cvIdentifierRef="PSI"/>
+            <CvTerm termAccession="MS:1000031" useTerm="true" termName="instrument model" isRepeatable="false"
+                    allowChildren="true" cvIdentifierRef="MS"/>
+        </CvMappingRule>
+
+        <!-- detector -->
+        <CvMappingRule id="detector_must"
+                       cvElementPath="/Report/Metadata/MzDataDescription/instrument/detector/cvParam/@accession"
+                       requirementLevel="MUST"
+                       scopePath="/Report/Metadata/MzDataDescription/instrument/detector"
+                       cvTermsCombinationLogic="OR">
+            <CvTerm termAccession="MS:1000026" useTerm="false" termName="detector type" isRepeatable="false"
+                    allowChildren="true" cvIdentifierRef="MS"/>
+            <CvTerm termAccession="PSI:1000453" useTerm="false" termName="Detector Description" isRepeatable="false"
+                    allowChildren="true" cvIdentifierRef="PSI"/>
+        </CvMappingRule>
+
+        <CvMappingRule id="detector_may"
+                       cvElementPath="/Report/Metadata/MzDataDescription/instrument/detector/cvParam/@accession"
+                       requirementLevel="MAY"
+                       scopePath="/Report/Metadata/MzDataDescription/instrument/detector"
+                       cvTermsCombinationLogic="OR">
+            <CvTerm termAccession="MS:1000027" useTerm="false" termName="detector acquisition mode" isRepeatable="true"
+                    allowChildren="true" cvIdentifierRef="MS"/>
+            <CvTerm termAccession="MS:1000481" useTerm="false" termName="detector attribute" isRepeatable="true"
+                    allowChildren="true" cvIdentifierRef="MS"/>
+        </CvMappingRule>
+
+        <!-- instrument, why is it used in analyzer and in sampleDescription -->
+
+    </CvMappingRuleList>
+</CvMapping>
