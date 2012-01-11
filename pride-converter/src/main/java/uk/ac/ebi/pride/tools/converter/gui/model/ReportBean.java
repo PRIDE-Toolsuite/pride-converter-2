@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui.model;
 
+import uk.ac.ebi.pride.tools.converter.report.model.Description;
+
 /**
  * Created by IntelliJ IDEA.
  * User: rcote
@@ -11,6 +13,8 @@ public class ReportBean {
 
     private String shortLabel;
     private String experimentTitle;
+    private Description sampleDescription;
+    private String sampleName;
 
     public String getShortLabel() {
         return shortLabel;
@@ -26,5 +30,21 @@ public class ReportBean {
 
     public void setExperimentTitle(String experimentTitle) {
         this.experimentTitle = experimentTitle;
+    }
+
+    public Description getSampleDescription() {
+        return sampleDescription;
+    }
+
+    public void setSampleDescription(Description sampleDescription) {
+        this.sampleDescription = sampleDescription;
+    }
+
+    public String getSampleName() {
+        return sampleName;
+    }
+
+    public void setSampleName(String sampleName) {
+        this.sampleName = sampleName;
     }
 }

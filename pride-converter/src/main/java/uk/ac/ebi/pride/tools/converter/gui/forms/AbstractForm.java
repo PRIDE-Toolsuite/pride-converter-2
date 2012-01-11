@@ -1,5 +1,6 @@
 package uk.ac.ebi.pride.tools.converter.gui.forms;
 
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ConverterForm;
@@ -26,6 +27,7 @@ import java.util.*;
 public abstract class AbstractForm extends JPanel implements ConverterForm {
 
     public static final String TEMPLATE_EXTENSION = ".xml";
+    protected static final Logger logger = Logger.getLogger(AbstractForm.class);
 
     protected ValidationListener validationListerner;
     protected ResourceBundle bundle = ResourceBundle.getBundle("messages");

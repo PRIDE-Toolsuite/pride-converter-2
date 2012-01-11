@@ -13,6 +13,7 @@ import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ValidationListener;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateUtilities;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
+import uk.ac.ebi.pride.tools.converter.report.model.Description;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
 
@@ -83,14 +84,14 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private void sampleNameFieldFocusLost() {
         validateSampleField(null);
         if (validationListerner != null) {
-            validationListerner.fireValidationListener(isNonNullTextField(sampleNameField.getText()));
+            validationListerner.fireValidationListener(isNonNullTextField(sampleNameField.getText()) && containsNEWTParam());
         }
     }
 
     private void sampleNameFieldKeyTyped(KeyEvent e) {
         validateSampleField(e);
         if (validationListerner != null) {
-            validationListerner.fireValidationListener(isNonNullTextField(sampleNameField.getText() + e.getKeyChar()));
+            validationListerner.fireValidationListener(isNonNullTextField(sampleNameField.getText() + e.getKeyChar()) && containsNEWTParam());
         }
     }
 
@@ -107,9 +108,9 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         }
     }
 
-    public void fileValidationListener() {
+    public void fireValidationListener() {
         if (validationListerner != null) {
-            validationListerner.fireValidationListener(isNonNullTextField(sampleNameField.getText()));
+            validationListerner.fireValidationListener(isNonNullTextField(sampleNameField.getText()) && containsNEWTParam());
         }
     }
 
@@ -170,6 +171,9 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
         //reset combobox to "Please select"
         comboBox.setSelectedIndex(0);
+
+        //update validation
+        fireValidationListener();
 
     }
 
@@ -448,10 +452,33 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         //no op
     }
 
+    public Description getSampleDescription() {
+        Description sample = new Description();
+        sample.setComment(getSampleComment());
+        Param p = getSampleParams();
+        sample.getCvParam().addAll(p.getCvParam());
+        sample.getUserParam().addAll(p.getUserParam());
+        return sample;
+    }
+
+    public boolean isSampleValid() {
+        return isNonNullTextField(sampleNameField.getText()) && containsNEWTParam();
+    }
+
+    private boolean containsNEWTParam() {
+        for (CvParam p : paramTable1.getCvParamList()) {
+            if (p.getCvLabel().equalsIgnoreCase("NEWT")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         JFrame f = new JFrame();
         f.add(new SamplePanel());
         f.pack();
         f.setVisible(true);
     }
+
 }
