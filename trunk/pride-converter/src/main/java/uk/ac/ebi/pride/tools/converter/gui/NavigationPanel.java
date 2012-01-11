@@ -199,6 +199,46 @@ public class NavigationPanel extends JFrame implements ValidationListener {
     }
 
     /**
+     * Add a form to the main navigation panel after the current form. It is assumed that all ConverterForms implementations are JPanels
+     *
+     * @param formToRegister - the form to add
+     * @param currentForm    - the form to add the element after
+     */
+    public void registerFormAfter(ConverterForm formToRegister, ConverterForm currentForm) {
+
+        if (!(formToRegister instanceof JPanel)) {
+            throw new IllegalArgumentException("All ConverterForm implementations must be JPanels");
+        }
+        //get index
+        int index = -1;
+        for (ConverterForm form : forms) {
+            index++;
+            if (form == currentForm) {
+                break;
+            }
+        }
+
+        if (index < 0) {
+            throw new IllegalArgumentException("Could not find form in forms list: " + currentForm.getFormName());
+        }
+
+        //add to card layout
+        contentPanel.add((JPanel) formToRegister, formToRegister.getFormName(), index + 1);
+        formNames.add(index + 1, formToRegister.getFormName());
+        forms.add(index + 1, formToRegister);
+        //revalidate card layout
+        contentPanel.validate();
+
+        //register listener
+        formToRegister.addValidationListener(this);
+
+        //add to panel list display
+
+        ((DefaultListModel) panelList.getModel()).add(index + 1, formToRegister.getFormName());
+        panelList.validate();
+    }
+
+    /**
      * Navigation method to go to next panel. Will call validateForm() from the current ConverterForm before
      * navigating to the next form.
      */

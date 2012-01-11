@@ -41,6 +41,7 @@ public class ConverterData {
     private Set<DatabaseMapping> databaseMappings = new HashSet<DatabaseMapping>();
     private ReportReaderDAO masterDAO;
     private Set<String> filesToDelete = new HashSet<String>();
+    private Map<String, ReportBean> customeReportFields = new HashMap<String, ReportBean>();
 
     private static ConverterData instance = new ConverterData();
 
@@ -112,6 +113,7 @@ public class ConverterData {
         PTMs.clear();
         databaseMappings.clear();
         filesToDelete.clear();
+        customeReportFields.clear();
     }
 
     public void clearPossibleStaleData() {
@@ -119,6 +121,7 @@ public class ConverterData {
         validationMessages.clear();
         databaseMappings.clear();
         filesToDelete.clear();
+        customeReportFields.clear();
     }
 
     public DataType getType() {
@@ -157,6 +160,14 @@ public class ConverterData {
         return filesToDelete;
     }
 
+    public Map<String, ReportBean> getCustomeReportFields() {
+        return customeReportFields;
+    }
+
+    public void setCustomeReportFields(String fileName, ReportBean customFieldData) {
+        customeReportFields.put(fileName, customFieldData);
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -175,6 +186,7 @@ public class ConverterData {
         sb.append(", databaseMappings=").append(databaseMappings);
         sb.append(", masterDAO=").append(masterDAO);
         sb.append(", filesToDelete=").append(filesToDelete);
+        sb.append(", customeReportFields=").append(customeReportFields);
         sb.append('}');
         return sb.toString();
     }
