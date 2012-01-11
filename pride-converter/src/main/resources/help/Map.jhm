@@ -20,6 +20,7 @@
     <mapID target="help.ui.format" url="html/usage/ui/format.html"/>
     <mapID target="help.ui.file" url="html/usage/ui/fileselect.html"/>
     <mapID target="help.ui.experimentdetails" url="html/usage/ui/experimentdetails.html"/>
+    <mapID target="help.ui.experimentdetailsextra" url="html/usage/ui/experimentdetailsextra.html"/>
     <mapID target="help.ui.contacts" url="html/usage/ui/contacts.html"/>
     <mapID target="help.ui.references" url="html/usage/ui/references.html"/>
     <mapID target="help.ui.sample" url="html/usage/ui/sample.html"/>

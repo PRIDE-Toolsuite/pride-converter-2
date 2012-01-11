@@ -33,11 +33,10 @@ public class ContactForm extends AbstractForm implements TableModelListener {
         initComponents();
 
         ContactTableModel contactTableModel = new ContactTableModel();
+        contactTableModel.addTableModelListener(this);
         contactTable.setModel(contactTableModel);
         contactTable.setColumnModel(contactTableModel.getTableColumnModel(contactTable));
-        contactTableModel.addTableModelListener(this);
         contactTable.setEnableRowValidation(true);
-
     }
 
     private void addContactAction(ActionEvent e) {

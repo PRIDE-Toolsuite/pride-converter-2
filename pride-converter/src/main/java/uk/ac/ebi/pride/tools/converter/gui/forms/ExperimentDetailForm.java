@@ -6,8 +6,10 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
+import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
@@ -27,6 +29,8 @@ import java.util.Collections;
  * @author User #3
  */
 public class ExperimentDetailForm extends AbstractForm {
+
+    private boolean doneOnce = false;
 
     public ExperimentDetailForm() {
         initComponents();
@@ -341,7 +345,12 @@ public class ExperimentDetailForm extends AbstractForm {
 
     @Override
     public void finish() {
-        /* no op */
+        //if there are multiple source files in the conversion, add another form in the UI
+        //to deal with this data
+        if (ConverterData.getInstance().getInputFiles().size() > 1 && !doneOnce) {
+            NavigationPanel.getInstance().registerFormAfter(new ExperimentDetailMultipleDataForm(), this);
+            doneOnce = true;
+        }
     }
 
     public static void main(String[] args) {

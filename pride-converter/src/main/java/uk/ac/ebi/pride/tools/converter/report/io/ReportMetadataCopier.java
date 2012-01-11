@@ -1,10 +1,10 @@
 package uk.ac.ebi.pride.tools.converter.report.io;
 
 import org.apache.log4j.Logger;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
-import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
-import uk.ac.ebi.pride.tools.converter.report.model.Metadata;
-import uk.ac.ebi.pride.tools.converter.report.model.PTM;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
@@ -79,10 +79,58 @@ public class ReportMetadataCopier {
         //create dao
         ReportReaderDAO dao = new ReportReaderDAO(reportFile);
         writer.setDAO(dao);
+
+        //neet to update short label / experiment title
+        ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(dao.getSourceFile().getPathToFile());
+        if (rb != null) {
+            masterMetadata.setShortLabel(rb.getShortLabel());
+            masterMetadata.setTitle(rb.getExperimentTitle());
+        }
+
+        //need to update experiment additional params
+        masterMetadata.setExperimentAdditional(mergeParams(masterMetadata.getExperimentAdditional(), dao.getExperimentParams()));
+
         //need to update the metadata so that the source file element of the mzdata admin reflect the correct file
         masterMetadata.getMzDataDescription().getAdmin().setSourceFile(dao.getSourceFile());
+
+        //need to update the processing method so that the information returned from the original dao is correct
+        masterMetadata.getMzDataDescription().getDataProcessing().setProcessingMethod(mergeParams(masterMetadata.getMzDataDescription().getDataProcessing().getProcessingMethod(), dao.getProcessingMethod()));
+
         //write report
         return writer.writeReport(masterMetadata, masterPTMs, masterDatabaseMappings);
+    }
+
+    private static Param mergeParams(Param masterParams, Param daoParams) {
+
+        for (CvParam cv : masterParams.getCvParam()) {
+            if (!containsAccession(daoParams.getCvParam(), cv.getAccession())) {
+                daoParams.getCvParam().add(cv);
+            }
+        }
+        for (UserParam up : masterParams.getUserParam()) {
+            if (!containsName(daoParams.getUserParam(), up.getName())) {
+                daoParams.getUserParam().add(up);
+            }
+        }
+        return daoParams;
+    }
+
+    private static boolean containsAccession(List<CvParam> cvParam, String accession) {
+        for (CvParam cv : cvParam) {
+            if (cv.getAccession().equals(accession)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean containsName(List<UserParam> userParams, String name) {
+        for (UserParam up : userParams) {
+            if (up.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
