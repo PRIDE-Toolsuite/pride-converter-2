@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.EventObject;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,11 +23,13 @@ import java.awt.event.MouseListener;
 public class DeleteIconColumn extends AbstractCellEditor
         implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
 
-    JButton button;
-    JTable table;
-    Action action;
+    private JButton button;
+    private JTable table;
+    private Action action;
+    private int clickCountToStart = 1;
 
     public DeleteIconColumn(JTable table, TableColumn tableColumn) {
+
         this.table = table;
 
         button = new JButton();
@@ -71,6 +74,23 @@ public class DeleteIconColumn extends AbstractCellEditor
         return button;
     }
 
+    /**
+     * Returns true if <code>anEvent</code> is <b>not</b> a
+     * <code>MouseEvent</code>.  Otherwise, it returns true
+     * if the necessary number of clicks have occurred, and
+     * returns false otherwise.
+     *
+     * @param anEvent the event
+     * @return true  if cell is ready for editing, false otherwise
+     * @see #shouldSelectCell
+     */
+    public boolean isCellEditable(EventObject anEvent) {
+        if (anEvent instanceof MouseEvent) {
+            return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
+        }
+        return true;
+    }
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
     }
@@ -92,12 +112,26 @@ public class DeleteIconColumn extends AbstractCellEditor
     }
 
     @Override
-    public Component getTableCellEditorComponent(JTable jTable, Object o, boolean b, int i, int i1) {
-        return button;
+    public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+        //if the value is boolean(true), it represents a param that is protected and can't be deleted
+        //so don't show the delete button
+        Component retval = button;
+        if (value != null && value instanceof Boolean && Boolean.valueOf(value.toString())) {
+            retval = new JLabel("");
+            clickCountToStart = 5;
+        }
+        return retval;
     }
 
     @Override
-    public Component getTableCellRendererComponent(JTable jTable, Object o, boolean b, boolean b1, int i, int i1) {
-        return button;
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        //if the value is boolean(true), it represents a param that is protected and can't be deleted
+        //so don't show the delete button
+        Component retval = button;
+        if (value != null && value instanceof Boolean && Boolean.valueOf(value.toString())) {
+            retval = new JLabel("");
+            clickCountToStart = 5;
+        }
+        return retval;
     }
 }

@@ -1,10 +1,12 @@
 package uk.ac.ebi.pride.tools.converter.gui.component.table.model;
 
+import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -16,6 +18,15 @@ import java.util.List;
  *         Time: 16:14
  */
 public class ParamTableModel extends BaseTableModel<ReportObject> {
+
+    private static HashSet<String> protectedUserParams;
+
+    static {
+        protectedUserParams = new HashSet<String>();
+        //currently required by PRIDE Inspector
+        protectedUserParams.add("Available protein quantitation fields");
+        protectedUserParams.add("Available peptide quantitation fields");
+    }
 
     public ParamTableModel() {
 
@@ -39,7 +50,7 @@ public class ParamTableModel extends BaseTableModel<ReportObject> {
 
         columnEditable = new boolean[]{false, false, false, false, false, true, false};
 
-        columnTypes = new Class<?>[]{String.class, String.class, String.class, String.class, String.class, String.class, ReportObject.class};
+        columnTypes = new Class<?>[]{String.class, String.class, String.class, String.class, String.class, Boolean.class, ReportObject.class};
 
         dataColumnIndex = 6;
 
@@ -53,11 +64,25 @@ public class ParamTableModel extends BaseTableModel<ReportObject> {
     }
 
     private Object[] getRowObjectArray(UserParam userParam) {
-        return new Object[]{"", "", "", userParam.getName(), userParam.getValue(), "", userParam};
+        boolean protectedParam = isUserParamProtected(userParam);
+        return new Object[]{"", "", "", userParam.getName(), userParam.getValue(), protectedParam, userParam};
+    }
+
+    private boolean isUserParamProtected(UserParam userParam) {
+        return protectedUserParams.contains(userParam.getName());
     }
 
     private Object[] getRowObjectArray(CvParam cvParam) {
-        return new Object[]{"", cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName(), cvParam.getValue(), "", cvParam};
+        boolean protectedParam = isCvParamProtected(cvParam);
+        return new Object[]{"", cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName(), cvParam.getValue(), protectedParam, cvParam};
+    }
+
+    private boolean isCvParamProtected(CvParam cvParam) {
+        //protect all quantitation params
+        if (QuantitationCvParams.isAQuantificationParam(cvParam.getAccession())) {
+            return true;
+        }
+        return false;
     }
 
     public List<UserParam> getUserParamList() {
@@ -80,5 +105,24 @@ public class ParamTableModel extends BaseTableModel<ReportObject> {
             }
         }
         return lst;
+    }
+
+    /**
+     * Indicates whether a row should be protected (i.e. not editable) even though the rest
+     * of the table might be editable
+     *
+     * @param rowNumber
+     * @return
+     */
+    @Override
+    public boolean isRowProtected(int rowNumber) {
+        Object obj = getValueAt(rowNumber, dataColumnIndex);
+        if (obj instanceof UserParam) {
+            return isUserParamProtected((UserParam) obj);
+        }
+        if (obj instanceof CvParam) {
+            return isCvParamProtected((CvParam) obj);
+        }
+        return false;
     }
 }

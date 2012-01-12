@@ -51,12 +51,14 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
                     modelSelectedRow = convertRowIndexToModel(getSelectedRow());
                     //get object
                     BaseTableModel<T> tableModel = (BaseTableModel<T>) getModel();
-                    T objToEdit = tableModel.get(modelSelectedRow);
-                    Class clazz = objToEdit.getClass();
-                    //show editing dialog for object
-                    AbstractDialog dialog = AbstractDialog.getInstance(_this, clazz);
-                    dialog.edit(objToEdit);
-                    dialog.setVisible(true);
+                    if (!tableModel.isRowProtected(modelSelectedRow)) {
+                        T objToEdit = tableModel.get(modelSelectedRow);
+                        Class clazz = objToEdit.getClass();
+                        //show editing dialog for object
+                        AbstractDialog dialog = AbstractDialog.getInstance(_this, clazz);
+                        dialog.edit(objToEdit);
+                        dialog.setVisible(true);
+                    }
                 }
             }
         });
