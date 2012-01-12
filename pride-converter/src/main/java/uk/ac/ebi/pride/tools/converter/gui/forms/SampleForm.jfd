@@ -56,7 +56,7 @@
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>uk.ac.ebi.pride.tools.converter.gui.component.panels.SamplePanel</string> 
           <void property="name"> 
-           <string>samplePanel1</string> 
+           <string>masterSamplePanel</string> 
           </void> 
          </object> 
          <object class="com.jformdesigner.model.FormLayoutConstraints"> 
@@ -65,7 +65,7 @@
            <string>title</string> 
            <object class="com.jformdesigner.model.FormMessage"> 
             <null/> 
-            <string>SampleForm.samplePanel1.tab.title</string> 
+            <string>SampleForm.masterSamplePanel.tab.title</string> 
            </object> 
           </void> 
          </object> 

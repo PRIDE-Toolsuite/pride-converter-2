@@ -113,4 +113,15 @@ public abstract class BaseTableModel<T extends ReportObject> extends DefaultTabl
 
     protected abstract Object[] getRowObjectArray(T t);
 
+    /**
+     * Indicates whether a row should be protected (i.e. not editable) even though the rest
+     * of the table might be editable
+     *
+     * @param rowNumber
+     * @return
+     */
+    public boolean isRowProtected(int rowNumber) {
+        return false;
+    }
+
 }

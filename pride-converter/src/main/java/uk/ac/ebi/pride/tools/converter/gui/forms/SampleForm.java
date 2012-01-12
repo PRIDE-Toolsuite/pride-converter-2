@@ -43,7 +43,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
         // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
         tabbedPane1 = new JTabbedPane();
-        samplePanel1 = new SamplePanel();
+        masterSamplePanel = new SamplePanel();
         label1 = new JLabel();
         customSampleButton = new JButton();
 
@@ -57,7 +57,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
                     tabbedPane1StateChanged();
                 }
             });
-            tabbedPane1.addTab(bundle.getString("SampleForm.samplePanel1.tab.title"), samplePanel1);
+            tabbedPane1.addTab(bundle.getString("SampleForm.masterSamplePanel.tab.title"), masterSamplePanel);
 
         }
 
@@ -104,7 +104,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
     private JTabbedPane tabbedPane1;
-    private SamplePanel samplePanel1;
+    private SamplePanel masterSamplePanel;
     private JLabel label1;
     private JButton customSampleButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
@@ -129,19 +129,21 @@ public class SampleForm extends AbstractForm implements ActionListener {
         if (!matchFound) {
             SamplePanel samplePanel = new SamplePanel();
             try {
+                //if there's already a bean with custom information, use that
                 if (rb != null && rb.getSampleDescription() != null) {
-                    samplePanel1.setSampleName(rb.getSampleName());
-                    samplePanel1.setSampleComment(rb.getSampleDescription().getComment());
+                    samplePanel.setSampleName(rb.getSampleName());
+                    samplePanel.setSampleComment(rb.getSampleDescription().getComment());
                     Param p = new Param();
                     p.getCvParam().addAll(rb.getSampleDescription().getCvParam());
                     p.getUserParam().addAll(rb.getSampleDescription().getUserParam());
-                    samplePanel1.setSampleParams(p);
+                    samplePanel.setSampleParams(p);
 
                 } else {
+                    //otherwise use the dao information
                     DAO dao = ConverterData.getInstance().getMasterDAO();
-                    samplePanel1.setSampleName(dao.getSampleName());
-                    samplePanel1.setSampleComment(dao.getSampleComment());
-                    samplePanel1.setSampleParams(dao.getSampleParams());
+                    samplePanel.setSampleName(dao.getSampleName());
+                    samplePanel.setSampleComment(dao.getSampleComment());
+                    samplePanel.setSampleParams(dao.getSampleParams());
                 }
             } catch (InvalidFormatException e) {
                 logger.warn("Error reading dao information: " + e.getMessage(), e);
@@ -246,7 +248,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
     public void clear() {
 
         isLoaded = false;
-        samplePanel1.clear();
+        masterSamplePanel.clear();
         if (tabbedPane1.getTabCount() > 1) {
             for (int i = 0; i < tabbedPane1.getTabCount(); i++) {
                 if (!tabbedPane1.getTitleAt(i).equals("Master Sample")) {
@@ -262,9 +264,10 @@ public class SampleForm extends AbstractForm implements ActionListener {
     @Override
     public void save(ReportReaderDAO dao) {
 
-        dao.setSampleName(samplePanel1.getSampleName());
-        dao.setSampleComment(samplePanel1.getSampleComment());
-        dao.setSampleParams(samplePanel1.getSampleParams());
+        //todo
+        dao.setSampleName(masterSamplePanel.getSampleName());
+        dao.setSampleComment(masterSamplePanel.getSampleComment());
+        dao.setSampleParams(masterSamplePanel.getSampleParams());
 
     }
 
@@ -279,13 +282,13 @@ public class SampleForm extends AbstractForm implements ActionListener {
         }
 
         if (!isLoaded) {
-            samplePanel1.setSampleName(dao.getSampleName());
-            samplePanel1.setSampleComment(dao.getSampleComment());
-            samplePanel1.setSampleParams(dao.getSampleParams());
+            masterSamplePanel.setSampleName(dao.getSampleName());
+            masterSamplePanel.setSampleComment(dao.getSampleComment());
+            masterSamplePanel.setSampleParams(dao.getSampleParams());
             isLoaded = true;
         }
         //fire validation listener on load
-        samplePanel1.fireValidationListener();
+        masterSamplePanel.fireValidationListener();
     }
 
     @Override
@@ -306,8 +309,8 @@ public class SampleForm extends AbstractForm implements ActionListener {
     @Override
     public void start() {
         //for back & forth navigation
-        samplePanel1.addValidationListener(validationListerner);
-        samplePanel1.fireValidationListener();
+        masterSamplePanel.addValidationListener(validationListerner);
+        masterSamplePanel.fireValidationListener();
     }
 
     @Override
