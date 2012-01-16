@@ -1,6 +1,6 @@
   * [PrideConverter2 ↑ Home]
   * File Formats
-    * [MascotDatDAO Mascot .da]
+    * [MascotDatDAO Mascot .dat]
     * [XTandemDAO X!Tandem]
     * [MzIdentMlDAO mzIdentML]
     * [OmssaDAO OMSSA]
