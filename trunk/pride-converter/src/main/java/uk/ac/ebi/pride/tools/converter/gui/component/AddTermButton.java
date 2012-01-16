@@ -7,6 +7,7 @@ package uk.ac.ebi.pride.tools.converter.gui.component;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.ComboValueCvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.CvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.UserParamDialog;
 
@@ -16,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -31,6 +33,7 @@ public class AddTermButton extends JButton {
     private boolean showUserParam = false;
     private boolean enabled = true;
     private Set<String> suggestedCVs;
+    private Collection<String> comboBoxValues;
 
     public AddTermButton() {
         initComponents();
@@ -47,6 +50,10 @@ public class AddTermButton extends JButton {
 
     public void setSuggestedCVs(Set<String> suggestedCVs) {
         this.suggestedCVs = suggestedCVs;
+    }
+
+    public void setComboBoxValues(Collection<String> comboBoxValues) {
+        this.comboBoxValues = comboBoxValues;
     }
 
     private void initComponents() {
@@ -97,8 +104,13 @@ public class AddTermButton extends JButton {
         private void cvParamMenuItemActionPerformed(ActionEvent e) {
 
             logger.debug("cvparam");
-            CvParamDialog cvParamDialog = new CvParamDialog(NavigationPanel.getInstance(), owner, suggestedCVs);
-            cvParamDialog.setVisible(true);
+            if (comboBoxValues != null) {
+                ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), owner, suggestedCVs, comboBoxValues);
+                cvParamDialog.setVisible(true);
+            } else {
+                CvParamDialog cvParamDialog = new CvParamDialog(NavigationPanel.getInstance(), owner, suggestedCVs);
+                cvParamDialog.setVisible(true);
+            }
         }
 
         private void userParamMenuItemActionPerformed(ActionEvent e) {
