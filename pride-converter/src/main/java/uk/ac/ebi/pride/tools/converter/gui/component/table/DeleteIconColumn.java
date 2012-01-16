@@ -11,8 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.EventObject;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,11 +22,12 @@ import java.util.EventObject;
  * Time: 17:18
  */
 public class DeleteIconColumn extends AbstractCellEditor
-        implements TableCellRenderer, TableCellEditor, ActionListener, MouseListener {
+        implements TableCellRenderer, TableCellEditor, ActionListener {
 
     private JButton button;
     private JTable table;
     private Action action;
+    private Map<Integer, Boolean> isDeletable = new HashMap<Integer, Boolean>();
     private int clickCountToStart = 1;
 
     public DeleteIconColumn(JTable table, TableColumn tableColumn) {
@@ -85,30 +87,9 @@ public class DeleteIconColumn extends AbstractCellEditor
      * @see #shouldSelectCell
      */
     public boolean isCellEditable(EventObject anEvent) {
-        if (anEvent instanceof MouseEvent) {
-            return ((MouseEvent) anEvent).getClickCount() >= clickCountToStart;
-        }
-        return true;
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public void mousePressed(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent mouseEvent) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent mouseEvent) {
+        JTable table = (JTable) anEvent.getSource();
+        int modelRow = table.convertRowIndexToModel(table.rowAtPoint(((MouseEvent) anEvent).getPoint()));
+        return isDeletable.get(modelRow);
     }
 
     @Override
@@ -118,7 +99,9 @@ public class DeleteIconColumn extends AbstractCellEditor
         Component retval = button;
         if (value != null && value instanceof Boolean && Boolean.valueOf(value.toString())) {
             retval = new JLabel("");
-            clickCountToStart = 5;
+            isDeletable.put(row, false);
+        } else {
+            isDeletable.put(row, true);
         }
         return retval;
     }
@@ -130,7 +113,9 @@ public class DeleteIconColumn extends AbstractCellEditor
         Component retval = button;
         if (value != null && value instanceof Boolean && Boolean.valueOf(value.toString())) {
             retval = new JLabel("");
-            clickCountToStart = 5;
+            isDeletable.put(row, false);
+        } else {
+            isDeletable.put(row, true);
         }
         return retval;
     }

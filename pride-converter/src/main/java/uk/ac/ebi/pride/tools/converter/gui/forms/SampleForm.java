@@ -140,6 +140,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
 
                 } else {
                     //otherwise use the dao information
+                    //todo - is this correct? what happens in case of quant params that can't be deleted?
                     DAO dao = ConverterData.getInstance().getMasterDAO();
                     samplePanel.setSampleName(dao.getSampleName());
                     samplePanel.setSampleComment(dao.getSampleComment());

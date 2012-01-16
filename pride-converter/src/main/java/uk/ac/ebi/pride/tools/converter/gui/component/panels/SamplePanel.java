@@ -4,10 +4,13 @@
 
 package uk.ac.ebi.pride.tools.converter.gui.component.panels;
 
+import org.apache.log4j.Logger;
+import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.panels.model.SampleCvComboBoxModel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.ComboValueCvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.CvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ValidationListener;
@@ -27,11 +30,14 @@ import java.util.*;
  */
 public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
+    private static final Logger logger = Logger.getLogger(SamplePanel.class);
+
     private ValidationListener validationListerner;
     private Map<String, String> speciesCache;
     private Map<String, String> cellCache;
     private Map<String, String> tissueCache;
     private ResourceBundle config;
+    private Map<String, String> subsamples = new HashMap<String, String>();
 
     private boolean isAllowMultipleValues = false;
 
@@ -141,8 +147,13 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
             Set<String> suggestedCVs = getSuggestedOntologies(resourceKey);
             if (!suggestedCVs.isEmpty()) {
-                CvParamDialog cvParamDialog = new CvParamDialog(NavigationPanel.getInstance(), this, suggestedCVs);
-                cvParamDialog.setVisible(true);
+                if (subsamples.isEmpty()) {
+                    CvParamDialog cvParamDialog = new CvParamDialog(NavigationPanel.getInstance(), this, suggestedCVs);
+                    cvParamDialog.setVisible(true);
+                } else {
+                    ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, suggestedCVs, subsamples.keySet());
+                    cvParamDialog.setVisible(true);
+                }
             }
 
         } else if (comboBox.getSelectedItem() != null && !TemplateUtilities.PLEASE_SELECT.equals(comboBox.getSelectedItem().toString())) {
@@ -361,10 +372,6 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private JLabel label8;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
-    public void setSampleNameEditable(boolean editable) {
-        sampleNameField.setEnabled(editable);
-    }
-
     public String getSampleName() {
         return sampleNameField.getText();
     }
@@ -384,8 +391,15 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     public void setSampleParams(Param param) {
         if (param != null) {
 
+            subsamples.clear();
             for (CvParam cv : param.getCvParam()) {
                 paramTable1.add(cv);
+                if (QuantitationCvParams.isQuantificationReagent(cv.getAccession())) {
+                    subsamples.put(cv.getName(), cv.getAccession());
+                }
+            }
+            if (!subsamples.isEmpty()) {
+                addTermButton1.setComboBoxValues(subsamples.keySet());
             }
             for (UserParam up : param.getUserParam()) {
                 paramTable1.add(up);
