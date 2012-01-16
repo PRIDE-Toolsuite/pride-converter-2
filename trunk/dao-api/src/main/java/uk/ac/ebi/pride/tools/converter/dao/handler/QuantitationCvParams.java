@@ -414,7 +414,7 @@ public enum QuantitationCvParams {
      * @return
      */
     public static boolean containsProteinQuantification(String accession) {
-    	// all quantification methods can be reported for the protein level.
-    	return true;
+    	// any quantification method can contain protein quant values
+    	return isQuantificationMethod(accession);
     }
 }
