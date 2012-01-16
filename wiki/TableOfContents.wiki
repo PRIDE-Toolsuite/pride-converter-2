@@ -7,4 +7,4 @@
     * [MzXmlDAO mzXML]
   * [QuantitativeMzTabFiles Quantitative data]
   * Developer
-    [HowToWriteADao DAO development]
+    * [HowToWriteADao DAO development]
