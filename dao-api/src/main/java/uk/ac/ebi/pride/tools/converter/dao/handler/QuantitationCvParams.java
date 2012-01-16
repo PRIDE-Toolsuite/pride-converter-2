@@ -91,7 +91,7 @@ public enum QuantitationCvParams {
     ITRAQ_117_REAGENT("PRIDE", "PRIDE:0000117", "iTRAQ reagent 117", ""),
     ITRAQ_118_REAGENT("PRIDE", "PRIDE:0000265", "iTRAQ reagent 118", ""),
     ITRAQ_119_REAGENT("PRIDE", "PRIDE:0000266", "iTRAQ reagent 119", ""),
-    ITRAQ_121_REAGENT("PRIDE", "PRIDE:0000267", "iTRAQ reagent 1121", ""),
+    ITRAQ_121_REAGENT("PRIDE", "PRIDE:0000267", "iTRAQ reagent 121", ""),
     
     TMT_126_REAGENT("PRIDE", "PRIDE:0000285", "TMT reagent 126", ""),
     TMT_127_REAGENT("PRIDE", "PRIDE:0000286", "TMT reagent 127", ""),
