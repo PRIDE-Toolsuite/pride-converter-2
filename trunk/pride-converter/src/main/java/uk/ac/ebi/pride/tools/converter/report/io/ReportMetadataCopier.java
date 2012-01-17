@@ -85,6 +85,15 @@ public class ReportMetadataCopier {
         if (rb != null) {
             masterMetadata.setShortLabel(rb.getShortLabel());
             masterMetadata.setTitle(rb.getExperimentTitle());
+            if (rb.getSampleDescription() != null) {
+                Description sample = rb.getSampleDescription();
+                //merge custom params with master params
+                sample = (Description) mergeParams(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription(), sample);
+                //merge custom params with dao params
+                sample = (Description) mergeParams(dao.getSampleParams(), sample);
+                //set params to be marshalled out
+                masterMetadata.getMzDataDescription().getAdmin().setSampleDescription(sample);
+            }
         }
 
         //need to update experiment additional params
@@ -100,9 +109,20 @@ public class ReportMetadataCopier {
         return writer.writeReport(masterMetadata, masterPTMs, masterDatabaseMappings);
     }
 
+    /**
+     * merges two sets of params. Iterates over all of the params from the masterParam object (obtained from the
+     * masterDAO) and compares them to the daoParam object (obtained from the file DAO). If the daoParam
+     * does not contain a param from the master, it will be added. If it does already contain a param,
+     * that param will not be overwritten.
+     *
+     * @param masterParams
+     * @param daoParams
+     * @return
+     */
     private static Param mergeParams(Param masterParams, Param daoParams) {
 
         for (CvParam cv : masterParams.getCvParam()) {
+            //todo - make sure NEWT params aren't overwritten
             if (!containsAccession(daoParams.getCvParam(), cv.getAccession())) {
                 daoParams.getCvParam().add(cv);
             }

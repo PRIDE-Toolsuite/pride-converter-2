@@ -140,7 +140,6 @@ public class SampleForm extends AbstractForm implements ActionListener {
 
                 } else {
                     //otherwise use the dao information
-                    //todo - is this correct? what happens in case of quant params that can't be deleted?
                     DAO dao = ConverterData.getInstance().getMasterDAO();
                     samplePanel.setSampleName(dao.getSampleName());
                     samplePanel.setSampleComment(dao.getSampleComment());
@@ -265,10 +264,29 @@ public class SampleForm extends AbstractForm implements ActionListener {
     @Override
     public void save(ReportReaderDAO dao) {
 
-        //todo
         dao.setSampleName(masterSamplePanel.getSampleName());
         dao.setSampleComment(masterSamplePanel.getSampleComment());
         dao.setSampleParams(masterSamplePanel.getSampleParams());
+
+        //loop through all open tabs and close them and save them to ConverterData for later use
+        //need to start at 1 because the first tab will not be closeable
+        for (int i = 1; i < tabbedPane1.getTabCount(); i++) {
+
+            SamplePanel panel = (SamplePanel) tabbedPane1.getComponentAt(i);
+            Description sample = panel.getSampleDescription();
+            String fileName = tabbedPane1.getTitleAt(i);
+            ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fileName);
+            if (rb != null) {
+                rb.setSampleName(panel.getSampleName());
+                rb.setSampleDescription(sample);
+            } else {
+                throw new IllegalStateException("Could not find report bean for file: " + fileName);
+            }
+        }
+        //now close all tabs
+        for (int i = 1; i < tabbedPane1.getTabCount(); i++) {
+            tabbedPane1.removeTabAt(i);
+        }
 
     }
 
