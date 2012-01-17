@@ -88,8 +88,7 @@ public class DeleteIconColumn extends AbstractCellEditor
      */
     public boolean isCellEditable(EventObject anEvent) {
         JTable table = (JTable) anEvent.getSource();
-        int modelRow = table.convertRowIndexToModel(table.rowAtPoint(((MouseEvent) anEvent).getPoint()));
-        return isDeletable.get(modelRow);
+        return isDeletable.get(table.rowAtPoint(((MouseEvent) anEvent).getPoint()));
     }
 
     @Override

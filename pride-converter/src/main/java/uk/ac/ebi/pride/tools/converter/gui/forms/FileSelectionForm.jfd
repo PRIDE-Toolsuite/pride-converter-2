@@ -25,7 +25,7 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp panel7::l:::x, comp fileTabbedPane::l::651:x, comp panel2::t::651:x}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, par t {comp panel7::l:::x, comp fileTabbedPane::l::663:x, comp panel2::t::663:x}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
@@ -83,11 +83,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq {space :::p, par l {comp button1::t:p:100:p, comp scrollPane1::t::622:x}, space :::p}}</string> 
+            <string>par l {seq {space :::p, par l {comp button1::t:p:100:p, comp scrollPane1::t::646:x}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq t {space :::p, comp scrollPane1::::156:x, space :::p, comp button1:::p:25:p, space :::p}}</string> 
+            <string>par l {seq t {space :::p, comp scrollPane1::::168:x, space :::p, comp button1:::p:25:p, space :::p}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -154,11 +154,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq {space :::p, par l {comp button3::t:p:100:p, comp scrollPane3::l::622:x, comp panel6::l::622:x}, space :::p}}</string> 
+            <string>par l {seq {space :::p, par l {comp button3::t:p:100:p, comp scrollPane3::l::646:x, comp panel6::l::646:x}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq t {space :::p, comp panel6:::p::p, space :::p, comp scrollPane3::::92:x, space :::p, comp button3:::p:25:p, space :::p}}</string> 
+            <string>par l {seq t {space :::p, comp panel6:::p::p, space :::p, comp scrollPane3::::104:x, space :::p, comp button3:::p:25:p, space :::p}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -362,11 +362,11 @@
            <class>org.jdesktop.layout.GroupLayout</class> 
            <void method="setProperty"> 
             <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {comp scrollPane2::l::622:x, comp button2::t:p:100:p}, space :::p}}</string> 
+            <string>par l {seq t {space :::p, par t {comp scrollPane2::l::646:x, comp button2::t:p:100:p}, space :::p}}</string> 
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq t {space :::p, comp scrollPane2::::156:x, space :::p, comp button2:::p:25:p, space :::p}}</string> 
+            <string>par l {seq t {space :::p, comp scrollPane2::::168:x, space :::p, comp button2:::p:25:p, space :::p}}</string> 
            </void> 
           </object> 
           <void property="name"> 
@@ -435,11 +435,11 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq t {space ::497:x, comp parserOptionHelpButton:::p::p}, comp tableScrollPane::l::641:x}</string> 
+          <string>par l {seq t {space ::508:x, comp parserOptionHelpButton:::p::p}, comp tableScrollPane::l::653:x}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq t {comp tableScrollPane::::77:x, space :::p, comp parserOptionHelpButton:::p::p}}</string> 
+          <string>par l {seq t {comp tableScrollPane::::89:x, space :::p, comp parserOptionHelpButton:::p::p}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -486,14 +486,6 @@
           </void> 
           <void property="name"> 
            <string>parserOptionHelpButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>parserOptionHelpButtonActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
           </void> 
          </object> 
         </void> 

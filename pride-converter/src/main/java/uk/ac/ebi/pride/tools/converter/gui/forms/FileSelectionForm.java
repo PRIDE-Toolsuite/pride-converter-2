@@ -140,9 +140,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         fastaFormat = HandlerFactory.FASTA_FORMAT.UNIPROT_MATCH_AC;
     }
 
-    private void parserOptionHelpButtonActionPerformed() {
-        // TODO add your code here
-    }
 
     private void initComponents() {
 //        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -213,14 +210,14 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                         .addContainerGap()
                                         .addGroup(panel3Layout.createParallelGroup()
                                                 .addComponent(button1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE))
+                                                .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
                                         .addContainerGap())
                 );
                 panel3Layout.setVerticalGroup(
                         panel3Layout.createParallelGroup()
                                 .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
                                         .addContainerGap()
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(button1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                         .addContainerGap())
@@ -301,8 +298,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                         .addContainerGap()
                                         .addGroup(panel4Layout.createParallelGroup()
                                                 .addComponent(button3, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
-                                                .addComponent(panel6, GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE))
+                                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                                                .addComponent(panel6, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
                                         .addContainerGap())
                 );
                 panel4Layout.setVerticalGroup(
@@ -311,7 +308,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                         .addContainerGap()
                                         .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
+                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(button3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                         .addContainerGap())
@@ -344,7 +341,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                 .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                                         .addContainerGap()
                                         .addGroup(panel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                .addComponent(scrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 622, Short.MAX_VALUE)
+                                                .addComponent(scrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
                                                 .addComponent(button2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
                                         .addContainerGap())
                 );
@@ -352,7 +349,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         panel5Layout.createParallelGroup()
                                 .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                                         .addContainerGap()
-                                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
                                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(button2, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                         .addContainerGap())
@@ -374,26 +371,20 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             //---- parserOptionHelpButton ----
             parserOptionHelpButton.setText(bundle.getString("SelecFilePanel.parserOptionHelpButton.text"));
             parserOptionHelpButton.setEnabled(false);
-            parserOptionHelpButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    parserOptionHelpButtonActionPerformed();
-                }
-            });
 
             GroupLayout panel7Layout = new GroupLayout(panel7);
             panel7.setLayout(panel7Layout);
             panel7Layout.setHorizontalGroup(
                     panel7Layout.createParallelGroup()
                             .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                                    .addContainerGap(497, Short.MAX_VALUE)
+                                    .addContainerGap(508, Short.MAX_VALUE)
                                     .addComponent(parserOptionHelpButton))
-                            .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
+                            .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
             );
             panel7Layout.setVerticalGroup(
                     panel7Layout.createParallelGroup()
                             .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(parserOptionHelpButton))
             );
@@ -407,8 +398,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(panel7, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(fileTabbedPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
-                                        .addComponent(panel2, GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE))
+                                        .addComponent(fileTabbedPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
+                                        .addComponent(panel2, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(

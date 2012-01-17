@@ -211,9 +211,9 @@ public class SampleForm extends AbstractForm implements ActionListener {
         //validate all open tabs
         Set<String> validatedTabs = new HashSet<String>();
         for (int i = 0; i < tabbedPane1.getTabCount(); i++) {
-            SamplePanel sample = (SamplePanel) tabbedPane1.getComponentAt(i);
+            SamplePanel samplePanel = (SamplePanel) tabbedPane1.getComponentAt(i);
             validatedTabs.add(tabbedPane1.getTitleAt(i));
-            messages.addAll(validator.validate(sample));
+            messages.addAll(validator.validate(samplePanel.getSampleDescription()));
         }
 
         //also check those that might be in memeory!
