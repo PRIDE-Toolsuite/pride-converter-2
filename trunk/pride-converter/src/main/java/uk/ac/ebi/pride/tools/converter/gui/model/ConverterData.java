@@ -117,8 +117,17 @@ public class ConverterData {
     }
 
     public void clearPossibleStaleData() {
-        PTMs.clear();
+        //basically, the only possible stale data will be everything
+        //except the dao format and the type, which will have been set
+        //in the first screen
+        inputFiles.clear();
+        fastaFiles.clear();
+        outputfiles.clear();
+        mztabFiles.clear();
         validationMessages.clear();
+        options = new Properties();
+        masterReportFileName = "";
+        PTMs.clear();
         databaseMappings.clear();
         filesToDelete.clear();
         customeReportFields.clear();

@@ -141,19 +141,17 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private void otherSelectedComboBoxItemStateChanged(JComboBox comboBox, Map<String, String> cache, String resourceKey) {
 
         //update boolean flag for future use when adding param
-        isAllowMultipleValues = ((SampleCvComboBoxModel) comboBox.getModel()).isAllowMultipleValues();
+        //if we have subsamples, we are alowed to have multiple params that would normally be singletons
+        isAllowMultipleValues = ((SampleCvComboBoxModel) comboBox.getModel()).isAllowMultipleValues() || !subsamples.isEmpty();
 
         if (comboBox.getSelectedItem() != null && TemplateUtilities.SELECT_OTHER.equals(comboBox.getSelectedItem().toString())) {
 
-            Set<String> suggestedCVs = getSuggestedOntologies(resourceKey);
-            if (!suggestedCVs.isEmpty()) {
-                if (subsamples.isEmpty()) {
-                    CvParamDialog cvParamDialog = new CvParamDialog(NavigationPanel.getInstance(), this, suggestedCVs);
-                    cvParamDialog.setVisible(true);
-                } else {
-                    ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, suggestedCVs, subsamples.keySet());
-                    cvParamDialog.setVisible(true);
-                }
+            if (subsamples.isEmpty()) {
+                CvParamDialog cvParamDialog = new CvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey));
+                cvParamDialog.setVisible(true);
+            } else {
+                ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey), subsamples.keySet());
+                cvParamDialog.setVisible(true);
             }
 
         } else if (comboBox.getSelectedItem() != null && !TemplateUtilities.PLEASE_SELECT.equals(comboBox.getSelectedItem().toString())) {
@@ -175,8 +173,15 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             }
             cv.setName(comboBox.getSelectedItem().toString());
 
-            //update the table, based on the isAllowMultipleValues of the model
-            add(cv);
+            if (subsamples.isEmpty()) {
+                //update the table, based on the isAllowMultipleValues of the model
+                add(cv);
+            } else {
+                ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey), subsamples.keySet());
+                cvParamDialog.edit(cv);
+                cvParamDialog.setVisible(true);
+            }
+
 
         }
 

@@ -81,6 +81,13 @@ public abstract class AbstractDialog extends JDialog {
             } else {
                 text.setBackground(Color.pink);
             }
+        } else if (source instanceof JComboBox) {
+            JComboBox box = (JComboBox) source;
+            if (box.getSelectedIndex() > -1) {
+                box.setBackground(Color.white);
+            } else {
+                box.setBackground(Color.pink);
+            }
         }
 
     }

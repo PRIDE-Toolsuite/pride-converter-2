@@ -110,7 +110,8 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         validateRequiredField(cvField, null);
         validateRequiredField(nameField, null);
         validateRequiredField(accessionField, null);
-        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null);
+        validateRequiredField(valueComboBox, null);
+        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
     }
 
     private void nameFieldKeyTyped(KeyEvent e) {
@@ -275,12 +276,12 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                 }
             }
         }
-        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null);
+        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
     }
 
     private void requiredFieldFocusLost(FocusEvent e) {
         validateRequiredField(e.getComponent(), null);
-        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null);
+        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
     }
 
     private void requiredFieldKeyTyped(KeyEvent e) {
@@ -292,7 +293,11 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         } else if (e.getSource().equals(accessionField)) {
             s2 += e.getKeyChar();
         }
-        okButton.setEnabled(isNonNullTextField(s1) && isNonNullTextField(s2) && nameField.getSelectedItem() != null);
+        okButton.setEnabled(isNonNullTextField(s1) && isNonNullTextField(s2) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
+    }
+
+    private void valueComboBoxItemStateChanged() {
+        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
     }
 
     private void initComponents() {
@@ -313,6 +318,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         cancelButton = new JButton();
         okButton = new JButton();
         valueComboBox = new JComboBox();
+        label10 = new JLabel();
 
         //======== this ========
         setResizable(false);
@@ -424,6 +430,24 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
             }
         });
 
+        //---- valueComboBox ----
+        valueComboBox.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                requiredFieldFocusLost(e);
+            }
+        });
+        valueComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                valueComboBoxItemStateChanged();
+            }
+        });
+
+        //---- label10 ----
+        label10.setText("*");
+        label10.setForeground(Color.red);
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
@@ -438,7 +462,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(label9, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(olsButton, GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
+                                                .addComponent(olsButton, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                         .addComponent(label1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
@@ -452,15 +476,18 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                                                 .addComponent(cancelButton))
                                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                                        .addComponent(valueComboBox, GroupLayout.Alignment.LEADING, 0, 316, Short.MAX_VALUE)
-                                                                        .addComponent(nameField, GroupLayout.Alignment.LEADING, 0, 316, Short.MAX_VALUE)
-                                                                        .addComponent(accessionField, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
+                                                                        .addComponent(valueComboBox, GroupLayout.Alignment.LEADING, 0, 328, Short.MAX_VALUE)
+                                                                        .addComponent(nameField, GroupLayout.Alignment.LEADING, 0, 328, Short.MAX_VALUE)
+                                                                        .addComponent(accessionField, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(iconLabel)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addGroup(contentPaneLayout.createParallelGroup()
-                                                                        .addComponent(label8, GroupLayout.DEFAULT_SIZE, 10, Short.MAX_VALUE)
-                                                                        .addComponent(label7, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE))))))
+                                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                                .addComponent(iconLabel)
+                                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                                                        .addComponent(label8, GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                                                                                        .addComponent(label7, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)))
+                                                                        .addComponent(label10, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))))))
                                 .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
@@ -489,7 +516,8 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                 .addGap(16, 16, 16)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(label3)
-                                        .addComponent(valueComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(valueComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(label10, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
                                 .addGap(16, 16, 16)
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addComponent(cancelButton)
@@ -518,6 +546,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
     private JButton cancelButton;
     private JButton okButton;
     private JComboBox valueComboBox;
+    private JLabel label10;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override
@@ -528,7 +557,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         validateRequiredField(cvField, null);
         validateRequiredField(nameField, null);
         validateRequiredField(accessionField, null);
-        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null);
+        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
     }
 
     @Override
