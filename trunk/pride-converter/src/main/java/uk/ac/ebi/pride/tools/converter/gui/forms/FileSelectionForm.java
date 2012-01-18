@@ -99,7 +99,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     private void loadDataFiles(ActionEvent e) {
-        Set<File> tableFiles = new HashSet<File>();
+        Set<File> tableFiles = new TreeSet<File>();
         tableFiles.addAll(dataFileTable.getFiles());
         tableFiles.addAll(chooseFiles(true, ConverterData.getInstance().getType().isAllowDirectory(), ConverterData.getInstance().getType().getFilter()));
         dataFileTable.clearFiles();
