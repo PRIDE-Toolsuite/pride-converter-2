@@ -26,7 +26,7 @@ public class ConverterData {
 
     // Key = input File Path
     // Value = report file path
-    private Map<String, String> inputFiles = new HashMap<String, String>();
+    private TreeMap<String, String> inputFiles = new TreeMap<String, String>();
     private List<String> outputfiles = new ArrayList<String>();
     private List<String> fastaFiles = new ArrayList<String>();
     private List<String> mztabFiles = new ArrayList<String>();
@@ -41,7 +41,7 @@ public class ConverterData {
     private Set<DatabaseMapping> databaseMappings = new HashSet<DatabaseMapping>();
     private ReportReaderDAO masterDAO;
     private Set<String> filesToDelete = new HashSet<String>();
-    private Map<String, ReportBean> customeReportFields = new HashMap<String, ReportBean>();
+    private Map<String, ReportBean> customeReportFields = new TreeMap<String, ReportBean>();
 
     private static ConverterData instance = new ConverterData();
 
