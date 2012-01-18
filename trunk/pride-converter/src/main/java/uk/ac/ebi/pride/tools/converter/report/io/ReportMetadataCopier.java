@@ -54,7 +54,31 @@ public class ReportMetadataCopier {
                 File reportFile = new File(reportFileName);
                 String outFileName;
                 if (reportFile.exists()) {
+
+                    //copySingleMetadata will override certain param collections
+                    //To avoid stale params from being written to the wrong file, keep track of the original
+                    //values here and reset them before the next loop in the iteration
+                    Description sample = new Description();
+                    sample.setComment(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getComment());
+                    sample.getCvParam().addAll(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getCvParam());
+                    sample.getUserParam().addAll(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getUserParam());
+                    String sampleName = masterMetadata.getMzDataDescription().getAdmin().getSampleName();
+                    Param expAdditional = new Param();
+                    expAdditional.getCvParam().addAll(masterMetadata.getExperimentAdditional().getCvParam());
+                    expAdditional.getUserParam().addAll(masterMetadata.getExperimentAdditional().getUserParam());
+                    Param processingMethod = new Param();
+                    processingMethod.getCvParam().addAll(masterMetadata.getMzDataDescription().getDataProcessing().getProcessingMethod().getCvParam());
+                    processingMethod.getUserParam().addAll(masterMetadata.getMzDataDescription().getDataProcessing().getProcessingMethod().getUserParam());
+
+                    //write file
                     outFileName = copySingleMetadata(masterMetadata, masterPTMs, masterDatabaseMappings, reportFile);
+
+                    //reset params
+                    masterMetadata.getMzDataDescription().getAdmin().setSampleName(sampleName);
+                    masterMetadata.getMzDataDescription().getAdmin().setSampleDescription(sample);
+                    masterMetadata.setExperimentAdditional(expAdditional);
+                    masterMetadata.getMzDataDescription().getDataProcessing().setProcessingMethod(processingMethod);
+
                 } else {
                     throw new ConverterException("Report file does not exist: " + reportFile);
                 }
@@ -88,11 +112,10 @@ public class ReportMetadataCopier {
             if (rb.getSampleDescription() != null) {
                 Description sample = rb.getSampleDescription();
                 //merge custom params with master params
-                sample = (Description) mergeParams(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription(), sample);
-                //merge custom params with dao params
-                sample = (Description) mergeParams(dao.getSampleParams(), sample);
+                sample = mergeSampleParams(sample, masterMetadata.getMzDataDescription().getAdmin().getSampleDescription(), dao.getSampleParams());
                 //set params to be marshalled out
                 masterMetadata.getMzDataDescription().getAdmin().setSampleDescription(sample);
+                masterMetadata.getMzDataDescription().getAdmin().setSampleName(rb.getSampleName());
             }
         }
 
@@ -122,7 +145,6 @@ public class ReportMetadataCopier {
     private static Param mergeParams(Param masterParams, Param daoParams) {
 
         for (CvParam cv : masterParams.getCvParam()) {
-            //todo - make sure NEWT params aren't overwritten
             if (!containsAccession(daoParams.getCvParam(), cv.getAccession())) {
                 daoParams.getCvParam().add(cv);
             }
@@ -133,6 +155,76 @@ public class ReportMetadataCopier {
             }
         }
         return daoParams;
+    }
+
+    /**
+     * merges three sets of params. Iterates over all of the params from the masterParam object (obtained from the
+     * masterDAO) and compares them to the customDescription object (created manually). If the customDescription
+     * does not contain a param from the master, it will be added. If it does already contain a param,
+     * that param will not be overwritten. Does the same with params coming from the DAO
+     *
+     * @param masterParams
+     * @param daoParams
+     * @return
+     */
+    private static Description mergeSampleParams(Description customDescription, Param masterParams, Param daoParams) {
+
+        //check to see if we have a newt annotation. if we do, don't copy any annotation from the master/dao.
+        boolean hasNEWT = false;
+        for (CvParam cv : customDescription.getCvParam()) {
+            if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
+                hasNEWT = true;
+                break;
+            }
+        }
+
+        //copy dao params to description
+        for (CvParam cv : daoParams.getCvParam()) {
+            //add params if:
+            //label is not NEWT and accession not already present
+            // OR
+            // label is NEWT and not already contains NEWT accession
+            //
+            if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
+                if (!hasNEWT) {
+                    customDescription.getCvParam().add(cv);
+                }
+            } else {
+                if (!containsAccession(customDescription.getCvParam(), cv.getAccession())) {
+                    customDescription.getCvParam().add(cv);
+                }
+            }
+        }
+
+        //copy master params to description
+        for (CvParam cv : masterParams.getCvParam()) {
+            //add params if:
+            //label is not NEWT and accession not already present
+            // OR
+            // label is NEWT and not already contains NEWT accession
+            //
+            if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
+                if (!hasNEWT) {
+                    customDescription.getCvParam().add(cv);
+                }
+            } else {
+                if (!containsAccession(customDescription.getCvParam(), cv.getAccession())) {
+                    customDescription.getCvParam().add(cv);
+                }
+            }
+        }
+
+        for (UserParam up : daoParams.getUserParam()) {
+            if (!containsName(customDescription.getUserParam(), up.getName())) {
+                customDescription.getUserParam().add(up);
+            }
+        }
+        for (UserParam up : masterParams.getUserParam()) {
+            if (!containsName(customDescription.getUserParam(), up.getName())) {
+                customDescription.getUserParam().add(up);
+            }
+        }
+        return customDescription;
     }
 
     private static boolean containsAccession(List<CvParam> cvParam, String accession) {

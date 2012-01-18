@@ -37,7 +37,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private Map<String, String> cellCache;
     private Map<String, String> tissueCache;
     private ResourceBundle config;
-    private Map<String, String> subsamples = new HashMap<String, String>();
+    private Set<String> subsamples = new HashSet<String>();
 
     private boolean isAllowMultipleValues = false;
 
@@ -150,7 +150,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                 CvParamDialog cvParamDialog = new CvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey));
                 cvParamDialog.setVisible(true);
             } else {
-                ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey), subsamples.keySet());
+                ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey), subsamples);
                 cvParamDialog.setVisible(true);
             }
 
@@ -177,7 +177,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                 //update the table, based on the isAllowMultipleValues of the model
                 add(cv);
             } else {
-                ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey), subsamples.keySet());
+                ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey), subsamples);
                 cvParamDialog.edit(cv);
                 cvParamDialog.setVisible(true);
             }
@@ -400,11 +400,11 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             for (CvParam cv : param.getCvParam()) {
                 paramTable1.add(cv);
                 if (QuantitationCvParams.isQuantificationReagent(cv.getAccession())) {
-                    subsamples.put(cv.getName(), cv.getAccession());
+                    subsamples.add(cv.getName());
                 }
             }
             if (!subsamples.isEmpty()) {
-                addTermButton1.setComboBoxValues(subsamples.keySet());
+                addTermButton1.setComboBoxValues(subsamples);
             }
             for (UserParam up : param.getUserParam()) {
                 paramTable1.add(up);

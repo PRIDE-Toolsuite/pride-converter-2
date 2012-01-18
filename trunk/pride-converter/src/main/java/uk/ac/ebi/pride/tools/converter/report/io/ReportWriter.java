@@ -6,6 +6,7 @@ import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.handler.ExternalHandler;
 import uk.ac.ebi.pride.tools.converter.dao.handler.FastaHandler;
+import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshallerFactory;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
@@ -19,10 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -111,6 +109,11 @@ public class ReportWriter {
 
             //write searchResultIdentifier
             marshall(out, dao.getSearchResultIdentifier());
+
+            //update sample params in case they contain subsample information
+            Description sample = meta.getMzDataDescription().getAdmin().getSampleDescription();
+            meta.getMzDataDescription().getAdmin().setSampleDescription(updateQuantParams(sample));
+
 
             //write metadata
             marshall(out, meta);
@@ -336,6 +339,33 @@ public class ReportWriter {
         return meta;
 
     }
+
+    private Description updateQuantParams(Description sample) {
+
+        //ITAQ115, subsample1
+        HashMap<String, String> subsamples = new HashMap<String, String>();
+        for (CvParam cv : sample.getCvParam()) {
+            if (QuantitationCvParams.isQuantificationReagent(cv.getAccession())) {
+                subsamples.put(cv.getName(), cv.getValue());
+            }
+        }
+        //if we have subsamples, check the other params otherwise just return
+        if (!subsamples.isEmpty()) {
+            for (CvParam cv : sample.getCvParam()) {
+                if (!QuantitationCvParams.isAQuantificationParam(cv.getAccession())) {
+                    //if the value of the param is ITRAQ or something of the sort, need to translate back to the
+                    //subsample number
+                    if (subsamples.keySet().contains(cv.getValue())) {
+                        cv.setValue(subsamples.get(cv.getValue()));
+                    }
+                }
+            }
+        }
+
+        return sample;
+
+    }
+
 
     private void marshall(PrintWriter out, ReportObject xmlObject) throws IOException {
 
