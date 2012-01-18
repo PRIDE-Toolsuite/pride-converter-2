@@ -118,7 +118,8 @@ public class SampleForm extends AbstractForm implements ActionListener {
 
         //check to see if sourcefile is already loaded
         boolean matchFound = false;
-        for (int i = 0; i < tabbedPane1.getTabCount(); i++) {
+        //start at 1 as the first tab will always be the master file
+        for (int i = 1; i < tabbedPane1.getTabCount(); i++) {
             if (tabbedPane1.getTitleAt(i).equals(sourceFile)) {
                 matchFound = true;
                 tabbedPane1.setSelectedIndex(i);
@@ -301,9 +302,11 @@ public class SampleForm extends AbstractForm implements ActionListener {
         }
 
         if (!isLoaded) {
+            tabbedPane1.setTitleAt(0, ConverterData.getInstance().getMasterSourceFilesName());
             masterSamplePanel.setSampleName(dao.getSampleName());
             masterSamplePanel.setSampleComment(dao.getSampleComment());
             masterSamplePanel.setSampleParams(dao.getSampleParams());
+            masterSamplePanel.setMasterPanel(true);
             isLoaded = true;
         }
         //fire validation listener on load

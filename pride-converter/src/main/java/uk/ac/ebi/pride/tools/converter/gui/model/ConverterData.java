@@ -72,6 +72,18 @@ public class ConverterData {
         return masterReportFileName;
     }
 
+    public String getMasterSourceFilesName() {
+        String retval = "";
+        if (!masterReportFileName.equals("")) {
+            for (Map.Entry<String, String> entry : inputFiles.entrySet()) {
+                if (entry.getValue().equals(masterReportFileName)) {
+                    retval = entry.getKey();
+                }
+            }
+        }
+        return retval;
+    }
+
     public void setMasterReportFileName(String masterReportFileName) {
         this.masterReportFileName = masterReportFileName;
     }

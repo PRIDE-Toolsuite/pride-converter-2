@@ -38,6 +38,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private Map<String, String> tissueCache;
     private ResourceBundle config;
     private Set<String> subsamples = new HashSet<String>();
+    private boolean isMaster = false;
 
     private boolean isAllowMultipleValues = false;
 
@@ -51,6 +52,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         }
         //init caches
         initCaches();
+        masterInformationLabel.setVisible(isMaster);
 
     }
 
@@ -212,6 +214,8 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         paramTable1 = new ParamTable();
         addTermButton1 = new AddTermButton();
         label8 = new JLabel();
+        panel1 = new JPanel();
+        masterInformationLabel = new JLabel();
 
         //======== this ========
 
@@ -287,6 +291,15 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         label8.setText("*");
         label8.setForeground(Color.red);
 
+        //======== panel1 ========
+        {
+            panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 3));
+
+            //---- masterInformationLabel ----
+            masterInformationLabel.setText("Sample annotations entered in this form will be copied across to all files unless overridden.");
+            panel1.add(masterInformationLabel);
+        }
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -295,6 +308,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
+                                        .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
                                         .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                         .addComponent(label3)
@@ -351,7 +365,9 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                         .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label5))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -375,6 +391,8 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private ParamTable paramTable1;
     private AddTermButton addTermButton1;
     private JLabel label8;
+    private JPanel panel1;
+    private JLabel masterInformationLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     public String getSampleName() {
@@ -491,6 +509,12 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             }
         }
         return false;
+    }
+
+    public void setMasterPanel(boolean isMaster) {
+        this.isMaster = isMaster;
+        masterInformationLabel.setVisible(isMaster);
+        masterInformationLabel.repaint();
     }
 
     public static void main(String[] args) {

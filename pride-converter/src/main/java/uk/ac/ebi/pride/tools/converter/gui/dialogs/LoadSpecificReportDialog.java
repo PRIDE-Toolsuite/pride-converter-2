@@ -41,6 +41,8 @@ public class LoadSpecificReportDialog extends JDialog {
     private void updateList() {
         TreeSet<String> files = new TreeSet<String>();
         files.addAll(ConverterData.getInstance().getInputFiles().keySet());
+        //do not include master file as it will already have been loaded in the master sample panel
+        files.remove(ConverterData.getInstance().getMasterSourceFilesName());
         sourceFileList.setListData(files.toArray());
     }
 
