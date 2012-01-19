@@ -447,6 +447,49 @@
             <groupId>uk.ac.ebi.pride.validator</groupId>
             <artifactId>prideValidator</artifactId>
             <version>0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>ojdbc14</artifactId>
+                    <groupId>oracle</groupId>
+                </exclusion>
+                <!--<exclusion>-->
+                <!--<groupId>org.geneontology</groupId>-->
+                <!--<artifactId>oboedit</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>uk.ac.ebi</groupId>-->
+                <!--<artifactId>ols</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>proteomics</groupId>-->
+                <!--<artifactId>proteomics-common</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>org.apache.axis</groupId>-->
+                <!--<artifactId>axis</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>org.apache.axis</groupId>-->
+                <!--<artifactId>axis-ant</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>commons-discovery</groupId>-->
+                <!--<artifactId>commons-discovery</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>commons-logging</groupId>-->
+                <!--<artifactId>commons-logging</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>wsdl4j</groupId>-->
+                <!--<artifactId>wsdl4j</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>org.apache.axis</groupId>-->
+                <!--<artifactId>axis-jaxrpc</artifactId>-->
+                <!--</exclusion>-->
+
+            </exclusions>
         </dependency>
 
         <!--picr / ols -->

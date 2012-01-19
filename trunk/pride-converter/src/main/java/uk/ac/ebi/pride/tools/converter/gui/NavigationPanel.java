@@ -95,7 +95,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
         System.out.println("\nName of the OS: " + Configurator.getOSName());
         System.out.println("Version of the OS: " + Configurator.getOSVersion());
-        System.out.println("Architecture of THe OS: " + Configurator.getOSArch());
+        System.out.println("Architecture of The OS: " + Configurator.getOSArch());
         System.out.println("User Home: " + Configurator.getUserHome());
 
         initComponents();

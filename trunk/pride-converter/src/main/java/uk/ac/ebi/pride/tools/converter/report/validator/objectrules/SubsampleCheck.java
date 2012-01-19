@@ -138,22 +138,37 @@ public class SubsampleCheck<ReportObject> extends ObjectRule<ReportObject> {
                     }
 
                     //check that all params have a valid subsample id
-                    Set<String> observedSubsampleIds = new HashSet<String>();
+                    Set<String> observedSubsamples = new HashSet<String>();
                     for (CvParam cv : cvParamsForLabel) {
-                        if (!observedSubsampleIds.add(cv.getValue())) {
+                        if (!observedSubsamples.add(cv.getValue())) {
                             msgs.add(new ValidatorMessage(MessageFormat.format("SubsampleCheck: There are multiple values for subsample {0} for cv label {1}", cv.getValue(), cvLabel),
                                     MessageLevel.ERROR, context, this));
                         }
-                        if (!subsamples.keySet().contains(cv.getValue())) {
+                        if (!subsamples.keySet().contains(cv.getValue()) && !subsamples.values().contains(cv.getValue())) {
                             msgs.add(new ValidatorMessage(MessageFormat.format("SubsampleCheck: {0} is not a valid subsample for cv label {1}", cv.getValue(), cvLabel),
                                     MessageLevel.ERROR, context, this));
                         }
                     }
+
+                    //we might have a combination of subsample1/ITRAQ115
+                    //need to iterate over all key/value of the entries to find any unseen subsampleIDs
+                    Set<String> observedSubsampleIds = new HashSet<String>();
+                    for (String observedSubsample : observedSubsamples) {
+                        for (Map.Entry<String, String> entry : subsamples.entrySet()) {
+                            //if we've seen either the subsampleID or subsample name, store the id in the collection
+                            if (entry.getKey().equals(observedSubsample) || entry.getValue().equals(observedSubsample)) {
+                                observedSubsampleIds.add(entry.getKey());
+                                break;
+                            }
+                        }
+                    }
+
+                    //then check to see if any IDs haven't been used
                     Set<String> allSubsampleIds = new HashSet<String>();
                     allSubsampleIds.addAll(subsamples.keySet());
                     allSubsampleIds.removeAll(observedSubsampleIds);
                     if (allSubsampleIds.size() > 0) {
-                        msgs.add(new ValidatorMessage(MessageFormat.format("SubsampleCheck: There is no values for subsample(s) {0} for cv label {1}", allSubsampleIds.toString(), cvLabel),
+                        msgs.add(new ValidatorMessage(MessageFormat.format("SubsampleCheck: There are no values for subsample(s) {0} for cv label {1}", allSubsampleIds.toString(), cvLabel),
                                 MessageLevel.ERROR, context, this));
                     }
 
