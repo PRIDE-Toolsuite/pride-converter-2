@@ -1,18 +1,27 @@
 package uk.ac.ebi.pride.tools.converter.dao.impl;
 
-import junit.framework.TestCase;
-import org.junit.Before;
-import org.junit.Test;
-import uk.ac.ebi.pride.jaxb.model.Precursor;
-import uk.ac.ebi.pride.jaxb.model.Spectrum;
-import uk.ac.ebi.pride.tools.converter.report.model.*;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
-import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
-
 import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
+
+import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import uk.ac.ebi.pride.jaxb.model.Precursor;
+import uk.ac.ebi.pride.jaxb.model.Spectrum;
+import uk.ac.ebi.pride.tools.converter.report.model.CV;
+import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
+import uk.ac.ebi.pride.tools.converter.report.model.Identification;
+import uk.ac.ebi.pride.tools.converter.report.model.PTM;
+import uk.ac.ebi.pride.tools.converter.report.model.Param;
+import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
+import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
+import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
+import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 public class XTandemDAOTest extends TestCase {
 
@@ -252,6 +261,10 @@ public class XTandemDAOTest extends TestCase {
 			assertNotNull(id);
 			assertEquals("ENSP00000216181", id.getAccession());
 			assertEquals(27, id.getPeptide().size());
+			
+			Peptide p = id.getPeptide().get(0);
+			
+			assertEquals(26, p.getFragmentIon().size());
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
