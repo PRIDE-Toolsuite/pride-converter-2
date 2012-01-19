@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,6 +49,7 @@ import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 import de.proteinms.xtandemparser.interfaces.Modification;
 import de.proteinms.xtandemparser.xtandem.Domain;
+import de.proteinms.xtandemparser.xtandem.FragmentIon;
 import de.proteinms.xtandemparser.xtandem.InputParams;
 import de.proteinms.xtandemparser.xtandem.ModificationMap;
 import de.proteinms.xtandemparser.xtandem.Peptide;
@@ -72,6 +74,69 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * DAO used to parse the spectra data
      */
     private DAO spectraDAO = null;
+    
+    public enum XTANDEM_FRAGMENT_IONS {
+    	// the order of the ions in the returned fragment
+    	// ion vector. the order of the ions is set in 
+    	// XTandemFile.java:285 (return value of getFragmentIonsForPeptide)
+//    	MH_IONS(0),
+//    	MHNH3_IONS(1),
+//    	MHH2O_IONS(2),
+//    	A_IONS(3),
+//    	AH2O_IONS(4),
+//    	ANH3_IONS(5),
+    	B_IONS(6),
+    	BH2O_IONS(7),
+    	BNH3_IONS(8),
+//    	C_IONS(9),
+//    	X_IONS(10),
+    	Y_IONS(11),
+    	YH2O_IONS(12),
+    	YNH3_IONS(13);
+    	
+    	private int index;
+    	
+    	private XTANDEM_FRAGMENT_IONS(int index) {
+    		this.index = index;
+    	}
+    	
+    	public int getIndex() {
+    		return index;
+    	}
+    	
+    	public CvParam getIonTypeParam(String position) {
+    		switch (this) {
+    			case Y_IONS:
+    				return new CvParam("PRIDE", "PRIDE:0000193", "y ion", position);
+    			case YH2O_IONS:
+    				return new CvParam("PRIDE", "PRIDE:0000197", "y ion -H2O", position);
+    			case YNH3_IONS:
+    				return new CvParam("PRIDE", "PRIDE:0000198", "y ion -NH3", position);
+    			case B_IONS:
+    				return new CvParam("PRIDE", "PRIDE:0000194", "b ion", position);
+    			case BH2O_IONS:
+    				return new CvParam("PRIDE", "PRIDE:0000196", "b ion -H2O", position);
+    			case BNH3_IONS:
+    				return new CvParam("PRIDE", "PRIDE:0000195", "b ion -NH3", position);
+//    			case A_IONS:
+//    				 return new CvParam("PRIDE", "PRIDE:0000233", "a ion", position);
+//    			case AH2O_IONS:
+//    				return new CvParam("PRIDE", "PRIDE:0000234", "a ion -H2O", position);
+//    			case ANH3_IONS:
+//    				return new CvParam("PRIDE", "PRIDE:0000235", "a ion -NH3", position);
+//    			case C_IONS:
+//    				return new CvParam("PRIDE", "PRIDE:0000236", "c ion", position);
+//    			case X_IONS:
+//    				return new CvParam("PRIDE", "PRIDE:0000227", "x ion", position);
+				default:
+					return null; // this shouldn't happen
+    		}
+    	}
+    	
+    	public static XTANDEM_FRAGMENT_IONS[] getFragmentIonTypes() {
+    		return values();
+    	}
+    }
 
     /**
      * The possible spectra source type associated
@@ -1187,7 +1252,13 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
                     convertedPeptide.setAdditional(additional);
                 }
-                
+                else {
+                	// add the fragment ions
+                	List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> fragmentIons = getPeptideFragmentIons(peptide, domain);
+                	
+                	if (fragmentIons != null && fragmentIons.size() > 0)
+                		convertedPeptide.getFragmentIon().addAll(fragmentIons);
+                }
                 // the used fragment ions are not reported in X!Tandem files. The parser only returns the theoretical
                 // ones. Therefore, no fragment ions are reported by the X!Tandem DAO.
 
@@ -1196,6 +1267,57 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         }
 
         return convertedPeptides;
+    }
+    
+    /**
+     * Returns a peptide's fragment ions as a List of
+     * report model FragmentIonS.
+     * @param peptide
+     * @param domain
+     * @return
+     */
+    private List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> getPeptideFragmentIons(Peptide peptide, Domain domain) {
+    	// get the fragment ions
+    	@SuppressWarnings("unchecked")
+		Vector<FragmentIon[]> ions = xtandemFile.getFragmentIonsForPeptide(peptide, domain);
+    	List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> prideIons = 
+    		new ArrayList<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon>();
+		
+    	// iterate over all ion types
+    	for (XTANDEM_FRAGMENT_IONS ionType : XTANDEM_FRAGMENT_IONS.getFragmentIonTypes()) {
+    		// get the array
+    		FragmentIon[] fragmentIons = ions.get(ionType.getIndex());
+    		
+    		if (fragmentIons == null)
+    			continue;
+    		
+    		// iterate over the found fragment ions
+    		for (FragmentIon fragmentIon : fragmentIons) {
+    			uk.ac.ebi.pride.tools.converter.report.model.FragmentIon prideIon = 
+    				new uk.ac.ebi.pride.tools.converter.report.model.FragmentIon();
+    			
+    			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_CHARGE.getParam(fragmentIon.getCharge()));
+                // intensity - the intensity can not be properly set since the intensity stored in the
+    			// X!Tandem file is changed and does not correspond to the original intensity
+    			// to get the actual intensity one would have to load the original spectrum, parse
+    			// the peak list etc.
+    			//prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam("50000"));
+                // m/z
+    			double mz = fragmentIon.getMZ() + fragmentIon.getTheoreticalExperimentalMassError();
+    			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MZ.getParam(mz));
+                // mass error
+                prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MASS_ERROR.getParam(
+                		fragmentIon.getTheoreticalExperimentalMassError()));
+
+                // set the name
+                CvParam name = ionType.getIonTypeParam("" + fragmentIon.getNumber());
+                if (name != null) prideIon.getCvParam().add(name);
+                
+                prideIons.add(prideIon);
+    		}
+    	}
+    	
+    	return prideIons;
     }
 
     /**
