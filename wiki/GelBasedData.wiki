@@ -34,7 +34,7 @@ The used options are as follows:
   * *-engine*: The search engine used. Supported values are "mascot", "xtandem", "mzidentml", "msgf".
   * *-mode*: Defines the mode PRIDE Converter should run in. To generate mzTab files this has to be set to "mztab".
   * *-gel_identifier*: Defines the (static) gel identifier to be used during this conversion
-  * *-gel_spot_regex*: A regular expression used to extract the gel spot's identifier from the input filename. As an alternative it is also possible to supply a static identifier using *-gel_spot_identifier* (works in the same way as *-gel_identifier*.
+  * *-gel_spot_regex*: A regular expression used to extract the gel spot's identifier from the input filename. As an alternative it is also possible to supply a static identifier using *-gel_spot_identifier* (works in the same way as *-gel_identifier*).
 
 == Creating mzTab files using a batch process (Linux) ==
 
