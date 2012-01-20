@@ -6,5 +6,6 @@
     * [OmssaDAO OMSSA]
     * [MzXmlDAO mzXML]
   * [QuantitativeMzTabFiles Quantitative data]
+  * [GelBasedData Gel based data]
   * Developer
     * [HowToWriteADao DAO development]
