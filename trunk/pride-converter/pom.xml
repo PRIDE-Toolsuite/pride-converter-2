@@ -79,6 +79,7 @@
 
     <profiles>
 
+        <!-- filter -->
         <profile>
             <!--
                Usage:
@@ -157,6 +158,7 @@
             </build>
         </profile>
 
+        <!-- converter (default) -->
         <profile>
             <!--
                Usage:
@@ -165,6 +167,7 @@
 
             <id>converter</id>
             <activation>
+                <activeByDefault>true</activeByDefault>
                 <property>
                     <name>converter</name>
                 </property>
@@ -236,6 +239,7 @@
             </build>
         </profile>
 
+        <!-- merger -->
         <profile>
             <!--
                Usage:
@@ -314,6 +318,7 @@
             </build>
         </profile>
 
+        <!-- cellzome -->
         <profile>
             <!--
                Usage:
