@@ -3008,13 +3008,14 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
         
         if ((Boolean) getCurrentProperty(SupportedProperties.USE_HOMOLOGY_THREHOLD)) {
         	hits = (double) results.getNumHitsAboveHomology(oneInXProb);
-        	decoyHits = (double) results.getNumHitsAboveHomology(oneInXProb);
+        	decoyHits = (double) results.getNumDecoyHitsAboveHomology(oneInXProb);
         }
         else {
         	hits = (double) results.getNumHitsAboveIdentity(oneInXProb);
         	decoyHits = (double) results.getNumDecoyHitsAboveIdentity(oneInXProb);
         }
 
+        // normally, the FDR is reported as decoy*2 / total - Mascot does it differently
         return decoyHits / hits;
     }
 }
