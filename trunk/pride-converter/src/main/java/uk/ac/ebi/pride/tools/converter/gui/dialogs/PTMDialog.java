@@ -429,7 +429,7 @@ public class PTMDialog extends AbstractDialog implements OLSInputable {
             isOriginValid = true;
             return isOriginValid;
         } else {
-            isOriginValid = modOrigin == null || modOrigin.equals("X") || !modOrigin.equals("none") || ptmOrigin.equals(alphaSort(modOrigin));
+            isOriginValid = modOrigin == null || modOrigin.equals("X") || ptmOrigin.equals(alphaSort(modOrigin));
             if (!isOriginValid) {
                 errorMessage = "The selected PTM cannot be assigned to the amino acids where it has been reported by the search engine";
             }
