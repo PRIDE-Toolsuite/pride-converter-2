@@ -20,6 +20,7 @@
 
         <plugins>
 
+            <!-- compiler plugin (target Java 1.6) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -29,7 +30,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Excludes StressTests by default -->
+            <!-- SureFire plugin (Excludes StressTests by default) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -42,13 +43,14 @@
                 </configuration>
             </plugin>
 
+            <!-- buiildnumber plugin (timestamp definition) -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>1.0-beta-3</version>
                 <executions>
                     <execution>
-                        <phase>validate</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>create</goal>
                         </goals>
@@ -57,13 +59,14 @@
                 <configuration>
                     <doCheck>false</doCheck>
                     <doUpdate>false</doUpdate>
-                    <format>{0,date,yyyy-MM-dd HH:mm}</format>
+                    <format>{0,date,yyyyMMdd-HHmm}</format>
                     <items>
                         <item>timestamp</item>
                     </items>
                 </configuration>
             </plugin>
 
+            <!-- dependency plugin (output file definition) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -74,97 +77,50 @@
                 </configuration>
             </plugin>
 
+            <!-- jar plugin (classToExecute, jarName) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${classToExecute}</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                    <finalName>${jarName}</finalName>
+                </configuration>
+            </plugin>
+
+            <!-- assembly plugin (assembly config, assemblyName) -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <finalName>${assemblyName}</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/converter-assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
     <profiles>
 
-        <!-- filter -->
         <profile>
-            <!--
-               Usage:
-               mvn -Dtest=skip clean package -P filter
-               -->
-
-            <id>filter</id>
-            <activation>
-                <property>
-                    <name>filter</name>
-                </property>
-            </activation>
-
-            <properties>
-                <jarName>pride-filter-${project.version}</jarName>
-            </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.3.2</version>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>uk.ac.ebi.pride.tools.converter.gui.FilterApplicationSelector</mainClass>
-                                    <addClasspath>true</addClasspath>
-                                    <classpathPrefix>lib/</classpathPrefix>
-                                </manifest>
-                            </archive>
-                            <finalName>${jarName}</finalName>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>buildnumber-maven-plugin</artifactId>
-                        <version>1.0-beta-3</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>create</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <doCheck>false</doCheck>
-                            <doUpdate>false</doUpdate>
-                            <format>{0,date,yyyyMMdd-HHmm}</format>
-                            <items>
-                                <item>timestamp</item>
-                            </items>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <configuration>
-                            <finalName>pride-filter-${buildNumber}</finalName>
-                            <descriptors>
-                                <descriptor>src/main/assembly/converter-assembly.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>make-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- converter (default) -->
-        <profile>
-            <!--
-               Usage:
-               mvn -Dtest=skip clean package -P converter
-               -->
-
             <id>converter</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -175,77 +131,27 @@
 
             <properties>
                 <jarName>pride-converter-${project.version}</jarName>
+                <classToExecute>uk.ac.ebi.pride.tools.converter.gui.ConverterApplicationSelector</classToExecute>
+                <assemblyName>pride-converter-${buildNumber}</assemblyName>
             </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.3.2</version>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>uk.ac.ebi.pride.tools.converter.gui.ConverterApplicationSelector
-                                    </mainClass>
-                                    <addClasspath>true</addClasspath>
-                                    <classpathPrefix>lib</classpathPrefix>
-                                </manifest>
-                            </archive>
-                            <finalName>${jarName}</finalName>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>buildnumber-maven-plugin</artifactId>
-                        <version>1.0-beta-3</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>create</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <doCheck>false</doCheck>
-                            <doUpdate>false</doUpdate>
-                            <format>{0,date,yyyyMMdd-HHmm}</format>
-                            <items>
-                                <item>timestamp</item>
-                            </items>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <configuration>
-                            <finalName>pride-converter-${buildNumber}</finalName>
-                            <descriptors>
-                                <descriptor>src/main/assembly/converter-assembly.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>make-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- merger -->
         <profile>
-            <!--
-               Usage:
-               mvn -Dtest=skip clean package -P merger
-               -->
+            <id>filter</id>
+            <activation>
+                <property>
+                    <name>filter</name>
+                </property>
+            </activation>
 
+            <properties>
+                <jarName>pride-filter-${project.version}</jarName>
+                <classToExecute>uk.ac.ebi.pride.tools.converter.gui.FilterApplicationSelector</classToExecute>
+                <assemblyName>pride-filter-${buildNumber}</assemblyName>
+            </properties>
+        </profile>
+
+        <profile>
             <id>merger</id>
             <activation>
                 <property>
@@ -255,76 +161,12 @@
 
             <properties>
                 <jarName>pride-merger-${project.version}</jarName>
+                <classToExecute>uk.ac.ebi.pride.tools.merger.PrideMerger</classToExecute>
+                <assemblyName>pride-merger-${buildNumber}</assemblyName>
             </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <version>2.3.2</version>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>uk.ac.ebi.pride.tools.merger.PrideMerger</mainClass>
-                                    <addClasspath>true</addClasspath>
-                                    <classpathPrefix>lib/</classpathPrefix>
-                                </manifest>
-                            </archive>
-                            <finalName>${jarName}</finalName>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>buildnumber-maven-plugin</artifactId>
-                        <version>1.0-beta-3</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>create</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <doCheck>false</doCheck>
-                            <doUpdate>false</doUpdate>
-                            <format>{0,date,yyyyMMdd-HHmm}</format>
-                            <items>
-                                <item>timestamp</item>
-                            </items>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <configuration>
-                            <finalName>pride-merger-${buildNumber}</finalName>
-                            <descriptors>
-                                <descriptor>src/main/assembly/converter-assembly.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>make-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
-        <!-- cellzome -->
         <profile>
-            <!--
-               Usage:
-               mvn -Dtest=skip clean package -P cellzome
-               -->
-
             <id>cellzome</id>
             <activation>
                 <property>
@@ -334,66 +176,9 @@
 
             <properties>
                 <jarName>pride-cellzome-${project.version}</jarName>
+                <classToExecute>uk.ac.ebi.pride.tools.cellzome.MzTabReader</classToExecute>
+                <assemblyName>pride-cellzome-${buildNumber}</assemblyName>
             </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-jar-plugin</artifactId>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>uk.ac.ebi.pride.tools.cellzome.MzTabReader</mainClass>
-                                    <addClasspath>true</addClasspath>
-                                    <classpathPrefix>lib/</classpathPrefix>
-                                </manifest>
-                            </archive>
-                            <finalName>${jarName}</finalName>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>buildnumber-maven-plugin</artifactId>
-                        <version>1.0-beta-3</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>create</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <doCheck>false</doCheck>
-                            <doUpdate>false</doUpdate>
-                            <format>{0,date,yyyyMMdd-HHmm}</format>
-                            <items>
-                                <item>timestamp</item>
-                            </items>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-assembly-plugin</artifactId>
-                        <version>2.2.1</version>
-                        <configuration>
-                            <finalName>pride-cellzome-${buildNumber}</finalName>
-                            <descriptors>
-                                <descriptor>src/main/assembly/converter-assembly.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>make-assembly</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>single</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
 
     </profiles>

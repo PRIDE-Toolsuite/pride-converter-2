@@ -12,6 +12,7 @@ import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
+import uk.ac.ebi.pride.tools.converter.utils.ModUtils;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
 import javax.swing.*;
@@ -24,15 +25,18 @@ import java.util.ResourceBundle;
  */
 public class PTMForm extends AbstractForm {
 
-    PTMTableModel ptmTableModel;
+    private PTMTableModel ptmTableModel;
 
     public PTMForm() {
+
         initComponents();
+
         ptmTableModel = new PTMTableModel();
         ptmTable.setModel(ptmTableModel);
         ptmTable.setColumnModel(ptmTableModel.getTableColumnModel(ptmTable));
         //erroneous PTMs will be highlighted in table
         ptmTable.setEnableRowValidation(true);
+
     }
 
     private void initComponents() {
@@ -105,7 +109,7 @@ public class PTMForm extends AbstractForm {
         if (!isLoaded) {
             //note that in this instance, the data is obtained from the ConverterData singleton
             //and not the dao
-            ptmTable.addAll(ConverterData.getInstance().getPTMs());
+            ptmTable.addAll(ModUtils.mapPreferredModifications(ConverterData.getInstance().getPTMs()));
             isLoaded = true;
         }
         //no need to fire validation listener
