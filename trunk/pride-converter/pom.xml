@@ -137,36 +137,6 @@
         </profile>
 
         <profile>
-            <id>filter</id>
-            <activation>
-                <property>
-                    <name>filter</name>
-                </property>
-            </activation>
-
-            <properties>
-                <jarName>pride-filter-${project.version}</jarName>
-                <classToExecute>uk.ac.ebi.pride.tools.converter.gui.FilterApplicationSelector</classToExecute>
-                <assemblyName>pride-filter-${buildNumber}</assemblyName>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>merger</id>
-            <activation>
-                <property>
-                    <name>merger</name>
-                </property>
-            </activation>
-
-            <properties>
-                <jarName>pride-merger-${project.version}</jarName>
-                <classToExecute>uk.ac.ebi.pride.tools.merger.PrideMerger</classToExecute>
-                <assemblyName>pride-merger-${buildNumber}</assemblyName>
-            </properties>
-        </profile>
-
-        <profile>
             <id>cellzome</id>
             <activation>
                 <property>
