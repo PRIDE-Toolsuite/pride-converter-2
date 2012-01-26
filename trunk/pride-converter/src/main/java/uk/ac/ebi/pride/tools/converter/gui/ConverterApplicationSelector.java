@@ -8,6 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +20,26 @@ import java.awt.event.ActionListener;
 public class ConverterApplicationSelector extends JFrame {
 
     private static ConverterApplicationSelector selector = null;
+
+    private enum ConverterProperties {
+
+        JVMARGS("jvm.args"),
+        PROXYUSER("http.proxyUser"),
+        PROXYPASSWORD("http.proxyPassword"),
+        PROXYSET("http.proxySet"),
+        PROXYHOST("http.proxyHost"),
+        PROXYPORT("http.proxyPort");
+
+        private String value;
+
+        private ConverterProperties(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 
     public ConverterApplicationSelector() {
         initComponents();
@@ -51,56 +73,99 @@ public class ConverterApplicationSelector extends JFrame {
         selector.setVisible(false);
         selector.dispose();
 
+        //read user properties
+        Properties properties = readUserProperties();
+        //launch new process
+        String mainClass = "";
+
         if (e.getSource().equals(converterButton)) {
-            launchConverter();
+            mainClass = ConverterLauncher.class.getName();
         } else if (e.getSource().equals(mergerButton)) {
-            launchMerger();
+            //
         } else if (e.getSource().equals(filterButton)) {
-            launchFilter();
+            mainClass = FilterGUI.class.getCanonicalName();
         } else if (e.getSource().equals(mzTabButton)) {
-            launchMzTab();
+            mainClass = MzTabLauncher.class.getName();
         } else {
             throw new IllegalArgumentException("No launch method defined for button: " + e.getSource());
         }
 
+        //bootstrap process
+        String jvmArgs = properties.getProperty(ConverterProperties.JVMARGS.getValue());
+        String proxyHost = properties.getProperty(ConverterProperties.PROXYHOST.getValue());
+        String proxyPort = properties.getProperty(ConverterProperties.PROXYPORT.getValue());
+        String proxySet = properties.getProperty(ConverterProperties.PROXYSET.getValue());
+        String proxyUser = properties.getProperty(ConverterProperties.PROXYUSER.getValue());
+        String proxyPassword = properties.getProperty(ConverterProperties.PROXYPASSWORD.getValue());
+
+        // create the command
+        StringBuilder cmdBuffer = new StringBuilder();
+        cmdBuffer.append("java -cp ");
+        if (isWindowsPlatform()) {
+            cmdBuffer.append("\"");
+        }
+        //classpath
+        cmdBuffer.append(System.getProperty("java.class.path"));
+        if (isWindowsPlatform()) {
+            cmdBuffer.append("\"");
+        }
+
+        //memory settings
+        if (jvmArgs != null) {
+            cmdBuffer.append(" ").append(jvmArgs);
+        }
+
+        //proxy settings
+        if (proxyHost != null) {
+            cmdBuffer.append(" -D").append(ConverterProperties.PROXYHOST.getValue()).append("=").append(proxyHost);
+        }
+        if (proxyPort != null) {
+            cmdBuffer.append(" -D").append(ConverterProperties.PROXYPORT.getValue()).append("=").append(proxyPort);
+        }
+        if (proxySet != null) {
+            cmdBuffer.append(" -D").append(ConverterProperties.PROXYSET.getValue()).append("=").append(proxySet);
+        }
+        if (proxyUser != null) {
+            cmdBuffer.append(" -D").append(ConverterProperties.PROXYUSER.getValue()).append("=").append(proxyUser);
+        }
+        if (proxyPassword != null) {
+            cmdBuffer.append(" -D").append(ConverterProperties.PROXYPASSWORD.getValue()).append("=").append(proxyPassword);
+        }
+
+        cmdBuffer.append(" ").append(mainClass);
+
+        // call the command
+        Process process;
+        try {
+            process = Runtime.getRuntime().exec(cmdBuffer.toString());
+            StreamProxy errorStreamProxy = new StreamProxy(process.getErrorStream(), System.err);
+            StreamProxy outStreamProxy = new StreamProxy(process.getInputStream(), System.out);
+            errorStreamProxy.start();
+            outStreamProxy.start();
+        } catch (IOException ioe) {
+            System.err.println("Error while bootstrapping the PRIDE Converter");
+            ioe.printStackTrace();
+            System.exit(1);
+        }
     }
 
-    private void launchMzTab() {
-//        NavigationPanel panel = NavigationPanel.getInstance();
-//        panel.registerForm(new DataTypeForm());
-//        panel.registerForm(new FileSelectionForm(OutputFormat.MZTAB));
-//        panel.registerForm(new MzTabOptionForm());
-//        panel.registerForm(new MzTabReportForm());
-//        panel.reset();
-    }
+    private Properties readUserProperties() {
 
-    private void launchConverter() {
-        NavigationPanel panel = NavigationPanel.getInstance();
-        panel.registerForm(new DataTypeForm());
-        panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_XML));
-        panel.registerForm(new ExperimentDetailForm());
-        panel.registerForm(new ContactForm());
-        panel.registerForm(new ReferenceForm());
-        panel.registerForm(new SampleForm());
-        panel.registerForm(new ProtocolForm());
-        panel.registerForm(new InstrumentForm());
-        panel.registerForm(new SoftwareProcessingForm());
-        panel.registerForm(new DatabaseMappingForm());
-        panel.registerForm(new PTMForm());
-        panel.registerForm(new AnnotationDoneForm());
-        panel.registerForm(new FileExportForm());
-        panel.registerForm(new ReportForm());
-        panel.reset();
-    }
+        Properties properties = new Properties();
+        try {
+            //check to see if there is a file called converter properties in the same directory
+            //as the current executable
+            File currentDir = new File(".");
+            File propFile = new File(currentDir, "converter.properties");
+            if (propFile.exists()) {
+                System.out.println("Reading properties file: " + propFile.getAbsolutePath());
+                properties.load(new FileReader(propFile));
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading properties file: " + e.getMessage());
+        }
+        return properties;
 
-    private void launchMerger() {
-        System.err.println("Merger not implemented yet");
-        System.exit(1);
-    }
-
-    private void launchFilter() {
-        FilterGUI filterGUI = new FilterGUI();
-        filterGUI.setVisible(true);
     }
 
     private void exitButtonActionPerformed() {
@@ -208,4 +273,75 @@ public class ConverterApplicationSelector extends JFrame {
     private JButton mergerButton;
     private JButton exitButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+    static class ConverterLauncher {
+
+        public static void main(String[] args) {
+            NavigationPanel panel = NavigationPanel.getInstance();
+            panel.registerForm(new DataTypeForm());
+            panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_XML));
+            panel.registerForm(new ExperimentDetailForm());
+            panel.registerForm(new ContactForm());
+            panel.registerForm(new ReferenceForm());
+            panel.registerForm(new SampleForm());
+            panel.registerForm(new ProtocolForm());
+            panel.registerForm(new InstrumentForm());
+            panel.registerForm(new SoftwareProcessingForm());
+            panel.registerForm(new DatabaseMappingForm());
+            panel.registerForm(new PTMForm());
+            panel.registerForm(new AnnotationDoneForm());
+            panel.registerForm(new FileExportForm());
+            panel.registerForm(new ReportForm());
+            panel.reset();
+        }
+
+    }
+
+    static class MzTabLauncher {
+
+        public static void main(String[] args) {
+            NavigationPanel panel = NavigationPanel.getInstance();
+            panel.registerForm(new DataTypeForm());
+            panel.registerForm(new FileSelectionForm(OutputFormat.MZTAB));
+            panel.reset();
+        }
+
+    }
+
+    /**
+     * Check whether it is Windows platform
+     *
+     * @return boolean  true means it is running on windows
+     */
+    private boolean isWindowsPlatform() {
+        String osName = System.getProperty("os.name");
+        return osName.startsWith("Windows");
+    }
+
+    /**
+     * StreamProxy redirect the output stream and error stream to screen.
+     */
+    private static class StreamProxy extends Thread {
+        final InputStream is;
+        final PrintStream os;
+
+        StreamProxy(InputStream is, PrintStream os) {
+            this.is = is;
+            this.os = os;
+        }
+
+        public void run() {
+            try {
+                InputStreamReader isr = new InputStreamReader(is);
+                BufferedReader br = new BufferedReader(isr);
+                String line;
+                while ((line = br.readLine()) != null) {
+                    os.println(line);
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex.getMessage(), ex);
+            }
+        }
+    }
+
 }
