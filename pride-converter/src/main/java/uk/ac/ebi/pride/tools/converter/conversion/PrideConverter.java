@@ -296,7 +296,7 @@ public class PrideConverter {
     private static void printUsage(String engine) {
         // automatically generate the help statement
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("PrideConverter", "Note that -mode, -engine and -sourcefile are required parameters for conversion.\n", PrideConverterCLIOptions.getOptions(), "\n\n" + Configurator.getVersion() + "\n\n", true);
+        formatter.printHelp("PrideConverter -converter", "Note that -mode, -engine and -sourcefile are required parameters for conversion.\n", PrideConverterCLIOptions.getOptions(), "\n\n" + Configurator.getVersion() + "\n\n", true);
 
         if (engine != null) {
             printEngineSpecificUsage(engine);

@@ -101,7 +101,7 @@ public class PrideMerger {
     private static void printUsage() {
         // automatically generate the help statement
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("PrideMerger", "\n", PrideMergerCLIOptions.getOptions(), "\n\n" + Configurator.getVersion() + "\n\n", true);
+        formatter.printHelp("PrideConverter -merger", "\n", PrideMergerCLIOptions.getOptions(), "\n\n" + Configurator.getVersion() + "\n\n", true);
     }
 
 }

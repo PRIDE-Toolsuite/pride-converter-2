@@ -139,7 +139,7 @@ public class PrideFilter {
     private static void printUsage() {
         // automatically generate the help statement
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("PrideFilter", "\n", PrideFilterCLIOptions.getOptions(), "\n\n" + Configurator.getVersion() + "\n\n", true);
+        formatter.printHelp("PrideConverter -filter", "\n", PrideFilterCLIOptions.getOptions(), "\n\n" + Configurator.getVersion() + "\n\n", true);
     }
 
 }
