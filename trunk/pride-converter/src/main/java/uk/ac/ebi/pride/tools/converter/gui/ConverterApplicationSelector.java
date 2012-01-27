@@ -3,6 +3,8 @@ package uk.ac.ebi.pride.tools.converter.gui;
 import uk.ac.ebi.pride.tools.converter.conversion.PrideConverter;
 import uk.ac.ebi.pride.tools.converter.gui.forms.*;
 import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
+import uk.ac.ebi.pride.tools.filter.PrideFilter;
+import uk.ac.ebi.pride.tools.merger.PrideMerger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,13 +59,39 @@ public class ConverterApplicationSelector extends JFrame {
                 System.exit(1);
             }
         } else {
-
-            //todo
-            //-converter pass args[1..n]
-            //-filter pass args[1..n]
-            //-merger pass args[1..n]
-
-            PrideConverter.main(args);
+        	// launch the CLI version
+        	String mode = args[0];
+        	
+        	// copy all arguments apart from the first one (the mode)
+        	// to the newArgs array.
+        	String newArgs[] = new String[args.length - 1];
+        	for (int i = 1; i < args.length; i++)
+        		newArgs[i - 1] = args[i];
+        	
+        	if ("-converter".equals(mode))
+        		PrideConverter.main(newArgs);
+        	else if ("-filter".equals(mode))
+        		PrideFilter.main(newArgs);
+        	else if ("-merger".equals(mode))
+        		PrideMerger.main(newArgs);
+        	else {
+        		System.out.println("Usage: java -jar pride_converter.jar [mode]\n");
+        		System.out.println("PRIDE Converter 2");
+        		System.out.println("PRIDE Converter can operate in several different modes.");
+        		System.out.println("To launch the graphical mode simply specify no parameters.\n");
+        		System.out.println("The following modes are supported by PRIDE Converter:");
+        		System.out.println("   -converter    Launches the PRIDE Converter in convert mode.");
+        		System.out.println("                 This mode allows one to convert several search");
+        		System.out.println("                 engine result files into the PRIDE XML format.");
+        		System.out.println("   -filter       Launches the PRIDE Converter in filter mode.");
+        		System.out.println("                 This mode allows one to remove f.e. unidentified");
+        		System.out.println("                 spectra or a given set of proteins from an existing");
+        		System.out.println("                 PRIDE XML file.");
+        		System.out.println("   -merger       Launches PRIDE Converter in merger mode.");
+        		System.out.println("                 This mode allows one to merge several PRIDE XML files");
+        		System.out.println("                 into a single file.\n");
+        		System.out.println("For mode specific help please use java -jar pride_converter.jar [mode] -help");
+        	}
         }
 
     }
