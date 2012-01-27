@@ -16,7 +16,6 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "mzTabButton"
 				"text": "Launch PRIDE mzTab Generator"
-				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "launchTool", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {

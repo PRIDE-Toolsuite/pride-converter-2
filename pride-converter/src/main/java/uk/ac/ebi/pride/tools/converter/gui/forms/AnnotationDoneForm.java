@@ -125,25 +125,25 @@ public class AnnotationDoneForm extends AbstractForm {
         try {
 
             //write report file currently being edited
-            ReportWriter writer = new ReportWriter(ConverterData.getInstance().getMasterReportFileName());
+            ReportWriter writer = new ReportWriter(ConverterData.getInstance().getMasterFile().getReportFile());
             writer.setDAO(ConverterData.getInstance().getMasterDAO());
-            NavigationPanel.getInstance().setWorkingMessage("Writing report file: " + ConverterData.getInstance().getMasterReportFileName());
+            NavigationPanel.getInstance().setWorkingMessage("Writing report file: " + ConverterData.getInstance().getMasterFile().getReportFile());
             String outfile = writer.writeReport();
 
-            if (!outfile.equals(ConverterData.getInstance().getMasterReportFileName())) {
+            if (!outfile.equals(ConverterData.getInstance().getMasterFile().getReportFile())) {
                 //we need to overwrite the old master report file
-                if (!IOUtilities.renameFile(outfile, ConverterData.getInstance().getMasterReportFileName())) {
+                if (!IOUtilities.renameFile(outfile, ConverterData.getInstance().getMasterFile().getReportFile())) {
                     throw new ConverterException("Could not overwrite master report file");
                 }
             }
 
             //copy metadata over to other report files, if any
             //only need to copy metadata if we have several input files at once
-            if (!"".equals(ConverterData.getInstance().getMasterReportFileName()) && ConverterData.getInstance().getInputFiles().size() > 1) {
-                String masterReportFileName = ConverterData.getInstance().getMasterReportFileName();
+            if (ConverterData.getInstance().getMasterFile() != null && ConverterData.getInstance().getInputFiles().size() > 1) {
+                String masterReportFileName = ConverterData.getInstance().getMasterFile().getReportFile();
                 List<String> destFileNames = new ArrayList<String>();
-                for (String reportFile : ConverterData.getInstance().getInputFiles().values()) {
-                    if (!ConverterData.getInstance().getMasterReportFileName().equals(reportFile)) {
+                for (String reportFile : ConverterData.getInstance().getReportFiles()) {
+                    if (!masterReportFileName.equals(reportFile)) {
                         destFileNames.add(reportFile);
                     }
                 }

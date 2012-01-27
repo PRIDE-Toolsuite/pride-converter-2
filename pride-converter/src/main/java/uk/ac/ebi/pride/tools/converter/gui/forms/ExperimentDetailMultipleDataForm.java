@@ -76,7 +76,7 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
     @Override
     public void clear() {
         isLoaded = false;
-        ExperimentDetailMultiTableModel model = new ExperimentDetailMultiTableModel(new ArrayList<String>(ConverterData.getInstance().getInputFiles().keySet()), "", "");
+        ExperimentDetailMultiTableModel model = new ExperimentDetailMultiTableModel(new ArrayList<String>(ConverterData.getInstance().getInputFiles()), "", "");
         model.addTableModelListener(this);
         experimentDataTable.setModel(model);
         //inactivate next button
@@ -107,7 +107,7 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
     @Override
     public void load(ReportReaderDAO dao) {
         if (!isLoaded) {
-            ExperimentDetailMultiTableModel model = new ExperimentDetailMultiTableModel(new ArrayList<String>(ConverterData.getInstance().getInputFiles().keySet()), dao.getExperimentTitle(), dao.getExperimentShortLabel());
+            ExperimentDetailMultiTableModel model = new ExperimentDetailMultiTableModel(new ArrayList<String>(ConverterData.getInstance().getInputFiles()), dao.getExperimentTitle(), dao.getExperimentShortLabel());
             model.addTableModelListener(this);
             experimentDataTable.setModel(model);
             isLoaded = true;

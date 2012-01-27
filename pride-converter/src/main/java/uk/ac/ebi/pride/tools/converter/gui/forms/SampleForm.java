@@ -302,7 +302,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
         }
 
         if (!isLoaded) {
-            tabbedPane1.setTitleAt(0, ConverterData.getInstance().getMasterSourceFilesName());
+            tabbedPane1.setTitleAt(0, ConverterData.getInstance().getMasterFile().getInputFile());
             masterSamplePanel.setSampleName(dao.getSampleName());
             masterSamplePanel.setSampleComment(dao.getSampleComment());
             masterSamplePanel.setSampleParams(dao.getSampleParams());

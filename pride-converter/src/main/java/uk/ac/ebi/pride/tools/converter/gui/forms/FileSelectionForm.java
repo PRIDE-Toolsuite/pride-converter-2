@@ -19,10 +19,7 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionCellEditor;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionTableModel;
-import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
-import uk.ac.ebi.pride.tools.converter.gui.model.DataType;
-import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
-import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
+import uk.ac.ebi.pride.tools.converter.gui.model.*;
 import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportWriter;
@@ -41,6 +38,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @author User #1
@@ -49,6 +47,9 @@ import java.util.*;
 public class FileSelectionForm extends AbstractForm implements TableModelListener {
 
     private static final Logger logger = Logger.getLogger(FileSelectionForm.class);
+    public static final String GEL_IDENTIFIER = "Gel Identifier";
+    public static final String SPOT_IDENTIFIER = "Spot Identifier";
+    public static final String SPOT_REGULAR_EXPRESSION = "Spot Regular Expression";
 
     private OutputFormat format;
 
@@ -60,6 +61,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         mzTabFileTable.getModel().addTableModelListener(this);
         sequenceFileTable.getModel().addTableModelListener(this);
         this.format = format;
+        if (format.equals(OutputFormat.MZTAB)) {
+            //disable tabs for fasta & mztab
+            fileTabbedPane.setEnabledAt(1, false);
+            fileTabbedPane.setEnabledAt(2, false);
+        }
     }
 
     private Collection<File> chooseFiles(boolean allowMultipleSelection, boolean allowDirectory, FileFilter filter) {
@@ -116,10 +122,9 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     private void loadTabFiles(ActionEvent e) {
-        Set<File> tableFiles = new HashSet<File>();
-        //only one tab file allowed per conversion
-        //tableFiles.addAll(mzTabFileTable.getFiles());
-        tableFiles.addAll(chooseFiles(false, false, new MzTabFileFilter()));
+        Set<File> tableFiles = new TreeSet<File>();
+        tableFiles.addAll(mzTabFileTable.getFiles());
+        tableFiles.addAll(chooseFiles(true, false, new MzTabFileFilter()));
         mzTabFileTable.clearFiles();
         mzTabFileTable.addFiles(tableFiles);
     }
@@ -478,9 +483,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     }
                 }
 
-                ConverterData.getInstance().getInputFiles().put(absolutePath, reportFile);
+                FileBean fileBean = new FileBean(absolutePath);
+                fileBean.setReportFile(reportFile);
+                ConverterData.getInstance().getDataFiles().add(fileBean);
                 if (i == 0) {
-                    ConverterData.getInstance().setMasterReportFileName(reportFile);
+                    ConverterData.getInstance().setMasterFile(fileBean);
                     ConverterData.getInstance().setMasterDAO(new ReportReaderDAO(new File(reportFile)));
                 }
                 // Read PTMs
@@ -536,6 +543,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             writer.setFastaHandler(HandlerFactory.getInstance().getFastaHandler(fastaFile.getAbsolutePath(), fastaFormat));
         }
 
+        //todo - need to defer report file generation if more than 1 report file!
         if (!mzTabFileTable.getFiles().isEmpty()) {
             //only one gel file will be selected by the filechooser
             File mztabFile = mzTabFileTable.getFiles().iterator().next();
@@ -561,15 +569,44 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             try {
 
                 logger.warn("Reading = " + absolutePath);
+                NavigationPanel.getInstance().setWorkingMessage("Creating mzTab file for " + absolutePath);
+
+                FileBean fileBean = new FileBean(absolutePath);
 
                 DAO dao = DAOFactory.getInstance().getDAO(absolutePath, ConverterData.getInstance().getDaoFormat());
                 dao.setConfiguration(options);
 
-                MzTabWriter writer = new MzTabWriter(dao);
+                // check if a gel or spot identifier is present
+                String gelId = null, spotId = null;
+                Pattern spotPattern = null;
+
+                if (options.getProperty(GEL_IDENTIFIER) != null && !"".equals(options.getProperty(GEL_IDENTIFIER))) {
+                    gelId = options.getProperty(GEL_IDENTIFIER);
+                }
+                if (options.getProperty(SPOT_IDENTIFIER) != null && !"".equals(options.getProperty(SPOT_IDENTIFIER))) {
+                    spotId = options.getProperty(SPOT_IDENTIFIER);
+                }
+                if (options.getProperty(SPOT_REGULAR_EXPRESSION) != null && !"".equals(options.getProperty(SPOT_REGULAR_EXPRESSION))) {
+                    String regex = options.getProperty(SPOT_REGULAR_EXPRESSION);
+                    spotPattern = Pattern.compile(regex);
+                }
+
+                // write the mztab file
+                MzTabWriter writer;
+
+                if (spotPattern != null)
+                    writer = new MzTabWriter(dao, gelId, spotPattern);
+                else
+                    writer = new MzTabWriter(dao, gelId, spotId);
 
                 String tabFile = file.getName() + ConverterData.MZTAB;
-                NavigationPanel.getInstance().setWorkingMessage("Creating mzTab file for " + absolutePath);
+
                 writer.writeMzTabFile(new File(outputDir, tabFile));
+
+                //update converterdata
+                fileBean.setMzTabFile(tabFile);
+                ConverterData.getInstance().getDataFiles().add(fileBean);
+                ConverterData.getInstance().getMztabFiles().add(tabFile);
 
             } catch (Exception e) {
                 logger.fatal("Error in Generating MzTAB Files for input file " + absolutePath + ", error is " + e.getMessage(), e);
@@ -579,13 +616,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                 gex.setComponent(getClass().getName());
                 throw gex;
             }
-        }
-
-        int value = JOptionPane.showOptionDialog(this, "All mzTab files generated. Click OK to exit or Cancel to return to PRIDE Converter", "mzTAB Export Done", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
-        if (value == JOptionPane.OK_OPTION) {
-            System.exit(0);
-        } else {
-            NavigationPanel.getInstance().reset();
         }
 
     }
@@ -695,10 +725,29 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     private void updateOptionTable() {
 
-        Collection<DAOProperty> props = DAOFactory.getInstance().getSupportedPorperties(ConverterData.getInstance().getDaoFormat());
-        if (props == null) {
-            props = Collections.emptyList();
+        ArrayList<DAOProperty> props = new ArrayList<DAOProperty>();
+
+        //if we're exporting to mztab, add those properties at the start of the list
+        if (format.equals(OutputFormat.MZTAB)) {
+            //add mztab-specific options
+            DAOProperty<String> gelIdentifier = new DAOProperty<String>(GEL_IDENTIFIER, null);
+            gelIdentifier.setDescription("Sets the gel identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.");
+            props.add(gelIdentifier);
+
+            DAOProperty<String> spotIdentifier = new DAOProperty<String>(SPOT_IDENTIFIER, null);
+            gelIdentifier.setDescription("Sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.");
+            props.add(spotIdentifier);
+
+            DAOProperty<String> spotRegex = new DAOProperty<String>(SPOT_REGULAR_EXPRESSION, null);
+            gelIdentifier.setDescription("Used to extract the gel spot identifier based on the sourcefile's name. The first matching group in the pattern is used as a spot identifier.");
+            props.add(spotRegex);
         }
+
+        //add dao-specific properties
+        if (DAOFactory.getInstance().getSupportedPorperties(ConverterData.getInstance().getDaoFormat()) != null) {
+            props.addAll(DAOFactory.getInstance().getSupportedPorperties(ConverterData.getInstance().getDaoFormat()));
+        }
+
         parserOptionTable = new ParserOptionTable(props);
         parserOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
         tableScrollPane.setViewportView(parserOptionTable);

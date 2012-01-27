@@ -13,6 +13,7 @@ import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.panels.FilterPanel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
@@ -27,8 +28,8 @@ import javax.swing.*;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * @author User #3
@@ -118,9 +119,7 @@ public class FileExportForm extends AbstractForm {
     @Override
     public void finish() throws GUIException {
 
-        ConverterData.getInstance().getOutputfiles().clear();
-
-        Map<String, String> files = ConverterData.getInstance().getInputFiles();
+        Set<FileBean> files = ConverterData.getInstance().getDataFiles();
 
         String outputPath = filterPanel1.getOutputPath();
         File ouptPutFolder = new File(outputPath);
@@ -130,13 +129,13 @@ public class FileExportForm extends AbstractForm {
 
         Properties options = ConverterData.getInstance().getOptions();
 
-        for (String inputFilePath : files.keySet()) {
+        for (FileBean fileBean : files) {
 
             try {
 
                 //setup file paths
-                File inputFile = new File(inputFilePath);
-                String reportFileName = files.get(inputFilePath);
+                File inputFile = new File(fileBean.getInputFile());
+                String reportFileName = fileBean.getReportFile();
                 if (filterPanel1.isRemoveWorkfiles()) {
                     ConverterData.getInstance().getFilesToDelete().add(reportFileName);
                 }
@@ -146,7 +145,7 @@ public class FileExportForm extends AbstractForm {
                     prideFile += FileUtils.gz;
                 }
                 //setup DAO
-                DAO dao = DAOFactory.getInstance().getDAO(inputFilePath, ConverterData.getInstance().getDaoFormat());
+                DAO dao = DAOFactory.getInstance().getDAO(inputFile.getAbsolutePath(), ConverterData.getInstance().getDaoFormat());
 
                 //setup reader
                 ReportReader reader = new ReportReader(reportFile);
@@ -187,8 +186,7 @@ public class FileExportForm extends AbstractForm {
                 }
 
                 //store final file path
-                ConverterData.getInstance().getOutputfiles().add(finalPrideXmlFile);
-
+                fileBean.setOutputFile(finalPrideXmlFile);
 
                 //validate PRIDE XML file
                 //warn user

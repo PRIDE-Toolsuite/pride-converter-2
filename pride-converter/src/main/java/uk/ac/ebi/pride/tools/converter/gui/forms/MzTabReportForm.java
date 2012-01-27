@@ -2,12 +2,16 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ConverterForm;
-import uk.ac.ebi.pride.tools.converter.gui.interfaces.ValidationListener;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
-import java.util.Collection;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,59 +20,165 @@ import java.util.Collection;
  * Time: 17:43
  * To change this template use File | Settings | File Templates.
  */
-public class MzTabReportForm implements ConverterForm {
+public class MzTabReportForm extends AbstractForm implements ConverterForm {
+
+    public MzTabReportForm() {
+        initComponents();
+    }
+
     @Override
     public Collection<ValidatorMessage> validateForm() throws ValidatorException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return Collections.emptyList();
     }
 
     @Override
     public void clear() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //no op
     }
 
     @Override
     public void save(ReportReaderDAO dao) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //no op
     }
 
     @Override
     public void load(ReportReaderDAO dao) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void loadTemplate(String templateName) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //no op
     }
 
     @Override
     public String getFormName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "Generation Report";
     }
 
     @Override
     public String getFormDescription() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return config.getString("mztabreport.form.description");
     }
 
     @Override
     public String getHelpResource() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public void addValidationListener(ValidationListener validationListerner) {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //todo
+        return "help.ui.file";
     }
 
     @Override
     public void start() {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //update table model data
+
+        List<String> inputFiles = new ArrayList<String>(ConverterData.getInstance().getInputFiles());
+        Collections.sort(inputFiles);
+        List<String> mzDataFiles = ConverterData.getInstance().getMztabFiles();
+        Collections.sort(mzDataFiles);
+
+        if (inputFiles.size() != mzDataFiles.size()) {
+            throw new IllegalStateException("File number mismatch: number of input files does not equal number of mztab files");
+        }
+
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        for (int i = 0; i < inputFiles.size(); i++) {
+            Vector<Object> row = new Vector<Object>();
+            row.add(inputFiles.get(i));
+            row.add(mzDataFiles.get(i));
+            data.add(row);
+        }
+        Vector<Object> headers = new Vector<Object>();
+        headers.add("Input File");
+        headers.add("MzTab File");
+
+        fileTable.setModel(new DefaultTableModel(data, headers) {
+            boolean[] columnEditable = new boolean[]{
+                    false, false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return columnEditable[columnIndex];
+            }
+        });
+        {
+            TableColumnModel cm = fileTable.getColumnModel();
+            cm.getColumn(0).setResizable(false);
+            cm.getColumn(1).setResizable(false);
+        }
+
+        NavigationPanel.getInstance().hideValidatorMessages();
     }
 
     @Override
     public void finish() throws GUIException {
-        //To change body of implemented methods use File | Settings | File Templates.
+        //no op
     }
+
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner non-commercial license
+        scrollPane1 = new JScrollPane();
+        fileTable = new JTable();
+        fileGeneratedLabel = new JLabel();
+
+        //======== this ========
+
+        //======== scrollPane1 ========
+        {
+
+            //---- fileTable ----
+            fileTable.setModel(new DefaultTableModel(
+                    new Object[][]{
+                            {null, null},
+                            {null, null},
+                    },
+                    new String[]{
+                            "Input File", "MzTab File"
+                    }
+            ) {
+                boolean[] columnEditable = new boolean[]{
+                        false, false
+                };
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return columnEditable[columnIndex];
+                }
+            });
+            {
+                TableColumnModel cm = fileTable.getColumnModel();
+                cm.getColumn(0).setResizable(false);
+                cm.getColumn(1).setResizable(false);
+            }
+            scrollPane1.setViewportView(fileTable);
+        }
+
+        //---- fileGeneratedLabel ----
+        fileGeneratedLabel.setText("Files Generated: ");
+
+        GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                        .addComponent(fileGeneratedLabel))
+                                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(fileGeneratedLabel)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner non-commercial license
+    private JScrollPane scrollPane1;
+    private JTable fileTable;
+    private JLabel fileGeneratedLabel;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

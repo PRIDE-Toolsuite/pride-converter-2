@@ -810,6 +810,9 @@ public class OLSDialog extends JDialog {
         Vector ontologyNamesAndKeys = new Vector();
 
         try {
+
+            System.out.println("System.getProperties(\"http.proxyHost\") = " + System.getProperty("http.proxyHost"));
+
             QueryService locator = new QueryServiceLocator();
             olsConnection = locator.getOntologyQuery();
             Map map = olsConnection.getOntologyNames();
