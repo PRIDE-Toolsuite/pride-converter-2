@@ -24,15 +24,12 @@ public class ConverterData {
     public static final String PRIDE_XML = "-pride.xml";
     public static final String DEFAULT_OUTPUT_LOCATION = System.getProperty("java.io.tmpdir") + File.separator + "prideconverter";
 
-    // Key = input File Path
-    // Value = report file path
-    private TreeMap<String, String> inputFiles = new TreeMap<String, String>();
-    private List<String> outputfiles = new ArrayList<String>();
+    private TreeSet<FileBean> dataFiles = new TreeSet<FileBean>();
     private List<String> fastaFiles = new ArrayList<String>();
-    private List<String> mztabFiles = new ArrayList<String>();
+    private List<String> mzTabFiles = new ArrayList<String>();
     private Properties options = new Properties();
     private DAOFactory.DAO_FORMAT daoFormat = null;
-    private String masterReportFileName = "";
+    private FileBean masterFile = null;
     private String lastSelectedDirectory = null;
     private Map<String, Collection<ValidatorMessage>> validationMessages = new HashMap<String, Collection<ValidatorMessage>>();
     private DataType type;
@@ -52,12 +49,45 @@ public class ConverterData {
     private ConverterData() {
     }
 
-    public Map<String, String> getInputFiles() {
+    public Set<FileBean> getDataFiles() {
+        return dataFiles;
+    }
+
+    public FileBean getFileBeanByInputFileName(String filename) {
+        for (FileBean fb : dataFiles) {
+            if (fb.getInputFile().equals(filename)) {
+                return fb;
+            }
+        }
+        return null;
+    }
+
+    public Set<String> getInputFiles() {
+        Set<String> inputFiles = new TreeSet<String>();
+        for (FileBean fb : dataFiles) {
+            inputFiles.add(fb.getInputFile());
+        }
         return inputFiles;
     }
 
-    public List<String> getOutputfiles() {
-        return outputfiles;
+    public Set<String> getOutputfiles() {
+        Set<String> outputFiles = new TreeSet<String>();
+        for (FileBean fb : dataFiles) {
+            if (fb.getOutputFile() != null) {
+                outputFiles.add(fb.getOutputFile());
+            }
+        }
+        return outputFiles;
+    }
+
+    public Set<String> getReportFiles() {
+        Set<String> reportFiles = new TreeSet<String>();
+        for (FileBean fb : dataFiles) {
+            if (fb.getReportFile() != null) {
+                reportFiles.add(fb.getReportFile());
+            }
+        }
+        return reportFiles;
     }
 
     public Properties getOptions() {
@@ -68,24 +98,12 @@ public class ConverterData {
         return daoFormat;
     }
 
-    public String getMasterReportFileName() {
-        return masterReportFileName;
+    public FileBean getMasterFile() {
+        return masterFile;
     }
 
-    public String getMasterSourceFilesName() {
-        String retval = "";
-        if (!masterReportFileName.equals("")) {
-            for (Map.Entry<String, String> entry : inputFiles.entrySet()) {
-                if (entry.getValue().equals(masterReportFileName)) {
-                    retval = entry.getKey();
-                }
-            }
-        }
-        return retval;
-    }
-
-    public void setMasterReportFileName(String masterReportFileName) {
-        this.masterReportFileName = masterReportFileName;
+    public void setMasterFile(FileBean masterFile) {
+        this.masterFile = masterFile;
     }
 
     public void setDaoFormat(DAOFactory.DAO_FORMAT daoFormat) {
@@ -109,18 +127,17 @@ public class ConverterData {
     }
 
     public List<String> getMztabFiles() {
-        return mztabFiles;
+        return mzTabFiles;
     }
 
     public void reset() {
-        inputFiles.clear();
+        dataFiles.clear();
         fastaFiles.clear();
-        outputfiles.clear();
-        mztabFiles.clear();
+        mzTabFiles.clear();
         validationMessages.clear();
         options = new Properties();
         daoFormat = null;
-        masterReportFileName = "";
+        masterFile = null;
         type = null;
         PTMs.clear();
         databaseMappings.clear();
@@ -132,13 +149,11 @@ public class ConverterData {
         //basically, the only possible stale data will be everything
         //except the dao format and the type, which will have been set
         //in the first screen
-        inputFiles.clear();
+        dataFiles.clear();
         fastaFiles.clear();
-        outputfiles.clear();
-        mztabFiles.clear();
         validationMessages.clear();
         options = new Properties();
-        masterReportFileName = "";
+        masterFile = null;
         PTMs.clear();
         databaseMappings.clear();
         filesToDelete.clear();
@@ -193,13 +208,12 @@ public class ConverterData {
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("ConverterData");
-        sb.append("{inputFiles=").append(inputFiles);
-        sb.append(", outputfiles=").append(outputfiles);
+        sb.append("{dataFiles=").append(dataFiles);
         sb.append(", fastaFiles=").append(fastaFiles);
-        sb.append(", mztabFiles=").append(mztabFiles);
+        sb.append(", mzTabFiles=").append(mzTabFiles);
         sb.append(", options=").append(options);
         sb.append(", daoFormat=").append(daoFormat);
-        sb.append(", masterReportFileName='").append(masterReportFileName).append('\'');
+        sb.append(", masterFile=").append(masterFile);
         sb.append(", lastSelectedDirectory='").append(lastSelectedDirectory).append('\'');
         sb.append(", validationMessages=").append(validationMessages);
         sb.append(", type=").append(type);
@@ -211,4 +225,5 @@ public class ConverterData {
         sb.append('}');
         return sb.toString();
     }
+
 }
