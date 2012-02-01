@@ -1,0 +1,181 @@
+/*
+ * Created by JFormDesigner on Wed Feb 01 14:03:26 GMT 2012
+ */
+
+package uk.ac.ebi.pride.tools.converter.gui.forms;
+
+import psidev.psi.tools.validator.ValidatorException;
+import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
+import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import java.util.*;
+
+/**
+ * @author User #3
+ */
+public class MergerReportForm extends AbstractForm {
+    public MergerReportForm() {
+        initComponents();
+    }
+
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner non-commercial license
+        label1 = new JLabel();
+        outputFileTextField = new JTextField();
+        scrollPane1 = new JScrollPane();
+        fileTable = new JTable();
+
+        //======== this ========
+
+        //---- label1 ----
+        label1.setText("Output file: ");
+
+        //---- outputFileTextField ----
+        outputFileTextField.setEditable(false);
+
+        //======== scrollPane1 ========
+        {
+
+            //---- fileTable ----
+            fileTable.setModel(new DefaultTableModel(
+                    new Object[][]{
+                            {null},
+                            {null},
+                    },
+                    new String[]{
+                            "Source Files"
+                    }
+            ) {
+                boolean[] columnEditable = new boolean[]{
+                        false
+                };
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int columnIndex) {
+                    return columnEditable[columnIndex];
+                }
+            });
+            scrollPane1.setViewportView(fileTable);
+        }
+
+        GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(label1)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(outputFileTextField, GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)))
+                                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup()
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(outputFileTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(label1))
+                                .addGap(18, 18, 18)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                                .addContainerGap())
+        );
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner non-commercial license
+    private JLabel label1;
+    private JTextField outputFileTextField;
+    private JScrollPane scrollPane1;
+    private JTable fileTable;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+
+    @Override
+    public Collection<ValidatorMessage> validateForm() throws ValidatorException {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void clear() {
+        /* no op */
+    }
+
+    @Override
+    public void save(ReportReaderDAO dao) {
+        /* no op */
+    }
+
+    @Override
+    public void load(ReportReaderDAO dao) {
+        /* no op */
+    }
+
+    @Override
+    public String getFormName() {
+        return "Merge Report";
+    }
+
+    @Override
+    public String getFormDescription() {
+        return config.getString("mergereport.form.description");
+    }
+
+    @Override
+    public String getHelpResource() {
+        return "help.ui.merger.report";
+    }
+
+    @Override
+    public void start() {
+
+        outputFileTextField.setText(ConverterData.getInstance().getMergedOutputFile());
+
+        //update table model data
+        List<String> inputFiles = new ArrayList<String>(ConverterData.getInstance().getInputFiles());
+        Collections.sort(inputFiles);
+
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        for (int i = 0; i < inputFiles.size(); i++) {
+            Vector<Object> row = new Vector<Object>();
+            row.add(inputFiles.get(i));
+            data.add(row);
+        }
+        Vector<Object> headers = new Vector<Object>();
+        headers.add("Input Files");
+
+        fileTable.setModel(new DefaultTableModel(data, headers) {
+            boolean[] columnEditable = new boolean[]{
+                    false
+            };
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return columnEditable[columnIndex];
+            }
+        });
+        {
+            TableColumnModel cm = fileTable.getColumnModel();
+            cm.getColumn(0).setResizable(false);
+        }
+
+        NavigationPanel.getInstance().hideValidatorMessages();
+
+    }
+
+    @Override
+    public void finish() throws GUIException {
+        /* no op */
+    }
+}

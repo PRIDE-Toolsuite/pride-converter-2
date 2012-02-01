@@ -1,14 +1,14 @@
 package uk.ac.ebi.pride.tools.merger;
 
-import java.io.File;
-import java.net.URL;
-import java.util.ArrayList;
-
 import junit.framework.TestCase;
 import uk.ac.ebi.pride.jaxb.model.Identification;
 import uk.ac.ebi.pride.jaxb.model.PeptideItem;
 import uk.ac.ebi.pride.jaxb.xml.PrideXmlReader;
 import uk.ac.ebi.pride.tools.merger.io.PrideXmlMerger;
+
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,7 +30,7 @@ public class MergerTest extends TestCase {
         ArrayList<String> toMerge = new ArrayList<String>();
         toMerge.add(file1.getAbsolutePath());
         toMerge.add(file2.getAbsolutePath());
-        PrideXmlMerger m = new PrideXmlMerger(toMerge, "merge-test.xml", false);
+        PrideXmlMerger m = new PrideXmlMerger(toMerge, "merge-test.xml", false, false);
         m.mergeXml();
 
         PrideXmlReader in = new PrideXmlReader(new File("merge-test.xml"));

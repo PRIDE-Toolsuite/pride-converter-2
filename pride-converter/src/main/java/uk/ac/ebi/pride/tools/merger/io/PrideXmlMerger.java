@@ -5,6 +5,7 @@ import uk.ac.ebi.pride.jaxb.model.*;
 import uk.ac.ebi.pride.jaxb.xml.PrideXmlReader;
 import uk.ac.ebi.pride.jaxb.xml.marshaller.PrideXmlMarshaller;
 import uk.ac.ebi.pride.jaxb.xml.marshaller.PrideXmlMarshallerFactory;
+import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.memory.MemoryUsage;
 
@@ -30,12 +31,14 @@ public class PrideXmlMerger {
     private String outputFilePath;
     private PrideXmlMarshaller prideJaxbMarshaller;
     private boolean gzipCompress = false;
+    private boolean updateGUI = false;
 
-    public PrideXmlMerger(List<String> filesToMerge, String outputFilePath, boolean gzipCompress) {
+    public PrideXmlMerger(List<String> filesToMerge, String outputFilePath, boolean gzipCompress, boolean updateGUI) {
 
         this.filesToMerge = filesToMerge;
         this.gzipCompress = gzipCompress;
         this.outputFilePath = outputFilePath;
+        this.updateGUI = updateGUI;
 
         prideJaxbMarshaller = PrideXmlMarshallerFactory.getInstance().initializeMarshaller();
 
@@ -44,7 +47,7 @@ public class PrideXmlMerger {
             //check to see if outputFilePath ends in .gz if gzip turned on
             if (!outputFilePath.endsWith(".gz")) {
                 //update file name
-                outputFilePath += ".gz";
+                this.outputFilePath += ".gz";
             }
         } else {
             //check to see if outputFilePath ends if .gz with gzip turned off
@@ -86,7 +89,7 @@ public class PrideXmlMerger {
      *
      * @throws ConverterException - on error
      */
-    public void mergeXml() throws ConverterException {
+    public String mergeXml() throws ConverterException {
 
         PrintWriter out = null;
         try {
@@ -104,6 +107,9 @@ public class PrideXmlMerger {
             }
 
             logger.warn("Writing file : " + xmlFile.getAbsolutePath());
+            if (updateGUI) {
+                NavigationPanel.getInstance().setWorkingMessage("Writing master file: " + xmlFile.getAbsolutePath());
+            }
 
             //use metadata from first file in list
             String masterFile = filesToMerge.get(0);
@@ -140,6 +146,9 @@ public class PrideXmlMerger {
             for (String file : localRefsPerFile.keySet()) {
                 //get reader
                 logger.info("Merging spectra from file: " + file);
+                if (updateGUI) {
+                    NavigationPanel.getInstance().setWorkingMessage("Merging spectra from file: " + file);
+                }
                 Map<String, Integer> idMappings = localRefsPerFile.get(file);
                 PrideXmlReader localReader = new PrideXmlReader(new File(file));
                 for (String oldSpectrumId : idMappings.keySet()) {
@@ -189,6 +198,9 @@ public class PrideXmlMerger {
             for (String file : localRefsPerFile.keySet()) {
                 //get reader
                 logger.info("Merging identifications from file: " + file);
+                if (updateGUI) {
+                    NavigationPanel.getInstance().setWorkingMessage("Merging identifications from file: " + file);
+                }
                 Map<String, Integer> idMappings = localRefsPerFile.get(file);
                 PrideXmlReader localReader = new PrideXmlReader(new File(file));
                 for (String identId : localReader.getIdentIds()) {
@@ -258,6 +270,8 @@ public class PrideXmlMerger {
 
             //close experimentcollection
             out.println("</ExperimentCollection>");
+
+            return xmlFile.getAbsolutePath();
 
         } catch (IOException e) {
 

@@ -83,7 +83,7 @@ public class PrideMerger {
             }
 
             // ---------------------------------------------------------------- run merge
-            PrideXmlMerger merger = new PrideXmlMerger(inputFiles, outputFile, line.hasOption("compress"));
+            PrideXmlMerger merger = new PrideXmlMerger(inputFiles, outputFile, line.hasOption("compress"), false);
             merger.mergeXml();
 
         } catch (ParseException e) {

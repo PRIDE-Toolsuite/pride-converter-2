@@ -5,6 +5,7 @@ import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ConverterForm;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
@@ -58,20 +59,27 @@ public class MzTabReportForm extends AbstractForm implements ConverterForm {
 
     @Override
     public String getHelpResource() {
-        //todo
-        return "help.ui.file";
+        return "help.ui.mztab.report";
     }
 
     @Override
     public void start() {
+
         //update table model data
+        Set<FileBean> files = ConverterData.getInstance().getDataFiles();
+        List<String> inputFiles = new ArrayList<String>();
+        List<String> mzTabFiles = new ArrayList<String>();
+        for (FileBean fileBean : files) {
+            inputFiles.add(fileBean.getInputFile());
+            if (fileBean.getMzTabFile() != null) {
+                mzTabFiles.add(fileBean.getMzTabFile());
+            }
+        }
 
-        List<String> inputFiles = new ArrayList<String>(ConverterData.getInstance().getInputFiles());
         Collections.sort(inputFiles);
-        List<String> mzDataFiles = ConverterData.getInstance().getMztabFiles();
-        Collections.sort(mzDataFiles);
+        Collections.sort(mzTabFiles);
 
-        if (inputFiles.size() != mzDataFiles.size()) {
+        if (inputFiles.size() != mzTabFiles.size()) {
             throw new IllegalStateException("File number mismatch: number of input files does not equal number of mztab files");
         }
 
@@ -79,7 +87,7 @@ public class MzTabReportForm extends AbstractForm implements ConverterForm {
         for (int i = 0; i < inputFiles.size(); i++) {
             Vector<Object> row = new Vector<Object>();
             row.add(inputFiles.get(i));
-            row.add(mzDataFiles.get(i));
+            row.add(mzTabFiles.get(i));
             data.add(row);
         }
         Vector<Object> headers = new Vector<Object>();

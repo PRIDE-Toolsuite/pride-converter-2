@@ -343,22 +343,22 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
                                     //check to see if we're on the last form!
 
-                                    if (selectedIndex == forms.size() - 1) {
-                                        //we're at the last form
-                                        nextButton.setText("Quit");
-                                        for (ActionListener al : nextButton.getActionListeners()) {
-                                            nextButton.removeActionListener(al);
-                                        }
-                                        nextButton.addActionListener(new ActionListener() {
-                                            @Override
-                                            public void actionPerformed(ActionEvent e) {
-                                                quit();
-                                            }
-                                        });
-                                        nextButton.setEnabled(true);
-                                        nextButton.revalidate();
-                                        nextButton.repaint();
-                                    }
+//                                    if (selectedIndex == forms.size() - 1) {
+//                                        //we're at the last form
+//                                        nextButton.setText("Quit");
+//                                        for (ActionListener al : nextButton.getActionListeners()) {
+//                                            nextButton.removeActionListener(al);
+//                                        }
+//                                        nextButton.addActionListener(new ActionListener() {
+//                                            @Override
+//                                            public void actionPerformed(ActionEvent e) {
+//                                                quit();
+//                                            }
+//                                        });
+//                                        nextButton.setEnabled(true);
+//                                        nextButton.revalidate();
+//                                        nextButton.repaint();
+//                                    }
 
                                 } else {
                                     if (value instanceof GUIException) {
@@ -519,6 +519,12 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
         CardLayout cl = (CardLayout) (contentPanel.getLayout());
         cl.first(contentPanel);
+
+        //call start on first form
+        selectedIndex = 0;
+        ConverterForm form = forms.get(selectedIndex);
+        form.start();
+
         pack();
         setVisible(true);
 

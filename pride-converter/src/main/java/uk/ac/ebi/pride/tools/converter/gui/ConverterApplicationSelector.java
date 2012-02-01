@@ -109,7 +109,7 @@ public class ConverterApplicationSelector extends JFrame {
         if (e.getSource().equals(converterButton)) {
             mainClass = ConverterLauncher.class.getName();
         } else if (e.getSource().equals(mergerButton)) {
-            //
+            mainClass = MergerLauncher.class.getName();
         } else if (e.getSource().equals(filterButton)) {
             mainClass = FilterGUI.class.getCanonicalName();
         } else if (e.getSource().equals(mzTabButton)) {
@@ -241,7 +241,6 @@ public class ConverterApplicationSelector extends JFrame {
 
         //---- mergerButton ----
         mergerButton.setText("Launch PRIDE Merger");
-        mergerButton.setEnabled(false);
         mergerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -331,6 +330,18 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new DataTypeForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.MZTAB));
             panel.registerForm(new MzTabReportForm());
+            panel.reset();
+        }
+
+    }
+
+    static class MergerLauncher {
+
+        public static void main(String[] args) {
+            NavigationPanel panel = NavigationPanel.getInstance();
+            panel.registerForm(new MergerInformationForm());
+            panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_MERGED_XML));
+            panel.registerForm(new MergerReportForm());
             panel.reset();
         }
 
