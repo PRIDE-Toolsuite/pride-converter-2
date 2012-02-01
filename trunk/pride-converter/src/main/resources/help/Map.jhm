@@ -49,6 +49,8 @@
 
     <mapID target="help.ui.merger.information" url="html/usage/ui/mergerinformation.html"/>
     <mapID target="help.ui.merger.report" url="html/usage/ui/mergerreport.html"/>
+    <mapID target="help.ui.filter.information" url="html/usage/ui/filterinformation.html"/>
+    <mapID target="help.ui.filter.report" url="html/usage/ui/filterreport.html"/>
     <mapID target="help.ui.mztab.report" url="html/usage/ui/mztabreport.html"/>
 
     <mapID target="help.faq" url="html/faq.html"/>

@@ -37,9 +37,11 @@ import java.util.Set;
 public class FileExportForm extends AbstractForm {
 
     private static final Logger logger = Logger.getLogger(FileExportForm.class);
+    private boolean filterOnly = false;
 
-    public FileExportForm() {
+    public FileExportForm(boolean filterOnly) {
         initComponents();
+        this.filterOnly = filterOnly;
     }
 
     private void initComponents() {
@@ -133,40 +135,55 @@ public class FileExportForm extends AbstractForm {
 
             try {
 
-                //setup file paths
-                File inputFile = new File(fileBean.getInputFile());
-                String reportFileName = fileBean.getReportFile();
-                if (filterPanel1.isRemoveWorkfiles()) {
-                    ConverterData.getInstance().getFilesToDelete().add(reportFileName);
+                String finalPrideXmlFile = null;
+                String workingPrideXmlFile = null;
+
+                //in the case that filterOnly is set to true, we assume that the pride xml file
+                //is already created and that the form is only used to filter xml files in a separate
+                //application. we do not therefore need to generate the xml file from the DAO and source file
+                if (!filterOnly) {
+
+                    //setup file paths
+                    File inputFile = new File(fileBean.getInputFile());
+                    String reportFileName = fileBean.getReportFile();
+                    if (filterPanel1.isRemoveWorkfiles()) {
+                        ConverterData.getInstance().getFilesToDelete().add(reportFileName);
+                    }
+
+                    File reportFile = new File(reportFileName);
+                    String prideFile = ouptPutFolder.getAbsolutePath() + FileUtils.FILE_SEPARATOR + inputFile.getName() + ConverterData.PRIDE_XML;
+                    if (filterPanel1.isGzipped()) {
+                        prideFile += FileUtils.gz;
+                    }
+                    //setup DAO
+                    DAO dao = DAOFactory.getInstance().getDAO(inputFile.getAbsolutePath(), ConverterData.getInstance().getDaoFormat());
+
+                    //setup reader
+                    ReportReader reader = new ReportReader(reportFile);
+
+                    //update DAO configuration based on report
+                    dao.setConfiguration(options);
+
+                    //write xml
+                    PrideXmlWriter out = new PrideXmlWriter(prideFile, reader, dao, filterPanel1.isGzipped());
+                    out.setIncludeOnlyIdentifiedSpectra(filterPanel1.isIncludeOnlyIdentifiedSpectra());
+
+                    logger.warn("Writing PRIDE XML to " + out.getOutputFilePath());
+
+                    NavigationPanel.getInstance().setWorkingMessage("Writing PRIDE XML file: " + prideFile);
+                    out.writeXml();
+
+                    //keep for later use
+                    workingPrideXmlFile = prideFile;
+
+                } else {
+                    workingPrideXmlFile = fileBean.getInputFile();
                 }
-                File reportFile = new File(reportFileName);
-                String prideFile = ouptPutFolder.getAbsolutePath() + FileUtils.FILE_SEPARATOR + inputFile.getName() + ConverterData.PRIDE_XML;
-                if (filterPanel1.isGzipped()) {
-                    prideFile += FileUtils.gz;
-                }
-                //setup DAO
-                DAO dao = DAOFactory.getInstance().getDAO(inputFile.getAbsolutePath(), ConverterData.getInstance().getDaoFormat());
 
-                //setup reader
-                ReportReader reader = new ReportReader(reportFile);
-
-                //update DAO configuration based on report
-                dao.setConfiguration(options);
-
-                //write xml
-                PrideXmlWriter out = new PrideXmlWriter(prideFile, reader, dao, filterPanel1.isGzipped());
-                out.setIncludeOnlyIdentifiedSpectra(filterPanel1.isIncludeOnlyIdentifiedSpectra());
-
-                logger.warn("Writing PRIDE XML to " + out.getOutputFilePath());
-
-                NavigationPanel.getInstance().setWorkingMessage("Writing PRIDE XML file: " + prideFile);
-                out.writeXml();
-
-                String finalPrideXmlFile = prideFile;
                 if (filterPanel1.isFilterXml()) {
 
                     //get filter from options
-                    PrideXmlFilter filter = filterPanel1.getFilter(prideFile, prideFile);
+                    PrideXmlFilter filter = filterPanel1.getFilter(workingPrideXmlFile, workingPrideXmlFile);
 
                     //warn user
                     logger.info("Filtering PRIDE XML file: " + filter.getOutputFilePath());
@@ -180,28 +197,35 @@ public class FileExportForm extends AbstractForm {
 
                     //if we're removing tempfiles, delete the old pride xml file
                     if (filterPanel1.isRemoveWorkfiles()) {
-                        ConverterData.getInstance().getFilesToDelete().add(prideFile);
+                        ConverterData.getInstance().getFilesToDelete().add(workingPrideXmlFile);
                     }
 
+                }
+
+                if (finalPrideXmlFile == null) {
+                    finalPrideXmlFile = workingPrideXmlFile;
                 }
 
                 //store final file path
                 fileBean.setOutputFile(finalPrideXmlFile);
 
-                //validate PRIDE XML file
-                //warn user
-                logger.info("Validating PRIDE XML file: " + finalPrideXmlFile);
-                NavigationPanel.getInstance().setWorkingMessage("Validating PRIDE XML file: " + finalPrideXmlFile);
-                PrideXmlValidator validator = ValidatorFactory.getInstance().getPrideXmlValidator();
-                //validate
-                Collection<ValidatorMessage> msgs;
-                if (filterPanel1.isGzipped()) {
-                    msgs = validator.validateGZFile(new File(finalPrideXmlFile));
-                } else {
-                    msgs = validator.validate(new File(finalPrideXmlFile));
+                //if only filtering, don't waste time validating file
+                if (!filterOnly) {
+                    //validate PRIDE XML file
+                    //warn user
+                    logger.info("Validating PRIDE XML file: " + finalPrideXmlFile);
+                    NavigationPanel.getInstance().setWorkingMessage("Validating PRIDE XML file: " + finalPrideXmlFile);
+                    PrideXmlValidator validator = ValidatorFactory.getInstance().getPrideXmlValidator();
+                    //validate
+                    Collection<ValidatorMessage> msgs;
+                    if (filterPanel1.isGzipped()) {
+                        msgs = validator.validateGZFile(new File(finalPrideXmlFile));
+                    } else {
+                        msgs = validator.validate(new File(finalPrideXmlFile));
+                    }
+                    //store messages for later display
+                    ConverterData.getInstance().setValidationMessages(finalPrideXmlFile, msgs);
                 }
-                //store messages for later display
-                ConverterData.getInstance().setValidationMessages(finalPrideXmlFile, msgs);
 
                 if (filterPanel1.isRemoveWorkfiles()) {
                     Runtime.getRuntime().addShutdownHook(new Thread() {

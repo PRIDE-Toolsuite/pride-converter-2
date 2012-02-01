@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
-import uk.ac.ebi.pride.tools.converter.gui.interfaces.ConverterForm;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
@@ -19,9 +18,8 @@ import java.util.*;
  * User: rcote
  * Date: 08/11/11
  * Time: 17:43
- * To change this template use File | Settings | File Templates.
  */
-public class MzTabReportForm extends AbstractForm implements ConverterForm {
+public class MzTabReportForm extends AbstractForm {
 
     public MzTabReportForm() {
         initComponents();

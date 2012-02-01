@@ -68,7 +68,7 @@ public class PrideXmlFilter {
             //check to see if inputFilePath ends in .gz if gzip turned on
             if (!inputFilePath.endsWith(FileUtils.gz)) {
                 //update file name
-                inputGzipCompressed = false;
+                this.inputGzipCompressed = false;
             }
         } else {
             //check to see if inputFilePath ends if .gz with gzip turned off

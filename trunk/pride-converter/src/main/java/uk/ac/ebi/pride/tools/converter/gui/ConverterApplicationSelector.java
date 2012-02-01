@@ -111,7 +111,7 @@ public class ConverterApplicationSelector extends JFrame {
         } else if (e.getSource().equals(mergerButton)) {
             mainClass = MergerLauncher.class.getName();
         } else if (e.getSource().equals(filterButton)) {
-            mainClass = FilterGUI.class.getCanonicalName();
+            mainClass = FilterLauncher.class.getName();
         } else if (e.getSource().equals(mzTabButton)) {
             mainClass = MzTabLauncher.class.getName();
         } else {
@@ -316,7 +316,7 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new DatabaseMappingForm());
             panel.registerForm(new PTMForm());
             panel.registerForm(new AnnotationDoneForm());
-            panel.registerForm(new FileExportForm());
+            panel.registerForm(new FileExportForm(false));
             panel.registerForm(new ReportForm());
             panel.reset();
         }
@@ -342,6 +342,19 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new MergerInformationForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_MERGED_XML));
             panel.registerForm(new MergerReportForm());
+            panel.reset();
+        }
+
+    }
+
+    static class FilterLauncher {
+
+        public static void main(String[] args) {
+            NavigationPanel panel = NavigationPanel.getInstance();
+            panel.registerForm(new FilterInformationForm());
+            panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_FILTERED_XML));
+            panel.registerForm(new FileExportForm(true));
+            panel.registerForm(new FilterReportForm());
             panel.reset();
         }
 
