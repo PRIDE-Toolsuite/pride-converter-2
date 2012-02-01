@@ -5,10 +5,10 @@
 package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import org.apache.log4j.Logger;
-import org.jdesktop.swingx.error.ErrorLevel;
+import psidev.psi.tools.validator.Context;
+import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorMessage;
-import uk.ac.ebi.pride.tools.converter.conversion.io.MzTabWriter;
-import uk.ac.ebi.pride.tools.converter.dao.DAO;
+import psidev.psi.tools.validator.rules.Rule;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
@@ -19,13 +19,13 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionCellEditor;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionTableModel;
-import uk.ac.ebi.pride.tools.converter.gui.model.*;
-import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.DataType;
+import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
+import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
+import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
-import uk.ac.ebi.pride.tools.converter.report.io.ReportWriter;
-import uk.ac.ebi.pride.tools.converter.report.io.xml.utilities.ReportXMLUtilities;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
-import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 import javax.help.CSH;
 import javax.swing.*;
@@ -38,7 +38,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.*;
-import java.util.regex.Pattern;
 
 /**
  * @author User #1
@@ -47,9 +46,6 @@ import java.util.regex.Pattern;
 public class FileSelectionForm extends AbstractForm implements TableModelListener {
 
     private static final Logger logger = Logger.getLogger(FileSelectionForm.class);
-    public static final String GEL_IDENTIFIER = "Gel Identifier";
-    public static final String SPOT_IDENTIFIER = "Spot Identifier";
-    public static final String SPOT_REGULAR_EXPRESSION = "Spot Regular Expression";
 
     private OutputFormat format;
 
@@ -61,10 +57,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         mzTabFileTable.getModel().addTableModelListener(this);
         sequenceFileTable.getModel().addTableModelListener(this);
         this.format = format;
-        if (format.equals(OutputFormat.MZTAB)) {
+        if (format.equals(OutputFormat.MZTAB) || format.equals(OutputFormat.PRIDE_MERGED_XML)) {
             //disable tabs for fasta & mztab
             fileTabbedPane.setEnabledAt(1, false);
             fileTabbedPane.setEnabledAt(2, false);
+            forceRegenerationBox.setEnabled(false);
         }
     }
 
@@ -456,63 +453,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JButton parserOptionHelpButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
-    private void generateReportFiles() throws GUIException {
-
-        Properties options = getOptions();
-        ConverterData.getInstance().setOptions(options);
-        int i = 0;
-
-        for (File file : dataFileTable.getFiles()) {
-            final String absolutePath = file.getAbsolutePath();
-            try {
-
-                String reportFile = absolutePath + ConverterData.REPORT_XML;
-                if (forceRegenerationBox.isSelected()) {
-
-                    generateReportFile(absolutePath);
-
-                } else {
-
-                    //try and load existing report file
-                    NavigationPanel.getInstance().setWorkingMessage("Attemping to load existing report file: " + reportFile);
-                    File repFile = new File(reportFile);
-                    //check to see if file exists and is a valid report file
-                    if (!repFile.exists() || !ReportXMLUtilities.isUnmodifiedSourceForReportFile(repFile, absolutePath)) {
-                        logger.warn("Source file modified since report generation, will recreate report file");
-                        generateReportFile(absolutePath);
-                    }
-                }
-
-                FileBean fileBean = new FileBean(absolutePath);
-                fileBean.setReportFile(reportFile);
-                ConverterData.getInstance().getDataFiles().add(fileBean);
-                if (i == 0) {
-                    ConverterData.getInstance().setMasterFile(fileBean);
-                    ConverterData.getInstance().setMasterDAO(new ReportReaderDAO(new File(reportFile)));
-                }
-                // Read PTMs
-                ReportReaderDAO reportReaderDAO = new ReportReaderDAO(new File(reportFile));
-                ConverterData.getInstance().getPTMs().addAll(reportReaderDAO.getPTMs());
-                // Read DB Mappings
-                ConverterData.getInstance().getDatabaseMappings().addAll(reportReaderDAO.getDatabaseMappings());
-                //increment file count
-                i++;
-
-            } catch (ConverterException e) {
-                logger.fatal("Error in Generating Report Files for input file " + absolutePath + ", error is " + e.getMessage(), e);
-                ErrorDialogHandler.showErrorDialog(this, ErrorLevel.FATAL, "Error in generating report files for input file " + absolutePath, null, "WRAPPER-REPORT", e);
-            } catch (InvalidFormatException e) {
-                logger.fatal("Invalid file format for input file " + absolutePath + ", error is " + e.getMessage(), e);
-                GUIException gex = new GUIException(e);
-                gex.setShortMessage("Invalid file format for input file " + absolutePath + "\nPlease select a properly formatted file and try again.");
-                gex.setDetailedMessage(null);
-                gex.setComponent(getClass().getName());
-                throw gex;
-            }
-        }
-
-    }
-
     private Properties getOptions() {
         ParserOptionTableModel model = (ParserOptionTableModel) parserOptionTable.getModel();
         Properties props = model.getProperties();
@@ -520,109 +460,41 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         return props;
     }
 
-    private void generateReportFile(String absolutePath) throws InvalidFormatException {
+    @Override
+    public Collection<ValidatorMessage> validateForm() {
 
-        String reportFile = absolutePath + ConverterData.REPORT_XML;
+        //if we're running the merger
+        if (format.equals(OutputFormat.PRIDE_MERGED_XML)) {
+            //check to see that we have at least two files
+            if (dataFileTable.getFiles().size() < 2) {
+                Collection<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
+                ValidatorMessage error = new ValidatorMessage("You must provide at least two files to merge", MessageLevel.ERROR, new Context("Pride Merger"), new Rule() {
+                    @Override
+                    public String getId() {
+                        return "MERGER";
+                    }
 
-        //create report file
-        NavigationPanel.getInstance().setWorkingMessage("Creating report file for " + absolutePath);
+                    @Override
+                    public String getName() {
+                        return "Merger File Number";
+                    }
 
-        logger.warn("Reading = " + absolutePath);
+                    @Override
+                    public String getDescription() {
+                        return "You must provide at least two files to merge";
+                    }
 
-        DAO dao = DAOFactory.getInstance().getDAO(absolutePath, ConverterData.getInstance().getDaoFormat());
-        Properties options = getOptions();
-        dao.setConfiguration(options);
-
-        ReportWriter writer = new ReportWriter(reportFile);
-        writer.setDAO(dao);
-
-        if (!sequenceFileTable.getFiles().isEmpty()) {
-            //only one fasta file will be selected by the filechooser
-            File fastaFile = sequenceFileTable.getFiles().iterator().next();
-            ConverterData.getInstance().getFastaFiles().add(fastaFile.getAbsolutePath());
-            writer.setFastaHandler(HandlerFactory.getInstance().getFastaHandler(fastaFile.getAbsolutePath(), fastaFormat));
-        }
-
-        //todo - need to defer report file generation if more than 1 report file!
-        if (!mzTabFileTable.getFiles().isEmpty()) {
-            //only one gel file will be selected by the filechooser
-            File mztabFile = mzTabFileTable.getFiles().iterator().next();
-            ConverterData.getInstance().getMztabFiles().add(mztabFile.getAbsolutePath());
-            writer.setExternalHandler(HandlerFactory.getInstance().getDefaultExternalHanlder(mztabFile.getAbsolutePath()));
-        }
-
-        logger.warn("Writing = " + reportFile);
-        writer.writeReport();
-
-    }
-
-    private void generateMzTabFiles() throws GUIException {
-
-        NavigationPanel.getInstance().setWorkingMessage("Creating mzTab files.");
-
-        File outputDir = new File(ConverterData.getInstance().getLastSelectedDirectory());
-        Properties options = getOptions();
-        ConverterData.getInstance().setOptions(options);
-
-        for (File file : dataFileTable.getFiles()) {
-            final String absolutePath = file.getAbsolutePath();
-            try {
-
-                logger.warn("Reading = " + absolutePath);
-                NavigationPanel.getInstance().setWorkingMessage("Creating mzTab file for " + absolutePath);
-
-                FileBean fileBean = new FileBean(absolutePath);
-
-                DAO dao = DAOFactory.getInstance().getDAO(absolutePath, ConverterData.getInstance().getDaoFormat());
-                dao.setConfiguration(options);
-
-                // check if a gel or spot identifier is present
-                String gelId = null, spotId = null;
-                Pattern spotPattern = null;
-
-                if (options.getProperty(GEL_IDENTIFIER) != null && !"".equals(options.getProperty(GEL_IDENTIFIER))) {
-                    gelId = options.getProperty(GEL_IDENTIFIER);
-                }
-                if (options.getProperty(SPOT_IDENTIFIER) != null && !"".equals(options.getProperty(SPOT_IDENTIFIER))) {
-                    spotId = options.getProperty(SPOT_IDENTIFIER);
-                }
-                if (options.getProperty(SPOT_REGULAR_EXPRESSION) != null && !"".equals(options.getProperty(SPOT_REGULAR_EXPRESSION))) {
-                    String regex = options.getProperty(SPOT_REGULAR_EXPRESSION);
-                    spotPattern = Pattern.compile(regex);
-                }
-
-                // write the mztab file
-                MzTabWriter writer;
-
-                if (spotPattern != null)
-                    writer = new MzTabWriter(dao, gelId, spotPattern);
-                else
-                    writer = new MzTabWriter(dao, gelId, spotId);
-
-                String tabFile = file.getName() + ConverterData.MZTAB;
-
-                writer.writeMzTabFile(new File(outputDir, tabFile));
-
-                //update converterdata
-                fileBean.setMzTabFile(tabFile);
-                ConverterData.getInstance().getDataFiles().add(fileBean);
-                ConverterData.getInstance().getMztabFiles().add(tabFile);
-
-            } catch (Exception e) {
-                logger.fatal("Error in Generating MzTAB Files for input file " + absolutePath + ", error is " + e.getMessage(), e);
-                GUIException gex = new GUIException(e);
-                gex.setShortMessage("Error in Generating MzTAB Files for input file " + absolutePath);
-                gex.setDetailedMessage(null);
-                gex.setComponent(getClass().getName());
-                throw gex;
+                    @Override
+                    public Collection<String> getHowToFixTips() {
+                        return null;
+                    }
+                });
+                msgs.add(error);
+                return msgs;
             }
         }
 
-    }
-
-    @Override
-    public Collection<ValidatorMessage> validateForm() {
-        //nothing to validate
+        //otherwise nothing to validate
         return Collections.emptyList();
     }
 
@@ -697,10 +569,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
         switch (format) {
             case MZTAB:
-                generateMzTabFiles();
+                IOUtilities.generateMzTabFiles(getOptions(), dataFileTable.getFiles());
                 break;
             case PRIDE_XML:
-                generateReportFiles();
+                IOUtilities.generateReportFiles(getOptions(), dataFileTable.getFiles(), forceRegenerationBox.isSelected());
+                break;
+            case PRIDE_MERGED_XML:
+                IOUtilities.mergePrideXMLFiles(getOptions(), dataFileTable.getFiles());
                 break;
             default:
                 throw new UnsupportedOperationException("No handler defined for " + format);
@@ -730,17 +605,25 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         //if we're exporting to mztab, add those properties at the start of the list
         if (format.equals(OutputFormat.MZTAB)) {
             //add mztab-specific options
-            DAOProperty<String> gelIdentifier = new DAOProperty<String>(GEL_IDENTIFIER, null);
+            DAOProperty<String> gelIdentifier = new DAOProperty<String>(IOUtilities.GEL_IDENTIFIER, null);
             gelIdentifier.setDescription("Sets the gel identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.");
             props.add(gelIdentifier);
 
-            DAOProperty<String> spotIdentifier = new DAOProperty<String>(SPOT_IDENTIFIER, null);
+            DAOProperty<String> spotIdentifier = new DAOProperty<String>(IOUtilities.SPOT_IDENTIFIER, null);
             gelIdentifier.setDescription("Sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.");
             props.add(spotIdentifier);
 
-            DAOProperty<String> spotRegex = new DAOProperty<String>(SPOT_REGULAR_EXPRESSION, null);
+            DAOProperty<String> spotRegex = new DAOProperty<String>(IOUtilities.SPOT_REGULAR_EXPRESSION, null);
             gelIdentifier.setDescription("Used to extract the gel spot identifier based on the sourcefile's name. The first matching group in the pattern is used as a spot identifier.");
             props.add(spotRegex);
+        }
+
+        //if we're merging XML, add those properties at the start of the list
+        if (format.equals(OutputFormat.PRIDE_MERGED_XML)) {
+            //add mztab-specific options
+            DAOProperty<Boolean> compress = new DAOProperty<Boolean>(IOUtilities.COMPRESS, false);
+            compress.setDescription("Turn on gzip compression for output file.");
+            props.add(compress);
         }
 
         //add dao-specific properties

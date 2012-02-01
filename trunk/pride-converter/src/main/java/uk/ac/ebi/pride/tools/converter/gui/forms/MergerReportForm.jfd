@@ -1,0 +1,46 @@
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::388:x, seq t {comp label1:::p::p, space :::p, comp outputFileTextField::::297:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp outputFileTextField::l:p::p, comp label1::l:p::p}, space s:::p, comp scrollPane1::::251:x, space :::p}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Output file: "
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "outputFileTextField"
+				"editable": false
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTable" ) {
+					name: "fileTable"
+					"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+						add( new java.util.Vector {
+							add( null )
+						} )
+						add( new java.util.Vector {
+							add( null )
+						} )
+					}, new java.util.Vector {
+						add( "Source Files" )
+					}, new java.util.Vector {
+						add( null )
+					}, new java.util.Vector {
+						add( false )
+					}, new java.util.Vector {
+						add( null )
+					} )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}

@@ -45,6 +45,11 @@
     <mapID target="help.ui.dao.pkl" url="html/usage/ui/dao/pkl.html"/>
     <mapID target="help.ui.dao.mgf" url="html/usage/ui/dao/mgf.html"/>
     <mapID target="help.ui.dao.mzdata" url="html/usage/ui/dao/mzdata.html"/>
+    <mapID target="help.ui.dao.pride" url="html/usage/ui/dao/pride.html"/>
+
+    <mapID target="help.ui.merger.information" url="html/usage/ui/mergerinformation.html"/>
+    <mapID target="help.ui.merger.report" url="html/usage/ui/mergerreport.html"/>
+    <mapID target="help.ui.mztab.report" url="html/usage/ui/mztabreport.html"/>
 
     <mapID target="help.faq" url="html/faq.html"/>
     <mapID target="help.faq.pride" url="html/faq/pride.html"/>

@@ -20,6 +20,7 @@ import java.util.*;
 public class ConverterData {
 
     public static final String REPORT_XML = "-report.xml";
+    public static final String MERGED_XML = "-merged.xml";
     public static final String MZTAB = "-mztab.txt";
     public static final String PRIDE_XML = "-pride.xml";
     public static final String DEFAULT_OUTPUT_LOCATION = System.getProperty("java.io.tmpdir") + File.separator + "prideconverter";
@@ -39,6 +40,8 @@ public class ConverterData {
     private ReportReaderDAO masterDAO;
     private Set<String> filesToDelete = new HashSet<String>();
     private Map<String, ReportBean> customeReportFields = new TreeMap<String, ReportBean>();
+
+    private String mergedOutputFile = null;
 
     private static ConverterData instance = new ConverterData();
 
@@ -143,6 +146,7 @@ public class ConverterData {
         databaseMappings.clear();
         filesToDelete.clear();
         customeReportFields.clear();
+        mergedOutputFile = null;
     }
 
     public void clearPossibleStaleData() {
@@ -204,6 +208,14 @@ public class ConverterData {
         customeReportFields.put(fileName, customFieldData);
     }
 
+    public String getMergedOutputFile() {
+        return mergedOutputFile;
+    }
+
+    public void setMergedOutputFile(String mergedOutputFile) {
+        this.mergedOutputFile = mergedOutputFile;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
@@ -222,8 +234,8 @@ public class ConverterData {
         sb.append(", masterDAO=").append(masterDAO);
         sb.append(", filesToDelete=").append(filesToDelete);
         sb.append(", customeReportFields=").append(customeReportFields);
+        sb.append(", mergedOutputFile='").append(mergedOutputFile).append('\'');
         sb.append('}');
         return sb.toString();
     }
-
 }

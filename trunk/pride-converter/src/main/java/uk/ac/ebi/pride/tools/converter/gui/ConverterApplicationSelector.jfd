@@ -26,7 +26,6 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "mergerButton"
 				"text": "Launch PRIDE Merger"
-				"enabled": false
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "launchTool", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {

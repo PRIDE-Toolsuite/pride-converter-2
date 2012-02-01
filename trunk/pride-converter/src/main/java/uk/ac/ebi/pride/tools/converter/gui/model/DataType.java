@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileFilter;
  *         Time: 10:59
  */
 public enum DataType {
+    PRIDE_XML("PRIDE", false, new PrideFileFilter()),
     MASCOT("MASCOT", false, new MascotFileFilter()),
     XTANDEM("XTANDEM", false, new XTandemFileFilter()),
     MZIDENTML("MZIDENTML", false, new MzIdentMLFileFilter()),

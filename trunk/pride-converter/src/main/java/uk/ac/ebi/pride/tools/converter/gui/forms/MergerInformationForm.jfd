@@ -1,0 +1,30 @@
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, par l {comp scrollPane1::l::388:x, comp label1::l:p::p}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :::p, comp scrollPane1::::267:x, space :::p}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "PRIDE XML Merger"
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "textArea1"
+					"editable": false
+					"lineWrap": true
+					"wrapStyleWord": true
+					"text": "This application will allow you to select multiple PRIDE XML files and merge them into a single PRIDE XML file. \n\nIt is assumed that each individual file is valid. Files will be ordered alphabetically and the metadata from the first file will be used to generate the final, merged file. The identifications and spectra from the other files will be merged into the final output file. \n\nPlease note that the spectrum IDs from the source files will not necessarily be kept, but the internal references between peptide-spectrum_refs will be maintained.  "
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}

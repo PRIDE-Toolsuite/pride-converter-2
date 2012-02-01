@@ -6,6 +6,7 @@ import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -17,6 +18,7 @@ import java.util.Properties;
 public class DAOFactory {
 
     public enum DAO_FORMAT {
+        PRIDE("pride", "PRIDE", false, "help.ui.dao.pride"),
         MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot"),
         SEQUEST("sequest", "Sequest", false, null),
         OMSSA("omssa", "OMSSA", false, null),
@@ -121,8 +123,8 @@ public class DAOFactory {
                 dao = new MzDataDAO(new File(sourcePath));
                 break;
             case MSGF:
-            	dao = new MsgfDao(new File(sourcePath));
-            	break;
+                dao = new MsgfDao(new File(sourcePath));
+                break;
             default:
                 throw new UnsupportedOperationException("No DAO defined for " + format);
         }
@@ -158,7 +160,10 @@ public class DAOFactory {
             case MZDATA:
                 return MzDataDAO.getSupportedPorperties();
             case MSGF:
-            	return MsgfDao.getSupportedPorperties();
+                return MsgfDao.getSupportedPorperties();
+            case PRIDE:
+                //todo
+                return Collections.emptyList();
             default:
                 throw new UnsupportedOperationException("No DAO defined for " + format);
         }
