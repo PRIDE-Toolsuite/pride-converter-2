@@ -10,5 +10,6 @@ package uk.ac.ebi.pride.tools.converter.gui.model;
 public enum OutputFormat {
     PRIDE_XML,
     PRIDE_MERGED_XML,
+    PRIDE_FILTERED_XML,
     MZTAB;
 }

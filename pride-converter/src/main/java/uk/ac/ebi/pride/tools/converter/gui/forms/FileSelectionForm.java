@@ -19,10 +19,7 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionCellEditor;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionTableModel;
-import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
-import uk.ac.ebi.pride.tools.converter.gui.model.DataType;
-import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
-import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
+import uk.ac.ebi.pride.tools.converter.gui.model.*;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
@@ -57,7 +54,9 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         mzTabFileTable.getModel().addTableModelListener(this);
         sequenceFileTable.getModel().addTableModelListener(this);
         this.format = format;
-        if (format.equals(OutputFormat.MZTAB) || format.equals(OutputFormat.PRIDE_MERGED_XML)) {
+        if (format.equals(OutputFormat.MZTAB)
+                || format.equals(OutputFormat.PRIDE_MERGED_XML)
+                || format.equals(OutputFormat.PRIDE_FILTERED_XML)) {
             //disable tabs for fasta & mztab
             fileTabbedPane.setEnabledAt(1, false);
             fileTabbedPane.setEnabledAt(2, false);
@@ -577,6 +576,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             case PRIDE_MERGED_XML:
                 IOUtilities.mergePrideXMLFiles(getOptions(), dataFileTable.getFiles());
                 break;
+            case PRIDE_FILTERED_XML:
+                //only store input files, the logic will be handled by other form
+                for (File inputFile : dataFileTable.getFiles()) {
+                    FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                    ConverterData.getInstance().getDataFiles().add(fileBean);
+                }
+                break;
             default:
                 throw new UnsupportedOperationException("No handler defined for " + format);
         }
@@ -641,6 +647,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         } else {
             parserOptionHelpButton.setEnabled(false);
         }
+
     }
 
 }
