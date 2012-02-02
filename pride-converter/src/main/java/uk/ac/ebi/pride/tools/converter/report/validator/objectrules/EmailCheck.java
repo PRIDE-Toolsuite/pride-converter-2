@@ -99,7 +99,6 @@ public class EmailCheck<ReportObject> extends ObjectRule<ReportObject> {
                     MessageLevel.ERROR, context, this));
         } else {
             // in PRIDE XSD contactinfo is optional <xsd:element name="contactInfo" type="xsd:string" minOccurs="0">
-            // ToDo: 
             String email = contact.getContactInfo();
             if (email == null) {
                 msgs.add(new ValidatorMessage("Could not find a 'contactInfo' element in the contact: " + contact.getName(),

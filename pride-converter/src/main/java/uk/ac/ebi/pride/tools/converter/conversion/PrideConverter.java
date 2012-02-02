@@ -12,7 +12,6 @@ import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReader;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportWriter;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
 
@@ -87,8 +86,6 @@ public class PrideConverter {
                 printUsage(null);
                 System.exit(STATUS_BAD_ARG);
             }
-
-            //todo - check for mode
 
             // ---------------------------------------------------------------- optional parameters
             // outputfile  - optional
@@ -228,29 +225,29 @@ public class PrideConverter {
                     }
                     dao.setConfiguration(props);
                 }
-                
+
                 // check if a gel or spot identifier is present
                 String gelId = null, spotId = null;
                 Pattern spotPattern = null;
-                
+
                 if (line.hasOption(PrideConverterCLIOptions.OPTIONS.GEL_IDENTIFIER.getValue())) {
-                	gelId = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.GEL_IDENTIFIER.getValue());
+                    gelId = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.GEL_IDENTIFIER.getValue());
                 }
                 if (line.hasOption(PrideConverterCLIOptions.OPTIONS.SPOT_IDENTIFIER.getValue())) {
-                	spotId = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPOT_IDENTIFIER.getValue());
+                    spotId = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPOT_IDENTIFIER.getValue());
                 }
                 if (line.hasOption(PrideConverterCLIOptions.OPTIONS.SPOT_REGEX.getValue())) {
-                	String regex = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPOT_REGEX.getValue());
-                	spotPattern = Pattern.compile(regex);
+                    String regex = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPOT_REGEX.getValue());
+                    spotPattern = Pattern.compile(regex);
                 }
 
                 // write the mztab file
                 MzTabWriter writer;
-                
+
                 if (spotPattern != null)
-                	writer = new MzTabWriter(dao, gelId, spotPattern);
+                    writer = new MzTabWriter(dao, gelId, spotPattern);
                 else
-                	writer = new MzTabWriter(dao, gelId, spotId);
+                    writer = new MzTabWriter(dao, gelId, spotId);
 
                 // write the file
                 File outfile = null;
