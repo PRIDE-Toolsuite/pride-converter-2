@@ -19,10 +19,12 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionCellEditor;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionTableModel;
-import uk.ac.ebi.pride.tools.converter.gui.model.*;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
+import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
+import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import javax.help.CSH;
 import javax.swing.*;
@@ -551,16 +553,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     @Override
     public void start() {
 
-        DataType type = ConverterData.getInstance().getType();
-        DAOFactory.DAO_FORMAT daoFormat = DAOFactory.DAO_FORMAT.getDAOForSearchengineOption(type.getEngineName().toLowerCase());
+        //update UI tabbed pane
+        fileTabbedPane.setTitleAt(0, ConverterData.getInstance().getDaoFormat().getNiceName() + " files");
 
-        if (daoFormat == null) {
-            throw new ConverterException("Invalid DAO Format: " + type.getEngineName());
-        }
-        ConverterData.getInstance().setDaoFormat(daoFormat);
-
-        fileTabbedPane.setTitleAt(0, daoFormat.getNiceName() + " files");
-
+        //update option table
         updateOptionTable();
 
         //fire the table listener - this is required if users go back & forth without changing the
