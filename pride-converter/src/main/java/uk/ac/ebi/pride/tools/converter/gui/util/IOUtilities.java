@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.conversion.io.MzTabWriter;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
+import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
@@ -162,32 +163,32 @@ public class IOUtilities {
 
     }
 
-    public static void generateReportFiles(Properties options, Collection<File> inputFiles, boolean forceRegeneration) throws GUIException {
+    public static void generateReportFiles(Properties options, Collection<FileBean> dataFiles, boolean forceRegeneration) throws GUIException {
 
         ConverterData.getInstance().setOptions(options);
         int i = 0;
 
-        for (File file : inputFiles) {
-            final String absolutePath = file.getAbsolutePath();
+        for (FileBean fileBean : dataFiles) {
+
             try {
 
-                String reportFile = absolutePath + ConverterData.REPORT_XML;
+                String reportFile = fileBean.getInputFile() + ConverterData.REPORT_XML;
                 if (forceRegeneration) {
-                    generateReportFile(absolutePath, options);
+                    generateReportFile(fileBean, options);
                 } else {
 
                     //try and load existing report file
                     NavigationPanel.getInstance().setWorkingMessage("Attemping to load existing report file: " + reportFile);
                     File repFile = new File(reportFile);
                     //check to see if file exists and is a valid report file
-                    if (!repFile.exists() || !ReportXMLUtilities.isUnmodifiedSourceForReportFile(repFile, absolutePath)) {
+                    if (!repFile.exists() || !ReportXMLUtilities.isUnmodifiedSourceForReportFile(repFile, fileBean.getInputFile())) {
                         logger.warn("Source file modified since report generation, will recreate report file");
-                        generateReportFile(absolutePath, options);
+                        generateReportFile(fileBean, options);
                     }
                 }
 
-                FileBean fileBean = new FileBean(absolutePath);
                 fileBean.setReportFile(reportFile);
+                //update datafiles collection
                 ConverterData.getInstance().getDataFiles().add(fileBean);
                 if (i == 0) {
                     ConverterData.getInstance().setMasterFile(fileBean);
@@ -202,16 +203,16 @@ public class IOUtilities {
                 i++;
 
             } catch (ConverterException e) {
-                logger.fatal("Error in generating Report Files for input file " + absolutePath + ", error is " + e.getMessage(), e);
+                logger.fatal("Error in generating Report Files for input file " + fileBean.getInputFile() + ", error is " + e.getMessage(), e);
                 GUIException gex = new GUIException(e);
-                gex.setShortMessage("Error in generating Report Files for input file " + absolutePath);
+                gex.setShortMessage("Error in generating Report Files for input file " + fileBean.getInputFile());
                 gex.setDetailedMessage(null);
                 gex.setComponent(IOUtilities.class.getName());
                 throw gex;
             } catch (InvalidFormatException e) {
-                logger.fatal("Invalid file format for input file " + absolutePath + ", error is " + e.getMessage(), e);
+                logger.fatal("Invalid file format for input file " + fileBean.getInputFile() + ", error is " + e.getMessage(), e);
                 GUIException gex = new GUIException(e);
-                gex.setShortMessage("Invalid file format for input file " + absolutePath + "\nPlease select a properly formatted file and try again.");
+                gex.setShortMessage("Invalid file format for input file " + fileBean.getInputFile() + "\nPlease select a properly formatted file and try again.");
                 gex.setDetailedMessage(null);
                 gex.setComponent(IOUtilities.class.getName());
                 throw gex;
@@ -220,35 +221,28 @@ public class IOUtilities {
 
     }
 
-    private static void generateReportFile(String absolutePath, Properties options) throws InvalidFormatException {
+    private static void generateReportFile(FileBean fileBean, Properties options) throws InvalidFormatException {
 
-        String reportFile = absolutePath + ConverterData.REPORT_XML;
+        String reportFile = fileBean.getInputFile() + ConverterData.REPORT_XML;
 
         //create report file
-        NavigationPanel.getInstance().setWorkingMessage("Creating report file for " + absolutePath);
+        NavigationPanel.getInstance().setWorkingMessage("Creating report file for " + fileBean.getInputFile());
 
-        logger.warn("Reading = " + absolutePath);
+        logger.warn("Reading = " + fileBean.getInputFile());
 
-        DAO dao = DAOFactory.getInstance().getDAO(absolutePath, ConverterData.getInstance().getDaoFormat());
+        DAO dao = DAOFactory.getInstance().getDAO(fileBean.getInputFile(), ConverterData.getInstance().getDaoFormat());
         dao.setConfiguration(options);
 
         ReportWriter writer = new ReportWriter(reportFile);
         writer.setDAO(dao);
 
-//        if (!sequenceFileTable.getFiles().isEmpty()) {
-//            //only one fasta file will be selected by the filechooser
-//            File fastaFile = sequenceFileTable.getFiles().iterator().next();
-//            ConverterData.getInstance().getFastaFiles().add(fastaFile.getAbsolutePath());
-//            writer.setFastaHandler(HandlerFactory.getInstance().getFastaHandler(fastaFile.getAbsolutePath(), fastaFormat));
-//        }
-//
-//        //todo - need to defer report file generation if more than 1 report file!
-//        if (!mzTabFileTable.getFiles().isEmpty()) {
-//            //only one gel file will be selected by the filechooser
-//            File mztabFile = mzTabFileTable.getFiles().iterator().next();
-//            ConverterData.getInstance().getMztabFiles().add(mztabFile.getAbsolutePath());
-//            writer.setExternalHandler(HandlerFactory.getInstance().getDefaultExternalHanlder(mztabFile.getAbsolutePath()));
-//        }
+        if (fileBean.getSequenceFile() != null) {
+            writer.setFastaHandler(HandlerFactory.getInstance().getFastaHandler(fileBean.getSequenceFile(), ConverterData.getInstance().getFastaFormat()));
+        }
+
+        if (fileBean.getMzTabFile() != null) {
+            writer.setExternalHandler(HandlerFactory.getInstance().getDefaultExternalHanlder(fileBean.getMzTabFile()));
+        }
 
         logger.warn("Writing = " + reportFile);
         writer.writeReport();

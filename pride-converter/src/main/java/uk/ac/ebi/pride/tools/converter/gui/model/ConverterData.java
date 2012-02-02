@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.tools.converter.gui.model;
 
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
+import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
@@ -26,7 +27,6 @@ public class ConverterData {
     public static final String DEFAULT_OUTPUT_LOCATION = System.getProperty("java.io.tmpdir") + File.separator + "prideconverter";
 
     private TreeSet<FileBean> dataFiles = new TreeSet<FileBean>();
-    private List<String> fastaFiles = new ArrayList<String>();
     private List<String> mzTabFiles = new ArrayList<String>();
     private Properties options = new Properties();
     private DAOFactory.DAO_FORMAT daoFormat = null;
@@ -34,6 +34,7 @@ public class ConverterData {
     private String lastSelectedDirectory = null;
     private Map<String, Collection<ValidatorMessage>> validationMessages = new HashMap<String, Collection<ValidatorMessage>>();
     private DataType type;
+    private HandlerFactory.FASTA_FORMAT fastaFormat;
 
     private Set<PTM> PTMs = new HashSet<PTM>();
     private Set<DatabaseMapping> databaseMappings = new HashSet<DatabaseMapping>();
@@ -65,6 +66,12 @@ public class ConverterData {
         return null;
     }
 
+    /**
+     * Returns a sorted set of input file paths. This set should not be modified as it is always generated based on the
+     * content of the collection of FileBean objects.
+     *
+     * @return
+     */
     public Set<String> getInputFiles() {
         Set<String> inputFiles = new TreeSet<String>();
         for (FileBean fb : dataFiles) {
@@ -73,6 +80,12 @@ public class ConverterData {
         return inputFiles;
     }
 
+    /**
+     * Returns a sorted set of output file paths. This set should not be modified as it is always generated based on the
+     * content of the collection of FileBean objects.
+     *
+     * @return
+     */
     public Set<String> getOutputfiles() {
         Set<String> outputFiles = new TreeSet<String>();
         for (FileBean fb : dataFiles) {
@@ -83,6 +96,12 @@ public class ConverterData {
         return outputFiles;
     }
 
+    /**
+     * Returns a sorted set of report file paths. This set should not be modified as it is always generated based on the
+     * content of the collection of FileBean objects.
+     *
+     * @return
+     */
     public Set<String> getReportFiles() {
         Set<String> reportFiles = new TreeSet<String>();
         for (FileBean fb : dataFiles) {
@@ -125,17 +144,18 @@ public class ConverterData {
         this.lastSelectedDirectory = lastSelectedDirectory;
     }
 
-    public List<String> getFastaFiles() {
-        return fastaFiles;
-    }
-
+    /**
+     * Returns a list of mztab file paths. This collection is independent of the data stored in the FileBean
+     * collection and should be used in the mapping of the mztab files to the proper input files.
+     *
+     * @return
+     */
     public List<String> getMztabFiles() {
         return mzTabFiles;
     }
 
     public void reset() {
         dataFiles.clear();
-        fastaFiles.clear();
         mzTabFiles.clear();
         validationMessages.clear();
         options = new Properties();
@@ -147,14 +167,15 @@ public class ConverterData {
         filesToDelete.clear();
         customeReportFields.clear();
         mergedOutputFile = null;
+        fastaFormat = null;
     }
 
     public void clearPossibleStaleData() {
         //basically, the only possible stale data will be everything
         //except the dao format and the type, which will have been set
         //in the first screen
+        fastaFormat = null;
         dataFiles.clear();
-        fastaFiles.clear();
         validationMessages.clear();
         options = new Properties();
         masterFile = null;
@@ -162,6 +183,8 @@ public class ConverterData {
         databaseMappings.clear();
         filesToDelete.clear();
         customeReportFields.clear();
+        dataFiles.clear();
+        mzTabFiles.clear();
     }
 
     public DataType getType() {
@@ -216,12 +239,19 @@ public class ConverterData {
         this.mergedOutputFile = mergedOutputFile;
     }
 
+    public HandlerFactory.FASTA_FORMAT getFastaFormat() {
+        return fastaFormat;
+    }
+
+    public void setFastaFormat(HandlerFactory.FASTA_FORMAT fastaFormat) {
+        this.fastaFormat = fastaFormat;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("ConverterData");
         sb.append("{dataFiles=").append(dataFiles);
-        sb.append(", fastaFiles=").append(fastaFiles);
         sb.append(", mzTabFiles=").append(mzTabFiles);
         sb.append(", options=").append(options);
         sb.append(", daoFormat=").append(daoFormat);
@@ -229,6 +259,7 @@ public class ConverterData {
         sb.append(", lastSelectedDirectory='").append(lastSelectedDirectory).append('\'');
         sb.append(", validationMessages=").append(validationMessages);
         sb.append(", type=").append(type);
+        sb.append(", fastaFormat=").append(fastaFormat);
         sb.append(", PTMs=").append(PTMs);
         sb.append(", databaseMappings=").append(databaseMappings);
         sb.append(", masterDAO=").append(masterDAO);

@@ -20,7 +20,7 @@ public class MzTabFileFilter extends FileFilter {
         }
         String extension = FileUtils.getExtension(file);
         if (extension != null) {
-            return (extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("mztab"));
+            return (extension.equalsIgnoreCase(".txt") || extension.equalsIgnoreCase(".mztab"));
         } else return false;
     }
 

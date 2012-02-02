@@ -21,6 +21,7 @@ public class ProgressDialog extends JDialog {
         super(owner);
         initComponents();
         this.worker = worker;
+        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     public ProgressDialog(Dialog owner, SwingWorker worker) {
@@ -59,6 +60,7 @@ public class ProgressDialog extends JDialog {
 
             //---- button1 ----
             button1.setText("Cancel");
+            button1.setEnabled(false);
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
