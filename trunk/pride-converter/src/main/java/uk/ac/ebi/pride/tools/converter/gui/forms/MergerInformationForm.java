@@ -6,10 +6,12 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.DataType;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import javax.swing.*;
 import java.util.Collection;
@@ -121,5 +123,10 @@ public class MergerInformationForm extends AbstractForm {
     @Override
     public void finish() throws GUIException {
         ConverterData.getInstance().setType(DataType.PRIDE_XML);
+        DAOFactory.DAO_FORMAT daoFormat = DAOFactory.DAO_FORMAT.getDAOForSearchengineOption(DataType.PRIDE_XML.getEngineName().toLowerCase());
+        if (daoFormat == null) {
+            throw new ConverterException("Invalid DAO Format: " + DataType.PRIDE_XML.getEngineName());
+        }
+        ConverterData.getInstance().setDaoFormat(daoFormat);
     }
 }
