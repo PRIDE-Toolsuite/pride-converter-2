@@ -123,6 +123,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         tableFiles.addAll(chooseFiles(true, false, new MzTabFileFilter()));
         mzTabFileTable.clearFiles();
         mzTabFileTable.addFiles(tableFiles);
+
+        //if there are multiple tab files, report file generation is always forced
+        if (mzTabFileTable.getFiles().size() > 1) {
+            forceRegenerationBox.setSelected(true);
+            forceRegenerationBox.setEnabled(false);
+        } else {
+            forceRegenerationBox.setSelected(false);
+            forceRegenerationBox.setEnabled(true);
+        }
     }
 
     private void fullIdButtonActionPerformed(ActionEvent e) {
@@ -567,15 +576,76 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         ConverterData.getInstance().clearPossibleStaleData();
 
         switch (format) {
+
+            //generate mztab files
             case MZTAB:
                 IOUtilities.generateMzTabFiles(getOptions(), dataFileTable.getFiles());
                 break;
+
+            //will be generating pride xml file in the end
             case PRIDE_XML:
-                IOUtilities.generateReportFiles(getOptions(), dataFileTable.getFiles(), forceRegenerationBox.isSelected());
+
+                File sequenceFile = null;
+                //we only have 1/0 sequence file
+                if (!sequenceFileTable.getFiles().isEmpty()) {
+                    //store path and fasta type
+                    sequenceFile = sequenceFileTable.getFiles().iterator().next();
+                    ConverterData.getInstance().setFastaFormat(fastaFormat);
+                }
+
+                //if we have several mztab files, don't generate the report files now as there will be a subsequent
+                //step where the user must confirm the input file/mztab file assignment. The report generation will
+                //be done in the next step
+                if (mzTabFileTable.getFiles().size() > 1) {
+
+                    //only store input files, the logic will be handled by other form
+                    for (File inputFile : dataFileTable.getFiles()) {
+                        FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                        if (sequenceFile != null) {
+                            fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
+                        }
+                        ConverterData.getInstance().getDataFiles().add(fileBean);
+                    }
+
+                    //store mztab files externally to fileBeans
+                    for (File mzTabFile : mzTabFileTable.getFiles()) {
+                        ConverterData.getInstance().getMztabFiles().add(mzTabFile.getAbsolutePath());
+                    }
+
+                    //store options for next form
+                    ConverterData.getInstance().setOptions(getOptions());
+
+                    //register a new form to deal with the mapping
+                    NavigationPanel.getInstance().registerFormAfter(new MzTabFileMappingForm(), this);
+
+                } else {
+                    File mzTabFile = null;
+                    //we only have 1/0 mztab file
+                    if (!mzTabFileTable.getFiles().isEmpty()) {
+                        mzTabFile = mzTabFileTable.getFiles().iterator().next();
+                    }
+                    //if there is only one mztab file, it will be added to all input files
+                    for (File inputFile : dataFileTable.getFiles()) {
+                        FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                        if (sequenceFile != null) {
+                            fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
+                        }
+                        if (mzTabFile != null) {
+                            fileBean.setMzTabFile(mzTabFile.getAbsolutePath());
+                        }
+                        ConverterData.getInstance().getDataFiles().add(fileBean);
+                    }
+
+                    IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected());
+                }
                 break;
+
+            //merging pride xml files
             case PRIDE_MERGED_XML:
                 IOUtilities.mergePrideXMLFiles(getOptions(), dataFileTable.getFiles());
                 break;
+
+            //filtering pride xml files
             case PRIDE_FILTERED_XML:
                 //only store input files, the logic will be handled by other form
                 for (File inputFile : dataFileTable.getFiles()) {
