@@ -864,10 +864,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
          */
         private int identifiedSpecIndex = 0;
         /**
-         * The current spectrum (1-based index) in the dao's iterator
-         */
-        private int currentDaoSpec = 1;
-        /**
          * The DAO's iterator
          */
         private Iterator<Spectrum> daoIterator;
@@ -896,23 +892,17 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             // get the 1-based index of the current spectra
             int currentSpecIndex = identifiedSpectraArray.get(identifiedSpecIndex++);
 
-            // make sure we're not too far
-            if (currentSpecIndex < currentDaoSpec)
-                throw new ConverterException("Invalid state in IdentifiedDAOSpectrumIterator.");
-
-            // move across all spectra that are not relevant in the DAO iterator
-            while (currentDaoSpec != currentSpecIndex && daoIterator.hasNext()) {
-                daoIterator.next();
-                currentDaoSpec++;
-            }
+            Spectrum s = daoIterator.next();
+            
+            while (s.getId() < currentSpecIndex && daoIterator.hasNext())
+            	s = daoIterator.next();
 
             // make sure the spec was found
-            if (currentDaoSpec != currentSpecIndex)
-                throw new ConverterException("Spectrum " + currentSpecIndex + " referenced in X!Tandem XML file does not exist in spectrum source file (DAO returned " + currentDaoSpec + ", hasNext=" + daoIterator.hasNext() + ".");
+            if (s.getId() != currentSpecIndex)
+                throw new ConverterException("Spectrum " + currentSpecIndex + " referenced in X!Tandem XML file does not exist in spectrum source file.");
 
-            // return the spectrum
-            currentDaoSpec++;
-            return daoIterator.next();
+            // return the spectrum            
+            return s;
         }
 
         @Override
