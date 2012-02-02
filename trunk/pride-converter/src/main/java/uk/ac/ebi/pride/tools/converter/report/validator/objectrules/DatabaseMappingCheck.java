@@ -66,7 +66,7 @@ public class DatabaseMappingCheck<ReportObject> extends ObjectRule<ReportObject>
             } else {
                 if (mapping.getCuratedDatabaseName() == null || "".equals(mapping.getCuratedDatabaseName())) {
                     msgs.add(new ValidatorMessage("Curated database name should be set for this search database: " + mapping.getSearchEngineDatabaseName(),
-                            MessageLevel.WARN, context, this));
+                            MessageLevel.ERROR, context, this));
                 }
                 if (mapping.getCuratedDatabaseVersion() == null || "".equals(mapping.getCuratedDatabaseVersion())) {
                     msgs.add(new ValidatorMessage("Curated database version should be set for this search database: " + mapping.getSearchEngineDatabaseName(),
