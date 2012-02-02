@@ -396,12 +396,27 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
             // process every peptide
             for (Peptide peptide : peptides) {
+            	// get the protein id by extracting it from the first domain (one peptide is only in one protein)
+            	if (peptide.getDomains().size() < 1)
+            		throw new InvalidFormatException("Peptide object encountered that does not contain any domains.");
+            	
+            	String firstDomainId = peptide.getDomains().get(0).getDomainID();
+            	String protId = firstDomainId.substring(0, firstDomainId.lastIndexOf('.'));
+            	
+            	// save the spec id as identified (extract the id from the protein id)
+                identifiedSpectra.add(Integer.parseInt(protId.substring(0, protId.indexOf('.'))));
+            	
+            	// get the protein object
+                Protein protein = protMap.getProtein(protId);
+
+                // store the peptide in the proteinHasPeptides HashMap
+                if (!proteinHasPeptides.containsKey(protein.getLabel()))
+                    proteinHasPeptides.put(protein.getLabel(), new ArrayList<Peptide>());
+                // add the peptide
+                proteinHasPeptides.get(protein.getLabel()).add(peptide);
+            	
                 // process every domain in the peptide
                 for (Domain domain : peptide.getDomains()) {
-                    // get the protein id
-                    String domainId = domain.getDomainID();
-                    String protId = domainId.substring(0, domainId.lastIndexOf('.'));
-
                     // expect the first peptide to be the highest ranking one (= smalles expect value)
                     if (minExpect == null)
                         minExpect = domain.getDomainExpect();
@@ -411,18 +426,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
                         // if only the best peptides hould be included, ignore every peptide with a larger expect value
                     else if (onlyBestPep && domain.getDomainExpect() > minExpect)
                         continue;
-
-                    // save the spec id as identified (extract the id from the protein id)
-                    identifiedSpectra.add(Integer.parseInt(protId.substring(0, protId.indexOf('.'))));
-
-                    // get the protein object
-                    Protein protein = protMap.getProtein(protId);
-
-                    // store the peptide in the proteinHasPeptides HashMap
-                    if (!proteinHasPeptides.containsKey(protein.getLabel()))
-                        proteinHasPeptides.put(protein.getLabel(), new ArrayList<Peptide>());
-                    // add the peptide
-                    proteinHasPeptides.get(protein.getLabel()).add(peptide);
 
                     // store the protein accession with the peptide sequence in sequenceInAccessions
                     if (!sequenceInAccessions.containsKey(domain.getDomainSequence()))
@@ -1249,8 +1252,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
                 	if (fragmentIons != null && fragmentIons.size() > 0)
                 		convertedPeptide.getFragmentIon().addAll(fragmentIons);
                 }
-                // the used fragment ions are not reported in X!Tandem files. The parser only returns the theoretical
-                // ones. Therefore, no fragment ions are reported by the X!Tandem DAO.
 
                 convertedPeptides.add(convertedPeptide);
             }
@@ -1291,7 +1292,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     			// X!Tandem file is changed and does not correspond to the original intensity
     			// to get the actual intensity one would have to load the original spectrum, parse
     			// the peak list etc.
-    			//prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam("50000"));
+    			if (useInternalSpectra)
+    				prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(fragmentIon.getIntensity()));
                 // m/z
     			double mz = fragmentIon.getMZ() + fragmentIon.getTheoreticalExperimentalMassError();
     			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MZ.getParam(mz));
