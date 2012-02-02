@@ -416,7 +416,7 @@ public class MzXmlDAO extends AbstractPeakListDAO {
 		
         spectrum.setId(scan.getNum().intValue());
 
-        // set the precuror list
+        // set the precursor list
         SpectrumDesc spectrumDesc = new SpectrumDesc();
 
         // create the spectrumSettings/spectrumInstrument (mzRangeStop, mzRangeStart, msLevel)
