@@ -149,10 +149,6 @@ public class FilterPanel extends JPanel {
         }
     }
 
-    private void scoreFilterTextFieldActionPerformed() {
-        // TODO add your code here
-    }
-
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -566,7 +562,20 @@ public class FilterPanel extends JPanel {
     }
 
     public void reset() {
-        //todo
+        gzipCheckBox.setSelected(true);
+        includeOnlyIdentifiedSpectraBox.setSelected(false);
+        removeWorkfilesBox.setSelected(true);
+        removeEmptySpectraBox.setSelected(false);
+        labelDecoyHitsBox.setSelected(false);
+        decoyPatternField.setText(null);
+        filterIdentsWIthNbPepBox.setSelected(false);
+        nbPeptideFilterTextField.setText(null);
+        filterScoreBox.setSelected(false);
+        scoreFilterTextField.setText(null);
+        blacklistCheckbox.setSelected(false);
+        blacklistTextfield.setText(null);
+        whitelistCheckbox.setSelected(false);
+        whitelistTextfield.setText(null);
     }
 
     public boolean isRemoveWorkfiles() {
