@@ -12,6 +12,7 @@ import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+import uk.ac.ebi.pride.tools.converter.utils.ModUtils;
 import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
 import uk.ac.ebi.pride.tools.converter.utils.memory.MemoryUsage;
 import uk.ac.ebi.pride.tools.utils.AccessionResolver;
@@ -67,6 +68,10 @@ public class ReportWriter {
     public String writeReport() throws ConverterException, InvalidFormatException {
         Metadata meta = createMedatada();
         Collection<PTM> ptms = dao.getPTMs();
+
+        //update PTM mappings to try and automatically assign curated PTM annotations by mass delta
+        ptms = ModUtils.mapPreferredModifications(ptms);
+
         Collection<DatabaseMapping> databaseMappings = dao.getDatabaseMappings();
         return writeReport(meta, ptms, databaseMappings);
     }
