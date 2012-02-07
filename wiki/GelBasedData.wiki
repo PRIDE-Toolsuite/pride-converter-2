@@ -10,7 +10,7 @@ PRIDE Converter 2 is able to automatically generate the required mzTab files in 
 
 = Generating mzTab files =
 
-Currently, the functionality to automatically generate an mzTab file using PRIDE Converter 2 is only available through the command line interface (CLI).
+== Using the Command Line ==
 
 Given the following example where Mascot was used and a single spot is represented through one result file:
 {{{
@@ -22,10 +22,10 @@ GelA_Spot2.dat      A         2
 
 Open a command line and navigate to the directory where the result files are stored. Then execute PRIDE Converter 2 with the following options:
 {{{
-java -jar /path/to/pride_converter.jar -engine mascot -sourcefile GelA_Spot1.dat -mode mztab -gel_identifier "Gel A" -gel_spot_regex "Gel[AB]_Spot([0-9]+).*"
+java -jar /path/to/pride_converter.jar -converter -engine mascot -sourcefile GelA_Spot1.dat -mode mztab -gel_identifier "Gel A" -gel_spot_regex "Gel[AB]_Spot([0-9]+).*"
 
 Alterantive:
-java -jar /path/to/pride_converter.jar -engine mascot -sourcefile GelA_Spot1.dat -mode mztab -gel_identifier "Gel A" -gel_spot_identifier "Spot 1"
+java -jar /path/to/pride_converter.jar -converter -engine mascot -sourcefile GelA_Spot1.dat -mode mztab -gel_identifier "Gel A" -gel_spot_identifier "Spot 1"
 }}}
 
 This command will create an mzTab file containing all protein identifications found in the supplied Mascot .dat file and saves it under "GelA_Spot1.dat-mztab".
@@ -41,10 +41,14 @@ The used options are as follows:
 On Linux it is possible to use "find" to launch the mzTab generation for all result files using a single command. Based on the previous example the same could be achieved for all (in the example both) .dat files with the following command:
 
 {{{
-find /path/to/dat/file/directory -name "*.dat" -exec java -jar /path/to/pride_converter.jar -engine mascot -mode mztab -gel_identifier "Gel A" -gel_spot_regex "Gel[AB]_Spot([0-9]+).*" -sourcefile '{}' \;
+find /path/to/dat/file/directory -name "*.dat" -exec java -jar /path/to/pride_converter.jar -converter -engine mascot -mode mztab -gel_identifier "Gel A" -gel_spot_regex "Gel[AB]_Spot([0-9]+).*" -sourcefile '{}' \;
 }}}
 
 In this case the *-gel_spot_regex* option must be used as otherwise all files would be attributed to a single gel spot.
+
+== Using the Graphical User Interface (GUI) ==
+
+mzTab files can also be generated using PRIDE Converter's GUI. Simply select "Launch PRIDE mzTab Generator" in the first window. In the second step you need to select the input file type. In the third step you can set the above mentioned options to add the gel specific information automatically to the generated mzTab files. For detailed information about the options please see the above list. 
 
 = Running PRIDE Converter =
 
