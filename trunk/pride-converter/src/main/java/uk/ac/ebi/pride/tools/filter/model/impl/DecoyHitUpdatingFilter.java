@@ -4,6 +4,7 @@ import uk.ac.ebi.pride.jaxb.model.CvParam;
 import uk.ac.ebi.pride.jaxb.model.Identification;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
+import uk.ac.ebi.pride.tools.filter.model.FDRCalculator;
 import uk.ac.ebi.pride.tools.filter.model.UpdatingFilter;
 
 import java.util.regex.Matcher;
@@ -16,7 +17,7 @@ import java.util.regex.PatternSyntaxException;
  * Date: 22/03/11
  * Time: 12:25
  */
-public class DecoyHitUpdatingFilter implements UpdatingFilter<Identification> {
+public class DecoyHitUpdatingFilter implements UpdatingFilter<Identification>, FDRCalculator {
 
     private Pattern decoyPattern;
     int totalIdentificationCount = 0;
@@ -52,14 +53,23 @@ public class DecoyHitUpdatingFilter implements UpdatingFilter<Identification> {
         return objToUpdate;
     }
 
-    public Double getFalseDiscoveryRate() {
+    public double getProteinFalseDiscoveryRate() {
 
         if (totalIdentificationCount > 0) {
             return decoyCount / (double) totalIdentificationCount;
         } else {
-            return null;
+            return -1;
         }
 
+    }
+
+    public double getPeptideFalseDiscoveryRate() {
+        return -1;
+    }
+
+    @Override
+    public FDRType getFDRType() {
+        return FDRType.PROTEIN;
     }
 
     private CvParam makeDecoyParam() {

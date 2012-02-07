@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.filter.io;
 
 import org.apache.log4j.Logger;
+import uk.ac.ebi.pride.jaxb.model.CvParam;
 import uk.ac.ebi.pride.jaxb.model.Identification;
 import uk.ac.ebi.pride.jaxb.model.PrideXmlObject;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
@@ -10,6 +11,7 @@ import uk.ac.ebi.pride.jaxb.xml.marshaller.PrideXmlMarshallerFactory;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.memory.MemoryUsage;
+import uk.ac.ebi.pride.tools.filter.model.FDRCalculator;
 import uk.ac.ebi.pride.tools.filter.model.Filter;
 import uk.ac.ebi.pride.tools.filter.model.UpdatingFilter;
 
@@ -37,6 +39,8 @@ public class PrideXmlFilter {
     private List<Filter<Identification>> identificationFilters = null;
     private List<UpdatingFilter<Identification>> identificationUpdatingFilters = null;
     private boolean filterUnidentifiedSpectra = false;
+
+    private boolean computeFDR = false;
 
     public PrideXmlFilter(String outputFilePath, String inputFilePath, boolean inputGzipCompressed, boolean outputGzipCompressed) {
 
@@ -256,6 +260,17 @@ public class PrideXmlFilter {
 
             //close experiment
             marshallPrideObject(out, reader.getAdditionalParams());
+            //write FDR, if required
+            for (UpdatingFilter filter : identificationUpdatingFilters) {
+                if (filter instanceof FDRCalculator) {
+                    marshallFDRParam(out, (FDRCalculator) filter);
+                }
+            }
+            for (Filter<Identification> filter : identificationFilters) {
+                if (filter instanceof FDRCalculator) {
+                    marshallFDRParam(out, (FDRCalculator) filter);
+                }
+            }
             out.println("</Experiment>");
 
             //close experimentcollection
@@ -270,6 +285,48 @@ public class PrideXmlFilter {
             if (out != null) {
                 out.close();
             }
+        }
+
+    }
+
+    private void marshallFDRParam(PrintWriter out, FDRCalculator fdrCalculator) throws IOException {
+        switch (fdrCalculator.getFDRType()) {
+            case PROTEIN:
+                if (fdrCalculator.getProteinFalseDiscoveryRate() > 0) {
+                    //write protein FDR param
+                    CvParam cv = new CvParam();
+                    cv.setCvLabel("MS");
+                    cv.setAccession("MS:1001214");
+                    cv.setName("prot:global FDR");
+                    cv.setValue("" + fdrCalculator.getProteinFalseDiscoveryRate());
+                    marshallPrideObject(out, cv);
+                }
+                break;
+            case PEPTIDE:
+                //write peptide FDR param
+                CvParam cv = new CvParam();
+                cv.setCvLabel("MS");
+                cv.setAccession("MS:1001364");
+                cv.setName("pep:global FDR");
+                cv.setValue("" + fdrCalculator.getPeptideFalseDiscoveryRate());
+                marshallPrideObject(out, cv);
+                break;
+            case BOTH:
+                //write protein FDR param
+                CvParam prot = new CvParam();
+                prot.setCvLabel("MS");
+                prot.setAccession("MS:1001214");
+                prot.setName("prot:global FDR");
+                prot.setValue("" + fdrCalculator.getProteinFalseDiscoveryRate());
+                marshallPrideObject(out, prot);
+                //write peptide FDR param
+                CvParam pep = new CvParam();
+                pep.setCvLabel("MS");
+                pep.setAccession("MS:1001364");
+                pep.setName("pep:global FDR");
+                pep.setValue("" + fdrCalculator.getPeptideFalseDiscoveryRate());
+                marshallPrideObject(out, pep);
+                break;
         }
 
     }
