@@ -10,8 +10,10 @@ PRIDE Converter can report quantitative data in PRIDE XML files. Unfortunately, 
 
 PRIDE Converter can be used to generate a skeleton mzTab file that can then be used to add the quantitative data. When using the command line version of PRIDE Converter simply set the mode to "mztab" to generate an mzTab file.
 {{{
-java -jar pride-converter-2.0.jar -engine [USED SEARCH ENGINE] -sourcefile [PATH TO FILE] -mode mztab
+java -jar pride-converter-2.0.jar -converter -engine [USED SEARCH ENGINE] -sourcefile [PATH TO FILE] -mode mztab
 }}}
+
+In the GUI version of PRIDE Converter click "Launch PRIDE mzTab Generator" to generate the skeleton file.
 
 == 2.) Add quantitative data ==
 
