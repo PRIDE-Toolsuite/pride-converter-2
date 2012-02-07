@@ -38,7 +38,7 @@ Quantitative data should be reported as defined by the mzTab format specificatio
 
 ===Gel-based data===
 
-This section is currently missing.
+PRIDE Converter is able to store basic gel-specific data in PRIDE XML files. For detailed information how the data must be prepared please see GelBasedData.
 
 = Known Issues =
 
