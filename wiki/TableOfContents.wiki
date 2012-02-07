@@ -7,5 +7,6 @@
     * [MzXmlDAO mzXML]
   * [QuantitativeMzTabFiles Quantitative data]
   * [GelBasedData Gel based data]
+  * [IntegratingPrideConverter Integrating PRIDE Converter]
   * Developer
     * [HowToWriteADao DAO development]
