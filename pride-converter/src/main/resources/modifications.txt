@@ -1,4 +1,4 @@
-#PSI-MOD id	DiffMono	Unimod	PSI-MOD name	PRIDE synonym	Origin	TermSpec
+#PSI-MOD id	DiffMono	Unimod	PSI-MOD name	PRIDE synonym	Origin(TermSpec)
 MOD:00404	-48.003371	11	homoserine lactone	Homoserine lactone	M(C-term)
 MOD:00403	-29.992806	10	homoserine	Homoserine	M(C-term)
 MOD:00704	-18.010565	23	dehydrated residue	Dehydratation	none(none)

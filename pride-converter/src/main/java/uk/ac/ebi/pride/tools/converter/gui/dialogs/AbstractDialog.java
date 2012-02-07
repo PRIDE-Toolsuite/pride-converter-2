@@ -35,7 +35,7 @@ public abstract class AbstractDialog extends JDialog {
         REPORT_OBJECT_TO_DIALOG.put(CvParam.class, CvParamDialog.class);
         REPORT_OBJECT_TO_DIALOG.put(UserParam.class, UserParamDialog.class);
         REPORT_OBJECT_TO_DIALOG.put(Reference.class, ReferenceDialog.class);
-        REPORT_OBJECT_TO_DIALOG.put(PTM.class, PTMDialog.class);
+        REPORT_OBJECT_TO_DIALOG.put(PTM.class, SimplePTMDialog.class);
         REPORT_OBJECT_TO_DIALOG.put(DatabaseMapping.class, DatabaseMappingDialog.class);
     }
 
