@@ -1,0 +1,58 @@
+#summary Explanation of how to integrate PRIDE Converter 2 into an existing (f.e.) LIMS system
+
+= Introduction =
+
+PRIDE Converter 2 exposes most of its functionality through a command line interface (CLI). This feature should enable users to integrate PRIDE Converter in already existing LIMS systems.
+
+= Modes of operation =
+
+== Prescan Mode ==
+
+PRIDE Converter works in two modes that must be triggered consecutively: First, the *prescan mode* is used to gather all available data from the input files. Among others, PRIDE Converter, for example, checks which modifications are reported. This information is used to generate one *report file* per input file indicating which information still needs to be annotated.
+
+The prescan mode is triggered when launching PRIDE Converter with the following parameters:
+{{{
+java -jar /path/to/pride_converter.jar -converter -mode prescan ...
+}}}
+
+Required parameters to create a report file for an input file are:
+  * *engine*: The search engine used to generate the output file.
+  * *sourcefile*: Path to the input file.
+
+For detailed (and up-to-date) information about the options simply execute
+{{{
+java -jar /path/to/pride_converter.jar -converter -help
+}}}
+
+There are several file format specific options available during the prescan. These cannot be changed after the prescan was done as otherwise a new report file needs to be generated. Detailed descriptions about the various options available can either be found under "File Formats" on the right side, in the PRIDE Converter help component or by executing
+{{{
+java -jar /path/to/pride_converter.jar -converter -engine [SEARCH ENGINE] -help
+}}}
+
+Search engine specific options must be set using *-D[[NAME]]=[[VALUE]]*. For example, to set the Mascot specific "-min_propability" option use
+{{{
+java -jar /path/to/pride_converter.jar -converter -engine mascot -Dmin_probability=0.01 ...
+}}}
+
+== Annotation ==
+
+After the prescan mode is complete the generated report file must be annotated. In the PRIDE Converter GUI this step is automatically performed using the annotation component that's integrated in the PRIDE Converter GUI.
+
+When integrating PRIDE Converter into an existing LIMS system, custom code is required to add the required information to the generated report file.
+
+== Convert Mode ==
+
+The last of the two operation modes of PRIDE Converter is the *convert mode*. This step is generally the computationally most expensive step as all spectra and fragment ion annotations are processed.
+
+The convert mode is triggered when launching PRIDE Converter with the following parameters:
+{{{
+java -jar /path/to/pride_converter.jar -converter -mode convert ...
+}}}
+
+The convert mode has the same required parameters as the prescan mode:
+  * *engine*: The search engine used to generate the output file.
+  * *sourcefile*: Path to the input file.
+
+Search engine specific parameters *cannot* be set in the convert mode. If they are supplied on the command line they are ignored and only the parameters from the prescan mode (stored in the report file) are used. These must not be changed in the report file as it could cause the conversion to fail or, even worse, incorrect data to be generated.
+
+In case any of the search engine specific parameters have to be changed at this stage the prescan mode must be called again creating a new report file.
