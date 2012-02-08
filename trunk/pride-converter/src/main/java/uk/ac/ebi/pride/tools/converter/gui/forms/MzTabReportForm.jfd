@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {comp scrollPane1::l::388:x, comp fileGeneratedLabel::l:p::p}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp fileGeneratedLabel:::p::p, space :::p, comp scrollPane1::::267:x, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::388:x, comp label1::l::388:x, comp fileGeneratedLabel::l:p::p}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :::p, comp fileGeneratedLabel:::p::p, space :::p, comp scrollPane1::::244:x, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -39,6 +39,12 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JLabel" ) {
 				name: "fileGeneratedLabel"
 				"text": "Files Generated: "
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "MzTab Generation Complete!"
+				"horizontalAlignment": 0
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 2, false )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

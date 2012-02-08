@@ -27,18 +27,13 @@ public class MergerReportForm extends AbstractForm {
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
-        label1 = new JLabel();
-        outputFileTextField = new JTextField();
         scrollPane1 = new JScrollPane();
         fileTable = new JTable();
+        label2 = new JLabel();
+        label1 = new JLabel();
+        outputFileTextField = new JTextField();
 
         //======== this ========
-
-        //---- label1 ----
-        label1.setText("Output file: ");
-
-        //---- outputFileTextField ----
-        outputFileTextField.setEditable(false);
 
         //======== scrollPane1 ========
         {
@@ -65,6 +60,17 @@ public class MergerReportForm extends AbstractForm {
             scrollPane1.setViewportView(fileTable);
         }
 
+        //---- label2 ----
+        label2.setText("PRIDE XML Mergring Complete!");
+        label2.setHorizontalAlignment(SwingConstants.CENTER);
+        label2.setFont(label2.getFont().deriveFont(label2.getFont().getSize() + 2f));
+
+        //---- label1 ----
+        label1.setText("Output file: ");
+
+        //---- outputFileTextField ----
+        outputFileTextField.setEditable(false);
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -73,7 +79,8 @@ public class MergerReportForm extends AbstractForm {
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
+                                        .addComponent(label2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                        .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                                 .addComponent(label1)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(outputFileTextField, GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)))
@@ -81,13 +88,15 @@ public class MergerReportForm extends AbstractForm {
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(outputFileTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label1))
-                                .addGap(18, 18, 18)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
+                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label1)
+                                        .addComponent(outputFileTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -95,10 +104,11 @@ public class MergerReportForm extends AbstractForm {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JLabel label1;
-    private JTextField outputFileTextField;
     private JScrollPane scrollPane1;
     private JTable fileTable;
+    private JLabel label2;
+    private JLabel label1;
+    private JTextField outputFileTextField;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

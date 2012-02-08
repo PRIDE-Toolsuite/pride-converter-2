@@ -32,6 +32,7 @@ public class FilterReportForm extends AbstractForm {
         scrollPane1 = new JScrollPane();
         fileTable = new JTable();
         fileGeneratedLabel = new JLabel();
+        label1 = new JLabel();
 
         //======== this ========
 
@@ -68,24 +69,32 @@ public class FilterReportForm extends AbstractForm {
         //---- fileGeneratedLabel ----
         fileGeneratedLabel.setText("Files Generated: ");
 
+        //---- label1 ----
+        label1.setText("PRIDE XML Filtering Complete!");
+        label1.setHorizontalAlignment(SwingConstants.CENTER);
+        label1.setFont(label1.getFont().deriveFont(label1.getFont().getSize() + 2f));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                                        .addComponent(fileGeneratedLabel))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                        .addComponent(label1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                        .addComponent(fileGeneratedLabel, GroupLayout.Alignment.LEADING))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
+                                .addComponent(label1)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(fileGeneratedLabel)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -96,6 +105,7 @@ public class FilterReportForm extends AbstractForm {
     private JScrollPane scrollPane1;
     private JTable fileTable;
     private JLabel fileGeneratedLabel;
+    private JLabel label1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override
