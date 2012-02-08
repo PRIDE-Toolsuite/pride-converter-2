@@ -20,6 +20,7 @@ import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.ResourceBundle;
@@ -29,6 +30,8 @@ import java.util.ResourceBundle;
  * @author rcote
  */
 public class DataTypeForm extends AbstractForm {
+
+    private java.util.List<JRadioButton> spectraOnlyButtons = new ArrayList<JRadioButton>();
 
     public DataTypeForm() {
         initComponents();
@@ -40,6 +43,18 @@ public class DataTypeForm extends AbstractForm {
 
         descriptionArea.setEditorKit(new HTMLEditorKit());
         descriptionArea.setText(bundle.getString("Welcome.message"));
+
+        //add all spectrum only buttons
+        spectraOnlyButtons.add(pklRadioMultiple);
+        spectraOnlyButtons.add(pklRadioSingle);
+        spectraOnlyButtons.add(dtaRadioMultiple);
+        spectraOnlyButtons.add(dtaRadioSingle);
+        spectraOnlyButtons.add(mzMLRadio);
+        spectraOnlyButtons.add(ms2Radio);
+        spectraOnlyButtons.add(mgfRadio);
+        spectraOnlyButtons.add(mzdataButton);
+        spectraOnlyButtons.add(msgfRadio);
+
     }
 
     public void setMacOS() {
@@ -617,6 +632,12 @@ public class DataTypeForm extends AbstractForm {
             if (res == JOptionPane.CANCEL_OPTION) {
                 clear();
             }
+        }
+    }
+
+    public void setSpectrumOnlyFormatsEnabled(boolean enabled) {
+        for (JRadioButton button : spectraOnlyButtons) {
+            button.setEnabled(enabled);
         }
     }
 }
