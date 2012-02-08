@@ -4,18 +4,10 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::388:x, seq t {comp label1:::p::p, space :::p, comp outputFileTextField::::297:x}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {comp outputFileTextField::l:p::p, comp label1::l:p::p}, space s:::p, comp scrollPane1::::251:x, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::388:x, comp label2::l::388:x, seq l {comp label1:::p::p, space :::p, comp outputFileTextField::::297:x}}, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp label2:::p:19:p, space :::p, par b {comp label1::b:p::p, comp outputFileTextField::b:p::p}, space :::p, comp scrollPane1::::238:x, space :::p}}"
 		} ) {
 			name: "this"
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"text": "Output file: "
-			} )
-			add( new FormComponent( "javax.swing.JTextField" ) {
-				name: "outputFileTextField"
-				"editable": false
-			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
 				add( new FormComponent( "javax.swing.JTable" ) {
@@ -37,6 +29,20 @@ new FormModel {
 						add( null )
 					} )
 				} )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "PRIDE XML Mergring Complete!"
+				"horizontalAlignment": 0
+				"font": new com.jformdesigner.model.SwingDerivedFont( null, 0, 2, false )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Output file: "
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "outputFileTextField"
+				"editable": false
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
