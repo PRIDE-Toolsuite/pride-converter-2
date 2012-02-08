@@ -25,6 +25,7 @@ public class ConverterApplicationSelector extends JFrame {
 
     private enum ConverterProperties {
 
+        JAVAHOME("java.home"),
         JVMARGS("jvm.args"),
         PROXYUSER("http.proxyUser"),
         PROXYPASSWORD("http.proxyPassword"),
@@ -119,6 +120,7 @@ public class ConverterApplicationSelector extends JFrame {
         }
 
         //bootstrap process
+        String javaHome = properties.getProperty(ConverterProperties.JAVAHOME.getValue());
         String jvmArgs = properties.getProperty(ConverterProperties.JVMARGS.getValue());
         String proxyHost = properties.getProperty(ConverterProperties.PROXYHOST.getValue());
         String proxyPort = properties.getProperty(ConverterProperties.PROXYPORT.getValue());
@@ -128,7 +130,16 @@ public class ConverterApplicationSelector extends JFrame {
 
         // create the command
         StringBuilder cmdBuffer = new StringBuilder();
-        cmdBuffer.append("java -cp ");
+        if (javaHome != null && !"".equals(javaHome.trim())) {
+            cmdBuffer.append(javaHome.trim()).append(File.separatorChar);
+        }
+        cmdBuffer.append("java");
+
+        if (isWindowsPlatform()) {
+            cmdBuffer.append(".exe ");
+        }
+
+        cmdBuffer.append(" -cp ");
         if (isWindowsPlatform()) {
             cmdBuffer.append("\"");
         }
@@ -327,7 +338,9 @@ public class ConverterApplicationSelector extends JFrame {
 
         public static void main(String[] args) {
             NavigationPanel panel = NavigationPanel.getInstance();
-            panel.registerForm(new DataTypeForm());
+            DataTypeForm form = new DataTypeForm();
+            form.setSpectrumOnlyFormatsEnabled(false);
+            panel.registerForm(form);
             panel.registerForm(new FileSelectionForm(OutputFormat.MZTAB));
             panel.registerForm(new MzTabReportForm());
             panel.reset();
