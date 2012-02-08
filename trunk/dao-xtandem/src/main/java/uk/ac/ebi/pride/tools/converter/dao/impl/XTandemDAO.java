@@ -29,7 +29,6 @@ import uk.ac.ebi.pride.jaxb.model.SpectrumSettings;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.dao.DefaultPTMs;
 import uk.ac.ebi.pride.tools.converter.report.model.CV;
 import uk.ac.ebi.pride.tools.converter.report.model.Contact;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
@@ -716,8 +715,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             else
                 p.setResidues(residue);
 
-            p = addDefaultPTMInfo(p);
-
             // add the delta if it wasn't added before
             if (p.getModMonoDelta().size() < 1)
                 p.getModMonoDelta().add(label.substring(0, label.indexOf('@')));
@@ -726,74 +723,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         }
 
         return ptms;
-    }
-
-    /**
-     * Enriches certain ptms for which the PSI-MOD
-     * accession can be guessed (f.e. Oxidation-M, Carbamidomethylation)
-     *
-     * @param ptm
-     * @return
-     */
-    private PTM addDefaultPTMInfo(PTM ptm) {
-        // extract the mass and AA letter
-        int index = ptm.getSearchEnginePTMLabel().indexOf('@');
-
-        if (index == -1)
-            return ptm;
-
-        // get the number
-        Double delta = Double.parseDouble(ptm.getSearchEnginePTMLabel().substring(0, index));
-        // get the AA code
-        String aa = ptm.getSearchEnginePTMLabel().substring(index + 1);
-
-        // make sure it's not a motif
-        if (aa.length() > 1)
-            return ptm;
-
-        // check the modification for the default mods
-        if ("C".equals(aa) && (delta > 57.01 && delta < 57.03)) {
-            ptm = enrichPtm(ptm, DefaultPTMs.CARBAMIDOMETHYL);
-        } else if ("M".equals(aa) && delta == 15.9949) {
-            ptm = enrichPtm(ptm, DefaultPTMs.OXIDATION);
-        } else if (delta == 14.0157) {
-            ptm = enrichPtm(ptm, DefaultPTMs.METHYLATION);
-        } else if (delta == 42.0106) {
-            ptm = enrichPtm(ptm, DefaultPTMs.ACETYLATION);
-        } else if (delta == 79.9663) {
-            ptm = enrichPtm(ptm, DefaultPTMs.PHOSPHORYLATION);
-        } else if (delta > -18.01069 && delta < -18.01049) {
-        	ptm = enrichPtm(ptm, DefaultPTMs.DEHYDRATION);
-        } else if (delta < -17.0264 && delta > -17.0266) {
-        	ptm = enrichPtm(ptm, DefaultPTMs.AMONIA_LOSS);
-        }
-
-        return ptm;
-    }
-
-    /**
-     * Enrich the passed PTM with the information from the default
-     * PTM.
-     *
-     * @param ptm
-     * @param defaultPtm
-     * @return
-     */
-    private PTM enrichPtm(PTM ptm, DefaultPTMs defaultPtm) {
-        ptm.setModAccession(defaultPtm.getAccession());
-        ptm.setModDatabase(defaultPtm.getDatabase());
-        ptm.setModDatabaseVersion(defaultPtm.getDatabaseVersion());
-
-        if (ptm.getAdditional() == null)
-            ptm.setAdditional(new Param());
-
-        ptm.getAdditional().getCvParam().add(new CvParam(defaultPtm.getDatabase(),
-                defaultPtm.getAccession(),
-                defaultPtm.getPreferredName(), ""));
-
-        ptm.getModMonoDelta().add(defaultPtm.getMonoDelta().toString());
-
-        return ptm;
     }
 
     @Override
