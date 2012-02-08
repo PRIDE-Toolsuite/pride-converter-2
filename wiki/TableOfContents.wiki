@@ -8,5 +8,6 @@
   * [QuantitativeMzTabFiles Quantitative data]
   * [GelBasedData Gel based data]
   * [IntegratingPrideConverter Integrating PRIDE Converter]
+  * [ProteinInference Protein inference]
   * Developer
     * [HowToWriteADao DAO development]
