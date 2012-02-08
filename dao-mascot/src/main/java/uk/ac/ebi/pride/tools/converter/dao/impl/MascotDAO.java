@@ -1,34 +1,73 @@
 package uk.ac.ebi.pride.tools.converter.dao.impl;
 
-import matrix_science.msparser.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import matrix_science.msparser.ms_inputquery;
+import matrix_science.msparser.ms_mascotresfile;
+import matrix_science.msparser.ms_mascotresults;
+import matrix_science.msparser.ms_peptide;
+import matrix_science.msparser.ms_peptidesummary;
+import matrix_science.msparser.ms_protein;
+import matrix_science.msparser.ms_proteinsummary;
+import matrix_science.msparser.ms_searchparams;
+import matrix_science.msparser.ms_taxonomychoice;
+import matrix_science.msparser.ms_taxonomyfile;
+import matrix_science.msparser.vectord;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import uk.ac.ebi.pride.jaxb.model.*;
+
+import uk.ac.ebi.pride.jaxb.model.Data;
+import uk.ac.ebi.pride.jaxb.model.IntenArrayBinary;
+import uk.ac.ebi.pride.jaxb.model.MzArrayBinary;
+import uk.ac.ebi.pride.jaxb.model.Precursor;
+import uk.ac.ebi.pride.jaxb.model.PrecursorList;
+import uk.ac.ebi.pride.jaxb.model.Spectrum;
+import uk.ac.ebi.pride.jaxb.model.SpectrumDesc;
+import uk.ac.ebi.pride.jaxb.model.SpectrumInstrument;
+import uk.ac.ebi.pride.jaxb.model.SpectrumSettings;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.dao.DefaultPTMs;
-import uk.ac.ebi.pride.tools.converter.report.model.*;
+import uk.ac.ebi.pride.tools.converter.report.model.CV;
 import uk.ac.ebi.pride.tools.converter.report.model.Contact;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
+import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
 import uk.ac.ebi.pride.tools.converter.report.model.FragmentIon;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
+import uk.ac.ebi.pride.tools.converter.report.model.InstrumentDescription;
+import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
+import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
+import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Protocol;
 import uk.ac.ebi.pride.tools.converter.report.model.Reference;
+import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
 import uk.ac.ebi.pride.tools.converter.report.model.Software;
 import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
-
-import java.io.*;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * MascotDAO using the Matrix Science ms_parser
@@ -783,9 +822,6 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
                 // set the specificity
                 ptm.setResidues(mascotFile.params().getFixedModsResidues(modNumber).replace("C_term", "1").replace("N_term", "0"));
 
-                // add default info
-                ptm = addDefaultPtmInfo(ptm);
-
                 //add delta info
                 Double modDelta = mascotFile.params().getFixedModsDelta(modNumber);
                 if (average) {
@@ -825,9 +861,6 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
                     ptm.setResidues(varModResidues.get(modName));
                 else
                     logger.warn("No residue information available for modification '" + modName + "'");
-
-                // add default info
-                ptm = addDefaultPtmInfo(ptm);
 
                 //add delta info
                 Double modDelta = mascotFile.params().getVarModsDelta(modNumber);
@@ -934,171 +967,6 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
         }
 
         return varModResidueStrings;
-    }
-
-    /**
-     * Inserts the information for the supported default PTMs
-     *
-     * @param ptm The ptm to get the default info for.
-     * @return The changed ptm.
-     */
-    private PTM addDefaultPtmInfo(PTM ptm) {
-        // Carbamidomethyl (C)
-        if (ptm.getSearchEnginePTMLabel().equals("Carbamidomethyl (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.CARBAMIDOMETHYL);
-        }
-        // Oxidation
-        else if (ptm.getSearchEnginePTMLabel().equals("Oxidation (M)") ||
-                ptm.getSearchEnginePTMLabel().equals("Oxidation (W)") ||
-                ptm.getSearchEnginePTMLabel().equals("Oxidation (H)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.OXIDATION);
-        }
-        // acetylation
-        else if (ptm.getSearchEnginePTMLabel().equals("Acetyl (Protein N-term)") ||
-                ptm.getSearchEnginePTMLabel().equals("Acetyl (K)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.ACETYLATION);
-        }
-        // amidation
-        else if (ptm.getSearchEnginePTMLabel().equals("Amidated (C-term)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.AMIDATION);
-        }
-        // biotin
-        else if (ptm.getSearchEnginePTMLabel().equals("Biotin (N-term)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.BIOTIN);
-        }
-        // carbamoylation
-        else if (ptm.getSearchEnginePTMLabel().equals("Carbamyl (K)") ||
-                ptm.getSearchEnginePTMLabel().equals("Carbamyl (Protein N-term)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.CARBAMOYLATION);
-        }
-        // carboxymethylation
-        else if (ptm.getSearchEnginePTMLabel().equals("Carboxymethyl (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.CARBOXYMETHYL);
-        }
-        // deamidation
-        else if (ptm.getSearchEnginePTMLabel().equals("Deamidated (N)") ||
-                ptm.getSearchEnginePTMLabel().equals("Deamidated (Q)") ||
-                ptm.getSearchEnginePTMLabel().equals("Deamidated (NQ)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.DEAMIDATION);
-        }
-        // homoserine
-        else if (ptm.getSearchEnginePTMLabel().equals("Met->Hse (M)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.HOMOSERIN);
-        }
-        // homoserine lactone
-        else if (ptm.getSearchEnginePTMLabel().equals("Met->Hsl (M)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.HOMOSERIN_LACTONE);
-        }
-        // NIPCAM
-        else if (ptm.getSearchEnginePTMLabel().equals("NIPCAM (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.NIPCAM);
-        }
-        // phoshorylations
-        else if (ptm.getSearchEnginePTMLabel().equals("Phospho (Y)") ||
-                ptm.getSearchEnginePTMLabel().equals("Phospho (T)") ||
-                ptm.getSearchEnginePTMLabel().equals("Phospho (S)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.PHOSPHORYLATION);
-        }
-        // dehydration
-        else if (ptm.getSearchEnginePTMLabel().equals("Dehydrated (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.DEHYDRATION);
-        }
-        // propionamide
-        else if (ptm.getSearchEnginePTMLabel().equals("Propionamide (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.PROPIONAMIDE);
-        }
-        // pyro-carbamidomethyltion
-        else if (ptm.getSearchEnginePTMLabel().equals("Pyro-carbamidomethyl (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.PYRO_CARBAMIDOMETHYL);
-        }
-        // pyro-glu e
-        else if (ptm.getSearchEnginePTMLabel().equals("Glu->pyro-Glu (E)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.PYRO_GLU_E);
-        }
-        // pyro-glu q
-        else if (ptm.getSearchEnginePTMLabel().equals("Gln->pyro-Glu (Q)") ||
-                ptm.getSearchEnginePTMLabel().equals("Gln->pyro-Glu (N-term Q)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.PYRO_GLU_Q);
-        }
-        // pyridylethyl
-        else if (ptm.getSearchEnginePTMLabel().equals("Pyridylethyl (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.PYRIDYLETHYL);
-        }
-        // amonia loss
-        else if (ptm.getSearchEnginePTMLabel().equals("Ammonia-loss (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.AMONIA_LOSS);
-        }
-        // methylation
-        else if (ptm.getSearchEnginePTMLabel().equals("Methyl (E)") ||
-                ptm.getSearchEnginePTMLabel().equals("Methyl (D)") ||
-                ptm.getSearchEnginePTMLabel().equals("Methyl (C-term)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.METHYLATION);
-        }
-        // methylthiolation
-        else if (ptm.getSearchEnginePTMLabel().equals("Methylthio (C)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.METHYLTHIOLATION);
-        }
-        // sulfation
-        else if (ptm.getSearchEnginePTMLabel().equals("Sulfo (Y)") ||
-                ptm.getSearchEnginePTMLabel().equals("Sulfo (T)") ||
-                ptm.getSearchEnginePTMLabel().equals("Sulfo (S)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.SULFATION);
-        }
-        // dihydroxylation
-        else if (ptm.getSearchEnginePTMLabel().equals("Dioxidation (M)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.DIHYDROXYLATION);
-        }
-        // formylation
-        else if (ptm.getSearchEnginePTMLabel().equals("Formyl (N-term)")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.FORMYLATION);
-        }
-        // iTRAQ 4 plex
-        else if (ptm.getSearchEnginePTMLabel().contains("iTRAQ4plex")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.ITRAQ_4PLEX);
-        }
-        // iTRAQ 8 plex
-        else if (ptm.getSearchEnginePTMLabel().contains("iTRAQ8plex")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.ITRAQ_8PLEX);
-        }
-        // TMT 6 plex (needs to be verified)
-        else if (ptm.getSearchEnginePTMLabel().contains("TMT6plex")) {
-            ptm = enrichPtm(ptm, DefaultPTMs.TMT_6PLEX);
-        }
-
-        return ptm;
-    }
-
-    /**
-     * Enrich the passed PTM with the information from the default
-     * PTM.
-     *
-     * @param ptm
-     * @param defaultPtm
-     * @return
-     */
-    private PTM enrichPtm(PTM ptm, DefaultPTMs defaultPtm) {
-        boolean average = mascotFile.params().getMASS().equals("Average");
-
-        ptm.setModAccession(defaultPtm.getAccession());
-        ptm.setModDatabase(defaultPtm.getDatabase());
-        ptm.setModDatabaseVersion(defaultPtm.getDatabaseVersion());
-
-        if (ptm.getAdditional() == null)
-            ptm.setAdditional(new Param());
-
-        CvParam newCvParam = new CvParam(defaultPtm.getDatabase(),
-                defaultPtm.getAccession(),
-                defaultPtm.getPreferredName(),
-                null);
-        ptm.getAdditional().getCvParam().add(newCvParam);
-
-        if (average) {
-            ptm.getModAvgDelta().add(defaultPtm.getAvgDelta().toString());
-        } else {
-            ptm.getModMonoDelta().add(defaultPtm.getMonoDelta().toString());
-        }
-
-        return ptm;
     }
 
     @Override
