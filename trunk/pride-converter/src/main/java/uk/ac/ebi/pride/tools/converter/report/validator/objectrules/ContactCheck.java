@@ -25,13 +25,13 @@ import java.util.Collection;
  * Note: Only objects of certain classes are supported by this rule (see #canCheck)
  */
 
-public class EmailCheck<ReportObject> extends ObjectRule<ReportObject> {
+public class ContactCheck<ReportObject> extends ObjectRule<ReportObject> {
 
     private static final Context context = new Context("contact element");
 
-    public EmailCheck(OntologyManager ontologyManager) {
+    public ContactCheck(OntologyManager ontologyManager) {
         super(ontologyManager);
-        this.setName("EmailCheck");
+        this.setName("ContactCheck");
     }
 
     /**
@@ -39,7 +39,7 @@ public class EmailCheck<ReportObject> extends ObjectRule<ReportObject> {
      */
     @Override
     public String getId() {
-        return "EMAIL";
+        return "CONTACT";
     }
 
     /**
@@ -68,7 +68,7 @@ public class EmailCheck<ReportObject> extends ObjectRule<ReportObject> {
             msgs = checkContact((Contact) reportObject);
         } else {
             // we got a unexpected object, create a appropriate ValidatorMessage
-            msgs.add(new ValidatorMessage("EmailCheck: Could not check the presented object '" + reportObject.getClass()
+            msgs.add(new ValidatorMessage("ContactCheck: Could not check the presented object '" + reportObject.getClass()
                     + "', as it is not of a supported type (Admin|Contact)!",
                     MessageLevel.ERROR, context, this));
         }
@@ -80,7 +80,7 @@ public class EmailCheck<ReportObject> extends ObjectRule<ReportObject> {
     private Collection<ValidatorMessage> checkAdmin(Admin admin) {
         Collection<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
         if (admin == null) {
-            msgs.add(new ValidatorMessage("EmailCheck: Could not check 'admin' section, as the object was null!",
+            msgs.add(new ValidatorMessage("ContactCheck: Could not check 'admin' section, as the object was null!",
                     MessageLevel.ERROR, context, this));
         } else {
             for (Contact contact : admin.getContact()) {
@@ -95,17 +95,32 @@ public class EmailCheck<ReportObject> extends ObjectRule<ReportObject> {
     private Collection<ValidatorMessage> checkContact(Contact contact) {
         Collection<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
         if (contact == null) {
-            msgs.add(new ValidatorMessage("EmailCheck: Could not check 'contactInfo' section, as the object was null!",
+            msgs.add(new ValidatorMessage("ContactCheck: Could not check 'contact' section, as the object was null!",
                     MessageLevel.ERROR, context, this));
         } else {
             // in PRIDE XSD contactinfo is optional <xsd:element name="contactInfo" type="xsd:string" minOccurs="0">
+            //<contact>
+            //  <name>{1,1}</name>
+            //  <institution>{1,1}</institution>
+            //  <contactInfo>{0,1}</contactInfo>
+            //</contact>
             String email = contact.getContactInfo();
-            if (email == null) {
+            String name = contact.getName();
+            String institution = contact.getInstitution();
+            if (name == null || "".equals(name.trim())) {
+                msgs.add(new ValidatorMessage("Could not find a 'name' element in the contact. ",
+                        MessageLevel.ERROR, context, this));
+            }
+            if (institution == null || "".equals(institution.trim())) {
+                msgs.add(new ValidatorMessage("Could not find a 'institution' element in the contact: " + contact.getName(),
+                        MessageLevel.ERROR, context, this));
+            }
+            if (email == null || "".equals(email.trim())) {
                 msgs.add(new ValidatorMessage("Could not find a 'contactInfo' element in the contact: " + contact.getName(),
                         MessageLevel.ERROR, context, this));
             } else {
                 if (!email.contains("@")) {
-                    msgs.add(new ValidatorMessage("Could not find a valid email address in 'contactInfo' element! (Try adding an @!)",
+                    msgs.add(new ValidatorMessage("Could not find a valid email address in 'contactInfo' element!)",
                             MessageLevel.ERROR, context, this));
                 }
             }

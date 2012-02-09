@@ -4,7 +4,7 @@
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.TaxonCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.SubsampleCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.InstrumentCheck"/>
-    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.EmailCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.ContactCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.ProtocolCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModAnnotationCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModDatabaseCheck"/>
