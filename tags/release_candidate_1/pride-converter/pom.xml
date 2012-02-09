@@ -1,0 +1,389 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>uk.ac.ebi.pride.tools</groupId>
+    <artifactId>pride-converter</artifactId>
+    <packaging>jar</packaging>
+    <version>2.0-SNAPSHOT</version>
+    <name>PRIDE Converter</name>
+    <description>This produces PRIDE XML files for submission from various source file formats</description>
+
+    <build>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <!-- compiler plugin (target Java 1.6) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <!-- SureFire plugin (Excludes StressTests by default) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.7.2</version>
+                <configuration>
+                    <failIfNoTests>false</failIfNoTests>
+                    <excludes>
+                        <exclude>**/*StressTest*.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+
+            <!-- buiildnumber plugin (timestamp definition) -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+                <version>1.0-beta-3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>create</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <doCheck>false</doCheck>
+                    <doUpdate>false</doUpdate>
+                    <format>{0,date,yyyyMMdd-HHmm}</format>
+                    <items>
+                        <item>timestamp</item>
+                    </items>
+                </configuration>
+            </plugin>
+
+            <!-- dependency plugin (output file definition) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <outputFile>dependency.dot</outputFile>
+                    <outputType>dot</outputType>
+                </configuration>
+            </plugin>
+
+            <!-- jar plugin (classToExecute, jarName) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>${classToExecute}</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                    <finalName>${jarName}</finalName>
+                </configuration>
+            </plugin>
+
+            <!-- assembly plugin (assembly config, assemblyName) -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+                <configuration>
+                    <finalName>${assemblyName}</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/converter-assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+
+        <profile>
+            <id>converter</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>converter</name>
+                </property>
+            </activation>
+
+            <properties>
+                <jarName>pride-converter-${project.version}</jarName>
+                <classToExecute>uk.ac.ebi.pride.tools.converter.gui.ConverterApplicationSelector</classToExecute>
+                <assemblyName>pride-converter-${buildNumber}</assemblyName>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>cellzome</id>
+            <activation>
+                <property>
+                    <name>cellzome</name>
+                </property>
+            </activation>
+
+            <properties>
+                <jarName>pride-cellzome-${project.version}</jarName>
+                <classToExecute>uk.ac.ebi.pride.tools.cellzome.MzTabReader</classToExecute>
+                <assemblyName>pride-cellzome-${buildNumber}</assemblyName>
+            </properties>
+        </profile>
+
+    </profiles>
+
+    <dependencies>
+
+        <!--DAO dependencies-->
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-peaklist-impl</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-mzidentml-impl</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-mzml-impl</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-mzxml-impl</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-mascot-impl</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-xtandem-impl</artifactId>
+            <version>1.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-msgf-impl</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.</groupId>
+            <artifactId>mztab-java</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--validator -->
+        <dependency>
+            <groupId>psidev.psi.tools</groupId>
+            <artifactId>xxindex</artifactId>
+            <version>0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride.validator</groupId>
+            <artifactId>prideValidator</artifactId>
+            <version>0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>ojdbc14</artifactId>
+                    <groupId>oracle</groupId>
+                </exclusion>
+                <!--<exclusion>-->
+                <!--<groupId>org.geneontology</groupId>-->
+                <!--<artifactId>oboedit</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>uk.ac.ebi</groupId>-->
+                <!--<artifactId>ols</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>proteomics</groupId>-->
+                <!--<artifactId>proteomics-common</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>org.apache.axis</groupId>-->
+                <!--<artifactId>axis</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>org.apache.axis</groupId>-->
+                <!--<artifactId>axis-ant</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>commons-discovery</groupId>-->
+                <!--<artifactId>commons-discovery</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>commons-logging</groupId>-->
+                <!--<artifactId>commons-logging</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>wsdl4j</groupId>-->
+                <!--<artifactId>wsdl4j</artifactId>-->
+                <!--</exclusion>-->
+                <!--<exclusion>-->
+                <!--<groupId>org.apache.axis</groupId>-->
+                <!--<artifactId>axis-jaxrpc</artifactId>-->
+                <!--</exclusion>-->
+
+            </exclusions>
+        </dependency>
+
+        <!--picr / ols -->
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools</groupId>
+            <artifactId>accession-resolver</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.picr</groupId>
+            <artifactId>picr-client</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <!--&lt;!&ndash; Has to be included to work on Java 1.5 &ndash;&gt;-->
+        <!--<dependency>-->
+        <!--<groupId>no.uib</groupId>-->
+        <!--<artifactId>ols-dialog</artifactId>-->
+        <!--<version>3.3.0</version>-->
+        <!--<type>jar</type>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.axis</groupId>
+            <artifactId>axis-saaj</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+        <!--utils -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
+            <version>4.01</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.10.0</version>
+        </dependency>
+
+        <!-- GUI -->
+        <dependency>
+            <groupId>jtattoo</groupId>
+            <artifactId>jtattoo</artifactId>
+            <version>1.3</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.swinglabs</groupId>
+            <artifactId>swingx</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.pride-mod</groupId>
+            <artifactId>pride-mod</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.help</groupId>
+            <artifactId>javahelp</artifactId>
+            <version>2.0.05</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.ols</groupId>
+            <artifactId>ols-client</artifactId>
+            <version>1.18</version>
+        </dependency>
+        <dependency>
+            <groupId>uk.ac.ebi.ols</groupId>
+            <artifactId>ols-core</artifactId>
+            <version>1.19</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>ojdbc14</artifactId>
+                    <groupId>oracle</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>ebi-repo</id>
+            <name>The EBI internal repository</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo</url>
+        </repository>
+        <repository>
+            <id>ebi-snapshot-repo</id>
+            <name>The EBI internal snapshot repository</name>
+            <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
+        </repository>
+
+        <!--<repository>-->
+        <!--<id>java-net</id>-->
+        <!--<name>Java Net Repository</name>-->
+        <!--<url>http://download.java.net/maven/2</url>-->
+        <!--</repository>-->
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>java-net</id>
+            <name>Java Net Repository</name>
+            <url>http://download.java.net/maven/2</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>ebi-repo</id>
+            <name>EBI Repository</name>
+            <url>scp://lobster.ebi.ac.uk/homes/maven/public_html/m2repo</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>ebi-repo-snapshots</id>
+            <name>EBI Snapshots Repository</name>
+            <url>scp://lobster.ebi.ac.uk/homes/maven/public_html/m2repo_snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+</project>

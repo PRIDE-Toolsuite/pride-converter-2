@@ -1,0 +1,244 @@
+<ExperimentCollection version="2.1">
+    <Experiment>
+        <ExperimentAccession>1</ExperimentAccession>
+        <Title>COFRADIC methionine proteome of unstimulated human blood platelets</Title>
+        <Reference>
+            <RefLine>Martens L, Van Damme P, Van Damme J, Staes A, Timmerman E, Ghesquiere B, Thomas GR, Vandekerckhove
+                J, Gevaert K (2005), ?The human platelet proteome mapped by peptide-centric proteomics: a functional
+                protein profile?, Proteomics, 5, 3193-3204.
+            </RefLine>
+            <additional>
+                <cvParam name="16038019" accession="16038019" cvLabel="PubMed"/>
+            </additional>
+        </Reference>
+        <ShortLabel>Platelets MetOx</ShortLabel>
+        <Protocol>
+            <ProtocolName>methionine oxidation induces a chromatographic shift on a diagonal RP-HPLC system.
+            </ProtocolName>
+            <ProtocolSteps/>
+        </Protocol>
+        <mzData version="1.05" accessionNumber="1">
+            <description>
+                <admin>
+                    <sampleName>Unstimulated human blood platelets</sampleName>
+                    <sampleDescription>
+                        <cvParam name="Homo sapiens (Human)" accession="9606" cvLabel="NEWT"/>
+                        <cvParam name="platelet" accession="CL:0000233" cvLabel="CL"/>
+                        <cvParam name="blood_platelets" accession="D001792" cvLabel="MeSH"/>
+                    </sampleDescription>
+                    <contact>
+                        <name>Prof. Dr. Kris Gevaert</name>
+                        <institution>Department of Medical Protein Research (GE07, VIB09), Faculty of Medicine and
+                            Health Sciences, Ghent University and Flanders Interuniversitary Institute for Biotechnology
+                            (VIB)
+                        </institution>
+                        <contactInfo>kris.gevaert@UGent.be</contactInfo>
+                    </contact>
+                    <contact>
+                        <name>Lennart Martens</name>
+                        <institution>Department of Medical Protein Research (GE07, VIB09), Faculty of Medicine and
+                            Health Sciences, Ghent University and Flanders Interuniversitary Institute for Biotechnology
+                            (VIB)
+                        </institution>
+                        <contactInfo>lennart.martens@UGent.be</contactInfo>
+                    </contact>
+                </admin>
+                <instrument>
+                    <instrumentName>Micromass Q-TOF I</instrumentName>
+                    <source>
+                        <cvParam value="ESI" name="Ionization Type" accession="PSI:1000008" cvLabel="PSI"/>
+                        <cvParam value="Chromatography" name="Inlet Type" accession="PSI:1000007" cvLabel="PSI"/>
+                        <cvParam value="PositiveIonMode" name="Ionization Mode" accession="PSI:1000009" cvLabel="PSI"/>
+                    </source>
+                    <analyzerList count="1">
+                        <analyzer>
+                            <cvParam value="Quadrupole-TOF" name="Analyzer Type" accession="PSI:1000010" cvLabel="PSI"/>
+                            <cvParam value="6000" name="Mass Resolution" accession="PSI:1000011" cvLabel="PSI"/>
+                            <cvParam value="FWHM" name="Resolution Method" accession="PSI:1000012" cvLabel="PSI"/>
+                            <cvParam value="Constant" name="Resolution Type" accession="PSI:1000013" cvLabel="PSI"/>
+                            <cvParam value="0.3" name="Accuracy" accession="PSI:1000014" cvLabel="PSI"/>
+                            <cvParam value="2.0" name="Isolation Width" accession="PSI:1000023" cvLabel="PSI"/>
+                            <cvParam value="2" name="Final MS Exponent" accession="PSI:1000024" cvLabel="PSI"/>
+                        </analyzer>
+                    </analyzerList>
+                    <detector>
+                        <cvParam value="MultiChannelPlate" name="Detector Type" accession="PSI:1000026" cvLabel="PSI"/>
+                        <cvParam value="6000" name="Detector Resolution" accession="PSI:1000028" cvLabel="PSI"/>
+                        <cvParam value=" 1000" name="Sampling Frequency" accession="PSI:1000029" cvLabel="PSI"/>
+                    </detector>
+                    <additional/>
+                </instrument>
+                <dataProcessing>
+                    <software>
+                        <name>MassLynx</name>
+                        <version>3.5</version>
+                        <comments>Software Comments (none)</comments>
+                    </software>
+                    <processingMethod>
+                        <cvParam value="false" name="Deisotoping" accession="PSI:1000033" cvLabel="PSI"/>
+                        <cvParam value="false" name="Charge Deconvolution" accession="PSI:1000034" cvLabel="PSI"/>
+                        <cvParam value="CentroidMassSpectrum" name="Peak Processing" accession="PSI:1000035"
+                                 cvLabel="PSI"/>
+                    </processingMethod>
+                </dataProcessing>
+            </description>
+            <spectrumList count="1281">
+                <spectrum id="1">
+                    <spectrumDesc>
+                        <spectrumSettings>
+                            <spectrumInstrument mzRangeStop="0.0" mzRangeStart="0.0" msLevel="2">
+                                <cvParam value="MassScan" name="Scan Mode" accession="PSI:1000036" cvLabel="PSI"/>
+                                <cvParam value="Positive" name="Polarity" accession="PSI:1000037" cvLabel="PSI"/>
+                                <cvParam value="8" name="Time In Seconds" accession="PSI:1000039" cvLabel="PSI"/>
+                            </spectrumInstrument>
+                        </spectrumSettings>
+                        <precursorList count="1">
+                            <precursor spectrumRef="0" msLevel="1">
+                                <ionSelection>
+                                    <cvParam value="3" name="Charge State" accession="PSI:1000041" cvLabel="PSI"/>
+                                    <cvParam value="1472.014" name="Intensity" accession="PSI:1000042" cvLabel="PSI"/>
+                                    <cvParam value="NumberOfCounts" name="Intensity Unit" accession="PSI:1000043"
+                                             cvLabel="PSI"/>
+                                    <cvParam value="499.5686" name="Mass To Charge Ratio" accession="PSI:1000040"
+                                             cvLabel="PSI"/>
+                                </ionSelection>
+                                <activation>
+                                    <cvParam value="CID" name="Activation Method" accession="PSI:1000044"
+                                             cvLabel="PSI"/>
+                                </activation>
+                            </precursor>
+                        </precursorList>
+                        <comments>Identified</comments>
+                    </spectrumDesc>
+                    <mzArrayBinary>
+                        <data length="156" endian="big" precision="64">
+                            QFIFYEGJN0xAXMXOB19v0kBgI2rn1WbPQGBGZzgdfb9AYGKMFUyYX0Bjo3JHRTjvQGPjdLxqfvpAZAZNATqSo0BlIxxDLKV6QGXkJa7mMflAZyMxj8UEgUBnJr7fpD/mQGdiU47zTWpAaQTQE6kqMEBqhBIFvAGjQGtiwvg3tKJAbAYhllK9PEBsRGgJ1JUYQG3kowVTJhhAbeglruYx+UBuhJD/lyR0QG6kNuLrHENAb2TmMfigkEBvhAkC3gDSQG+kkP+XJHRAb8XXCj1wpEBv5MVtXPqtQHEC2lEZzgdAcWI4HX2/SEBxoeB19v0iQHKzANG3F1lAc1Lk92X9i0BzwlbVz6rOQHPE4A0bcXZAc9JFOO8010B0AYJAt4A0QHRCfO2RaHNAdVKANG3F1kB1YvfO2RaHQHWy3MY/FBJAdeNLxqfvnkB183eaa1CxQHZzVgQYk3VAdozaufVZtEB3BHWOIZZTQHcTR64UeuFAeCQKPXCj10B4Mzr7fpEAQHiSQ5WBBiVAeYPgdfb9IkB5onRTjvNNQHnC5prULD1AepMqmTC+DkB6oDOcDr7gQHqkwIMSbphAerO5jH4oJEB6tkLDye7MQHrDJoCdSVJAetLPqs2ehEB7ZH9itq59QHvAwiaAnUlAe8QjOcDr7kB71CEtdzGQQHwTsv7FbV1AfDRSvTw2EUB8YiQLeANHQHyEUyYXwb5AfIez0HyEtkB8ititq59WQHyUUr08NhFAfJiQ/5ckdEB8obpeNT99QHykjopx3mpAfoNwOvt+kUB+k6D5CWu6QH7DoWHk92ZAft5ckdFOPEB/JBQSBbwCQH80I6Kcd5pAfzucDr7fpEB/Q4EGJN0vQH/T987ZFodAgAJJul41P0CACjzTWoWIQIAaWK2rn1ZAgBu59Vmz0ECAIhtxdY4iQIBKN0vGp/BAgIIZML4N7UCA6U01qFh5QIDqZmZmZmZAgP+bcXWOIkCBWpPdl/YrQIHSPnbItDlAggIW8AaNuUCCIfhsImgKQIIm0U47zTZAglKj1wo9cUCCgnO2RaHLQIKyQE6kqMFAgsMspXp4bECCxNXPqs2fQILZZSvTw2FAgur/Lkjop0CDCgS13MY/QIMSditq59VAgyJdLxqfvkCDI+CqZML4QIMqQYk3S8dAgzMtQsPJ70CDopysCDEnQIQSpul41P5AhBStdzGPxUCEGyFh5PdmQIRBXCj1wo9AhEqTdLxqf0CETpDLKV6eQIRq1jiGWUtAhHqEgW8AaUCEgkCDEm6YQIaqe7L+xW1AhsNwBo24u0CHIul41P30QIcq8hLXcxlAhzqrNnoPkUCHqspXp4bCQIezL+xW1dBAh7thE0BOpUCHwynHeaa1QIhTFRgqmTFAiXNB8hLXc0CJgnqs2eg+QImLTdLxqfxAihtGp++dskCKU0VtXPqtQIqzOO801qFAirtU/fO2RkCKwx0U47zTQIrrUbcXWOJAi/ufVZs9CECMU59Vmz0IQIyLkWhysCFAjJOVTJhfB0CM4S/sVtXQQIzjthE0BOpAjOyXWOIZZUCM81bVz6rOQI1z/5ckdFRAjXwFh5PdmECNg9zGPxQSQI6zv7FbVz9AjrVhsImgJ0CQRepkwvg4QJBGljiGWUtAkEoULDye7UCQUmMFUyYY
+                        </data>
+                    </mzArrayBinary>
+                    <intenArrayBinary>
+                        <data length="156" endian="big" precision="64">
+                            QCvkJa7mMflAEFhE0BOpKkBaHSvTw2ETP+11jiGWUr1ACOg+QlruY0Ac5eNT987ZQB0Y/FBIFvA/gqMFUyYXwkAdpD/lyR0VQBRqzZ6D5CZAIpXCj1wo9j+x/y5I6KceQAjVmz0HyEtARPnoPkJa7kAQas2eg+QmQAmrNnoPkJdAEKBBiTdLx0AtVVmz0HyFP/GrNnoPkJc/gqMFUyYXwkAQwxJul41QQADVmz0HyEtAAas2eg+Ql0AUas2eg+QmP/GrNnoPkJdAJFAgxJul40A14vg3tKI0QCg1Zs9B8hNAANWbPQfIS0AA1Zs9B8hLQBCgQYk3S8dAAWDe0ojOcEBCCr08NhE0P/TJ7sv7FbVAGKBBiTdLxz/xqzZ6D5CXQBCpeNT987ZANpprULDyfEAI9itq59VnQADVmz0HyEs/8as2eg+Ql0AiQjOcDr7gQC5y8an7520/8as2eg+Ql0AUas2eg+QmQBSEZzgdfb9AFDxqfvnbI0AQvBvaURnOQAoWHk92X9lAIj6rNnoPkUAUzEm6XjU/QAmrNnoPkJdACUCDEm6XjUAA+qzZ6D5CQBC8G9pRGc5AGIRnOB19vz+qufVZs9B9QBz6xxDLKV9ACVLxqfvnbUAycvGp++dtP//RtxdY4hlAJmGJN0vGqEAQwxJul41QP/GrNnoPkJdAIi5wOvt+kUABqzZ6D5CXQHcpnUlRgqpALwQLeANG3EAhulEZzgdfQFPND/lyR0U/90r08NhE0EANXp4bCJoCQDUq9PDYRNBAANWbPQfIS0AUoEGJN0vHQBV13MY/FBJAANWbPQfIS0AgexW1c+qzQCBvdl/YraxAIokC3gDRt0AofDYRNATqQAoWHk92X9lAEGrNnoPkJkAJ8NhE0BOpQC0bSiM5wOw/4ye7L+xW1kAkas2eg+QmQB1801qFh5RAFHsVtXPqs0AJ4uscQyylQANbItDlYEI/gqMFUyYXwkAwU5WBBiTdQAjVmz0HyEtAANWbPQfIS0AQYXwb2lEaQADVmz0HyEtAChYeT3Zf2UAgYqmTC+DfQBS5wOvt+kQ/8NXPqs2ehEAAfVZs9B8hQADVmz0HyEs/8as2eg+Ql0AI1Zs9B8hLQAj2K2rn1WdAIGGJN0vGqD+mETQE6kqMQADVmz0HyEs/8as2eg+Ql0AQwxJul41QQCZ4uscQyyk//yowVTJhfEAgfWOIZZSvP/GrNnoPkJdAFH1WbPQfIUAJQIMSbpeNQADVmz0HyEs/8as2eg+Ql0AzHHEMspXqQBTl41P3ztlAEGF8G9pRGkAJGz0HyEteQBCNnoPkJa9AFLwb2lEZzkAwT4oJAt4BQB0URnOB19w/8as2eg+Ql0AY6D5CWu5jQBGrNnoPkJdAED6rNnoPkT/xqzZ6D5CXQBBqzZ6D5CZAAWDe0ojOcEAkNWbPQfITQAFg3tKIznBAIIDe0ojOcEAA1Zs9B8hLQAGrNnoPkJdAJjC+De0ojUAKFh5Pdl/ZQC7MVtXPqs5AGGrNnoPkJj/zOpKjBVMmQCpfLkjopx5AHI2eg+Qlr0AUhGc4HX2/QDMwxJul41RAIrB8hLXcxkAJGz0HyEteQCLgDRtxdY5AA5eNT987ZEAsi1Cw8nuzQBsxW1c+qzZAKsQyylenh0AJqzZ6D5CX
+                        </data>
+                    </intenArrayBinary>
+                </spectrum>
+                <spectrum id="3">
+                    <spectrumDesc>
+                        <spectrumSettings>
+                            <spectrumInstrument mzRangeStop="0.0" mzRangeStart="0.0" msLevel="2">
+                                <cvParam value="MassScan" name="Scan Mode" accession="PSI:1000036" cvLabel="PSI"/>
+                                <cvParam value="Positive" name="Polarity" accession="PSI:1000037" cvLabel="PSI"/>
+                                <cvParam value="8" name="Time In Seconds" accession="PSI:1000039" cvLabel="PSI"/>
+                            </spectrumInstrument>
+                        </spectrumSettings>
+                        <precursorList count="1">
+                            <precursor spectrumRef="2" msLevel="1">
+                                <ionSelection>
+                                    <cvParam value="2" name="Charge State" accession="PSI:1000041" cvLabel="PSI"/>
+                                    <cvParam value="1796.4561" name="Intensity" accession="PSI:1000042" cvLabel="PSI"/>
+                                    <cvParam value="NumberOfCounts" name="Intensity Unit" accession="PSI:1000043"
+                                             cvLabel="PSI"/>
+                                    <cvParam value="485.7202" name="Mass To Charge Ratio" accession="PSI:1000040"
+                                             cvLabel="PSI"/>
+                                </ionSelection>
+                                <activation>
+                                    <cvParam value="CID" name="Activation Method" accession="PSI:1000044"
+                                             cvLabel="PSI"/>
+                                </activation>
+                            </precursor>
+                        </precursorList>
+                        <comments>Identified</comments>
+                    </spectrumDesc>
+                    <mzArrayBinary>
+                        <data length="121" endian="big" precision="64">
+                            QFGEyylenhtAVQT3Zf2K20BVQtKIznA7QFWGX9itq59AW4S+De0ojUBeBXwb2lEaQGAjeANG3F1AYELWoWHk90BiY6ufVZs9QGVj6rNnoPlAZiJul41P30BnIrNnoPkJQGfD4N7SiM5AaSPOB19v0kBpJuLrHEMtQGlkETQE6ktAaWf752yLREBpazw2ETQFQGmibcXWOIZAasLgdfb9IkBqxoPkJa7mQGrjLkjopx5Aa8TQ5WBBiUBs48rAgxJvQG8ian752yNAcCJdzGPxQUBwMmCqZML4QHBDRtxdY4hAcLIxJul41UBwtAnUlRgrQHDCTqSowVVAcUKWu5jH40BxRNhE0BOpQHFR+KCQLeBAcWF8G9pRGkByYnEMspXqQHJx1c+qzZ9AcoIWhysCDEBywjEm6XjVQHOC+kP+XJJAc6KbpeNT+EB0opSvTw2EQHSyruYx+KFAdNOy/sVtXUB1s06kqMFVQHXywVTJhfBAdfiM5wOvuEB2gsSbpeNUQHizmgJ1JUZAeNKdSVGCqkB41MfigkC4QHkTNuLrHENAedR7SiM5wUB6gvxQSBbwQHvkGJN0vGpAfdSpkwvg30B+UlMmF8G+QH5VWu5jH4pAflvYraufVkB+XuGwiaAnQH5hOvt+kQBAfmQFvAGjbkB+Z1BIFvAHQH5r8hLXcxlAfnALDye7MEB+dkbcXWOIQH6DxQSBbwBAfyNruYx+KECAkfaURnOCQICZoS13MZBAgPIvGp++d0CBGq4UeuFIQIEiomgJ1JVAgdqrAgxJukCCFekP+XJHQIIqUU47zTZAgjGlruYx+UCCSkXWOIZZQILyEtdzGPxAgvkCDEm6XkCC+mGwiaAnQIMie0ojOcFAgypsv7FbV0CDglG3F1jiQIOasfigkC5Ag5wKPXCj10CDqTbi6xxDQIO6j1wo9cNAhAqXJHRTj0CEkzSiM5wPQISaL+xW1dBAhSDckdFOPECFIu9pRGc4QIUkk6kqMFVAhSecrAgxJ0CFKvyEtdzGQIUzGwiaAnVAhbpU/fO2RkCF8RtxdY4iQIaCwiaAnUlAhzJFBIFvAECHM+LrHEMtQIeTIwVTJhhAh7uCqZML4UCHwvvnbItEQIgKpkwvg3tAiHtIS13MZECIgr3Zf2K3QIia6xxDLKVAiSsraufVZ0CJuwZZSvTxQIm+Xcxj8UFAicC4UeuFH0CJwzvNNahYQInJe7L+xW1Ai1OlEZzgdkCQFdMmF8G+QJAubKV6eGxAkG6rHEMspUCSEkPJ7sv7QKAWoSBbwBo=
+                        </data>
+                    </mzArrayBinary>
+                    <intenArrayBinary>
+                        <data length="121" endian="big" precision="64">
+                            QAFg3tKIznBAJL+XJHRTjz/xqzZ6D5CXQB2bCJoCdSVAFNNATqSowUBZX36Q/5ckQEH0Y/FBIFxAMF/FBIFvAEBC5UyYXwb3QB0NT987ZFpAEQsPJ7sv7EAUhGc4HX2/QAoWHk92X9lAIulenhsImj/sFUyYXwb3QDOjH4oJAt5ABvvnbItDlj/wJUYKpkwwQCZy8an7521AW3OFHrhR7EAVULDye7L/QC0+GwiaAnVAEKl41P3ztkA5Bl/YraufQBiEZzgdfb9AKI2eg+Qlr0AUwxJul41QQBTMSbpeNT9AFGF8G9pRGj+qufVZs9B9QBCnOB19v0hAMxj1wo9cKT/x9Vmz0HyFQCB0HyEtdzJAMJLeANG3F0AZAb2lEZzgQEZgE6kqMFVAHrZFocrAg0AA1Zs9B8hLQBkLDye7L+xAEMMSbpeNUEAcucDr7fpEQADVmz0HyEtACNWbPQfIS0BClS8an753QAjVmz0HyEtAANWbPQfIS0AdJul41P30QAjVmz0HyEtAAfWOIZZSvT/wAAAAAAAAQAjVmz0HyEtACPYraufVZ0AwKc4HX2/SQCMlvAGjbi9ACNWbPQfIS0AIRaHKwIMSQAESBbwBo25AUaIbCJoCdUAdvdl/YrauP/yETQE6kqNATKFh5Pdl/kAPzQE6kqMFQDZGz0HyEtdAG8hLXcxj8UAAaufVZs9CQAjQ5WBBiTdAANWbPQfIS0ASdT987ZFoQADVmz0HyEtAGVML4N7SiUA+ew8nuy/sQBkBvaURnOBAGHQfIS13MkAQwxJul41QQADVmz0HyEs/8as2eg+Ql0AUucDr7fpEQAlS8an7520/8AAAAAAAAEAKCDEm6XjVQAB41P3ztkZAJIkC3gDRt0AQas2eg+QmP/WWUr08NhFACJ3mmtQsPUAI1Zs9B8hLQBS5wOvt+kRACNWbPQfIS0AsoDRtxdY5QBiNnoPkJa8//z0HyEtdzEBcPM5wOvt/QCF/IS13MZBAG2a1Cw8nu0A/gpx3mmtRQAmrNnoPkJdAEH1WbPQfIUAA1Zs9B8hLQAjVmz0HyEs/8R/y5I6Kcj/xH/LkjopyQAjVmz0HyEtALIWHk92X9kAiNWbPQfITQADVmz0HyEtAANWbPQfISz/xqzZ6D5CXQADVmz0HyEtAChYeT3Zf2UAyXgdfb9IgP/CwiaAnUlRAAPqs2eg+QkAcItDlYEGJQBBqzZ6D5CZACoDRtxdY4kAA1Zs9B8hLP/GrNnoPkJdAANWbPQfIS0AI1Zs9B8hLP/GrNnoPkJc=
+                        </data>
+                    </intenArrayBinary>
+                </spectrum>
+            </spectrumList>
+        </mzData>
+        <GelFreeIdentification>
+            <Accession>IPI00302927</Accession>
+            <AccessionVersion>2</AccessionVersion>
+            <Database>IPI human</Database>
+            <DatabaseVersion>2.31</DatabaseVersion>
+            <PeptideItem>
+                <Sequence>TDMDNQIVVSDYAQMDR</Sequence>
+                <Start>293</Start>
+                <End>309</End>
+                <SpectrumReference>1</SpectrumReference>
+                <additional/>
+            </PeptideItem>
+            <additional>
+                <userParam value="MeanOfPeptideScores" name="ScoreCalculation"/>
+                <userParam value="MeanOfPeptideIdentityThresholds" name="ThresholdCalculation"/>
+                <userParam value="AboveOrEqualToIdentityThreshold" name="PeptideIdentification"/>
+                <userParam value="95" name="MascotConfidenceLevel"/>
+            </additional>
+            <Score>33.0</Score>
+            <Threshold>33.0</Threshold>
+            <SearchEngine>Mascot 2.0.03</SearchEngine>
+            <SequenceCoverage>0.0</SequenceCoverage>
+        </GelFreeIdentification>
+        <GelFreeIdentification>
+            <Accession>IPI00025512</Accession>
+            <AccessionVersion>2</AccessionVersion>
+            <Database>IPI human</Database>
+            <DatabaseVersion>2.31</DatabaseVersion>
+            <PeptideItem>
+                <Sequence>LFDQAFGLPR</Sequence>
+                <Start>28</Start>
+                <End>37</End>
+                <SpectrumReference>3</SpectrumReference>
+                <additional/>
+            </PeptideItem>
+            <additional>
+                <userParam value="MeanOfPeptideScores" name="ScoreCalculation"/>
+                <userParam value="MeanOfPeptideIdentityThresholds" name="ThresholdCalculation"/>
+                <userParam value="AboveOrEqualToIdentityThreshold" name="PeptideIdentification"/>
+                <userParam value="95" name="MascotConfidenceLevel"/>
+            </additional>
+            <Score>67.0</Score>
+            <Threshold>35.0</Threshold>
+            <SearchEngine>Mascot 2.0.03</SearchEngine>
+            <SequenceCoverage>0.0</SequenceCoverage>
+        </GelFreeIdentification>
+
+        <additional>
+            <cvParam value="COFRADIC proteome of unstimulated human blood platelets" name="Project"
+                     accession="PRIDE:0000097" cvLabel="PRIDE"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001350.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001351.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001352.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001353.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001354.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001355.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001356.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001357.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=e9fb12a126eb66c09da634b15b60cc6a1eca17265a981cefc2a61494f3def9cb4840a3e4d34b6cbea5343db0a31d20c5607f681833039d5a9f6ac5c6f60ecc679ba704cc000000000001945d"
+                    name="Tranche link for mass spectrometer raw data files"/>
+            <userParam value="MethionineCOFRADIC" name="COFRADICType"/>
+        </additional>
+    </Experiment>
+</ExperimentCollection>

@@ -1,0 +1,90 @@
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::653:x, comp panel1::l::653:x, seq l {par t {comp label3:::p::p, comp label1::t:p::p:1, comp label6::t:p::p}, space :::p, par l {seq {comp sampleNameField:::p:187:p:1, space :::p, comp label2:::p:28:p}, seq l {comp speciesComboBox::::138:x, space :p:10:p, comp label8:::p:12:p, space :::p, comp label4:::p::p, space :::p, comp tissueComboBox::::123:x, space s:::p, comp label7:::p::p, space :::p, comp cellComboBox::::122:x}, comp sampleCommentField::l::551:x:1}}, seq t {comp label5:::p::p, space ::385:x, comp addTermButton1:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par b {comp label1::b:p::p, comp sampleNameField::b:p::p, comp label2::b:p::p}, space :::p, par b {comp label6::b:p::p, comp sampleCommentField::b:p::p}, space :::p, par b {comp cellComboBox::b:p::p, comp label7::b:p::p, comp tissueComboBox::b:p::p, comp label4::b:p::p, comp speciesComboBox::b:p::p, comp label3::b:p::p, comp label8::b:p::p}, space :p:14:p, par t {comp addTermButton1:::p::p, comp label5:::p::p}, space :::p, comp scrollPane1::::327:x, space :::p, comp panel1:::p::p, space :::p}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Sample Name"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "sampleNameField"
+				addEvent( new FormEvent( "java.awt.event.FocusListener", "focusLost", "sampleNameFieldFocusLost", false ) )
+				addEvent( new FormEvent( "java.awt.event.KeyListener", "keyTyped", "sampleNameFieldKeyTyped", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label2"
+				"text": "*"
+				"foreground": sfield java.awt.Color red
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label5"
+				"text": "Additional Information"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label6"
+				"text": "Description"
+			} )
+			add( new FormComponent( "javax.swing.JTextField" ) {
+				name: "sampleCommentField"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label3"
+				"text": "Species"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "speciesComboBox"
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "speciesComboBoxItemStateChanged", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label4"
+				"text": "Tissue"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "tissueComboBox"
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "tissueComboBoxItemStateChanged", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "Cell Type"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "cellComboBox"
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "cellComboBoxItemStateChanged", true ) )
+			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable" ) {
+					name: "paramTable1"
+				} )
+			} )
+			add( new FormComponent( "uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton" ) {
+				name: "addTermButton1"
+				"text": "Add Param"
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label8"
+				"text": "*"
+				"foreground": sfield java.awt.Color red
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) {
+				"hgap": 3
+				"vgap": 3
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "masterInformationLabel"
+					"text": "Sample annotations entered in this form will be copied across to all files unless overridden."
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 15, 0 )
+			"size": new java.awt.Dimension( 665, 485 )
+		} )
+	}
+}

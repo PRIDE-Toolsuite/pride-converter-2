@@ -1,0 +1,35 @@
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp panel1::l::636:x, comp messageLabel::l::636:x, comp progressBar1::l::636:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :p:20:p, comp progressBar1:::p:23:p, space :::p, comp messageLabel:::p:24:p, space :::p, comp panel1:::p::p, space :::x}}"
+		} ) {
+			name: "this"
+			"title": "Working..."
+			"resizable": false
+			add( new FormComponent( "javax.swing.JProgressBar" ) {
+				name: "progressBar1"
+				"indeterminate": true
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "messageLabel"
+				"horizontalAlignment": 0
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.FlowLayout ) ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button1"
+					"text": "Cancel"
+					"enabled": false
+					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1ActionPerformed", false ) )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 70 )
+			"size": new java.awt.Dimension( 660, 145 )
+		} )
+	}
+}

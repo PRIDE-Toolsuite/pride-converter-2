@@ -1,0 +1,258 @@
+<ExperimentCollection version="2.1">
+    <Experiment>
+        <ExperimentAccession>1</ExperimentAccession>
+        <Title>COFRADIC methionine proteome of unstimulated human blood platelets</Title>
+        <Reference>
+            <RefLine>Martens L, Van Damme P, Van Damme J, Staes A, Timmerman E, Ghesquiere B, Thomas GR, Vandekerckhove
+                J, Gevaert K (2005), ?The human platelet proteome mapped by peptide-centric proteomics: a functional
+                protein profile?, Proteomics, 5, 3193-3204.
+            </RefLine>
+            <additional>
+                <cvParam name="16038019" accession="16038019" cvLabel="PubMed"/>
+            </additional>
+        </Reference>
+        <ShortLabel>Platelets MetOx</ShortLabel>
+        <Protocol>
+            <ProtocolName>methionine oxidation induces a chromatographic shift on a diagonal RP-HPLC system.
+            </ProtocolName>
+            <ProtocolSteps/>
+        </Protocol>
+        <mzData version="1.05" accessionNumber="1">
+            <description>
+                <admin>
+                    <sampleName>Unstimulated human blood platelets</sampleName>
+                    <sampleDescription>
+                        <cvParam name="Homo sapiens (Human)" accession="9606" cvLabel="NEWT"/>
+                        <cvParam name="platelet" accession="CL:0000233" cvLabel="CL"/>
+                        <cvParam name="blood_platelets" accession="D001792" cvLabel="MeSH"/>
+                    </sampleDescription>
+                    <contact>
+                        <name>Prof. Dr. Kris Gevaert</name>
+                        <institution>Department of Medical Protein Research (GE07, VIB09), Faculty of Medicine and
+                            Health Sciences, Ghent University and Flanders Interuniversitary Institute for Biotechnology
+                            (VIB)
+                        </institution>
+                        <contactInfo>kris.gevaert@UGent.be</contactInfo>
+                    </contact>
+                    <contact>
+                        <name>Lennart Martens</name>
+                        <institution>Department of Medical Protein Research (GE07, VIB09), Faculty of Medicine and
+                            Health Sciences, Ghent University and Flanders Interuniversitary Institute for Biotechnology
+                            (VIB)
+                        </institution>
+                        <contactInfo>lennart.martens@UGent.be</contactInfo>
+                    </contact>
+                </admin>
+                <instrument>
+                    <instrumentName>Micromass Q-TOF I</instrumentName>
+                    <source>
+                        <cvParam value="ESI" name="Ionization Type" accession="PSI:1000008" cvLabel="PSI"/>
+                        <cvParam value="Chromatography" name="Inlet Type" accession="PSI:1000007" cvLabel="PSI"/>
+                        <cvParam value="PositiveIonMode" name="Ionization Mode" accession="PSI:1000009" cvLabel="PSI"/>
+                    </source>
+                    <analyzerList count="1">
+                        <analyzer>
+                            <cvParam value="Quadrupole-TOF" name="Analyzer Type" accession="PSI:1000010" cvLabel="PSI"/>
+                            <cvParam value="6000" name="Mass Resolution" accession="PSI:1000011" cvLabel="PSI"/>
+                            <cvParam value="FWHM" name="Resolution Method" accession="PSI:1000012" cvLabel="PSI"/>
+                            <cvParam value="Constant" name="Resolution Type" accession="PSI:1000013" cvLabel="PSI"/>
+                            <cvParam value="0.3" name="Accuracy" accession="PSI:1000014" cvLabel="PSI"/>
+                            <cvParam value="2.0" name="Isolation Width" accession="PSI:1000023" cvLabel="PSI"/>
+                            <cvParam value="2" name="Final MS Exponent" accession="PSI:1000024" cvLabel="PSI"/>
+                        </analyzer>
+                    </analyzerList>
+                    <detector>
+                        <cvParam value="MultiChannelPlate" name="Detector Type" accession="PSI:1000026" cvLabel="PSI"/>
+                        <cvParam value="6000" name="Detector Resolution" accession="PSI:1000028" cvLabel="PSI"/>
+                        <cvParam value=" 1000" name="Sampling Frequency" accession="PSI:1000029" cvLabel="PSI"/>
+                    </detector>
+                    <additional/>
+                </instrument>
+                <dataProcessing>
+                    <software>
+                        <name>MassLynx</name>
+                        <version>3.5</version>
+                        <comments>Software Comments (none)</comments>
+                    </software>
+                    <processingMethod>
+                        <cvParam value="false" name="Deisotoping" accession="PSI:1000033" cvLabel="PSI"/>
+                        <cvParam value="false" name="Charge Deconvolution" accession="PSI:1000034" cvLabel="PSI"/>
+                        <cvParam value="CentroidMassSpectrum" name="Peak Processing" accession="PSI:1000035"
+                                 cvLabel="PSI"/>
+                    </processingMethod>
+                </dataProcessing>
+            </description>
+            <spectrumList count="1281">
+
+                <spectrum id="5">
+                    <spectrumDesc>
+                        <spectrumSettings>
+                            <spectrumInstrument mzRangeStop="0.0" mzRangeStart="0.0" msLevel="2">
+                                <cvParam value="MassScan" name="Scan Mode" accession="PSI:1000036" cvLabel="PSI"/>
+                                <cvParam value="Positive" name="Polarity" accession="PSI:1000037" cvLabel="PSI"/>
+                                <cvParam value="8" name="Time In Seconds" accession="PSI:1000039" cvLabel="PSI"/>
+                            </spectrumInstrument>
+                        </spectrumSettings>
+                        <precursorList count="1">
+                            <precursor spectrumRef="4" msLevel="1">
+                                <ionSelection>
+                                    <cvParam value="2" name="Charge State" accession="PSI:1000041" cvLabel="PSI"/>
+                                    <cvParam value="10447.8945" name="Intensity" accession="PSI:1000042" cvLabel="PSI"/>
+                                    <cvParam value="NumberOfCounts" name="Intensity Unit" accession="PSI:1000043"
+                                             cvLabel="PSI"/>
+                                    <cvParam value="603.7625" name="Mass To Charge Ratio" accession="PSI:1000040"
+                                             cvLabel="PSI"/>
+                                </ionSelection>
+                                <activation>
+                                    <cvParam value="CID" name="Activation Method" accession="PSI:1000044"
+                                             cvLabel="PSI"/>
+                                </activation>
+                            </precursor>
+                        </precursorList>
+                        <comments>Identified</comments>
+                    </spectrumDesc>
+                    <mzArrayBinary>
+                        <data length="1014" endian="big" precision="64">
+                            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
+                        </data>
+                    </mzArrayBinary>
+                    <intenArrayBinary>
+                        <data length="1014" endian="big" precision="64">
+                            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
+                        </data>
+                    </intenArrayBinary>
+                </spectrum>
+                <spectrum id="7">
+                    <spectrumDesc>
+                        <spectrumSettings>
+                            <spectrumInstrument mzRangeStop="0.0" mzRangeStart="0.0" msLevel="2">
+                                <cvParam value="MassScan" name="Scan Mode" accession="PSI:1000036" cvLabel="PSI"/>
+                                <cvParam value="Positive" name="Polarity" accession="PSI:1000037" cvLabel="PSI"/>
+                                <cvParam value="8" name="Time In Seconds" accession="PSI:1000039" cvLabel="PSI"/>
+                            </spectrumInstrument>
+                        </spectrumSettings>
+                        <precursorList count="1">
+                            <precursor spectrumRef="6" msLevel="1">
+                                <ionSelection>
+                                    <cvParam value="2" name="Charge State" accession="PSI:1000041" cvLabel="PSI"/>
+                                    <cvParam value="1123.6621" name="Intensity" accession="PSI:1000042" cvLabel="PSI"/>
+                                    <cvParam value="NumberOfCounts" name="Intensity Unit" accession="PSI:1000043"
+                                             cvLabel="PSI"/>
+                                    <cvParam value="379.2376" name="Mass To Charge Ratio" accession="PSI:1000040"
+                                             cvLabel="PSI"/>
+                                </ionSelection>
+                                <activation>
+                                    <cvParam value="CID" name="Activation Method" accession="PSI:1000044"
+                                             cvLabel="PSI"/>
+                                </activation>
+                            </precursor>
+                        </precursorList>
+                        <comments>Identified</comments>
+                    </spectrumDesc>
+                    <mzArrayBinary>
+                        <data length="118" endian="big" precision="64">
+                            QFKEKPXCj1xAVQQaNuLrHEBVhmTC+De1QFuEWhysCDFAXAQt4A0bcUBdBZ6D5CWvQGAjYeT3Zf5AYEMFUyYXwkBh5GCqZML4QGJDNnoPkJdAYmO8AaNuL0BiZp7sv7FbQGKC2eg+QltAYyNZs9B8hUBjJxgqmTC+QGMqSOinHedAY2LlYEGJN0BlI3Cj1wo9QGVj2/SH/LlAZYPp4bCJoEBlh+NT987ZQGWkOinHeadAZePCj1wo9kBmo0euFHrhQGbk1P3ztkZAZwEtdzGPxUBnBPkJa7mMQGclFbVz6rNAaOPOB19v0kBpJDOcDr7gQGojkWhysCFAamSw8nuy/0Bq5EC3gDRuQGsFLKV6eGxAa0Xqs2eg+UBr5E6kqMFVQGyFsv7FbV1AbgI6Kcd5p0Buxg+QlruZQG+loPkJa7pAcBLJ7sv7FkBwIpD/lyR0QHAyZ6D5CWxAcMLdLxqfvkByYx5Pdl/ZQHKC+XJHRTlAcpD7fpD/l0Bykz1wo9cKQHKjYraufVZAcrHQE6kqMEBytD8UEgW8QHLC41P3ztlAc4NeNT987kBziBOpKjBVQHORckdFOO9Ac5OwIMSbpkBzo9kWhysCQHOy3tKIznBAc7VqfvnbI0B0Mvy5I6KcQHSLsCDEm6ZAdJObpeNT+EB1M6IznA6/QHWT2eg+QltAdaRh5Pdl/kB21F8G9pRGQHbmKpkwvg5AdvNJUYKpk0B3JH4oJAt4QHeUMspXp4dAd7Qnuy/sV0B3u69PDYRNQHe/V6eGwidAd8NOO801qEB4lBGc4HX3QHkUVtXPqs5AeSg47zTWoUB5opwOvt+kQHm0LQ5WBBlAecKFHrhR7EB5xFgQYk3TQHnUcd5prUNAewS5jH4oJEB75PBvaURnQHvn2yLQ5WBAe+qMfigkC0B78sNhE0BPQHv1SowVTJhAfMSc4HX2/UB9tJ1JUYKqQH4ltKIznA9AfkTYraufVkB+5QDRtxdZQH7nvAGjbi9AfvURNATqS0B++KrNnoPkQH/lPqs2ehBAgAKXJHRTj0CAGv5ckdFOQIAqgNG3F1lAgOsD5CWu5kCBAuyLQ5WBQIEL2rn1WbRAgRM+36Q/5kCBam0ojOcEQIFy9pRGc4JAgXszZ6D5CUCBfYlruYx+QIGDTdLxqfxAgYbxqfvnbUCBiup++dsjQIJjFYEGJN1AgosfIS13MkCEg4qmTC+DQISFYKpkwvhAhIupx3mmtUCEkgGjbi6yQISTocrAgxI=
+                        </data>
+                    </mzArrayBinary>
+                    <intenArrayBinary>
+                        <data length="118" endian="big" precision="64">
+                            QCS67mMfiglAOtR0U47zTUBAg8an752yQB0URnOB19xACUCDEm6XjUAJQIMSbpeNQELKAnUlRgtAQdAdfb9IgEAgcvGp++dtQADVmz0HyEtAUh8zMzMzMz/hocrAgxJvQBCP+XJHRTlALfDlYEGJNz/4F1jiGWUsP4KjBVMmF8JAIqA0bcXWOUAU6D5CWu5jQFDS3gDRtxdAGMoJAt4A0j/yP+XJHRTkQDXjjvNNahZAIpgdfb9IgEAi/kJa7mMgQErhhfBvaUQ/+dT987ZFokAhnnbItDlYQAlAgxJul41AQ+mmtQsPKEA8Rj8UEgW8QBngqmTC+DhAPXw8nuy/sUAgML4N7SiNQBA8an752yM/8as2eg+Ql0AA1Zs9B8hLQCMOfVZs9B8/8NXPqs2ehEBDND/lyR0VQAjVmz0HyEtAEI2eg+Qlrz/xqzZ6D5CXQADVmz0HyEtAChYeT3Zf2UA3m5I6Kcd6QDVBBiTdLxs/mX9itq59VkAcTvNNahYeP/GrNnoPkJdAANWbPQfISz+CowVTJhfCQCKVwo9cKPZAQLiaAnUlRkAA6D5CWu5jP/BKIznA6+5AAPqs2eg+QkAQqXjU/fO2QBA1c+qzZ6E/8fVZs9B8hUAI9itq59VnQDEFz6rNnoRAItyR0U47zUARqzZ6D5CXQDZbuYx+KCRAES3gDRtxdkAiiiM5wOvuP/GrNnoPkJdAANWbPQfIS0AJQIMSbpeNQB0BvaURnOBAORFocrAgxUAYGX9itq59P/AJa7mMfihAHLLKV6eGwkAtyWu5jH4oQAjVmz0HyEs/8as2eg+Ql0AA1Zs9B8hLQDAhqfvnbIs/72u5jH4oJEAR/IS13MY/QCQwvg3tKI1AANWbPQfIS0BTbI6Kcd5qQBPfigkC3gE/8UU47zTWoUAOVMmF8G9pQCxV6eGwiaBAJFOcDr7fpEAU1Zs9B8hLQBj4bCJoCdVAAWDe0ojOcEAiyNuLrHENQAJN0vGp++dAED6rNnoPkT/w+qzZ6D5CQBRFocrAgxJAIxWBBiTdL0AA1Zs9B8hLQAoWHk92X9lAHKBBiTdLx0Ao3uy/sVtXP6q59Vmz0H1ACNWbPQfIS0ABqzZ6D5CXQBBhfBvaURpAVcdnoPkJbEAL4eT3Zf2LQEAm5jH4oJBAEBvaURnOB0AdJul41P30QAjVmz0HyEtAHUdfb9If80BJ2tq59Vm0QAXul41P3ztAMwzGPxQSBj/wSiM5wOvuQAD6rNnoPkI=
+                        </data>
+                    </intenArrayBinary>
+                </spectrum>
+            </spectrumList>
+        </mzData>
+        <GelFreeIdentification>
+            <Accession>IPI00002478</Accession>
+            <AccessionVersion>1</AccessionVersion>
+            <Database>IPI human</Database>
+            <DatabaseVersion>2.31</DatabaseVersion>
+            <PeptideItem>
+                <Sequence>AKPLMELIER</Sequence>
+                <Start>196</Start>
+                <End>205</End>
+                <SpectrumReference>5</SpectrumReference>
+                <additional/>
+            </PeptideItem>
+            <additional>
+                <userParam value="MeanOfPeptideScores" name="ScoreCalculation"/>
+                <userParam value="MeanOfPeptideIdentityThresholds" name="ThresholdCalculation"/>
+                <userParam value="AboveOrEqualToIdentityThreshold" name="PeptideIdentification"/>
+                <userParam value="95" name="MascotConfidenceLevel"/>
+            </additional>
+            <Score>54.0</Score>
+            <Threshold>36.0</Threshold>
+            <SearchEngine>Mascot 2.0.03</SearchEngine>
+            <SequenceCoverage>0.0</SequenceCoverage>
+        </GelFreeIdentification>
+        <GelFreeIdentification>
+            <Accession>IPI00185600</Accession>
+            <AccessionVersion>1</AccessionVersion>
+            <Database>IPI human</Database>
+            <DatabaseVersion>2.31</DatabaseVersion>
+            <PeptideItem>
+                <Sequence>DESTNVDMSLAQR</Sequence>
+                <Start>351</Start>
+                <End>363</End>
+                <SpectrumReference>7</SpectrumReference>
+                <additional/>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>MSLAQR</Sequence>
+                <Start>351</Start>
+                <End>363</End>
+                <SpectrumReference>2135</SpectrumReference>
+                <additional/>
+            </PeptideItem>
+            <PeptideItem>
+                <Sequence>DESTNVD</Sequence>
+                <Start>351</Start>
+                <End>363</End>
+                <SpectrumReference>2065</SpectrumReference>
+                <additional/>
+            </PeptideItem>
+            <additional>
+                <userParam value="MeanOfPeptideScores" name="ScoreCalculation"/>
+                <userParam value="MeanOfPeptideIdentityThresholds" name="ThresholdCalculation"/>
+                <userParam value="AboveOrEqualToIdentityThreshold" name="PeptideIdentification"/>
+                <userParam value="95" name="MascotConfidenceLevel"/>
+            </additional>
+            <Score>89.33</Score>
+            <Threshold>32.67</Threshold>
+            <SearchEngine>Mascot 2.0.03</SearchEngine>
+            <SequenceCoverage>0.0</SequenceCoverage>
+        </GelFreeIdentification>
+        <additional>
+            <cvParam value="COFRADIC proteome of unstimulated human blood platelets" name="Project"
+                     accession="PRIDE:0000097" cvLabel="PRIDE"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001350.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001351.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001352.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001353.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001354.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001355.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001356.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=c3f45a83e4aa32f3877bac53234c8cefc05c96157b27a4762df46c0cff7043c2b70a2c6b78be4f50ccd96c44d14534a7b897ec8cc814d0f8bafcb0a137ec761e35c847b30000000000000469/Mascot/F001357.dat"
+                    name="Tranche link for search engine output file"/>
+            <userParam
+                    value="http://www.proteomecommons.org/data-downloader.jsp?fileName=e9fb12a126eb66c09da634b15b60cc6a1eca17265a981cefc2a61494f3def9cb4840a3e4d34b6cbea5343db0a31d20c5607f681833039d5a9f6ac5c6f60ecc679ba704cc000000000001945d"
+                    name="Tranche link for mass spectrometer raw data files"/>
+            <userParam value="MethionineCOFRADIC" name="COFRADICType"/>
+        </additional>
+    </Experiment>
+</ExperimentCollection>

@@ -1,0 +1,41 @@
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp converterButton::l::376:x, comp mergerButton::t::376:x, comp filterButton::t::376:x, comp mzTabButton::l::376:x, comp exitButton::t::376:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp converterButton:::p:35:p, space :::p, comp mzTabButton:::p:35:p, space :::p, comp mergerButton:::p:35:p, space :::p, comp filterButton:::p:35:p, space :::p, comp exitButton:::p:35:p, space :::x}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "converterButton"
+				"text": "Launch PRIDE Converter"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "launchTool", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "mzTabButton"
+				"text": "Launch PRIDE mzTab Generator"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "launchTool", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "filterButton"
+				"text": "Launch PRIDE Filter"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "launchTool", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "mergerButton"
+				"text": "Launch PRIDE Merger"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "launchTool", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "exitButton"
+				"text": "Exit"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "exitButtonActionPerformed", false ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 235 )
+		} )
+	}
+}

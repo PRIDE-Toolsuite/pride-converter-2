@@ -1,0 +1,24 @@
+----------                              -----------
+| source  |                             | report  |
+|/--------                              |/---------
+
+- identificationIterator               - reportformatidentificationiterator
+- always returns n identifications     - returns m <= n identifications
+- alwyas returns n in the same         - no guarantee on order whatsoever
+  order for a given method
+  in a search result file
+
+      Marshaller to output xml will
+      - iterate on source file using IdIter
+          - for each identification
+              - lookup in report file
+              - resolve conflicting data based on report file
+              - update identification with spectrum ref, additional params, etc
+              - marshall to output file
+
+
+Need SpectrumResolver that will work in two modes
+  - output all spectra
+  - output only identified spectra
+     - need then mechanism to provide whitelist of peptide UIDs
+  - need mechanism to resolve spectrumRef for peptide UID in both modes

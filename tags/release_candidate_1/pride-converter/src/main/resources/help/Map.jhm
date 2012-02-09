@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+<!DOCTYPE map
+        PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 1.0//EN"
+        "http://java.sun.com/products/javahelp/map_1_0.dtd">
+
+<map version="1.0">
+    <mapID target="help_window_icon" url="icons/help.gif"/>
+    <mapID target="toc_icon" url="icons/toc.png"/>
+    <mapID target="previous_page_icon" url="icons/previous_page.png"/>
+    <mapID target="next_page_icon" url="icons/next_page.png"/>
+    <mapID target="home_page_icon" url="icons/home_page.png"/>
+    <mapID target="print_icon" url="icons/print.png"/>
+    <mapID target="print_setting_icon" url="icons/print_settings.png"/>
+
+    <mapID target="help.index" url="html/index.html"/>
+    <mapID target="help.feedback" url="html/feedback.html"/>
+
+    <mapID target="help.ui" url="html/usage/user_interface.html"/>
+
+    <mapID target="help.ui.format" url="html/usage/ui/format.html"/>
+    <mapID target="help.ui.file" url="html/usage/ui/fileselect.html"/>
+    <mapID target="help.ui.fileextra" url="html/usage/ui/fileselectextra.html"/>
+    <mapID target="help.ui.experimentdetails" url="html/usage/ui/experimentdetails.html"/>
+    <mapID target="help.ui.experimentdetailsextra" url="html/usage/ui/experimentdetailsextra.html"/>
+    <mapID target="help.ui.contacts" url="html/usage/ui/contacts.html"/>
+    <mapID target="help.ui.references" url="html/usage/ui/references.html"/>
+    <mapID target="help.ui.sample" url="html/usage/ui/sample.html"/>
+    <mapID target="help.ui.protocol" url="html/usage/ui/protocol.html"/>
+    <mapID target="help.ui.instrument" url="html/usage/ui/instrument.html"/>
+    <mapID target="help.ui.software" url="html/usage/ui/software.html"/>
+    <mapID target="help.ui.databasemapping" url="html/usage/ui/databasemapping.html"/>
+    <mapID target="help.ui.ptms" url="html/usage/ui/ptms.html"/>
+    <mapID target="help.ui.review" url="html/usage/ui/review.html"/>
+    <mapID target="help.ui.export" url="html/usage/ui/export.html"/>
+    <mapID target="help.ui.validation" url="html/usage/ui/validation.html"/>
+    <mapID target="help.ui.cvparam" url="html/usage/ui/cvparam.html"/>
+
+    <mapID target="help.ui.dao" url="html/usage/ui/dao/index.html"/>
+    <mapID target="help.ui.dao.mascot" url="html/usage/ui/dao/mascot.html"/>
+    <mapID target="help.ui.dao.mzxml" url="html/usage/ui/dao/mzxml.html"/>
+    <mapID target="help.ui.dao.mzml" url="html/usage/ui/dao/mzml.html"/>
+    <mapID target="help.ui.dao.mzidentml" url="html/usage/ui/dao/mzidentml.html"/>
+    <mapID target="help.ui.dao.xtandem" url="html/usage/ui/dao/xtandem.html"/>
+    <mapID target="help.ui.dao.ms2" url="html/usage/ui/dao/ms2.html"/>
+    <mapID target="help.ui.dao.dta" url="html/usage/ui/dao/dta.html"/>
+    <mapID target="help.ui.dao.pkl" url="html/usage/ui/dao/pkl.html"/>
+    <mapID target="help.ui.dao.mgf" url="html/usage/ui/dao/mgf.html"/>
+    <mapID target="help.ui.dao.mzdata" url="html/usage/ui/dao/mzdata.html"/>
+    <mapID target="help.ui.dao.pride" url="html/usage/ui/dao/pride.html"/>
+    <mapID target="help.ui.dao.msgf" url="html/usage/ui/dao/msgf.html"/>
+
+    <mapID target="help.ui.merger.information" url="html/usage/ui/mergerinformation.html"/>
+    <mapID target="help.ui.merger.report" url="html/usage/ui/mergerreport.html"/>
+    <mapID target="help.ui.filter.information" url="html/usage/ui/filterinformation.html"/>
+    <mapID target="help.ui.filter.report" url="html/usage/ui/filterreport.html"/>
+    <mapID target="help.ui.mztab.report" url="html/usage/ui/mztabreport.html"/>
+
+    <mapID target="help.faq" url="html/faq.html"/>
+    <mapID target="help.faq.pride" url="html/faq/pride.html"/>
+    <mapID target="help.faq.pridexml" url="html/faq/pride_xml.html"/>
+    <mapID target="help.faq.memory" url="html/faq/memory.html"/>
+
+</map>

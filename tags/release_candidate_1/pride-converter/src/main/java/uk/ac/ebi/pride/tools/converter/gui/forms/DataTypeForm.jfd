@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
+ <object class="com.jformdesigner.model.FormModel"> 
+  <void method="setProperty"> 
+   <string>i18n.autoExternalize</string> 
+   <boolean>true</boolean> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.bundleName</string> 
+   <string>messages</string> 
+  </void> 
+  <void method="setProperty"> 
+   <string>i18n.keyPrefix</string> 
+   <string>WelcomeScreen</string> 
+  </void> 
+  <void property="contentType"> 
+   <string>form/swing</string> 
+  </void> 
+  <void property="root"> 
+   <object class="com.jformdesigner.model.FormRoot"> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormContainer"> 
+      <string>uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm</string> 
+      <object class="com.jformdesigner.model.FormLayoutManager"> 
+       <class>org.jdesktop.layout.GroupLayout</class> 
+       <void method="setProperty"> 
+        <string>$horizontalGroup</string> 
+        <string>par l {seq l {space :::p, comp mainPanel:::::x, space :::p}}</string> 
+       </void> 
+       <void method="setProperty"> 
+        <string>$verticalGroup</string> 
+        <string>par l {seq l {space :::p, comp mainPanel:::::x, space :::p}}</string> 
+       </void> 
+      </object> 
+      <void property="name"> 
+       <string>this</string> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JPanel</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>org.jdesktop.layout.GroupLayout</class> 
+         <void method="setProperty"> 
+          <string>$horizontalGroup</string> 
+          <string>par l {seq {par l {seq l {par l {comp dtaRadioSingle::l:p::p, comp mzIdentMLRadio::l:p::p, comp mzMLRadio::l:p::p, seq l {comp mascotRadio:::p::p, space :::p, comp macOsWarningLabel::::177:x}, comp pklRadioSingle::l:p::p, comp mgfRadio::l:p::p}, space :::p, par l {comp mzdataButton::l:p::p, seq l {space :1:1:1, par l {comp mzxmlButton:::p::p, comp xtandemRadio:::p::p, comp ms2Radio:::p:99:p, comp dtaRadioMultiple:::p::p}}, comp pklRadioMultiple::l:p::p}}, seq l {space :::p, comp label1:::p::p}}, space :::p}, seq l {comp msgfRadio:::p::p, space :::p}, comp scrollPane1::l::538:x}</string> 
+         </void> 
+         <void method="setProperty"> 
+          <string>$verticalGroup</string> 
+          <string>par l {seq l {space :::p, comp label1:::p::p, space :p:9:p, par l {seq l {par b {comp mascotRadio::b:p::p, comp macOsWarningLabel::b:p::p}, space :::p, comp mzMLRadio:::p::p, space :::p, comp mzIdentMLRadio:::p::p, space :::p, comp dtaRadioSingle:::p::p, space :::p, comp pklRadioSingle:::p::p, space :::p, par b {comp mgfRadio::b:p::p, comp mzdataButton::b:p::p}}, seq l {comp mzxmlButton:::p::p, space :::p, comp xtandemRadio:::p::p, space :::p, comp ms2Radio:::p::p, space :::p, comp dtaRadioMultiple:::p::p, space :::p, comp pklRadioMultiple:::p::p}}, space :::p, comp msgfRadio:::p::p, space s:::p, comp scrollPane1::::178:x}}</string> 
+         </void> 
+        </object> 
+        <void method="setProperty"> 
+         <string>border</string> 
+         <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
+        </void> 
+        <void property="name"> 
+         <string>mainPanel</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormContainer"> 
+          <string>javax.swing.JScrollPane</string> 
+          <object class="com.jformdesigner.model.FormLayoutManager"> 
+           <class>javax.swing.JScrollPane</class> 
+          </object> 
+          <void property="name"> 
+           <string>scrollPane1</string> 
+          </void> 
+          <void method="add"> 
+           <object class="com.jformdesigner.model.FormComponent"> 
+            <string>javax.swing.JEditorPane</string> 
+            <void method="setProperty"> 
+             <string>text</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>Welcome.message</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>contentType</string> 
+             <string>text/html</string> 
+            </void> 
+            <void method="setProperty"> 
+             <string>editable</string> 
+             <boolean>false</boolean> 
+            </void> 
+            <void method="setProperty"> 
+             <string>font</string> 
+             <object class="java.awt.Font"> 
+              <string>Dialog</string> 
+              <int>2</int> 
+              <int>10</int> 
+             </object> 
+            </void> 
+            <void property="name"> 
+             <string>descriptionArea</string> 
+            </void> 
+            <void method="addEvent"> 
+             <object class="com.jformdesigner.model.FormEvent"> 
+              <string>javax.swing.event.HyperlinkListener</string> 
+              <string>hyperlinkUpdate</string> 
+              <string>descriptionAreaHyperlinkUpdate</string> 
+              <boolean>true</boolean> 
+             </object> 
+            </void> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.pklRadioMultiple.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object id="FormReference0" class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>pklRadioMultiple</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>pklRadioMultipleActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.pklRadioSingle.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object idref="FormReference0"/> 
+          </void> 
+          <void property="name"> 
+           <string>pklRadioSingle</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>pklRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.dtaRadioMultiple.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object id="FormReference1" class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>dtaRadioMultiple</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>dtaRadioMultipleActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.dtaRadioSingle.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object idref="FormReference1"/> 
+          </void> 
+          <void property="name"> 
+           <string>dtaRadioSingle</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>dtaRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.mzIdentMLRadio.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>mzIdentMLRadio</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>mzIdentMLRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.mzMLRadio.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>mzMLRadio</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>mzMLRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.mascotRadio.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>mascotRadio</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>mascotRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.xtandemRadio.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>xtandemRadio</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>xtandemRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.mzxmlButton.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>mzxmlButton</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>mzxmlButtonActionPerformed</string> 
+            <boolean>false</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.ms2Radio.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>ms2Radio</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>ms2RadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.mgfRadio.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>mgfRadio</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>mgfRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JLabel</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <string>not supported on Mac OS</string> 
+          </void> 
+          <void method="setProperty"> 
+           <string>font</string> 
+           <object class="java.awt.Font"> 
+            <string>Dialog</string> 
+            <int>2</int> 
+            <int>10</int> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>macOsWarningLabel</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.mzdataButton.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>mzdataButton</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>mzdataButtonActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JLabel</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.label1.text</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>label1</string> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JRadioButton</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>WelcomeScreen.msgfRadio.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>$buttonGroup</string> 
+           <object class="com.jformdesigner.model.FormReference"> 
+            <string>dataTypeGroup</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>msgfRadio</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>java.awt.event.ActionListener</string> 
+            <string>actionPerformed</string> 
+            <string>msgfRadioActionPerformed</string> 
+            <boolean>true</boolean> 
+           </object> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>5</int> 
+        <int>5</int> 
+       </object> 
+      </void> 
+      <void method="setProperty"> 
+       <string>size</string> 
+       <object class="java.awt.Dimension"> 
+        <int>550</int> 
+        <int>435</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+    <void method="add"> 
+     <object class="com.jformdesigner.model.FormNonVisual"> 
+      <string>javax.swing.ButtonGroup</string> 
+      <void method="auxiliary"> 
+       <void method="setProperty"> 
+        <string>JavaCodeGenerator.variableLocal</string> 
+        <boolean>false</boolean> 
+       </void> 
+      </void> 
+      <void property="name"> 
+       <string>dataTypeGroup</string> 
+      </void> 
+     </object> 
+     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
+      <null/> 
+      <void method="setProperty"> 
+       <string>location</string> 
+       <object class="java.awt.Point"> 
+        <int>5</int> 
+        <int>530</int> 
+       </object> 
+      </void> 
+     </object> 
+    </void> 
+   </object> 
+  </void> 
+ </object> 
+</java> 
