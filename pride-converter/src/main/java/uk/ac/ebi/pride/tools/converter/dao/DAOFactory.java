@@ -24,15 +24,15 @@ public class DAOFactory {
         OMSSA("omssa", "OMSSA", false, null),
         MS_LIMS("mslims", "ms_lims", false, null),
         X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem"),
-        MGF("mgf", "MGF", true, null),
+        MGF("mgf", "MGF", true, "help.ui.dao.mgf"),
         MZIDENTML("mzidentml", "mzIdentML", false, "help.ui.dao.mzidentml"),
-        DTA("dta", "DTA", true, null),
-        PKL("pkl", "PKL", true, null),
-        MS2("ms2", "MS2", true, null),
+        DTA("dta", "DTA", true, "help.ui.dao.dta"),
+        PKL("pkl", "PKL", true, "help.ui.dao.pkl"),
+        MS2("ms2", "MS2", true, "help.ui.dao.ms2"),
         MZML("mzml", "mzML", true, "help.ui.dao.mzml"),
         MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml"),
-        MZDATA("mzdata", "mzData", true, null),
-        MSGF("msgf", "MSGF", true, null);
+        MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata"),
+        MSGF("msgf", "MSGF", true, "help.ui.dao.msgf");
 
         private String commandLineName;
         private String niceName;
@@ -125,6 +125,9 @@ public class DAOFactory {
             case MSGF:
                 dao = new MsgfDao(new File(sourcePath));
                 break;
+            case PRIDE:
+                //todo
+                throw new UnsupportedOperationException("No DAO defined for " + format);
             default:
                 throw new UnsupportedOperationException("No DAO defined for " + format);
         }

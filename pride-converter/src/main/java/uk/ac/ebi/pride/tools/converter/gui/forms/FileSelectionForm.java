@@ -706,7 +706,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         parserOptionTable = new ParserOptionTable(props);
         parserOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
         tableScrollPane.setViewportView(parserOptionTable);
-        if (!props.isEmpty() && ConverterData.getInstance().getDaoFormat().getHelpResource() != null) {
+        if (ConverterData.getInstance().getDaoFormat().getHelpResource() != null) {
             parserOptionHelpButton.setEnabled(true);
             CSH.setHelpIDString(parserOptionHelpButton, ConverterData.getInstance().getDaoFormat().getHelpResource());
             parserOptionHelpButton.addActionListener(new CSH.DisplayHelpFromSource(NavigationPanel.getInstance().getHelpBroker()));

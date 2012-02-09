@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" media="all"
           href="../../../css/s.css">
-    <title>MS2 DAO Options</title>
+    <title>MSGF DAO Options</title>
 </head>
 
 <body class="template">
@@ -13,7 +13,7 @@
 
     <!-- header -->
     <div id="header">
-        <h1>MS2 DAO Options</h1>
+        <h1>MSGF DAO Options</h1>
     </div>
 
     <!-- navigation -->
@@ -21,19 +21,21 @@
            style="border-collapse: collapse;">
         <tr>
             <td align="left" class="topicpath"><span
-                    style="color: #666666;"><a href="xtandem.html">Previous</a>
-				</span> | <a href="dta.html">Next</a> | <a href="#topicSeeAlsoTopicsList">See Also</a>
-            </td>
+                    style="color: #666666;"><a href="mzdata.html.html">Previous</a> </span> |
+                <span
+                        style="color: #666666;"><Next </span> |
+                <a href="#topicSeeAlsoTopicsList">See Also</a></td>
             <td width="70%" class="topicpath"></td>
         </tr>
     </table>
 
     <!-- table of contents -->
     <div class="introduction">
-        <p>The MS2 DAO is based on the ms2-parser by Griss et al. which
-            is part of the jmzReader library (http://jmzreader.googlecode.com).
-            A description of the ms2 file format can be found at the crux project
-            page (http://noble.gs.washington.edu/proj/crux/ms2-format.html).</p>
+        <p> The MSGF DAO can convert files produced by the MS-GeneratingFunction tool into PRIDE XML files (see
+            http://proteomics.ucsd.edu/Software/MSGeneratingFunction.html). As the MSGF output is very limited several
+            features are not available when using this DAO such as the reporting of variable and static modifications
+            (apart from Carbamidomethylation). Therefore, this DAO should only be used with care and PRIDE support
+            (pride-support@ebi.ac.uk) contacted before MSGF files are converted.</p>
     </div>
 
     <!-- content -->
@@ -41,13 +43,31 @@
         <div class="section">
             <h3>Details</h3>
 
-            <p>
-                The MS2 DAO does not support any configuration options. MS2 files
-                only contain spectra information and <b>no identification data</b>.
-            </p>
+            <table class="dao_option_table">
+                <tr>
+                    <th>Add Carbamidomethylation</th>
+                    <td>MSGF files cannot report modifications. If
+                        this parameter is set to "true" a
+                        Carbamidomethylation is added to every C.
+                    </td>
+                <tr>
+                    <th>mzXML Path</th>
+                    <td>path to the folder where the mzXML files can
+                        be found. If this parameter is not set the
+                        mzXML file will be search for in the MSGF
+                        file's directory.
+                    </td>
+                </tr>
+                <tr>
+                    <th>Search Engine</th>
+                    <td>The name of the search engine. Defaults to MZXML
+                    </td>
+                </tr>
+            </table>
+
+
         </div>
     </div>
-
 
     <div id="seealso">
         <a name="topicSeeAlsoTopicsList"></a>
@@ -65,11 +85,11 @@
             <li><a href="mzml.html">mzML</a></li>
             <li><a href="mzidentml.html">mzIdentML</a></li>
             <li><a href="xtandem.html">X!Tandem</a></li>
+            <li><a href="ms2.html">MS2</a></li>
             <li><a href="dta.html">DTA</a></li>
             <li><a href="pkl.html">PKL</a></li>
             <li><a href="mgf.html">MGF</a></li>
             <li><a href="mzdata.html">mzData</a></li>
-            <li><a href="msgf.html">MSGF</a></li>
         </ul>
     </div>
     <div id="footer">
