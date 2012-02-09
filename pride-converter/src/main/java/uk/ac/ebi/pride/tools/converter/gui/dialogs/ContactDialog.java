@@ -49,21 +49,24 @@ public class ContactDialog extends AbstractDialog {
 
     private void contactDialogFocusLost(FocusEvent e) {
         validateRequiredField(e.getComponent(), null);
-        okButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()));
-        saveButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()));
+        okButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()) && isNonNullTextField(institutionField.getText()));
+        saveButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()) && isNonNullTextField(institutionField.getText()));
     }
 
     private void contactDialogKeyTyped(KeyEvent e) {
         validateRequiredField(e.getComponent(), e);
         String s1 = nameField.getText();
         String s2 = emailField.getText();
+        String s3 = institutionField.getText();
         if (e.getSource().equals(nameField)) {
             s1 += e.getKeyChar();
         } else if (e.getSource().equals(emailField)) {
             s2 += e.getKeyChar();
+        } else if (e.getSource().equals(institutionField)) {
+            s3 += e.getKeyChar();
         }
-        okButton.setEnabled(isNonNullTextField(s1) && isNonNullTextField(s2));
-        saveButton.setEnabled(isNonNullTextField(s1) && isNonNullTextField(s2));
+        okButton.setEnabled(isNonNullTextField(s1) && isNonNullTextField(s2) && isNonNullTextField(s3));
+        saveButton.setEnabled(isNonNullTextField(s1) && isNonNullTextField(s2) && isNonNullTextField(s3));
     }
 
     @Override
@@ -72,8 +75,8 @@ public class ContactDialog extends AbstractDialog {
         nameField.setText(c.getName());
         emailField.setText(c.getContactInfo());
         institutionField.setText(c.getInstitution());
-        okButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()));
-        saveButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()));
+        okButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()) && isNonNullTextField(institutionField.getText()));
+        saveButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()) && isNonNullTextField(institutionField.getText()));
     }
 
     private Contact makeContact() {
@@ -114,6 +117,7 @@ public class ContactDialog extends AbstractDialog {
         okButton = new JButton();
         loadButton = new JButton();
         saveButton = new JButton();
+        label6 = new JLabel();
 
         //======== this ========
         setResizable(false);
@@ -128,6 +132,20 @@ public class ContactDialog extends AbstractDialog {
 
         //---- label3 ----
         label3.setText("Institution");
+
+        //---- institutionField ----
+        institutionField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                contactDialogFocusLost(e);
+            }
+        });
+        institutionField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                contactDialogKeyTyped(e);
+            }
+        });
 
         //---- emailField ----
         emailField.addFocusListener(new FocusAdapter() {
@@ -203,6 +221,10 @@ public class ContactDialog extends AbstractDialog {
             }
         });
 
+        //---- label6 ----
+        label6.setText("*");
+        label6.setForeground(Color.red);
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
@@ -232,7 +254,8 @@ public class ContactDialog extends AbstractDialog {
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                         .addComponent(label4, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE))))
+                                                        .addComponent(label5, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label6, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE))))
                                 .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
@@ -251,7 +274,8 @@ public class ContactDialog extends AbstractDialog {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(institutionField)
-                                        .addComponent(label3))
+                                        .addComponent(label3)
+                                        .addComponent(label6))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(cancelButton)
@@ -279,5 +303,6 @@ public class ContactDialog extends AbstractDialog {
     private JButton okButton;
     private JButton loadButton;
     private JButton saveButton;
+    private JLabel label6;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }
