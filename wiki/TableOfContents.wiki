@@ -11,3 +11,6 @@
   * [ProteinInference Protein inference]
   * Developer
     * [HowToWriteADao DAO development]
+  * User Manual
+    * [HowToStartApplication How to Start the PRIDE Converter Launcher]
+    * [HowToConfigureApplication PRIDE Converter Launcher Configuration]
