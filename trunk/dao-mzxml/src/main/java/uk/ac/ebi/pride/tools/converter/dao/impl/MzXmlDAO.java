@@ -86,7 +86,7 @@ public class MzXmlDAO extends AbstractPeakListDAO {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static Collection<DAOProperty> getSupportedPorperties() {
+	public static Collection<DAOProperty> getSupportedProperties() {
 		return Collections.emptyList();
 	}
 	

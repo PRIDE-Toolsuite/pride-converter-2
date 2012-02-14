@@ -313,7 +313,7 @@ public class PrideConverter {
             System.exit(STATUS_BAD_ARG);
         }
 
-        Collection<DAOProperty> properties = DAOFactory.getInstance().getSupportedPorperties(daoFormat);
+        Collection<DAOProperty> properties = DAOFactory.getInstance().getSupportedProperties(daoFormat);
         // create Options object
         Options options = new Options();
         for (DAOProperty prop : properties) {

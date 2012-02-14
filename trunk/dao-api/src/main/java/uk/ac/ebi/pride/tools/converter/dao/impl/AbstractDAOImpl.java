@@ -39,8 +39,8 @@ public abstract class AbstractDAOImpl implements DAO {
      *
      * @return A collection of supported properties.
      */
-    public static Collection<DAOProperty> getSupportedPorperties() {
-        throw new UnsupportedOperationException("Method getSupportedPorperties is not implemented for this DAO. " +
+    public static Collection<DAOProperty> getSupportedProperties() {
+        throw new UnsupportedOperationException("Method getSupportedProperties is not implemented for this DAO. " +
                 "Please report this to the PRIDE team.");
     }
 

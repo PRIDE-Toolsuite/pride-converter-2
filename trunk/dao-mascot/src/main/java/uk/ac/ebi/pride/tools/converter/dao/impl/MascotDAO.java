@@ -339,7 +339,7 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
      * @return A collection of supported properties.
      */
     @SuppressWarnings("rawtypes")
-    public static Collection<DAOProperty> getSupportedPorperties() {
+    public static Collection<DAOProperty> getSupportedProperties() {
         // generate the supported properties (if they weren't created yet)
         generateSupportedProperties();
         return supportedProperties;

@@ -267,7 +267,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     }
     
     @SuppressWarnings("rawtypes")
-    public static Collection<DAOProperty> getSupportedPorperties() {
+    public static Collection<DAOProperty> getSupportedProperties() {
         List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
     	
     	DAOProperty<String> spectrumFilePath = new DAOProperty<String>(SupportedProperty.SPECTRUM_FILE.getName(), null);

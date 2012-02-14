@@ -139,31 +139,31 @@ public class DAOFactory {
 
     }
 
-    public Collection<DAOProperty> getSupportedPorperties(DAO_FORMAT format) {
+    public Collection<DAOProperty> getSupportedProperties(DAO_FORMAT format) {
 
         switch (format) {
             case MASCOT:
-                return MascotDAO.getSupportedPorperties();
+                return MascotDAO.getSupportedProperties();
             case MGF:
-                return MgfDAO.getSupportedPorperties();
+                return MgfDAO.getSupportedProperties();
             case DTA:
-                return DtaDAO.getSupportedPorperties();
+                return DtaDAO.getSupportedProperties();
             case PKL:
-                return PklDAO.getSupportedPorperties();
+                return PklDAO.getSupportedProperties();
             case MS2:
-                return Ms2DAO.getSupportedPorperties();
+                return Ms2DAO.getSupportedProperties();
             case X_TANDEM:
-                return XTandemDAO.getSupportedPorperties();
+                return XTandemDAO.getSupportedProperties();
             case MZML:
-                return MzmlDAO.getSupportedPorperties();
+                return MzmlDAO.getSupportedProperties();
             case MZIDENTML:
-                return MzIdentmlDAO.getSupportedPorperties();
+                return MzIdentmlDAO.getSupportedProperties();
             case MZXML:
-                return MzXmlDAO.getSupportedPorperties();
+                return MzXmlDAO.getSupportedProperties();
             case MZDATA:
-                return MzDataDAO.getSupportedPorperties();
+                return MzDataDAO.getSupportedProperties();
             case MSGF:
-                return MsgfDao.getSupportedPorperties();
+                return MsgfDao.getSupportedProperties();
             case PRIDE:
                 //todo
                 return Collections.emptyList();
