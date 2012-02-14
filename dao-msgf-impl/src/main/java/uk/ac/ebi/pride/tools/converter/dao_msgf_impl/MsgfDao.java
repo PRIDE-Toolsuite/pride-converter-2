@@ -162,7 +162,7 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 			if (mzxmlFiles.size() > 1)
 				throw new ConverterException("The MSGF DAO only supports one referenced mzXML file per MSGF file.");
 			
-			
+			br.close();
 		} catch (FileNotFoundException e) {
 			logger.error("Failed to open input file: " + e.getMessage());
 			throw new ConverterException("Could not find input file.", e);
