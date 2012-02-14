@@ -540,7 +540,7 @@ public class MascotDAOTest extends TestCase {
 
     @Test
     public void testGetSupportedProperties() {
-        Collection<DAOProperty> properties = mascotDao.getSupportedPorperties();
+        Collection<DAOProperty> properties = mascotDao.getSupportedProperties();
 
         assertEquals(12, properties.size());
     }

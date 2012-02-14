@@ -78,7 +78,7 @@ public class Ms2DAO extends AbstractPeakListDAO implements DAO {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static Collection<DAOProperty> getSupportedPorperties() {
+    public static Collection<DAOProperty> getSupportedProperties() {
         return Collections.EMPTY_LIST;
     }
 

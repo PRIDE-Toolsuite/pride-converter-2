@@ -78,7 +78,7 @@ public class PklDAO extends AbstractPeakListDAO implements DAO {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static Collection<DAOProperty> getSupportedPorperties() {
+    public static Collection<DAOProperty> getSupportedProperties() {
         return Collections.EMPTY_LIST;
     }
 

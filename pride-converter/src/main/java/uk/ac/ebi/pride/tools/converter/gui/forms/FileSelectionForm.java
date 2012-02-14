@@ -699,8 +699,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         }
 
         //add dao-specific properties
-        if (DAOFactory.getInstance().getSupportedPorperties(ConverterData.getInstance().getDaoFormat()) != null) {
-            props.addAll(DAOFactory.getInstance().getSupportedPorperties(ConverterData.getInstance().getDaoFormat()));
+        if (DAOFactory.getInstance().getSupportedProperties(ConverterData.getInstance().getDaoFormat()) != null) {
+            props.addAll(DAOFactory.getInstance().getSupportedProperties(ConverterData.getInstance().getDaoFormat()));
         }
 
         parserOptionTable = new ParserOptionTable(props);

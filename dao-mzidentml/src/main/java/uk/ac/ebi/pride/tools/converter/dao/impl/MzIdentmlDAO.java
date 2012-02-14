@@ -661,7 +661,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
     }
 
     @SuppressWarnings("rawtypes")
-    public static Collection<DAOProperty> getSupportedPorperties() {
+    public static Collection<DAOProperty> getSupportedProperties() {
         ArrayList<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
 
         // add the allow-identifications-only option

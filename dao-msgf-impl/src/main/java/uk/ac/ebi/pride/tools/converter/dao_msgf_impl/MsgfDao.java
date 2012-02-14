@@ -247,7 +247,7 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static Collection<DAOProperty> getSupportedPorperties() {
+	public static Collection<DAOProperty> getSupportedProperties() {
 		List<DAOProperty> properties = new ArrayList<DAOProperty>();
 		
 		DAOProperty<String> searchEngine = new DAOProperty<String>("search_engine", "MSGF");
