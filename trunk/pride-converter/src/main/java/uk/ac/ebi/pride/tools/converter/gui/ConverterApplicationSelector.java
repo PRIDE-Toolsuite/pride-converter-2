@@ -1,12 +1,16 @@
 package uk.ac.ebi.pride.tools.converter.gui;
 
+import java.awt.event.*;
 import uk.ac.ebi.pride.tools.converter.conversion.PrideConverter;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.ImageDialog;
 import uk.ac.ebi.pride.tools.converter.gui.forms.*;
 import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
 import uk.ac.ebi.pride.tools.filter.PrideFilter;
 import uk.ac.ebi.pride.tools.merger.PrideMerger;
 
 import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,6 +50,14 @@ public class ConverterApplicationSelector extends JFrame {
 
     public ConverterApplicationSelector() {
         initComponents();
+        SimpleAttributeSet attribs = new SimpleAttributeSet();
+        StyleConstants.setFontSize(attribs, 10);
+        StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
+        textPane1.setParagraphAttributes(attribs,true);
+        textPane2.setParagraphAttributes(attribs,true);
+        textPane3.setParagraphAttributes(attribs,true);
+        textPane4.setParagraphAttributes(attribs,true);
+        textPane5.setParagraphAttributes(attribs,true);
     }
 
     public static void main(String[] args) {
@@ -211,24 +223,45 @@ public class ConverterApplicationSelector extends JFrame {
         System.exit(0);
     }
 
+    private void label1MouseClicked(MouseEvent e) {
+        if (e.getClickCount() == 3){
+            ImageDialog about = new ImageDialog(this);
+            about.setVisible(true);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
-        converterButton = new JButton();
+        label2 = new JLabel();
+        label1 = new JLabel();
         mzTabButton = new JButton();
         filterButton = new JButton();
-        mergerButton = new JButton();
         exitButton = new JButton();
+        converterButton = new JButton();
+        textPane1 = new JTextPane();
+        textPane2 = new JTextPane();
+        textPane3 = new JTextPane();
+        mergerButton = new JButton();
+        textPane4 = new JTextPane();
+        textPane5 = new JTextPane();
 
         //======== this ========
+        setResizable(false);
+        setTitle("PRIDE Converter Toolsuite");
         Container contentPane = getContentPane();
 
-        //---- converterButton ----
-        converterButton.setText("Launch PRIDE Converter");
-        converterButton.addActionListener(new ActionListener() {
+        //---- label2 ----
+        label2.setText("PRIDE Converter Toolsuite");
+        label2.setFont(new Font("Dialog", Font.BOLD, 18));
+
+        //---- label1 ----
+        label1.setIcon(new ImageIcon(getClass().getResource("/images/workflow.png")));
+        label1.setHorizontalAlignment(SwingConstants.CENTER);
+        label1.addMouseListener(new MouseAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                launchTool(e);
+            public void mouseClicked(MouseEvent e) {
+                label1MouseClicked(e);
             }
         });
 
@@ -250,15 +283,6 @@ public class ConverterApplicationSelector extends JFrame {
             }
         });
 
-        //---- mergerButton ----
-        mergerButton.setText("Launch PRIDE Merger");
-        mergerButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                launchTool(e);
-            }
-        });
-
         //---- exitButton ----
         exitButton.setText("Exit");
         exitButton.addActionListener(new ActionListener() {
@@ -268,47 +292,128 @@ public class ConverterApplicationSelector extends JFrame {
             }
         });
 
+        //---- converterButton ----
+        converterButton.setText("Launch PRIDE Converter");
+        converterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                launchTool(e);
+            }
+        });
+
+        //---- textPane1 ----
+        textPane1.setBackground(UIManager.getColor("Button.background"));
+        textPane1.setFont(new Font("Dialog", Font.PLAIN, 10));
+        textPane1.setText("Converts spectra and identifications to PRIDE XML.");
+
+        //---- textPane2 ----
+        textPane2.setBackground(UIManager.getColor("Button.background"));
+        textPane2.setFont(new Font("Dialog", Font.PLAIN, 10));
+        textPane2.setText("Generates skeleton mzTab files that need further editing to add quantitation and/or 2D gel information.");
+
+        //---- textPane3 ----
+        textPane3.setBackground(UIManager.getColor("Button.background"));
+        textPane3.setText("Combines multiple PRIDE XML files into one single PRIDE XML file, while maintaing the links between peptides and spectra.");
+        textPane3.setFont(new Font("Dialog", Font.PLAIN, 10));
+
+        //---- mergerButton ----
+        mergerButton.setText("Launch PRIDE Merger");
+        mergerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                launchTool(e);
+            }
+        });
+
+        //---- textPane4 ----
+        textPane4.setBackground(UIManager.getColor("Button.background"));
+        textPane4.setFont(new Font("Dialog", Font.PLAIN, 10));
+        textPane4.setText("Filters PRIDE XML based on specific identification-, peptide- and/or spectrum-based criteria.");
+
+        //---- textPane5 ----
+        textPane5.setBackground(UIManager.getColor("Button.background"));
+        textPane5.setFont(new Font("Dialog", Font.PLAIN, 10));
+        textPane5.setText("Quit the tool suite");
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup()
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(converterButton, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                                        .addComponent(mergerButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                                        .addComponent(filterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                                        .addComponent(mzTabButton, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
-                                        .addComponent(exitButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
-                                .addContainerGap())
+                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(label1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 632, GroupLayout.PREFERRED_SIZE))
+                                .addGroup(contentPaneLayout.createSequentialGroup()
+                                    .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(textPane3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                                        .addComponent(textPane2, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                                        .addComponent(textPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                                        .addComponent(textPane4, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(filterButton, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                                        .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                                        .addComponent(converterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                                        .addComponent(mzTabButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE))))
+                            .addGap(8, 8, 8))
+                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                            .addComponent(textPane5, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE)
+                            .addContainerGap())))
         );
         contentPaneLayout.setVerticalGroup(
-                contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(converterButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mzTabButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(mergerButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(filterButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(label2)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(label1)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(textPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(converterButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(textPane2)
+                        .addComponent(mzTabButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                        .addComponent(textPane3))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(filterButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                        .addComponent(textPane4))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                        .addComponent(textPane5)
+                        .addComponent(exitButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                    .addContainerGap(13, Short.MAX_VALUE))
         );
-        pack();
+        setSize(660, 570);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JButton converterButton;
+    private JLabel label2;
+    private JLabel label1;
     private JButton mzTabButton;
     private JButton filterButton;
-    private JButton mergerButton;
     private JButton exitButton;
+    private JButton converterButton;
+    private JTextPane textPane1;
+    private JTextPane textPane2;
+    private JTextPane textPane3;
+    private JButton mergerButton;
+    private JTextPane textPane4;
+    private JTextPane textPane5;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     static class ConverterLauncher {
@@ -329,6 +434,7 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new AnnotationDoneForm());
             panel.registerForm(new FileExportForm(false));
             panel.registerForm(new ReportForm());
+            panel.setExitToApplicationSelector(true);
             panel.reset();
         }
 
@@ -343,6 +449,7 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(form);
             panel.registerForm(new FileSelectionForm(OutputFormat.MZTAB));
             panel.registerForm(new MzTabReportForm());
+            panel.setExitToApplicationSelector(true);
             panel.reset();
         }
 
@@ -355,6 +462,7 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new MergerInformationForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_MERGED_XML));
             panel.registerForm(new MergerReportForm());
+            panel.setExitToApplicationSelector(true);
             panel.reset();
         }
 
@@ -368,6 +476,7 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_FILTERED_XML));
             panel.registerForm(new FileExportForm(true));
             panel.registerForm(new FilterReportForm());
+            panel.setExitToApplicationSelector(true);
             panel.reset();
         }
 
