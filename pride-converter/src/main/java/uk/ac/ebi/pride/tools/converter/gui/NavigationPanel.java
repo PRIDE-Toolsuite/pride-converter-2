@@ -64,7 +64,8 @@ public class NavigationPanel extends JFrame implements ValidationListener {
     private HelpSet mainHelpSet;
 
     //user notification
-    ProgressDialog progressDialog = null;
+    private ProgressDialog progressDialog = null;
+    private boolean exitToApplicationSelector = false;
 
     public static NavigationPanel getInstance() {
         return instance;
@@ -485,7 +486,13 @@ public class NavigationPanel extends JFrame implements ValidationListener {
     private void quit() {
         int value = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit this application?", "Please confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (value == JOptionPane.YES_OPTION) {
-            System.exit(0);
+            if (exitToApplicationSelector){
+                setVisible(false);
+                ConverterApplicationSelector.main(new String[]{});
+                dispose();
+            } else {
+                System.exit(0);
+            }
         }
     }
 
@@ -873,4 +880,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         return mainHelpBroker;
     }
 
+    public void setExitToApplicationSelector(boolean exitToApplicationSelector) {
+        this.exitToApplicationSelector = exitToApplicationSelector;
+    }
 }
