@@ -178,7 +178,7 @@
           <string>javax.swing.JLabel</string> 
           <void method="setProperty"> 
            <string>text</string> 
-           <string>Additional Information</string> 
+           <string>Experiment Additional Parameters</string> 
           </void> 
           <void property="name"> 
            <string>label7</string> 

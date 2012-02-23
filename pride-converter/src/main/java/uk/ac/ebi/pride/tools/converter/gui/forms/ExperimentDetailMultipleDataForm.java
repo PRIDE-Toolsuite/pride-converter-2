@@ -4,8 +4,11 @@
 
 package uk.ac.ebi.pride.tools.converter.gui.forms;
 
+import psidev.psi.tools.validator.Context;
+import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import psidev.psi.tools.validator.rules.Rule;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ExperimentDetailMultiTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ExperimentDetailMultiTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
@@ -16,9 +19,10 @@ import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
 /**
  * @author User #3
@@ -70,7 +74,17 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
 
     @Override
     public Collection<ValidatorMessage> validateForm() throws ValidatorException {
-        return Collections.emptyList();
+
+        List<ValidatorMessage> validatorMessages = new ArrayList<ValidatorMessage>();
+        ExperimentDetailMultiTableModel model = (ExperimentDetailMultiTableModel) experimentDataTable.getModel();
+        if (!model.isValid()) {
+            //add validation error
+            validatorMessages.add(new ValidatorMessage("Duplicate values for experiment title and short label", MessageLevel.ERROR, new Context("Experiment Additional Information"), new DuplicateInfoRule()));
+        }
+        experimentDataTable.getSelectionModel().clearSelection();
+        experimentDataTable.repaint();
+
+        return validatorMessages;
     }
 
     @Override
@@ -149,6 +163,36 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
     @Override
     public void tableChanged(TableModelEvent e) {
         validationListerner.fireValidationListener(((ExperimentDetailMultiTableModel) experimentDataTable.getModel()).isValid());
+        //calling isValid in the model will update information on which rows are erroneous
+        //therefore we need to call repaint to make sure that the table is properly displayed
+        experimentDataTable.repaint();
+    }
+
+    private static class DuplicateInfoRule implements Rule {
+        @Override
+        public String getId() {
+            return "Duplicate Experiment Information";
+        }
+
+        @Override
+        public String getName() {
+            return "Duplicate Experiment Information";
+        }
+
+        @Override
+        public String getDescription() {
+            return "Duplicate Experiment Information";
+        }
+
+        @Override
+        public Collection<String> getHowToFixTips() {
+            return null;
+        }
+
+        @Override
+        public String toString() {
+            return "Duplicate Experiment Information";
+        }
     }
 
 }

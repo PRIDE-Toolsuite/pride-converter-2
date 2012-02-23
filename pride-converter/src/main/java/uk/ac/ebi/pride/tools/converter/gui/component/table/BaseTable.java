@@ -28,9 +28,9 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
 
     private static final int DOUBLE_CLICK_COUNT = 2;
 
-    private static final Color grey = new Color(219, 213, 218);
-    private static final Color lightBlue = new Color(100, 117, 245);
-    private static final Color errorRed = new Color(255, 102, 102);
+    public static final Color grey = new Color(219, 213, 218);
+    public static final Color lightBlue = new Color(100, 117, 245);
+    public static final Color errorRed = new Color(255, 102, 102);
 
     private BaseTable<T> _this;
     protected int modelSelectedRow;
