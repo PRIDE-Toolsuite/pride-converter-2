@@ -36,6 +36,36 @@ public class ExperimentDetailMultiTable extends JTable {
         return super.getCellRenderer(row, column);
     }
 
+    @Override
+    public Component prepareRenderer(TableCellRenderer renderer,
+                                     int rowIndex, int vColIndex) {
+
+        Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
+
+        if (isCellSelected(rowIndex, vColIndex)) {
+            c.setBackground(BaseTable.lightBlue);
+        } else {
+
+            //get object at row
+            int modelSelectedRow = convertRowIndexToModel(rowIndex);
+            //get row state
+            ExperimentDetailMultiTableModel model = (ExperimentDetailMultiTableModel) getModel();
+            if (model.isErrorDetectedInRow(modelSelectedRow)) {
+                c.setBackground(BaseTable.errorRed);
+            } else {
+                //no errors - use alternate colors
+                if (rowIndex % 2 == 0) {
+                    c.setBackground(BaseTable.grey);
+                } else {
+                    c.setBackground(getBackground());
+                }
+            }
+
+        }
+        return c;
+    }
+
+
     private class QuickStringCellEditor extends DefaultCellEditor {
 
         private JTextField component = new JTextField();

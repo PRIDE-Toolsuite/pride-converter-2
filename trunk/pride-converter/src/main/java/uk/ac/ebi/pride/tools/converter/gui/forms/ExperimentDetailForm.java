@@ -144,7 +144,7 @@ public class ExperimentDetailForm extends AbstractForm {
             }
 
             //---- label7 ----
-            label7.setText("Additional Information");
+            label7.setText("Experiment Additional Parameters");
 
             //======== scrollPane2 ========
             {
@@ -157,31 +157,31 @@ public class ExperimentDetailForm extends AbstractForm {
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
-                    panel1Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                            .addGroup(GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
-                                                    .addContainerGap()
-                                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE))
-                                            .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addContainerGap()
-                                                    .addComponent(label7)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
-                                                    .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                    .addContainerGap())
+                panel1Layout.createParallelGroup()
+                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addGroup(GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE))
+                            .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(label7)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
+                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
-                    panel1Layout.createParallelGroup()
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                            .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(label7))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                                    .addContainerGap())
+                panel1Layout.createParallelGroup()
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label7))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                        .addContainerGap())
             );
         }
 
@@ -203,49 +203,49 @@ public class ExperimentDetailForm extends AbstractForm {
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(label3)
-                                        .addComponent(label2)
-                                        .addComponent(label1))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(projectNameInput, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
-                                        .addComponent(experimentTitleInput, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
-                                        .addComponent(shortNameInput, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(label4)
-                                        .addComponent(label5)
-                                        .addComponent(label6))
-                                .addGap(175, 175, 175))
-                        .addGroup(layout.createSequentialGroup()
-                                .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+            layout.createParallelGroup()
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(label3)
+                        .addComponent(label2)
+                        .addComponent(label1))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        .addComponent(projectNameInput, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                        .addComponent(experimentTitleInput, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                        .addComponent(shortNameInput, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup()
+                        .addComponent(label4)
+                        .addComponent(label5)
+                        .addComponent(label6))
+                    .addGap(175, 175, 175))
+                .addGroup(layout.createSequentialGroup()
+                    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(15, 15, 15)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(projectNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label4)
-                                        .addComponent(label1))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(experimentTitleInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label5)
-                                        .addComponent(label2))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(shortNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label6)
-                                        .addComponent(label3))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+            layout.createParallelGroup()
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(15, 15, 15)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(projectNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label4)
+                        .addComponent(label1))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(experimentTitleInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label5)
+                        .addComponent(label2))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(shortNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(label6)
+                        .addComponent(label3))
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -318,6 +318,18 @@ public class ExperimentDetailForm extends AbstractForm {
             }
             isLoaded = true;
         }
+
+        //if there are multiple source files in the conversion, add another form in the UI
+        //to deal with this data
+        if (ConverterData.getInstance().getInputFiles().size() > 1 && !doneOnce) {
+            experimentTitleInput.setText("will be set in next form");
+            experimentTitleInput.setEditable(false);
+            shortNameInput.setText("will be set in next form");
+            shortNameInput.setEditable(false);
+            NavigationPanel.getInstance().registerFormAfter(new ExperimentDetailMultipleDataForm(), this);
+            doneOnce = true;
+        }
+
         //fire validation listener on load
         validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()));
     }
@@ -345,12 +357,7 @@ public class ExperimentDetailForm extends AbstractForm {
 
     @Override
     public void finish() {
-        //if there are multiple source files in the conversion, add another form in the UI
-        //to deal with this data
-        if (ConverterData.getInstance().getInputFiles().size() > 1 && !doneOnce) {
-            NavigationPanel.getInstance().registerFormAfter(new ExperimentDetailMultipleDataForm(), this);
-            doneOnce = true;
-        }
+        /* no op */
     }
 
     public static void main(String[] args) {

@@ -114,6 +114,10 @@ public class SampleForm extends AbstractForm implements ActionListener {
         dialog.setVisible(true);
     }
 
+    public void selectMasterFilePanel(){
+        tabbedPane1.setSelectedIndex(0);
+    }
+
     public void addPaneForSample(String sourceFile, ReportBean rb) {
 
         //check to see if sourcefile is already loaded

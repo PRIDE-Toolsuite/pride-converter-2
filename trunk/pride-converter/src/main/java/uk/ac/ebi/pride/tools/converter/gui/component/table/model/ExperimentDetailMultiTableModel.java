@@ -2,7 +2,9 @@ package uk.ac.ebi.pride.tools.converter.gui.component.table.model;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,12 +22,14 @@ public class ExperimentDetailMultiTableModel extends AbstractTableModel {
     private List<String> fileNames;
     private List<String> experimentTitles = new ArrayList<String>();
     private List<String> shortLabels = new ArrayList<String>();
+    private List<Boolean> errorDetectedInRow = new ArrayList<Boolean>();
 
     public ExperimentDetailMultiTableModel(List<String> files, String experimentTitle, String experimentShortLabel) {
         fileNames = files;
         for (String f : files) {
             experimentTitles.add(experimentTitle);
             shortLabels.add(experimentShortLabel);
+            errorDetectedInRow.add(false);
         }
     }
 
@@ -149,21 +153,29 @@ public class ExperimentDetailMultiTableModel extends AbstractTableModel {
 
     public boolean isValid() {
         boolean allValid = true;
-        for (String s : experimentTitles) {
-            if (s == null || s.trim().equals("")) {
+
+        Set<String> observedValues = new HashSet<String>();
+        //loop over all rows. it there are empty values or duplicate values, set flag to be highlighted
+        for (int i = 0; i < fileNames.size(); i++){
+            String expTitle = experimentTitles.get(i);
+            String shortLabel = shortLabels.get(i);
+
+            //check content
+            allValid = allValid && expTitle != null && !"".equals(expTitle.trim());
+            allValid = allValid && shortLabel != null && !"".equals(shortLabel.trim());
+            if (!observedValues.add(expTitle + shortLabel)) {
+                //duplicate information!
                 allValid = false;
-                break;
+                errorDetectedInRow.set(i, true);
+            } else {
+                errorDetectedInRow.set(i, false);
             }
         }
-        if (allValid) {
-            for (String s : shortLabels) {
-                if (s == null || s.trim().equals("")) {
-                    allValid = false;
-                    break;
-                }
-            }
-        }
+
         return allValid;
     }
 
+    public boolean isErrorDetectedInRow(int modelSelectedRow) {
+        return errorDetectedInRow.get(modelSelectedRow);
+    }
 }
