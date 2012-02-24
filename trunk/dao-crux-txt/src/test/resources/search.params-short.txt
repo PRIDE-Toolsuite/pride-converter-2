@@ -1,0 +1,27 @@
+# Which isotopes to use in calculating fragment ion mass.
+# <string>=average|mono. Default=mono.
+# Parameter file only.  Used by crux-search-for-matches and
+# crux-predict-peptide-ions.
+fragment-mass=mono
+
+# Print to stdout additional information about the spectrum.
+# Avaliable only for crux-get-ms2-spectrum.  Does not affect contents of
+# the output file.
+stats=false
+
+# Specifies the operator that is used to compare an entry in the
+# specified column to the value given on the command line. 
+# (eq|gt|gte|lt|lte|neq). Default: eq.
+# Available for crux extract-rows
+comparison=eq
+
+# Minimum number of points for estimating the Weibull parameters. 
+# Default=4000.
+# Available for crux search-for-xlinks
+min-weibull-points=4000
+
+# Predict the given number of isotope peaks (0|1|2). Default=0.
+# Only available for crux-predict-peptide-ion.  Automatically set to 0
+# for Sp scoring and 1 for xcorr scoring.
+isotope=0
+
