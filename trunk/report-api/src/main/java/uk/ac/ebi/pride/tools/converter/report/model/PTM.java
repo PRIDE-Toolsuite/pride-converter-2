@@ -18,6 +18,7 @@ import java.util.List;
  *       &lt;sequence>
  *         &lt;element name="SearchEnginePTMLabel" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="ModAccession" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="ModName" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="ModDatabase" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="ModDatabaseVersion" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="FixedModification" type="{http://www.w3.org/2001/XMLSchema}boolean" minOccurs="0"/>
@@ -35,6 +36,7 @@ import java.util.List;
 @XmlType(name = "PTMType", propOrder = {
         "searchEnginePTMLabel",
         "modAccession",
+        "modName",
         "modDatabase",
         "modDatabaseVersion",
         "fixedModification",
@@ -54,6 +56,8 @@ public class PTM
     protected String searchEnginePTMLabel;
     @XmlElement(name = "ModAccession")
     protected String modAccession;
+    @XmlElement(name = "ModName")
+    protected String modName;
     @XmlElement(name = "ModDatabase")
     protected String modDatabase;
     @XmlElement(name = "ModDatabaseVersion")
@@ -263,6 +267,14 @@ public class PTM
         this.additional = value;
     }
 
+    public String getModName() {
+        return modName;
+    }
+
+    public void setModName(String modName) {
+        this.modName = modName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -292,6 +304,7 @@ public class PTM
         sb.append("PTM");
         sb.append("{searchEnginePTMLabel='").append(searchEnginePTMLabel).append('\'');
         sb.append(", modAccession='").append(modAccession).append('\'');
+        sb.append(", modName='").append(modName).append('\'');
         sb.append(", modDatabase='").append(modDatabase).append('\'');
         sb.append(", modDatabaseVersion='").append(modDatabaseVersion).append('\'');
         sb.append(", fixedModification=").append(fixedModification);
