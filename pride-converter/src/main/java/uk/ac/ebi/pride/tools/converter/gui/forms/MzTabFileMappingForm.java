@@ -196,7 +196,7 @@ public class MzTabFileMappingForm extends AbstractForm {
         }
 
         //generate report files
-        IOUtilities.generateReportFiles(ConverterData.getInstance().getOptions(), ConverterData.getInstance().getDataFiles(), true);
+        IOUtilities.generateReportFiles(ConverterData.getInstance().getOptions(), ConverterData.getInstance().getDataFiles(), true, true);
 
     }
 

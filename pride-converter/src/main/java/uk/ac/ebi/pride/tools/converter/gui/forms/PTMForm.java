@@ -35,6 +35,8 @@ public class PTMForm extends AbstractForm {
         ptmTable.setColumnModel(ptmTableModel.getTableColumnModel(ptmTable));
         //erroneous PTMs will be highlighted in table
         ptmTable.setEnableRowValidation(true);
+        //disable alternate row colors - otherwise too colourful and messy
+        ptmTable.setUseAlternateRowColor(false);
 
     }
 

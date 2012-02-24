@@ -7,6 +7,7 @@ import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.handler.ExternalHandler;
 import uk.ac.ebi.pride.tools.converter.dao.handler.FastaHandler;
 import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
+import uk.ac.ebi.pride.tools.converter.gui.model.DecoratedReportObject;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshallerFactory;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
@@ -38,6 +39,7 @@ public class ReportWriter {
     private ReportMarshaller marshaller;
     private FastaHandler fastaHandler = null;
     private ExternalHandler externalHandler = null;
+    private boolean automaticallyMapPreferredPTMs = false;
 
     public ReportWriter(String filePath) {
         this.filePath = filePath;
@@ -70,7 +72,9 @@ public class ReportWriter {
         Collection<PTM> ptms = dao.getPTMs();
 
         //update PTM mappings to try and automatically assign curated PTM annotations by mass delta
-        ptms = ModUtils.mapPreferredModifications(ptms);
+        if (automaticallyMapPreferredPTMs) {
+            ptms = ModUtils.mapPreferredModifications(ptms);
+        }
 
         Collection<DatabaseMapping> databaseMappings = dao.getDatabaseMappings();
         return writeReport(meta, ptms, databaseMappings);
@@ -379,7 +383,11 @@ public class ReportWriter {
         }
 
         try {
-            marshaller.marshall(xmlObject, out);
+            if (xmlObject instanceof DecoratedReportObject) {
+                marshaller.marshall(((DecoratedReportObject) xmlObject).getInner(), out);
+            } else {
+                marshaller.marshall(xmlObject, out);
+            }
             out.println();
         } catch (Exception e) {
             throw new IOException("Error marshalling: " + xmlObject.getClass().getName(), e);
@@ -401,4 +409,7 @@ public class ReportWriter {
 
     }
 
+    public void setAutomaticallyMapPreferredPTMs(boolean automaticallyMapPreferredPTMs) {
+        this.automaticallyMapPreferredPTMs = automaticallyMapPreferredPTMs;
+    }
 }

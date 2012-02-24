@@ -27,18 +27,24 @@ public class ModUtils {
     public static final String MOD_VERSION = ResourceBundle.getBundle("gui-settings").getString("mod.database.version");
     public static final String MOD_DATABASE = "MOD";
 
+    private static SlimModCollection preferredModifications = null;
+
     public static SlimModCollection getPreferredModifications() {
 
-        try {
-            URL url = ModUtils.class.getClassLoader().getResource(MOD_FILE);
-            if (url != null) {
-                return ReadTabSlim.parseSlimModification(url);
-            } else {
-                throw new IllegalStateException("Could not find preferred modification file");
+        //lazy load
+        if (preferredModifications == null) {
+            try {
+                URL url = ModUtils.class.getClassLoader().getResource(MOD_FILE);
+                if (url != null) {
+                    preferredModifications = ReadTabSlim.parseSlimModification(url);
+                } else {
+                    throw new IllegalStateException("Could not find preferred modification file");
+                }
+            } catch (IOException e) {
+                throw new IllegalStateException("Error reading preferred modification file: " + e.getMessage(), e);
             }
-        } catch (IOException e) {
-            throw new IllegalStateException("Error reading preferred modification file: " + e.getMessage(), e);
         }
+        return preferredModifications;
 
     }
 
@@ -115,6 +121,34 @@ public class ModUtils {
 
         }
         return retval;
+
+    }
+
+    public static boolean canMapToMultiplePreferredMods(PTM ptm) {
+
+
+        double delta = Double.NaN;
+        boolean canMap = false;
+
+        if (ptm.getModMonoDelta() != null && !ptm.getModMonoDelta().isEmpty()) {
+            delta = Double.valueOf(ptm.getModMonoDelta().get(0));
+        } else if (ptm.getModAvgDelta() != null && !ptm.getModAvgDelta().isEmpty()) {
+            delta = Double.valueOf(ptm.getModAvgDelta().get(0));
+        }
+
+        //if no delta annotated in ptm
+        if (delta != Double.NaN) {
+
+            //map by delta
+            SlimModCollection filteredMods = getPreferredModifications().getbyDelta(delta, LOW_PRECISION);
+
+            //if we have one and only one mod
+            if (filteredMods.size() > 1) {
+                canMap = true;
+            }
+        }
+
+        return canMap;
 
     }
 

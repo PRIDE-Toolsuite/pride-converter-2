@@ -345,6 +345,11 @@ public class SimplePTMDialog extends AbstractDialog implements OLSInputable {
             p.getCvParam().clear();
         }
 
+        //update PTM information
+        ptm.setModName(name);
+        ptm.setModAccession(accession);
+
+        //store additional param
         CvParam cvParam = new CvParam();
         cvParam.setCvLabel("MOD");
         cvParam.setAccession(accession);

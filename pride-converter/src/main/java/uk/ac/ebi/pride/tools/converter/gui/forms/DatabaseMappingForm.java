@@ -34,6 +34,8 @@ public class DatabaseMappingForm extends AbstractForm {
         initComponents();
 
         tableModel = new DatabaseMappingTableModel();
+        //erroneous DBMs will be highlighted in table
+        databaseTable.setEnableRowValidation(true);
         databaseTable.setModel(tableModel);
         databaseTable.setColumnModel(tableModel.getTableColumnModel(databaseTable));
 

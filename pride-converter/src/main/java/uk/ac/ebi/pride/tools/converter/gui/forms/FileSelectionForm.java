@@ -1,6 +1,6 @@
 /*
- * Created by JFormDesigner on Wed May 25 11:03:01 BST 2011
- */
+* Created by JFormDesigner on Wed May 25 11:03:01 BST 2011
+*/
 
 package uk.ac.ebi.pride.tools.converter.gui.forms;
 
@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import psidev.psi.tools.validator.Context;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorMessage;
-import psidev.psi.tools.validator.rules.Rule;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
@@ -24,6 +23,7 @@ import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
+import uk.ac.ebi.pride.tools.converter.gui.validator.rules.PrideMergerFileRule;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
 import javax.help.CSH;
@@ -478,27 +478,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             //check to see that we have at least two files
             if (dataFileTable.getFiles().size() < 2) {
                 Collection<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
-                ValidatorMessage error = new ValidatorMessage("You must provide at least two files to merge", MessageLevel.ERROR, new Context("Pride Merger"), new Rule() {
-                    @Override
-                    public String getId() {
-                        return "MERGER";
-                    }
-
-                    @Override
-                    public String getName() {
-                        return "Merger File Number";
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "You must provide at least two files to merge";
-                    }
-
-                    @Override
-                    public Collection<String> getHowToFixTips() {
-                        return null;
-                    }
-                });
+                ValidatorMessage error = new ValidatorMessage("You must provide at least two files to merge", MessageLevel.ERROR, new Context("Pride Merger"), new PrideMergerFileRule());
                 msgs.add(error);
                 return msgs;
             }
@@ -632,7 +612,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         ConverterData.getInstance().getDataFiles().add(fileBean);
                     }
 
-                    IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected());
+                    IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected(), true);
                 }
                 break;
 

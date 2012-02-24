@@ -4,6 +4,7 @@ import psidev.psi.tools.validator.ValidatorException;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
+import uk.ac.ebi.pride.tools.converter.gui.model.DecoratedReportObject;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
@@ -35,6 +36,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
     private BaseTable<T> _this;
     protected int modelSelectedRow;
     protected boolean enableRowValidation = false;
+    private boolean useAlternateRowColor = true;
 
     public BaseTable() {
         _this = this;
@@ -115,12 +117,21 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
                         if (validator.hasError(objToValidate)) {
                             c.setBackground(errorRed);
                         } else {
-                            //no errors - use alternate colors
-                            if (rowIndex % 2 == 0) {
-                                c.setBackground(grey);
-                            } else {
-                                c.setBackground(getBackground());
+
+                            Color bgCol = null;
+                            if (objToValidate instanceof DecoratedReportObject) {
+                                DecoratedReportObject decoratedReportObject = (DecoratedReportObject) objToValidate;
+                                bgCol = decoratedReportObject.getBackground();
                             }
+                            //no errors and no predeficed color - use alternate colors
+                            if (bgCol == null){
+                                if (rowIndex % 2 == 0 && useAlternateRowColor) {
+                                    bgCol = grey;
+                                } else {
+                                    bgCol = getBackground();
+                                }
+                            }
+                            c.setBackground(bgCol);
                         }
 
                     } catch (ValidatorException e) {
@@ -132,7 +143,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
 
             } else {
                 //just alternate colours
-                if (rowIndex % 2 == 0) {
+                if (rowIndex % 2 == 0 && useAlternateRowColor) {
                     c.setBackground(grey);
                 } else {
                     c.setBackground(getBackground());
@@ -147,4 +158,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
         this.enableRowValidation = enableRowValidation;
     }
 
+    public void setUseAlternateRowColor(boolean useAlternateRowColor) {
+        this.useAlternateRowColor = useAlternateRowColor;
+    }
 }
