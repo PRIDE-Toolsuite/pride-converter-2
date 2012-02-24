@@ -780,6 +780,17 @@
                     </xsd:documentation>
                 </xsd:annotation>
             </xsd:element>
+            <xsd:element name="ModName" type="xsd:string"
+                         maxOccurs="1" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The ModName element definition (String)
+                        holds the name from the relevant
+                        post-translational modification database as
+                        indicated by in the ModDatabase element.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
             <xsd:element name="ModDatabase" type="xsd:string"
                          maxOccurs="1" minOccurs="0">
                 <xsd:annotation>
