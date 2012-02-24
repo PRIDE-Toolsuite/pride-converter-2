@@ -1,181 +1,120 @@
 package uk.ac.ebi.pride.tools.converter.dao_crux_txt.model;
 
+/**
+ * Its pretty much a POJO representing a peptide
+ * @author Jose A. Dianes
+ * @version $Id$
+ */
 public class CruxPeptide {
+
+	//private final String protein_id;
+    //private final String flanking_aa;
 	private final int scan;
-	private final String sequence;
-	private final String prevAA;
-	private final String nextAA;
-	private final int charge;
-	private final double mqScore;
-	private final double length;
-	private final double totalPrmScore;
-	private final double medianPrmScore;
-	private final double fractionY;
-	private final double fractionB;
-	private final double intensity;
-	private final int ntt;
-	private final double pValue;
-	private final double fScore;
-	private final double deltaScore;
-	private final double deltaScoreOther;
-	private final int recordNumber;
-	private final int dbFilePos;
-	private final int specFilePos;
-	private final double specProb;
-	
-	public CruxPeptide(int scan, String sequence, String prevAA, String nextAA,
-                       int charge, double mqScore, double length, double totalPrmScore,
-                       double medianPrmScore, double fractionY, double fractionB,
-                       double intensity, int ntt, double pValue, double fScore,
-                       double deltaScore, double deltaScoreOther, int recordNumber,
-                       int dbFilePos, int specFilePos, double specProb) {
-		this.scan = scan;
-		this.sequence = sequence;
-		this.prevAA = prevAA;
-		this.nextAA = nextAA;
-		this.charge = charge;
-		this.mqScore = mqScore;
-		this.length = length;
-		this.totalPrmScore = totalPrmScore;
-		this.medianPrmScore = medianPrmScore;
-		this.fractionY = fractionY;
-		this.fractionB = fractionB;
-		this.intensity = intensity;
-		this.ntt = ntt;
-		this.pValue = pValue;
-		this.fScore = fScore;
-		this.deltaScore = deltaScore;
-		this.deltaScoreOther = deltaScoreOther;
-		this.recordNumber = recordNumber;
-		this.dbFilePos = dbFilePos;
-		this.specFilePos = specFilePos;
-		this.specProb = specProb;
+    private final int charge;
+    private final double specPrecursorMZ;
+    private final double specNeutralMass;
+    private final double peptideMass;
+    private final double deltaCn;
+    private final double xcorrScore;
+    private final int xcorrRank;
+    private final int matchesSpectrum;
+    private final String sequence;
+    private final String claveageType;
+
+	public CruxPeptide(int scan, int charge, double specPrecursorMZ, double specNeutralMass, 
+                       double peptideMass, double deltaCn, double xcorrScore, int xcorrRank,
+                       int matchesSpectrum, String sequence, String claveageType) {
+        this.scan = scan;
+        this.charge = charge;
+        this.specPrecursorMZ = specPrecursorMZ;
+        this.specNeutralMass = specNeutralMass;
+        this.peptideMass = peptideMass;
+        this.deltaCn = deltaCn;
+        this.xcorrScore = xcorrScore;
+        this.xcorrRank = xcorrRank;
+        this.matchesSpectrum = matchesSpectrum;
+        this.sequence = sequence;
+        this.claveageType = claveageType;
 	}
 
-	public int getScan() {
-		return scan;
-	}
+    public int getScan() {
+        return scan;
+    }
 
-	public String getSequence() {
-		return sequence;
-	}
+    public int getCharge() {
+        return charge;
+    }
 
-	public String getPrevAA() {
-		return prevAA;
-	}
+    public double getSpecPrecursorMZ() {
+        return specPrecursorMZ;
+    }
 
-	public String getNextAA() {
-		return nextAA;
-	}
+    public double getSpecNeutralMass() {
+        return specNeutralMass;
+    }
 
-	public int getCharge() {
-		return charge;
-	}
+    public double getPeptideMass() {
+        return peptideMass;
+    }
 
-	public double getMqScore() {
-		return mqScore;
-	}
+    public double getDeltaCn() {
+        return deltaCn;
+    }
 
-	public double getLength() {
-		return length;
-	}
+    public double getXcorrScore() {
+        return xcorrScore;
+    }
 
-	public double getTotalPrmScore() {
-		return totalPrmScore;
-	}
+    public int getXcorrRank() {
+        return xcorrRank;
+    }
 
-	public double getMedianPrmScore() {
-		return medianPrmScore;
-	}
+    public int getMatchesSpectrum() {
+        return matchesSpectrum;
+    }
 
-	public double getFractionY() {
-		return fractionY;
-	}
+    public String getSequence() {
+        return sequence;
+    }
 
-	public double getFractionB() {
-		return fractionB;
-	}
-
-	public double getIntensity() {
-		return intensity;
-	}
-
-	public int getNtt() {
-		return ntt;
-	}
-
-	public double getpValue() {
-		return pValue;
-	}
-
-	public double getfScore() {
-		return fScore;
-	}
-
-	public double getDeltaScore() {
-		return deltaScore;
-	}
-
-	public double getDeltaScoreOther() {
-		return deltaScoreOther;
-	}
-
-	public int getRecordNumber() {
-		return recordNumber;
-	}
-
-	public int getDbFilePos() {
-		return dbFilePos;
-	}
-
-	public int getSpecFilePos() {
-		return specFilePos;
-	}
-
-	public double getSpecProb() {
-		return specProb;
-	}
+    public String getClaveageType() {
+        return claveageType;
+    }
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + charge;
-		result = prime * result + dbFilePos;
+
+        result = prime * result + scan;
+
+        result = prime * result + charge;
+
 		long temp;
-		temp = Double.doubleToLongBits(deltaScore);
+		temp = Double.doubleToLongBits(specPrecursorMZ);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(deltaScoreOther);
+
+		temp = Double.doubleToLongBits(specNeutralMass);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(fScore);
+
+        temp = Double.doubleToLongBits(peptideMass);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(fractionB);
+
+        temp = Double.doubleToLongBits(deltaCn);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(fractionY);
+
+        temp = Double.doubleToLongBits(xcorrScore);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(intensity);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(length);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(medianPrmScore);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(mqScore);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((nextAA == null) ? 0 : nextAA.hashCode());
-		result = prime * result + ntt;
-		temp = Double.doubleToLongBits(pValue);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((prevAA == null) ? 0 : prevAA.hashCode());
-		result = prime * result + recordNumber;
-		result = prime * result + scan;
-		result = prime * result
-				+ ((sequence == null) ? 0 : sequence.hashCode());
-		result = prime * result + specFilePos;
-		temp = Double.doubleToLongBits(specProb);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(totalPrmScore);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
+
+        result = prime * result + xcorrRank;
+
+        result = prime * result + matchesSpectrum;
+
+        result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
+
+		result = prime * result + ((claveageType == null) ? 0 : claveageType.hashCode());
+
+        return result;
 	}
 
 	@Override
@@ -186,70 +125,43 @@ public class CruxPeptide {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CruxPeptide other = (CruxPeptide) obj;
-		if (charge != other.charge)
+
+        CruxPeptide other = (CruxPeptide) obj;
+
+        if (charge != other.scan)
+            return false;
+        if (charge != other.charge)
+            return false;
+		if (Double.doubleToLongBits(specPrecursorMZ) != Double
+				.doubleToLongBits(other.specPrecursorMZ))
 			return false;
-		if (dbFilePos != other.dbFilePos)
+		if (Double.doubleToLongBits(specNeutralMass) != Double
+				.doubleToLongBits(other.specNeutralMass))
 			return false;
-		if (Double.doubleToLongBits(deltaScore) != Double
-				.doubleToLongBits(other.deltaScore))
+		if (Double.doubleToLongBits(peptideMass) != Double
+				.doubleToLongBits(other.peptideMass))
 			return false;
-		if (Double.doubleToLongBits(deltaScoreOther) != Double
-				.doubleToLongBits(other.deltaScoreOther))
+		if (Double.doubleToLongBits(deltaCn) != Double
+				.doubleToLongBits(other.deltaCn))
 			return false;
-		if (Double.doubleToLongBits(fScore) != Double
-				.doubleToLongBits(other.fScore))
+		if (Double.doubleToLongBits(xcorrScore) != Double
+				.doubleToLongBits(other.xcorrScore))
 			return false;
-		if (Double.doubleToLongBits(fractionB) != Double
-				.doubleToLongBits(other.fractionB))
-			return false;
-		if (Double.doubleToLongBits(fractionY) != Double
-				.doubleToLongBits(other.fractionY))
-			return false;
-		if (Double.doubleToLongBits(intensity) != Double
-				.doubleToLongBits(other.intensity))
-			return false;
-		if (Double.doubleToLongBits(length) != Double
-				.doubleToLongBits(other.length))
-			return false;
-		if (Double.doubleToLongBits(medianPrmScore) != Double
-				.doubleToLongBits(other.medianPrmScore))
-			return false;
-		if (Double.doubleToLongBits(mqScore) != Double
-				.doubleToLongBits(other.mqScore))
-			return false;
-		if (nextAA == null) {
-			if (other.nextAA != null)
-				return false;
-		} else if (!nextAA.equals(other.nextAA))
-			return false;
-		if (ntt != other.ntt)
-			return false;
-		if (Double.doubleToLongBits(pValue) != Double
-				.doubleToLongBits(other.pValue))
-			return false;
-		if (prevAA == null) {
-			if (other.prevAA != null)
-				return false;
-		} else if (!prevAA.equals(other.prevAA))
-			return false;
-		if (recordNumber != other.recordNumber)
-			return false;
-		if (scan != other.scan)
-			return false;
+        if (xcorrRank != other.xcorrRank)
+            return false;
+        if (matchesSpectrum != other.matchesSpectrum)
+            return false;
 		if (sequence == null) {
 			if (other.sequence != null)
 				return false;
 		} else if (!sequence.equals(other.sequence))
 			return false;
-		if (specFilePos != other.specFilePos)
+		if (claveageType == null) {
+			if (other.claveageType != null)
+				return false;
+		} else if (!claveageType.equals(other.claveageType))
 			return false;
-		if (Double.doubleToLongBits(specProb) != Double
-				.doubleToLongBits(other.specProb))
-			return false;
-		if (Double.doubleToLongBits(totalPrmScore) != Double
-				.doubleToLongBits(other.totalPrmScore))
-			return false;
+
 		return true;
 	}
 }

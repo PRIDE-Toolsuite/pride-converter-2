@@ -1,291 +1,284 @@
 package uk.ac.ebi.pride.tools.converter.dao_crux_txt;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
 import org.apache.log4j.Logger;
-
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.dao.DefaultPTMs;
 import uk.ac.ebi.pride.tools.converter.dao.impl.AbstractDAOImpl;
 import uk.ac.ebi.pride.tools.converter.dao.impl.AbstractPeakListDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.MzXmlDAO;
-import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxPeptide;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxProtein;
-import uk.ac.ebi.pride.tools.converter.report.model.CV;
-import uk.ac.ebi.pride.tools.converter.report.model.Contact;
-import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
-import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
-import uk.ac.ebi.pride.tools.converter.report.model.Identification;
-import uk.ac.ebi.pride.tools.converter.report.model.InstrumentDescription;
-import uk.ac.ebi.pride.tools.converter.report.model.PTM;
-import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
-import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
-import uk.ac.ebi.pride.tools.converter.report.model.Protocol;
-import uk.ac.ebi.pride.tools.converter.report.model.Reference;
-import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
-import uk.ac.ebi.pride.tools.converter.report.model.Software;
-import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
-import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxTxtIdentificationsParser;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxTxtParamsParser;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.properties.SupportedProperty;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * @author Jose A. Dianes
+ * @version $Id$
+ */
 public class CruxTxtDao extends AbstractDAOImpl implements DAO {
-	/**
+
+    /**
 	 * Logger used by this class
 	 */
 	private static final Logger logger = Logger.getLogger(CruxTxtDao.class);
-	/**
-	 * The input MSF file.
+
+    /**
+	 * The input target Crux-txt file.
 	 */
-	private final File sourcefile;
+	private final File targetFile;
+
+    /**
+     * The input decoy Crux-txt file.
+     */
+    private final File decoyFile;
+
+    /**
+     * The input properties Crux-txt file.
+     */
+    private final File propertiesFile;
+    
 	/**
-	 * The proteins found in the MSGF
+	 * The proteins found in the Crux-txt target file
 	 */
 	private Map<String, CruxProtein> proteins;
+
+    /**
+     * The proteins found in the Crux-txt decoy file
+     */
+    private Map<String, CruxProtein> proteinsDecoy;
+
 	/**
-	 * The mzXML files referenced in the MSGF file.
+	 * The spectra file
 	 */
-	private Set<String> mzxmlFiles;
-	/**
+	private File spectraFile;
+
+
+    /**
 	 * DAO used to parse the corresponding peak list
 	 * file.
 	 */
-	private AbstractPeakListDAO peakListDao;
-	/**
-	 * Peptides found in the MSGF file.
+	private AbstractPeakListDAO peakListDao;   // todo: not sure if we need this one in Crux
+
+    /**
+	 * Peptides found in the Crux-txt file.
 	 */
-	private int peptideCount = 0;
-	/**
+	private int peptideCount = 0; // todo: not sure if we need this one in Crux
+
+    /**
 	 * The spectra ids in the peak list format
 	 */
-	private List<String> specIds;
-	/**
+	private List<String> specIds; // todo: not sure if we need this one in Crux
+
+    /**
 	 * List of spectra ids that were identified
 	 */
-	private List<Integer> identifiedSpecIds = new ArrayList<Integer>();
-	/**
+	private List<Integer> identifiedSpecIds = new ArrayList<Integer>();  // todo: not sure if we need this one in Crux
+
+    /**
 	 * The search engine reported for the proteins
 	 */
-	private String searchEngine = "MSGF";
-	/**
-	 * Path where the mzXML files can be found
-	 */
-	private String mzxmlFolderPath = null;
-	/**
-	 * Indicates whether a carbamidomehtylation should be
-	 * added to every C.
-	 */
-	private boolean addModCarbamidomethylation = false;
-	
+    // todo: is Crux the search engine?
+	private String searchEngine = "MSGF"; // todo: not sure if we need this one in Crux
+
+    /**
+     * Contains all the properties of this DAO (get/setConfiguration)
+     */
 	private Properties properties;
-	
-	public CruxTxtDao(File sourcefile) {
-		this.sourcefile = sourcefile;
-		
-		// parse the msf file
-		parseMsgfFile();
-	}
-	
-	/**
-	 * Parses the MSGF file and stores
-	 * the found proteins / peptides in
-	 * the proteins Map as well as the 
-	 * references mzXML files.
-	 */
-	private void parseMsgfFile() {
-		if (sourcefile == null)
-			throw new ConverterException("Input file was not set.");
-		
-		proteins = new LinkedHashMap<String, CruxProtein>();
-		mzxmlFiles = new HashSet<String>();
-		
-		// open the file
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(sourcefile)));
-			String line;
-			Map<String, Integer> header = null;
-			
-			while ((line = br.readLine()) != null) {
-				String[] fields = line.split("\t");
-				
-				// read the header if it wasn't read yet
-				if (header == null) {
-					header = new HashMap<String, Integer>();
-					for (int i = 0; i < fields.length; i++)
-						header.put(fields[i], i);
-					
-					continue;
-				}
-				
-				// if the protein doesn't exist yet create it
-				String accession = fields[header.get("Protein")];
-				
-				if (!proteins.containsKey(accession))
-					proteins.put(accession, new CruxProtein(accession));
-				
-				// process the peptide
-				CruxPeptide peptide = createMsgfPeptide(fields, header);
-				proteins.get(accession).addPeptide(peptide);
-				peptideCount++;
-				
-				identifiedSpecIds.add(peptide.getScan());
-				
-				// add the mzXML file (name)				
-				mzxmlFiles.add(fields[header.get("#SpectrumFile")]);
-			}
-			
-			// make sure only one mzxmlFile is referenced
-			if (mzxmlFiles.size() > 1)
-				throw new ConverterException("The MSGF DAO only supports one referenced mzXML file per MSGF file.");
-			
-			
-		} catch (FileNotFoundException e) {
-			logger.error("Failed to open input file: " + e.getMessage());
-			throw new ConverterException("Could not find input file.", e);
-		} catch (IOException e) {
-			logger.error("Failed to read from input file: " + e.getMessage());
-			throw new ConverterException("Failed to read from input file.", e);
-		} 
-	}
-	
-	/**
-	 * Creates the peak list dao to load the mzXML file.
-	 */
-	private void createPeakListDao() {
-		if (peakListDao != null)
-			return;
-		
-		// create the mzXML DAO
-		String path = mzxmlFiles.iterator().next();
-		
-		File peakListFile = new File(path);
-		
-		if (!peakListFile.exists() && mzxmlFolderPath != null)
-			peakListFile = new File(new File(mzxmlFolderPath).getAbsolutePath() + File.separator + peakListFile.getName());
-		if (!peakListFile.exists())
-			peakListFile = new File(sourcefile.getParent() + File.separator + peakListFile.getName());
-		if (!peakListFile.exists())
-			peakListFile = new File(peakListFile.getName());
-		if (!peakListFile.exists())
-			throw new ConverterException("Referenced peak list file '" + peakListFile.getName() + "' could not be found.");
-		
-		try {
-			peakListDao = new MzXmlDAO(peakListFile);
-			
-			specIds = peakListDao.getSpectraIds();
-		}
-		catch (InvalidFormatException e) {
-			logger.error("Failed to parse input peak list file: " + e.getMessage());
-			throw new ConverterException("Failed to parse peak list file: " + e.getMessage());
-		}
+
+    /**
+     * Built up from the search parameter file
+     */
+    private Properties parameters;
+
+    /**
+     * Main constructor. Will parse three files:
+     *  - Crux txt target identifications file
+     *  - Crux txt decoy identifications file
+     *  - Crux parameters file
+     *  And create the proper internal data structures
+     *
+     * @param targetFile
+     * @param decoyFile
+     * @param propertiesFile
+     */
+	public CruxTxtDao(File targetFile, File decoyFile, File propertiesFile) {
+		this.targetFile = targetFile;
+		this.propertiesFile = propertiesFile;
+        this.decoyFile = decoyFile;
+
+		// parse the Crux files
+        proteins = CruxTxtIdentificationsParser.parse(targetFile).proteins;
+        proteinsDecoy = CruxTxtIdentificationsParser.parse(decoyFile).proteins; // todo: Right now, we do nothing with the decoy two extra columns
+        parameters = CruxTxtParamsParser.parse(propertiesFile);     // todo: give proper semantics to parameters in the future
 	}
 
-	/**
-	 * Creates a new CruxPeptide object from the passed
-	 * fields and header.
-	 * @param fields The fields of the line representing the peptide.
-	 * @param header A Map mapping a given column name to its 0-based index.
-	 * @return The CruxPeptide object representing the line.
-	 */
-	private CruxPeptide createMsgfPeptide(String[] fields,
-			Map<String, Integer> header) {
-		
-		// process the sequence
-		String annotation = fields[header.get("Annotation")];
-		String prevAA = annotation.substring(0, 1);
-		String sequence = annotation.substring(2, annotation.length() - 2);
-		String nextAA = annotation.substring(annotation.length() - 1);
-		
-		CruxPeptide peptide = new CruxPeptide(
-				Integer.parseInt(fields[header.get("Scan#")]), 
-				sequence, 
-				prevAA, 
-				nextAA, 
-				Integer.parseInt(fields[header.get("Charge")]), 
-				Double.parseDouble(fields[header.get("MQScore")]), 
-				Double.parseDouble(fields[header.get("Length")]), 
-				Double.parseDouble(fields[header.get("TotalPRMScore")]), 
-				Double.parseDouble(fields[header.get("MedianPRMScore")]), 
-				Double.parseDouble(fields[header.get("FractionY")]), 
-				Double.parseDouble(fields[header.get("FractionB")]), 
-				Double.parseDouble(fields[header.get("Intensity")]), 
-				Integer.parseInt(fields[header.get("NTT")].replace(".0", "")), 
-				Double.parseDouble(fields[header.get("p-value")]), 
-				Double.parseDouble(fields[header.get("F-Score")]), 
-				Double.parseDouble(fields[header.get("DeltaScore")]), 
-				Double.parseDouble(fields[header.get("DeltaScoreOther")]), 
-				Integer.parseInt(fields[header.get("RecordNumber")]), 
-				Integer.parseInt(fields[header.get("DBFilePos")]), 
-				Integer.parseInt(fields[header.get("SpecFilePos")]), 
-				Double.parseDouble(fields[header.get("SpecProb")]));
-		
-		return peptide;
-	}
+    @SuppressWarnings("rawtypes")
+    public static Collection<DAOProperty> getSupportedProperties() {
 
-	@SuppressWarnings("rawtypes")
-	public static Collection<DAOProperty> getSupportedProperties() {
-		List<DAOProperty> properties = new ArrayList<DAOProperty>();
-		
-		DAOProperty<String> searchEngine = new DAOProperty<String>("search_engine", "MSGF");
-		searchEngine.setDescription("MSGF files do not contain the search engine used to identify a protein. This parameter sets the given search engine. Default value is \"MSGF\"");
-		properties.add(searchEngine);
-		
-		DAOProperty<String> mzxmlPath = new DAOProperty<String>("mzxml_path", null);
-		searchEngine.setDescription("path to the folder where the mzXML files can be found. If this parameter is not set the mzXML file will be search for in the MSGF file's directory.");
-		properties.add(mzxmlPath);
-		
-		DAOProperty<Boolean> addCarbamidomethylation = new DAOProperty<Boolean>("add_carbamidomethylation", false);
-		addCarbamidomethylation.setDescription("MSGF files cannot report modifications. If this parameter is set to \"true\" a Carbamidomethylation is added to every C.");
-		properties.add(addCarbamidomethylation);
-		
-		return properties;
+        List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
+
+        // Spectra file property
+        DAOProperty<String> spectrumFilePath = new DAOProperty<String>(SupportedProperty.SPECTRUM_FILE.getName(), null);
+        spectrumFilePath.setDescription("Allows to manually set the path to the spectrum source file. This should be mandatory since, in Crux, spectra files are not references within the identification or parameter files.");
+        supportedProperties.add(spectrumFilePath);
+
+        // todo: add more properties here as required/supported
+
+
+        return supportedProperties;
     }
-	
-	public void setConfiguration(Properties props) {
-		properties = props;
-		
-		searchEngine = properties.getProperty("search_engine", "MSGF");
-		mzxmlFolderPath = properties.getProperty("mzxml_path", null);
-		addModCarbamidomethylation = Boolean.parseBoolean( 
-				properties.getProperty("add_carbamidomethylation", "false") );
-	}
 
-	public Properties getConfiguration() {
-		// no configuration supported
-		return properties;
-	}
+    /**
+     * Sets the properties associated to this DAO
+     * @param props The properties to be associated with the DAO
+     */
+    public void setConfiguration(Properties props) {
+        properties = props;
 
+        // set member properties here using properties object
+        spectraFile = new File(props.getProperty(SupportedProperty.SPECTRUM_FILE.getName()));
+    }
+
+    /**
+     * Gets the properties associated with this DAO
+     * @return The properties associated with the DAO
+     */
+    public Properties getConfiguration() {
+        return properties;
+    }
+
+
+
+
+
+
+    // previous DAO code starts here
+
+
+//    /**
+//     *
+//     * @param props
+//     */
+//    public void setConfiguration(Properties props) {
+//        properties = props;
+//
+//        searchEngine = properties.getProperty("search_engine", "MSGF");
+//        mzxmlFolderPath = properties.getProperty("mzxml_path", null);
+//        addModCarbamidomethylation = Boolean.parseBoolean(
+//                properties.getProperty("add_carbamidomethylation", "false") );
+//    }
+
+//    /**
+//     *
+//     * @return
+//     */
+//    public Properties getConfiguration() {
+//        // no configuration supported
+//        return properties;
+//    }
+
+    // examples of setting properties
+
+//    @SuppressWarnings("rawtypes")
+//    public static Collection<DAOProperty> getSupportedProperties() {
+//
+//        List<DAOProperty> properties = new ArrayList<DAOProperty>();
+//
+//        DAOProperty<String> searchEngine = new DAOProperty<String>("search_engine", "MSGF");
+//        searchEngine.setDescription("MSGF files do not contain the search engine used to identify a protein. This parameter sets the given search engine. Default value is \"MSGF\"");
+//        properties.add(searchEngine);
+//
+//        DAOProperty<String> mzxmlPath = new DAOProperty<String>("mzxml_path", null);
+//        searchEngine.setDescription("path to the folder where the mzXML files can be found. If this parameter is not set the mzXML file will be search for in the MSGF file's directory.");
+//        properties.add(mzxmlPath);
+//
+//        DAOProperty<Boolean> addCarbamidomethylation = new DAOProperty<Boolean>("add_carbamidomethylation", false);
+//        addCarbamidomethylation.setDescription("MSGF files cannot report modifications. If this parameter is set to \"true\" a Carbamidomethylation is added to every C.");
+//        properties.add(addCarbamidomethylation);
+//
+//        return properties;
+//    }
+
+//    @SuppressWarnings("rawtypes")
+//    public static Collection<DAOProperty> getSupportedProperties() {
+//
+//        List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
+//
+//        DAOProperty<String> spectrumFilePath = new DAOProperty<String>(SupportedProperty.SPECTRUM_FILE.getName(), null);
+//        spectrumFilePath.setDescription("allows to manually set the path to the spectrum source file. If this property is set any file referenced in the actual X!Tandem file will be ignored.");
+//        supportedProperties.add(spectrumFilePath);
+//
+//        DAOProperty<Boolean> useInternalSpectra = new DAOProperty<Boolean>(SupportedProperty.USE_INTERNAL_SPECTA.getName(), false);
+//        useInternalSpectra.setDescription("if this parameter is set to \"true\" the spectra stored in the X!Tandem file are used irrespective of whether an external peak list file is referenced. These spectra are highly preprocessed and do not properly represent the input spectra. This option should only be used if the original spectra are not available.");
+//        supportedProperties.add(useInternalSpectra);
+//
+//        return supportedProperties;
+//    }
+//
+
+//	/**
+//	 * Creates the peak list dao to load the mzXML file.
+//	 */
+//	private void createPeakListDao() {
+//		if (peakListDao != null)
+//			return;
+//
+//		// create the mzXML DAO
+//		String path = mzxmlFiles.iterator().next();
+//
+//		File peakListFile = new File(path);
+//
+//		if (!peakListFile.exists() && mzxmlFolderPath != null)
+//			peakListFile = new File(new File(mzxmlFolderPath).getAbsolutePath() + File.separator + peakListFile.getName());
+//		if (!peakListFile.exists())
+//			peakListFile = new File(targetFile.getParent() + File.separator + peakListFile.getName());
+//		if (!peakListFile.exists())
+//			peakListFile = new File(peakListFile.getName());
+//		if (!peakListFile.exists())
+//			throw new ConverterException("Referenced peak list file '" + peakListFile.getName() + "' could not be found.");
+//
+//		try {
+//			peakListDao = new MzXmlDAO(peakListFile);
+//
+//			specIds = peakListDao.getSpectraIds();
+//		}
+//		catch (InvalidFormatException e) {
+//			logger.error("Failed to parse input peak list file: " + e.getMessage());
+//			throw new ConverterException("Failed to parse peak list file: " + e.getMessage());
+//		}
+//	}
+
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public String getExperimentTitle() throws InvalidFormatException {
 		return "Unknown MSGF based experiment";
 	}
 
+    /**
+     *
+     * @return
+     */
 	public String getExperimentShortLabel() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Param getExperimentParams() throws InvalidFormatException {
 		// initialize the collection to hold the params
         Param params = new Param();
@@ -297,87 +290,150 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         return params;
 	}
 
+    /**
+     *
+     * @return
+     */
 	public String getSampleName() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     */
 	public String getSampleComment() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Param getSampleParams() throws InvalidFormatException {
 		return new Param();
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public SourceFile getSourceFile() throws InvalidFormatException {
 		// initialize the return variable
         SourceFile file = new SourceFile();
 
-        file.setPathToFile(sourcefile.getAbsolutePath());
-        file.setNameOfFile(sourcefile.getName());
+        file.setPathToFile(targetFile.getAbsolutePath());
+        file.setNameOfFile(targetFile.getName());
         file.setFileType("MSGF file");
 
         return file;
 	}
 
+    /**
+     *
+     * @return
+     */
 	public Collection<Contact> getContacts() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     */
 	public InstrumentDescription getInstrument() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Software getSoftware() throws InvalidFormatException {
 		return new Software();
 	}
 
+    /**
+     *
+     * @return
+     */
 	public Param getProcessingMethod() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     */
 	public Protocol getProtocol() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     */
 	public Collection<Reference> getReferences() {
 		return null;
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public String getSearchDatabaseName() throws InvalidFormatException {
 		return "Unknown database";
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public String getSearchDatabaseVersion() throws InvalidFormatException {
 		return "Unknown";
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Collection<PTM> getPTMs() throws InvalidFormatException {
 		List<PTM> ptms = new ArrayList<PTM>();
-		
-		if (addModCarbamidomethylation) {
-			PTM ptm = new PTM();
-			
-			ptm.setSearchEnginePTMLabel("carbamidomethylation");
-			ptm.setModAccession(DefaultPTMs.CARBAMIDOMETHYL.getAccession());
-			ptm.setModDatabase(DefaultPTMs.CARBAMIDOMETHYL.getDatabase());
-			ptm.setModDatabaseVersion(DefaultPTMs.CARBAMIDOMETHYL.getDatabaseVersion());
-			ptm.getModMonoDelta().add(DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString());
-			ptm.setResidues("C");
-			
-			Param additional = new Param();
-			additional.getCvParam().add(new CvParam("PSI", 
-					DefaultPTMs.CARBAMIDOMETHYL.getAccession(), 
-					DefaultPTMs.CARBAMIDOMETHYL.getPreferredName(), 
-					DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString()));
-			ptm.setAdditional(additional);
-			
-			ptms.add(ptm);
-		}
-		
+
+//		if (addModCarbamidomethylation) {
+//			PTM ptm = new PTM();
+//
+//			ptm.setSearchEnginePTMLabel("carbamidomethylation");
+//			ptm.setModAccession(DefaultPTMs.CARBAMIDOMETHYL.getAccession());
+//			ptm.setModDatabase(DefaultPTMs.CARBAMIDOMETHYL.getDatabase());
+//			ptm.setModDatabaseVersion(DefaultPTMs.CARBAMIDOMETHYL.getDatabaseVersion());
+//			ptm.getModMonoDelta().add(DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString());
+//			ptm.setResidues("C");
+//
+//			Param additional = new Param();
+//			additional.getCvParam().add(new CvParam("PSI",
+//					DefaultPTMs.CARBAMIDOMETHYL.getAccession(),
+//					DefaultPTMs.CARBAMIDOMETHYL.getPreferredName(),
+//					DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString()));
+//			ptm.setAdditional(additional);
+//
+//			ptms.add(ptm);
+//		}
+
 		return ptms;
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Collection<DatabaseMapping> getDatabaseMappings()
 			throws InvalidFormatException {
 		ArrayList<DatabaseMapping> mappings = new ArrayList<DatabaseMapping>(1);
@@ -392,6 +448,11 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		return mappings;
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public SearchResultIdentifier getSearchResultIdentifier()
 			throws InvalidFormatException {
 		// intialize the search result identifier
@@ -400,13 +461,18 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         // format the current time
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-        identifier.setSourceFilePath(sourcefile.getAbsolutePath());
+        identifier.setSourceFilePath(targetFile.getAbsolutePath());
         identifier.setTimeCreated(formatter.format(new Date(System.currentTimeMillis())));
-        identifier.setHash(FileUtils.MD5Hash(sourcefile.getAbsolutePath()));
+        identifier.setHash(FileUtils.MD5Hash(targetFile.getAbsolutePath()));
 
         return identifier;
 	}
 
+    /**
+     *
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Collection<CV> getCvLookup() throws InvalidFormatException {
 		// just create a set containing the 2 cvLookups used here
         ArrayList<CV> cvs = new ArrayList<CV>();
@@ -417,18 +483,30 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         return cvs;
 	}
 
+    /**
+     *
+     * @param onlyIdentified
+     * @return
+     * @throws InvalidFormatException
+     */
 	public int getSpectrumCount(boolean onlyIdentified)
 			throws InvalidFormatException {
-		if (peakListDao == null)
-			createPeakListDao();
+//		if (peakListDao == null)
+//			createPeakListDao();
 		
 		return onlyIdentified ? peptideCount : peakListDao.getSpectrumCount(false);
 	}
 
+    /**
+     *
+     * @param onlyIdentified
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Iterator<Spectrum> getSpectrumIterator(boolean onlyIdentified)
 			throws InvalidFormatException {
-		if (peakListDao == null)
-			createPeakListDao();
+//		if (peakListDao == null)
+//			createPeakListDao();
 		
 		if (onlyIdentified)
 			return new OnlyIdentifiedSpectrumIterator();
@@ -436,11 +514,23 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		return peakListDao.getSpectrumIterator(false);
 	}
 
+    /**
+     *
+     * @param peptideUID
+     * @return
+     * @throws InvalidFormatException
+     */
 	public int getSpectrumReferenceForPeptideUID(String peptideUID)
 			throws InvalidFormatException {
 		return getSpecRefForScan(Integer.parseInt(peptideUID));
 	}
 
+    /**
+     *
+     * @param identificationUID
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Identification getIdentificationByUID(String identificationUID)
 			throws InvalidFormatException {
 		CruxProtein protein = proteins.get(identificationUID);
@@ -451,11 +541,20 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		return convertIdentification(protein);
 	}
 
+    /**
+     *
+     * @param prescanMode
+     * @return
+     * @throws InvalidFormatException
+     */
 	public Iterator<Identification> getIdentificationIterator(
 			boolean prescanMode) throws InvalidFormatException {
 		return new MsgfIdentificationIterator();
 	}
-	
+
+    /**
+     *
+     */
 	private class MsgfIdentificationIterator implements Iterator<Identification> {
 		private final Iterator<String> accessionIterator = proteins.keySet().iterator();
 		
@@ -472,7 +571,13 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		}
 	}
 
+    /**
+     *
+     * @param protein
+     * @return
+     */
 	private Identification convertIdentification(CruxProtein protein) {
+        /*
 		Identification identification = new Identification();
 		
 		identification.setAccession(protein.getAccession());
@@ -529,6 +634,8 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		}
 		
 		return identification;
+		*/
+        return null; // todo: refactor this method and remove this line
 	}
 	
 	/**
@@ -539,29 +646,29 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 	private List<PeptidePTM> createPeptidePtms(String sequence) {
 		List<PeptidePTM> mods = new ArrayList<PeptidePTM>();
 		
-		for (int i = 0; i < sequence.length(); i++) {
-			char c = sequence.charAt(i);
-			
-			if (addModCarbamidomethylation && c == 'C') { 
-				PeptidePTM ptm = new PeptidePTM();
-				ptm.setFixedModification(true);
-				ptm.setSearchEnginePTMLabel("carbamidomethylation");
-				ptm.setModAccession(DefaultPTMs.CARBAMIDOMETHYL.getAccession());
-				ptm.setModDatabase(DefaultPTMs.CARBAMIDOMETHYL.getDatabase());
-				ptm.setModDatabaseVersion(DefaultPTMs.CARBAMIDOMETHYL.getDatabaseVersion());
-				ptm.setModLocation(i + 1);
-				ptm.getModMonoDelta().add(DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString());
-				
-				Param additional = new Param();
-				additional.getCvParam().add(new CvParam("PSI", 
-						DefaultPTMs.CARBAMIDOMETHYL.getAccession(), 
-						DefaultPTMs.CARBAMIDOMETHYL.getPreferredName(), 
-						DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString()));
-				ptm.setAdditional(additional);
-				
-				mods.add(ptm);
-			}
-		}
+//		for (int i = 0; i < sequence.length(); i++) {
+//			char c = sequence.charAt(i);
+//
+//			if (addModCarbamidomethylation && c == 'C') {
+//				PeptidePTM ptm = new PeptidePTM();
+//				ptm.setFixedModification(true);
+//				ptm.setSearchEnginePTMLabel("carbamidomethylation");
+//				ptm.setModAccession(DefaultPTMs.CARBAMIDOMETHYL.getAccession());
+//				ptm.setModDatabase(DefaultPTMs.CARBAMIDOMETHYL.getDatabase());
+//				ptm.setModDatabaseVersion(DefaultPTMs.CARBAMIDOMETHYL.getDatabaseVersion());
+//				ptm.setModLocation(i + 1);
+//				ptm.getModMonoDelta().add(DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString());
+//
+//				Param additional = new Param();
+//				additional.getCvParam().add(new CvParam("PSI",
+//						DefaultPTMs.CARBAMIDOMETHYL.getAccession(),
+//						DefaultPTMs.CARBAMIDOMETHYL.getPreferredName(),
+//						DefaultPTMs.CARBAMIDOMETHYL.getMonoDelta().toString()));
+//				ptm.setAdditional(additional);
+//
+//				mods.add(ptm);
+//			}
+//		}
 		
 		return mods;
 	}
@@ -572,7 +679,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 	 * @return
 	 */
 	private int getSpecRefForScan(Integer scan) {
-		createPeakListDao();
+//		createPeakListDao();
 		
 		String scanId = scan.toString();
 		
@@ -583,7 +690,10 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		
 		throw new ConverterException("Could not find spectrum for scan = " + scan);
 	}
-	
+
+    /**
+     *
+     */
 	private class OnlyIdentifiedSpectrumIterator implements Iterator<Spectrum> {
 		private Iterator<Integer> specIdIterator;
 		private Iterator<Spectrum> specIterator;

@@ -3,6 +3,11 @@ package uk.ac.ebi.pride.tools.converter.dao_crux_txt.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Encapsulates the identification protein accession and a list of associated peptides
+ * @author Jose A. Dianes
+ * @version $Id$
+ */
 public class CruxProtein {
 	private final String accession;
 	private List<CruxPeptide> peptides;
