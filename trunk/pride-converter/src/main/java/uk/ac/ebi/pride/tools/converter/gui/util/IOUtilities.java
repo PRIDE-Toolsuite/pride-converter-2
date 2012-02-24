@@ -163,7 +163,7 @@ public class IOUtilities {
 
     }
 
-    public static void generateReportFiles(Properties options, Collection<FileBean> dataFiles, boolean forceRegeneration) throws GUIException {
+    public static void generateReportFiles(Properties options, Collection<FileBean> dataFiles, boolean forceRegeneration, boolean automaticallyMapPreferredPTMs) throws GUIException {
 
         ConverterData.getInstance().setOptions(options);
         int i = 0;
@@ -174,7 +174,7 @@ public class IOUtilities {
 
                 String reportFile = fileBean.getInputFile() + ConverterData.REPORT_XML;
                 if (forceRegeneration) {
-                    generateReportFile(fileBean, options);
+                    generateReportFile(fileBean, options, automaticallyMapPreferredPTMs);
                 } else {
 
                     //try and load existing report file
@@ -183,7 +183,7 @@ public class IOUtilities {
                     //check to see if file exists and is a valid report file
                     if (!repFile.exists() || !ReportXMLUtilities.isUnmodifiedSourceForReportFile(repFile, fileBean.getInputFile())) {
                         logger.warn("Source file modified since report generation, will recreate report file");
-                        generateReportFile(fileBean, options);
+                        generateReportFile(fileBean, options, automaticallyMapPreferredPTMs);
                     }
                 }
 
@@ -221,7 +221,7 @@ public class IOUtilities {
 
     }
 
-    private static void generateReportFile(FileBean fileBean, Properties options) throws InvalidFormatException {
+    private static void generateReportFile(FileBean fileBean, Properties options, boolean automaticallyMapPreferredPTMs) throws InvalidFormatException {
 
         String reportFile = fileBean.getInputFile() + ConverterData.REPORT_XML;
 
@@ -235,6 +235,7 @@ public class IOUtilities {
 
         ReportWriter writer = new ReportWriter(reportFile);
         writer.setDAO(dao);
+        writer.setAutomaticallyMapPreferredPTMs(automaticallyMapPreferredPTMs);
 
         if (fileBean.getSequenceFile() != null) {
             writer.setFastaHandler(HandlerFactory.getInstance().getFastaHandler(fileBean.getSequenceFile(), ConverterData.getInstance().getFastaFormat()));

@@ -151,6 +151,11 @@ public class ConverterApplicationSelector extends JFrame {
             cmdBuffer.append(".exe ");
         }
 
+        //memory settings
+        if (jvmArgs != null) {
+            cmdBuffer.append(" ").append(jvmArgs);
+        }
+
         cmdBuffer.append(" -cp ");
         if (isWindowsPlatform()) {
             cmdBuffer.append("\"");
@@ -159,11 +164,6 @@ public class ConverterApplicationSelector extends JFrame {
         cmdBuffer.append(System.getProperty("java.class.path"));
         if (isWindowsPlatform()) {
             cmdBuffer.append("\"");
-        }
-
-        //memory settings
-        if (jvmArgs != null) {
-            cmdBuffer.append(" ").append(jvmArgs);
         }
 
         //proxy settings
@@ -184,6 +184,7 @@ public class ConverterApplicationSelector extends JFrame {
         }
 
         cmdBuffer.append(" ").append(mainClass);
+        System.err.println("Bootstrap command: " + cmdBuffer.toString());
 
         // call the command
         Process process;
@@ -211,6 +212,8 @@ public class ConverterApplicationSelector extends JFrame {
             if (propFile.exists()) {
                 System.out.println("Reading properties file: " + propFile.getAbsolutePath());
                 properties.load(new FileReader(propFile));
+            } else {
+                System.err.println("WARNING: no converter.properties file found in " + currentDir.getAbsolutePath());
             }
         } catch (IOException e) {
             System.err.println("Error reading properties file: " + e.getMessage());
@@ -513,6 +516,7 @@ public class ConverterApplicationSelector extends JFrame {
                     os.println(line);
                 }
             } catch (IOException ex) {
+                ex.printStackTrace();
                 throw new RuntimeException(ex.getMessage(), ex);
             }
         }

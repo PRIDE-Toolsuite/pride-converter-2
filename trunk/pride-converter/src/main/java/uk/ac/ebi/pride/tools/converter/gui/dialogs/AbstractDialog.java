@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.tools.converter.gui.dialogs;
 
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.PTMTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateType;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateUtilities;
@@ -36,6 +37,7 @@ public abstract class AbstractDialog extends JDialog {
         REPORT_OBJECT_TO_DIALOG.put(UserParam.class, UserParamDialog.class);
         REPORT_OBJECT_TO_DIALOG.put(Reference.class, ReferenceDialog.class);
         REPORT_OBJECT_TO_DIALOG.put(PTM.class, SimplePTMDialog.class);
+        REPORT_OBJECT_TO_DIALOG.put(PTMTableModel.DecoratedPTM.class, SimplePTMDialog.class);
         REPORT_OBJECT_TO_DIALOG.put(DatabaseMapping.class, DatabaseMappingDialog.class);
     }
 

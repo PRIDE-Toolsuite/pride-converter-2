@@ -103,6 +103,8 @@ public class ReportMetadataCopier {
         //create dao
         ReportReaderDAO dao = new ReportReaderDAO(reportFile);
         writer.setDAO(dao);
+        //don't remap PTMs from the master
+        writer.setAutomaticallyMapPreferredPTMs(false);
 
         //neet to update short label / experiment title
         ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(dao.getSourceFile().getPathToFile());

@@ -38,6 +38,8 @@ public class DatabaseMappingDialog extends AbstractDialog {
 
     private void initDatabaseNames() {
         Map<String, String> databases = TemplateUtilities.initMapCache("/templates/databases.txt");
+        //update default "PLEASE SELECT"
+        databases.put(TemplateUtilities.PLEASE_SELECT, TemplateUtilities.PLEASE_SELECT_OR_TYPE);
         //remove select_other option that is automatically added
         databases.remove(TemplateUtilities.SELECT_OTHER);
         cDbName.setModel(new DefaultComboBoxModel(databases.values().toArray()));
@@ -52,13 +54,13 @@ public class DatabaseMappingDialog extends AbstractDialog {
         DatabaseMapping db = new DatabaseMapping();
         db.setSearchEngineDatabaseName(seDbName.getText());
         db.setSearchEngineDatabaseVersion(seDbVersion.getText());
-        if (cDbName.getSelectedIndex() > -1 && !cDbName.getSelectedItem().equals(TemplateUtilities.PLEASE_SELECT)) {
+        if (cDbName.getSelectedIndex() > -1 && !cDbName.getSelectedItem().equals(TemplateUtilities.PLEASE_SELECT_OR_TYPE)) {
             db.setCuratedDatabaseName(cDbName.getSelectedItem().toString());
         } else if (cDbName.getEditor().getItem() != null) {
             db.setCuratedDatabaseName(cDbName.getEditor().getItem().toString());
         }
         //sanity check
-        if ("Please select".equals(db.getCuratedDatabaseName())) {
+        if (TemplateUtilities.PLEASE_SELECT_OR_TYPE.equals(db.getCuratedDatabaseName())) {
             db.setCuratedDatabaseName(null);
         }
         db.setCuratedDatabaseVersion(cDbVersion.getText());
@@ -144,51 +146,51 @@ public class DatabaseMappingDialog extends AbstractDialog {
             GroupLayout dialogPaneLayout = new GroupLayout(dialogPane);
             dialogPane.setLayout(dialogPaneLayout);
             dialogPaneLayout.setHorizontalGroup(
-                    dialogPaneLayout.createParallelGroup()
+                dialogPaneLayout.createParallelGroup()
+                    .addGroup(dialogPaneLayout.createSequentialGroup()
+                        .addGroup(dialogPaneLayout.createParallelGroup()
                             .addGroup(dialogPaneLayout.createSequentialGroup()
-                                    .addGroup(dialogPaneLayout.createParallelGroup()
-                                            .addGroup(dialogPaneLayout.createSequentialGroup()
-                                                    .addGroup(dialogPaneLayout.createParallelGroup()
-                                                            .addComponent(label6)
-                                                            .addComponent(label7)
-                                                            .addComponent(label8)
-                                                            .addComponent(label5))
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addGroup(dialogPaneLayout.createParallelGroup()
-                                                            .addComponent(seDbName, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                                                            .addComponent(cDbName, 0, 255, Short.MAX_VALUE)
-                                                            .addComponent(seDbVersion, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
-                                                            .addComponent(cDbVersion, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)))
-                                            .addGroup(GroupLayout.Alignment.TRAILING, dialogPaneLayout.createSequentialGroup()
-                                                    .addContainerGap(352, Short.MAX_VALUE)
-                                                    .addComponent(okButton)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(cancelButton)))
-                                    .addContainerGap())
+                                .addGroup(dialogPaneLayout.createParallelGroup()
+                                    .addComponent(label6)
+                                    .addComponent(label7)
+                                    .addComponent(label8)
+                                    .addComponent(label5))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(dialogPaneLayout.createParallelGroup()
+                                    .addComponent(seDbName, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                                    .addComponent(cDbName, 0, 255, Short.MAX_VALUE)
+                                    .addComponent(seDbVersion, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                                    .addComponent(cDbVersion, GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)))
+                            .addGroup(GroupLayout.Alignment.TRAILING, dialogPaneLayout.createSequentialGroup()
+                                .addContainerGap(352, Short.MAX_VALUE)
+                                .addComponent(okButton)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cancelButton)))
+                        .addContainerGap())
             );
             dialogPaneLayout.setVerticalGroup(
-                    dialogPaneLayout.createParallelGroup()
-                            .addGroup(dialogPaneLayout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(label5)
-                                            .addComponent(seDbName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(label6)
-                                            .addComponent(seDbVersion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(label7)
-                                            .addComponent(cDbName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(label8)
-                                            .addComponent(cDbVersion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                                    .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(cancelButton)
-                                            .addComponent(okButton)))
+                dialogPaneLayout.createParallelGroup()
+                    .addGroup(dialogPaneLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(label5)
+                            .addComponent(seDbName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(label6)
+                            .addComponent(seDbVersion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(label7)
+                            .addComponent(cDbName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(label8)
+                            .addComponent(cDbVersion, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addGroup(dialogPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(cancelButton)
+                            .addComponent(okButton)))
             );
         }
         contentPane.add(dialogPane, BorderLayout.CENTER);

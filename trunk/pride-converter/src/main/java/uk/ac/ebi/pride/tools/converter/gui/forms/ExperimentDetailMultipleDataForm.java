@@ -14,6 +14,7 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ExperimentDetai
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
+import uk.ac.ebi.pride.tools.converter.gui.validator.rules.DuplicateInfoRule;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
 import javax.swing.*;
@@ -168,32 +169,6 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
         experimentDataTable.repaint();
     }
 
-    private static class DuplicateInfoRule implements Rule {
-        @Override
-        public String getId() {
-            return "Duplicate Experiment Information";
-        }
-
-        @Override
-        public String getName() {
-            return "Duplicate Experiment Information";
-        }
-
-        @Override
-        public String getDescription() {
-            return "Duplicate Experiment Information";
-        }
-
-        @Override
-        public Collection<String> getHowToFixTips() {
-            return null;
-        }
-
-        @Override
-        public String toString() {
-            return "Duplicate Experiment Information";
-        }
-    }
 
 }
 

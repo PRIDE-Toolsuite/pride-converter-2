@@ -811,7 +811,7 @@ public class OLSDialog extends JDialog {
 
         try {
 
-            System.out.println("System.getProperties(\"http.proxyHost\") = " + System.getProperty("http.proxyHost"));
+//            System.out.println("System.getProperties(\"http.proxyHost\") = " + System.getProperty("http.proxyHost"));
 
             QueryService locator = new QueryServiceLocator();
             olsConnection = locator.getOntologyQuery();

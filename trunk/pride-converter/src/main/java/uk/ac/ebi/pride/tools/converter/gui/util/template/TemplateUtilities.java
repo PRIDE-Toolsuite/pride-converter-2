@@ -26,6 +26,7 @@ public class TemplateUtilities {
     private static final String BASE_TEMPLATE_PATH = ".prideconverter" + FILE_SEPARATOR + "template";
 
     public static final String PLEASE_SELECT = "Please select";
+    public static final String PLEASE_SELECT_OR_TYPE = "Please select or type";
     public static final String SELECT_OTHER = "Select Other";
 
     public static Map<String, String> initMapCache(String resourceName) {

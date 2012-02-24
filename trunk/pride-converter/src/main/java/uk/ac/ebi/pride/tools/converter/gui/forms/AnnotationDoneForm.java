@@ -127,6 +127,8 @@ public class AnnotationDoneForm extends AbstractForm {
             //write report file currently being edited
             ReportWriter writer = new ReportWriter(ConverterData.getInstance().getMasterFile().getReportFile());
             writer.setDAO(ConverterData.getInstance().getMasterDAO());
+            //we don't want to lose the annotations we've already done!
+            writer.setAutomaticallyMapPreferredPTMs(false);
             NavigationPanel.getInstance().setWorkingMessage("Writing report file: " + ConverterData.getInstance().getMasterFile().getReportFile());
             String outfile = writer.writeReport();
 
