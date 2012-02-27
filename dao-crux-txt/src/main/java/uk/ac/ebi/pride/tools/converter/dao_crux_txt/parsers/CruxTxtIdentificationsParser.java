@@ -55,6 +55,8 @@ public class CruxTxtIdentificationsParser {
         }
     }
 
+
+
     /**
      * Parses the whole file.
      * @param identificationsFile
@@ -62,6 +64,16 @@ public class CruxTxtIdentificationsParser {
      * @throws ConverterException
      */
     public static CruxParserResults parse(File identificationsFile) throws ConverterException {
+        return parse(identificationsFile, "");
+    }
+    
+    /**
+     * Parses the whole file.
+     * @param identificationsFile
+     * @return A Map of proteins to peptides (1 to n) obtained from the file
+     * @throws ConverterException
+     */
+    public static CruxParserResults parse(File identificationsFile, String prefix) throws ConverterException {
         if (identificationsFile == null)
             throw new ConverterException("Input identifications file was not set.");
 
@@ -69,8 +81,6 @@ public class CruxTxtIdentificationsParser {
         res.proteins = new LinkedHashMap<String, CruxProtein>();
         res.identifiedSpecIds = new LinkedList<Integer>();
         res.peptideCount = 0;
-
-        //mzxmlFiles = new HashSet<String>(); //todo: what to do with spectra files
 
         try {
 
@@ -98,6 +108,7 @@ public class CruxTxtIdentificationsParser {
 
                 // for each protein accession (key), create an entry and add the peptide to the peptide list (value)
                 for (String accession: proteinIds) {
+                    accession = prefix + accession;
                     // if the protein doesn't exist add it for the first time
                     if (!res.proteins.containsKey(accession))
                         res.proteins.put(accession, new CruxProtein(accession));
@@ -105,21 +116,9 @@ public class CruxTxtIdentificationsParser {
                     // finally associate the peptide
                     res.proteins.get(accession).addPeptide(peptide);
 
-                    // todo: what is the real meaning of this? peptide identifications? PUT IN THE RIGHT PLACE
-                    res.peptideCount++;
-                    res.identifiedSpecIds.add(peptide.getScan());
-
                 }
 
-                // todo: put this also in the right place. What does it mean?
-                // add the mzXML file (name)				
-                //mzxmlFiles.add(fields[header.get("#SpectrumFile")]);
             }
-
-            // todo: change this??
-            // make sure only one mzxmlFile is referenced
-//            if (mzxmlFiles.size() > 1)
-//                throw new ConverterException("The MSGF DAO only supports one referenced mzXML file per MSGF file.");
 
             return res;
 

@@ -5,7 +5,10 @@ package uk.ac.ebi.pride.tools.converter.dao_crux_txt.properties;
  * @version $Id$
  */
 public enum SupportedProperty {
-    SPECTRUM_FILE("spectrum_file");
+    SPECTRUM_FILE("spectrum_file"),
+    THRESHOLD("threshold"),
+    DECOY_PREFIX("decoy_prefix"),
+    MAX_RANK("max_rank");
 
     private String name;
 
