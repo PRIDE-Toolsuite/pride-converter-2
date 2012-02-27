@@ -326,7 +326,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
         file.setPathToFile(targetFile.getAbsolutePath());
         file.setNameOfFile(targetFile.getName());
-        file.setFileType("MSGF file");
+        file.setFileType("MSGF file"); // FIXME: put correct thing here
 
         return file;
 	}
