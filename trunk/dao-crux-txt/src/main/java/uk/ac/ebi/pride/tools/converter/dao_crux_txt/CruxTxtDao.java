@@ -117,7 +117,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
 		// parse the Crux files
         proteins = CruxTxtIdentificationsParser.parse(targetFile).proteins;
-        proteinsDecoy = CruxTxtIdentificationsParser.parse(decoyFile).proteins; // todo: Right now, we do nothing with the decoy two extra columns
+        proteinsDecoy = CruxTxtIdentificationsParser.parse(decoyFile, "DECOY_").proteins; // todo: Right now, we do nothing with the decoy two extra columns
         parameters = CruxTxtParamsParser.parse(propertiesFile);     // todo: give proper semantics to parameters in the future
 	}
 
