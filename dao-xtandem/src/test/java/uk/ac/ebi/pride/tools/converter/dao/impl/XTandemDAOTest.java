@@ -124,7 +124,7 @@ public class XTandemDAOTest extends TestCase {
 
 			if (nCurDb == 0) {
 				assertEquals(
-						"cRAP 2009.05.01 with Sigma-Aldrich Universal Protein Standard sequences",
+						"../fasta/crap.fasta.pro (cRAP 2009.05.01 with Sigma-Aldrich Universal Protein Standard sequences)",
 						m.getSearchEngineDatabaseName());
 				assertEquals("", m.getSearchEngineDatabaseVersion());
 			}

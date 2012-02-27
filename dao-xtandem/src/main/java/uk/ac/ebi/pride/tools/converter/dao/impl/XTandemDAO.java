@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -659,7 +660,9 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         	
         	DatabaseMapping mapping = new DatabaseMapping();
             
-            mapping.setSearchEngineDatabaseName(source != null ? source : path);
+        	// don't use the description as it might not be unique
+//          mapping.setSearchEngineDatabaseName(source != null ? source : path);
+        	mapping.setSearchEngineDatabaseName(path + (source != null ? " (" + source + ")" : ""));
             mapping.setSearchEngineDatabaseVersion("");
 
             mappings.add(mapping);
@@ -1105,7 +1108,9 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         if (!sequenceSourceDescription.containsKey(sourcePath))
             throw new InvalidFormatException("Unknown sequence source path encountered ('" + sourcePath + "'). Can't determine used sequence search database.");
 
-        identification.setDatabase(sequenceSourceDescription.get(sourcePath) != null ? sequenceSourceDescription.get(sourcePath) : sourcePath);
+        // don't use the description as it might not be unique
+//      identification.setDatabase(sequenceSourceDescription.get(sourcePath) != null ? sequenceSourceDescription.get(sourcePath) : sourcePath);
+        identification.setDatabase(sourcePath + (sequenceSourceDescription.get(sourcePath) != null ? " (" + sequenceSourceDescription.get(sourcePath) + ")" : ""));
         identification.setDatabaseVersion("");
 
         identification.setScore(protein.getSummedScore());
@@ -1165,6 +1170,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
                     // add the additional info
                     Param additional = new Param();
+                    additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(xtandemFile.getSpectrum( peptide.getSpectrumNumber() ).getPrecursorCharge()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(domain.getDomainExpect()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_HYPERSCORE.getParam(domain.getDomainHyperScore()));
                     additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(domain.getDomainMh()));
@@ -1216,7 +1222,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     			uk.ac.ebi.pride.tools.converter.report.model.FragmentIon prideIon = 
     				new uk.ac.ebi.pride.tools.converter.report.model.FragmentIon();
     			
-    			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_CHARGE.getParam(fragmentIon.getCharge()));
+    			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_CHARGE.getParam(new Double(fragmentIon.getCharge()).intValue()));
                 // intensity - the intensity can not be properly set since the intensity stored in the
     			// X!Tandem file is changed and does not correspond to the original intensity
     			// to get the actual intensity one would have to load the original spectrum, parse
