@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * @author Jose A. Dianes
- * @version $Id$
+ * @version 1.0
  */
 public class CruxTxtIdentificationParserTest extends TestCase {
 
