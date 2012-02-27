@@ -89,25 +89,25 @@
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>mgf-parser</artifactId>
-            <version>1.1.2</version>
+            <version>1.2.2</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>pkl-parser</artifactId>
-            <version>1.1.2</version>
+            <version>1.2.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>ms2-parser</artifactId>
-            <version>1.1.1</version>
+            <version>1.2.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.pride.tools</groupId>
             <artifactId>dta-parser</artifactId>
-            <version>1.1.2</version>
+            <version>1.2.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -119,7 +119,7 @@
         <dependency>
         	<groupId>uk.ac.ebi.pride.tools</groupId>
         	<artifactId>mzdata-parser</artifactId>
-        	<version>1.1</version>
+        	<version>1.2.1</version>
         	<type>jar</type>
         	<scope>compile</scope>
         </dependency>
