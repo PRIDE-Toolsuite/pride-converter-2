@@ -165,6 +165,10 @@ public class PrideConverter {
                 //write report
                 ReportWriter writer = new ReportWriter(reportFile);
                 writer.setDAO(dao);
+                //the CLI in prescan mode will always automatically map the PTMs!
+                writer.setAutomaticallyMapPreferredPTMs(true);
+
+
                 if (fastaFile != null) {
 
                     String fastaFormat = "full";
