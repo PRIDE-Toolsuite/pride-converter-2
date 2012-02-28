@@ -84,7 +84,7 @@
         <dependency>
             <groupId>de.proteinms.xtandemparser</groupId>
             <artifactId>xtandem-parser</artifactId>
-            <version>1.3.6</version>
+            <version>1.3.9</version>
             <exclusions>
                 <exclusion>
                     <groupId>lennart</groupId>
@@ -129,13 +129,13 @@
             <name>The EBI internal snapshot repository</name>
             <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
         </repository>
-
+ 
         <repository>
             <id>genesis-maven2-repository</id>
             <name>Genesis maven2 repository</name>
             <url>http://genesis.UGent.be/maven2</url>
         </repository>
- 
+
         <repository>
             <id>java-net</id>
             <name>Java Net Repository</name>
@@ -161,7 +161,7 @@
             <uniqueVersion>false</uniqueVersion>
             <id>ebi-repo-snapshots</id>
             <name>EBI Snapshots Repository</name>
-            <url>scp://lobster.ebi.ac.uk/homes/maven/public_html/m2repo_snapshots</url>
+            <url>scp://localhost:2226/homes/maven/public_html/m2repo_snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
