@@ -45,9 +45,7 @@ public class DataTypeForm extends AbstractForm {
         descriptionArea.setText(bundle.getString("Welcome.message"));
 
         //add all spectrum only buttons
-        spectraOnlyButtons.add(pklRadioMultiple);
         spectraOnlyButtons.add(pklRadioSingle);
-        spectraOnlyButtons.add(dtaRadioMultiple);
         spectraOnlyButtons.add(dtaRadioSingle);
         spectraOnlyButtons.add(mzMLRadio);
         spectraOnlyButtons.add(ms2Radio);
@@ -266,93 +264,72 @@ public class DataTypeForm extends AbstractForm {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
-        mainPanel = new JPanel();
         scrollPane1 = new JScrollPane();
         descriptionArea = new JEditorPane();
-        pklRadioMultiple = new JRadioButton();
-        pklRadioSingle = new JRadioButton();
-        dtaRadioMultiple = new JRadioButton();
-        dtaRadioSingle = new JRadioButton();
-        mzIdentMLRadio = new JRadioButton();
-        mzMLRadio = new JRadioButton();
+        label1 = new JLabel();
+        panel3 = new JPanel();
+        panel1 = new JPanel();
         mascotRadio = new JRadioButton();
+        macOsWarningLabel = new JLabel();
+        mzMLRadio = new JRadioButton();
         xtandemRadio = new JRadioButton();
+        mzIdentMLRadio = new JRadioButton();
+        mzdataButton = new JRadioButton();
         mzxmlButton = new JRadioButton();
+        dtaRadioSingle = new JRadioButton();
+        pklRadioSingle = new JRadioButton();
         ms2Radio = new JRadioButton();
         mgfRadio = new JRadioButton();
-        macOsWarningLabel = new JLabel();
-        mzdataButton = new JRadioButton();
-        label1 = new JLabel();
         msgfRadio = new JRadioButton();
         dataTypeGroup = new ButtonGroup();
 
         //======== this ========
 
-        //======== mainPanel ========
+        //======== scrollPane1 ========
         {
-            mainPanel.setBorder(null);
 
-            //======== scrollPane1 ========
+            //---- descriptionArea ----
+            descriptionArea.setText(bundle.getString("WelcomeScreen.descriptionArea.text"));
+            descriptionArea.setContentType("text/html");
+            descriptionArea.setEditable(false);
+            descriptionArea.setFont(new Font("Dialog", Font.ITALIC, 10));
+            descriptionArea.addHyperlinkListener(new HyperlinkListener() {
+                @Override
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    descriptionAreaHyperlinkUpdate(e);
+                }
+            });
+            scrollPane1.setViewportView(descriptionArea);
+        }
+
+        //---- label1 ----
+        label1.setText(bundle.getString("WelcomeScreen.label1.text"));
+
+        //======== panel3 ========
+        {
+            panel3.setLayout(new GridLayout(6, 2));
+
+            //======== panel1 ========
             {
+                panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 5));
 
-                //---- descriptionArea ----
-                descriptionArea.setText(bundle.getString("Welcome.message"));
-                descriptionArea.setContentType("text/html");
-                descriptionArea.setEditable(false);
-                descriptionArea.setFont(new Font("Dialog", Font.ITALIC, 10));
-                descriptionArea.addHyperlinkListener(new HyperlinkListener() {
+                //---- mascotRadio ----
+                mascotRadio.setText(bundle.getString("WelcomeScreen.mascotRadio.text"));
+                mascotRadio.setHorizontalAlignment(SwingConstants.LEFT);
+                mascotRadio.addActionListener(new ActionListener() {
                     @Override
-                    public void hyperlinkUpdate(HyperlinkEvent e) {
-                        descriptionAreaHyperlinkUpdate(e);
+                    public void actionPerformed(ActionEvent e) {
+                        mascotRadioActionPerformed(e);
                     }
                 });
-                scrollPane1.setViewportView(descriptionArea);
+                panel1.add(mascotRadio);
+
+                //---- macOsWarningLabel ----
+                macOsWarningLabel.setText("not supported on Mac OS");
+                macOsWarningLabel.setFont(new Font("Dialog", Font.ITALIC, 10));
+                panel1.add(macOsWarningLabel);
             }
-
-            //---- pklRadioMultiple ----
-            pklRadioMultiple.setText(bundle.getString("WelcomeScreen.pklRadioMultiple.text"));
-            pklRadioMultiple.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    pklRadioMultipleActionPerformed(e);
-                }
-            });
-
-            //---- pklRadioSingle ----
-            pklRadioSingle.setText(bundle.getString("WelcomeScreen.pklRadioSingle.text"));
-            pklRadioSingle.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    pklRadioActionPerformed(e);
-                }
-            });
-
-            //---- dtaRadioMultiple ----
-            dtaRadioMultiple.setText(bundle.getString("WelcomeScreen.dtaRadioMultiple.text"));
-            dtaRadioMultiple.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dtaRadioMultipleActionPerformed(e);
-                }
-            });
-
-            //---- dtaRadioSingle ----
-            dtaRadioSingle.setText(bundle.getString("WelcomeScreen.dtaRadioSingle.text"));
-            dtaRadioSingle.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dtaRadioActionPerformed(e);
-                }
-            });
-
-            //---- mzIdentMLRadio ----
-            mzIdentMLRadio.setText(bundle.getString("WelcomeScreen.mzIdentMLRadio.text"));
-            mzIdentMLRadio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mzIdentMLRadioActionPerformed(e);
-                }
-            });
+            panel3.add(panel1);
 
             //---- mzMLRadio ----
             mzMLRadio.setText(bundle.getString("WelcomeScreen.mzMLRadio.text"));
@@ -362,15 +339,7 @@ public class DataTypeForm extends AbstractForm {
                     mzMLRadioActionPerformed(e);
                 }
             });
-
-            //---- mascotRadio ----
-            mascotRadio.setText(bundle.getString("WelcomeScreen.mascotRadio.text"));
-            mascotRadio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mascotRadioActionPerformed(e);
-                }
-            });
+            panel3.add(mzMLRadio);
 
             //---- xtandemRadio ----
             xtandemRadio.setText(bundle.getString("WelcomeScreen.xtandemRadio.text"));
@@ -380,37 +349,17 @@ public class DataTypeForm extends AbstractForm {
                     xtandemRadioActionPerformed(e);
                 }
             });
+            panel3.add(xtandemRadio);
 
-            //---- mzxmlButton ----
-            mzxmlButton.setText(bundle.getString("WelcomeScreen.mzxmlButton.text"));
-            mzxmlButton.addActionListener(new ActionListener() {
+            //---- mzIdentMLRadio ----
+            mzIdentMLRadio.setText(bundle.getString("WelcomeScreen.mzIdentMLRadio.text"));
+            mzIdentMLRadio.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    mzxmlButtonActionPerformed();
+                    mzIdentMLRadioActionPerformed(e);
                 }
             });
-
-            //---- ms2Radio ----
-            ms2Radio.setText(bundle.getString("WelcomeScreen.ms2Radio.text"));
-            ms2Radio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ms2RadioActionPerformed(e);
-                }
-            });
-
-            //---- mgfRadio ----
-            mgfRadio.setText(bundle.getString("WelcomeScreen.mgfRadio.text"));
-            mgfRadio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mgfRadioActionPerformed(e);
-                }
-            });
-
-            //---- macOsWarningLabel ----
-            macOsWarningLabel.setText("not supported on Mac OS");
-            macOsWarningLabel.setFont(new Font("Dialog", Font.ITALIC, 10));
+            panel3.add(mzIdentMLRadio);
 
             //---- mzdataButton ----
             mzdataButton.setText(bundle.getString("WelcomeScreen.mzdataButton.text"));
@@ -420,9 +369,57 @@ public class DataTypeForm extends AbstractForm {
                     mzdataButtonActionPerformed(e);
                 }
             });
+            panel3.add(mzdataButton);
 
-            //---- label1 ----
-            label1.setText(bundle.getString("WelcomeScreen.label1.text"));
+            //---- mzxmlButton ----
+            mzxmlButton.setText(bundle.getString("WelcomeScreen.mzxmlButton.text"));
+            mzxmlButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mzxmlButtonActionPerformed();
+                }
+            });
+            panel3.add(mzxmlButton);
+
+            //---- dtaRadioSingle ----
+            dtaRadioSingle.setText(bundle.getString("WelcomeScreen.dtaRadioSingle.text"));
+            dtaRadioSingle.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dtaRadioActionPerformed(e);
+                }
+            });
+            panel3.add(dtaRadioSingle);
+
+            //---- pklRadioSingle ----
+            pklRadioSingle.setText(bundle.getString("WelcomeScreen.pklRadioSingle.text"));
+            pklRadioSingle.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    pklRadioActionPerformed(e);
+                }
+            });
+            panel3.add(pklRadioSingle);
+
+            //---- ms2Radio ----
+            ms2Radio.setText(bundle.getString("WelcomeScreen.ms2Radio.text"));
+            ms2Radio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ms2RadioActionPerformed(e);
+                }
+            });
+            panel3.add(ms2Radio);
+
+            //---- mgfRadio ----
+            mgfRadio.setText(bundle.getString("WelcomeScreen.mgfRadio.text"));
+            mgfRadio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mgfRadioActionPerformed(e);
+                }
+            });
+            panel3.add(mgfRadio);
 
             //---- msgfRadio ----
             msgfRadio.setText(bundle.getString("WelcomeScreen.msgfRadio.text"));
@@ -432,82 +429,7 @@ public class DataTypeForm extends AbstractForm {
                     msgfRadioActionPerformed(e);
                 }
             });
-
-            GroupLayout mainPanelLayout = new GroupLayout(mainPanel);
-            mainPanel.setLayout(mainPanelLayout);
-            mainPanelLayout.setHorizontalGroup(
-                    mainPanelLayout.createParallelGroup()
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                    .addGroup(mainPanelLayout.createParallelGroup()
-                                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                                    .addGroup(mainPanelLayout.createParallelGroup()
-                                                            .addComponent(dtaRadioSingle)
-                                                            .addComponent(mzIdentMLRadio)
-                                                            .addComponent(mzMLRadio)
-                                                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                                                    .addComponent(mascotRadio)
-                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                    .addComponent(macOsWarningLabel, GroupLayout.DEFAULT_SIZE, 177, Short.MAX_VALUE))
-                                                            .addComponent(pklRadioSingle)
-                                                            .addComponent(mgfRadio))
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addGroup(mainPanelLayout.createParallelGroup()
-                                                            .addComponent(mzdataButton)
-                                                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                                                    .addGap(1, 1, 1)
-                                                                    .addGroup(mainPanelLayout.createParallelGroup()
-                                                                            .addComponent(mzxmlButton)
-                                                                            .addComponent(xtandemRadio)
-                                                                            .addComponent(ms2Radio, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)
-                                                                            .addComponent(dtaRadioMultiple)))
-                                                            .addComponent(pklRadioMultiple)))
-                                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                                    .addContainerGap()
-                                                    .addComponent(label1)))
-                                    .addContainerGap())
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                    .addComponent(msgfRadio)
-                                    .addContainerGap())
-                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE)
-            );
-            mainPanelLayout.setVerticalGroup(
-                    mainPanelLayout.createParallelGroup()
-                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(label1)
-                                    .addGap(9, 9, 9)
-                                    .addGroup(mainPanelLayout.createParallelGroup()
-                                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                                    .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                            .addComponent(mascotRadio)
-                                                            .addComponent(macOsWarningLabel))
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(mzMLRadio)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(mzIdentMLRadio)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(dtaRadioSingle)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(pklRadioSingle)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addGroup(mainPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                            .addComponent(mgfRadio)
-                                                            .addComponent(mzdataButton)))
-                                            .addGroup(mainPanelLayout.createSequentialGroup()
-                                                    .addComponent(mzxmlButton)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(xtandemRadio)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(ms2Radio)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(dtaRadioMultiple)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(pklRadioMultiple)))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(msgfRadio)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
-            );
+            panel3.add(msgfRadio);
         }
 
         GroupLayout layout = new GroupLayout(this);
@@ -516,53 +438,57 @@ public class DataTypeForm extends AbstractForm {
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(mainPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                                        .addComponent(panel3, GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                                        .addComponent(label1))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(mainPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(label1)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panel3, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
         //---- dataTypeGroup ----
-        dataTypeGroup.add(pklRadioMultiple);
-        dataTypeGroup.add(pklRadioSingle);
-        dataTypeGroup.add(dtaRadioMultiple);
-        dataTypeGroup.add(dtaRadioSingle);
-        dataTypeGroup.add(mzIdentMLRadio);
-        dataTypeGroup.add(mzMLRadio);
         dataTypeGroup.add(mascotRadio);
+        dataTypeGroup.add(mzMLRadio);
         dataTypeGroup.add(xtandemRadio);
+        dataTypeGroup.add(mzIdentMLRadio);
+        dataTypeGroup.add(mzdataButton);
         dataTypeGroup.add(mzxmlButton);
+        dataTypeGroup.add(dtaRadioSingle);
+        dataTypeGroup.add(pklRadioSingle);
         dataTypeGroup.add(ms2Radio);
         dataTypeGroup.add(mgfRadio);
-        dataTypeGroup.add(mzdataButton);
         dataTypeGroup.add(msgfRadio);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JPanel mainPanel;
     private JScrollPane scrollPane1;
     private JEditorPane descriptionArea;
-    private JRadioButton pklRadioMultiple;
-    private JRadioButton pklRadioSingle;
-    private JRadioButton dtaRadioMultiple;
-    private JRadioButton dtaRadioSingle;
-    private JRadioButton mzIdentMLRadio;
-    private JRadioButton mzMLRadio;
+    private JLabel label1;
+    private JPanel panel3;
+    private JPanel panel1;
     private JRadioButton mascotRadio;
+    private JLabel macOsWarningLabel;
+    private JRadioButton mzMLRadio;
     private JRadioButton xtandemRadio;
+    private JRadioButton mzIdentMLRadio;
+    private JRadioButton mzdataButton;
     private JRadioButton mzxmlButton;
+    private JRadioButton dtaRadioSingle;
+    private JRadioButton pklRadioSingle;
     private JRadioButton ms2Radio;
     private JRadioButton mgfRadio;
-    private JLabel macOsWarningLabel;
-    private JRadioButton mzdataButton;
-    private JLabel label1;
     private JRadioButton msgfRadio;
     private ButtonGroup dataTypeGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
