@@ -2,8 +2,10 @@ package uk.ac.ebi.pride.tools.converter.dao;
 
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
 import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,32 +20,37 @@ import java.util.Properties;
 public class DAOFactory {
 
     public enum DAO_FORMAT {
-        PRIDE("pride", "PRIDE", false, "help.ui.dao.pride"),
-        MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot"),
-        SEQUEST("sequest", "Sequest", false, null),
-        OMSSA("omssa", "OMSSA", false, null),
-        MS_LIMS("mslims", "ms_lims", false, null),
-        X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem"),
-        MGF("mgf", "MGF", true, "help.ui.dao.mgf"),
-        MZIDENTML("mzidentml", "mzIdentML", false, "help.ui.dao.mzidentml"),
-        DTA("dta", "DTA", true, "help.ui.dao.dta"),
-        PKL("pkl", "PKL", true, "help.ui.dao.pkl"),
-        MS2("ms2", "MS2", true, "help.ui.dao.ms2"),
-        MZML("mzml", "mzML", true, "help.ui.dao.mzml"),
-        MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml"),
-        MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata"),
-        MSGF("msgf", "MSGF", true, "help.ui.dao.msgf");
+        PRIDE("pride", "PRIDE", false, "help.ui.dao.pride", false, false, new PrideFileFilter()),
+        MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot", false, false, new MascotFileFilter()),
+        SEQUEST("sequest", "Sequest", false, null, false, false, null),
+        OMSSA("omssa", "OMSSA", false, null, false, false, null),
+        MS_LIMS("mslims", "ms_lims", false, null, false, false, null),
+        X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem", false, true, new XTandemFileFilter()),
+        MGF("mgf", "MGF", true, "help.ui.dao.mgf", false, false, new MGFFileFilter()),
+        MZIDENTML("mzidentml", "mzIdentML", false, "help.ui.dao.mzidentml", false, false, new MzIdentMLFileFilter()),
+        DTA("dta", "DTA", true, "help.ui.dao.dta", true, false, new DTAFileFilter()),
+        PKL("pkl", "PKL", true, "help.ui.dao.pkl", true, false, new PKLFileFilter()),
+        MS2("ms2", "MS2", true, "help.ui.dao.ms2", false, false, new MGFFileFilter()),
+        MZML("mzml", "mzML", true, "help.ui.dao.mzml", false, false, new MzMLFileFilter()),
+        MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, new MzXMLFileFilter()),
+        MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, new MzDataFileFilter()),
+        MSGF("msgf", "MSGF", true, "help.ui.dao.msgf", false, false, new MSGFFileFilter());
 
         private String commandLineName;
         private String niceName;
         private boolean spectrumOnly;
         private String helpResource;
+        private FileFilter filter;
+        private boolean allowDirectory;
+        private boolean allowExternalSpectra;
 
-        private DAO_FORMAT(String commandLineName, String niceName, boolean spectrumOnly, String helpResource) {
+        private DAO_FORMAT(String commandLineName, String niceName, boolean spectrumOnly, String helpResource, boolean allowDirectory, boolean allowExternalSpectra, FileFilter fileFilter) {
             this.commandLineName = commandLineName;
             this.niceName = niceName;
             this.spectrumOnly = spectrumOnly;
             this.helpResource = helpResource;
+            this.allowDirectory = allowDirectory;
+            this.allowExternalSpectra = allowExternalSpectra;
         }
 
         public static DAO_FORMAT getDAOForSearchengineOption(String searchEngineOption) {
@@ -72,6 +79,19 @@ public class DAOFactory {
         public String getHelpResource() {
             return helpResource;
         }
+
+        public boolean isAllowExternalSpectra() {
+            return allowExternalSpectra;
+        }
+
+        public FileFilter getFilter() {
+            return filter;
+        }
+
+        public boolean isAllowDirectory() {
+            return allowDirectory;
+        }
+
     }
 
     public enum GEL_COORDINATE_HANDLER_TYPE {

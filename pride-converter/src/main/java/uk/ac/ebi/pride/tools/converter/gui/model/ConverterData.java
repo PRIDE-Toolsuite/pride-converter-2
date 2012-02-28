@@ -33,7 +33,6 @@ public class ConverterData {
     private FileBean masterFile = null;
     private String lastSelectedDirectory = null;
     private Map<String, Collection<ValidatorMessage>> validationMessages = new HashMap<String, Collection<ValidatorMessage>>();
-    private DataType type;
     private HandlerFactory.FASTA_FORMAT fastaFormat;
 
     private Set<PTM> PTMs = new HashSet<PTM>();
@@ -161,7 +160,6 @@ public class ConverterData {
         options = new Properties();
         daoFormat = null;
         masterFile = null;
-        type = null;
         PTMs.clear();
         databaseMappings.clear();
         filesToDelete.clear();
@@ -185,14 +183,6 @@ public class ConverterData {
         customeReportFields.clear();
         dataFiles.clear();
         mzTabFiles.clear();
-    }
-
-    public DataType getType() {
-        return type;
-    }
-
-    public void setType(DataType type) {
-        this.type = type;
     }
 
     public Set<PTM> getPTMs() {
@@ -258,7 +248,6 @@ public class ConverterData {
         sb.append(", masterFile=").append(masterFile);
         sb.append(", lastSelectedDirectory='").append(lastSelectedDirectory).append('\'');
         sb.append(", validationMessages=").append(validationMessages);
-        sb.append(", type=").append(type);
         sb.append(", fastaFormat=").append(fastaFormat);
         sb.append(", PTMs=").append(PTMs);
         sb.append(", databaseMappings=").append(databaseMappings);
