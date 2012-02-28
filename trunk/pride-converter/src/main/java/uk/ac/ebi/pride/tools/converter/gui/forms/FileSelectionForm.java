@@ -18,6 +18,7 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionCellEditor;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.MultipleFormEditingWarningDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
@@ -109,6 +110,12 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         tableFiles.addAll(chooseFiles(true, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().getFilter()));
         dataFileTable.clearFiles();
         dataFileTable.addFiles(tableFiles);
+
+        if (format.equals(OutputFormat.PRIDE_XML) && !Boolean.valueOf(PreferenceManager.getInstance().getProperty(PreferenceManager.PREFERENCE.IGNORE_MULTIPLE_FILE_EDITING)) && dataFileTable.getFiles().size() > 1) {
+            MultipleFormEditingWarningDialog dialog = new MultipleFormEditingWarningDialog(NavigationPanel.getInstance());
+            dialog.setVisible(true);
+        }
+
     }
 
     private void loadSequenceFiles(ActionEvent e) {
@@ -648,9 +655,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         //will be called by each file table but we only care about the data files for now
         if (e.getSource().equals(dataFileTable.getModel())) {
             validationListerner.fireValidationListener(dataFileTable.getFiles().size() > 0);
-            if (format.equals(OutputFormat.PRIDE_XML) && !Boolean.valueOf(PreferenceManager.getInstance().getProperty(PreferenceManager.PREFERENCE.IGNORE_MULTIPLE_FILE_EDITING))) {
-
-            }
         }
     }
 

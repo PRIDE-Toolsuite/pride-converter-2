@@ -1,0 +1,36 @@
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::376:x, seq t {comp checkBox1::::290:x, space :::p, comp okButton:::p:80:p}}, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::136:x, space :::p, par b {comp okButton::b:p::p, comp checkBox1::b:p:25:p}, space :::p}}"
+		} ) {
+			name: "this"
+			"title": "Warning - Editing multiple source files"
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane1"
+				add( new FormComponent( "javax.swing.JTextPane" ) {
+					name: "textPane1"
+					"background": sfield com.jformdesigner.model.FormObject NULL_VALUE
+					"editable": false
+					"text": "You are converting multiple source files. Be aware that some information will be copied across all PRIDE XML files while some information will not be. Please refer to the PRIDE Converter Help to learn more about this feature."
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "okButton"
+				"text": "OK"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "okButtonActionPerformed", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JCheckBox" ) {
+				name: "checkBox1"
+				"text": "Never show this warning again"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBox1ActionPerformed", true ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 205 )
+		} )
+	}
+}

@@ -40,6 +40,9 @@ public class AnnotationDoneForm extends AbstractForm {
         // Generated using JFormDesigner non-commercial license
         scrollPane1 = new JScrollPane();
         textArea1 = new JTextArea();
+        scrollPane2 = new JScrollPane();
+        messageArea = new JTextArea();
+        label1 = new JLabel();
 
         //======== this ========
 
@@ -54,20 +57,42 @@ public class AnnotationDoneForm extends AbstractForm {
             scrollPane1.setViewportView(textArea1);
         }
 
+        //======== scrollPane2 ========
+        {
+
+            //---- messageArea ----
+            messageArea.setBackground(null);
+            messageArea.setText("You have X warnings. Please review them before proceeding.");
+            messageArea.setLineWrap(true);
+            messageArea.setEditable(false);
+            messageArea.setWrapStyleWord(true);
+            scrollPane2.setViewportView(messageArea);
+        }
+
+        //---- label1 ----
+        label1.setText("Messages:");
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(scrollPane2, GroupLayout.Alignment.LEADING)
+                                        .addComponent(scrollPane1)
+                                        .addComponent(label1, GroupLayout.Alignment.LEADING))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(label1)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -77,6 +102,9 @@ public class AnnotationDoneForm extends AbstractForm {
     // Generated using JFormDesigner non-commercial license
     private JScrollPane scrollPane1;
     private JTextArea textArea1;
+    private JScrollPane scrollPane2;
+    private JTextArea messageArea;
+    private JLabel label1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override
@@ -118,6 +146,33 @@ public class AnnotationDoneForm extends AbstractForm {
     public void start() {
         //nothing to validate
         validationListerner.fireValidationListener(true);
+
+        //update messages
+        StringBuilder messages = new StringBuilder();
+        if (ConverterData.getInstance().getInputFiles().size() > 1) {
+            //add multiple file message
+            messages.append("You are converting ")
+                    .append(ConverterData.getInstance().getInputFiles().size())
+                    .append(" source files. Be aware that some information will be copied across")
+                    .append(" all PRIDE XML files while some information will not be. Please refer")
+                    .append(" to the PRIDE Converter Help to learn more about this.\n\n");
+        }
+        if (NavigationPanel.getInstance().getWarningMessageCount() > 0) {
+            //add warning message
+            messages.append("The information you have entered in the previous forms has generated ")
+                    .append(NavigationPanel.getInstance().getWarningMessageCount())
+                    .append(" warning messages.")
+                    .append(" Please review them before generating the PRIDE XML files.\n\n");
+        }
+        if (NavigationPanel.getInstance().getInfoMessageCount() > 0) {
+            //add info message
+            messages.append("The information you have entered in the previous forms has generated ")
+                    .append(NavigationPanel.getInstance().getInfoMessageCount())
+                    .append(" information messages.")
+                    .append(" Please review them before generating the PRIDE XML files.\n\n");
+        }
+        messageArea.setText(messages.toString());
+
     }
 
     @Override
