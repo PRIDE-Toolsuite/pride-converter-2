@@ -17,6 +17,7 @@ import java.util.zip.GZIPInputStream;
 public class FileUtils {
 
     public final static String dat = ".dat";
+    public final static String txt = ".txt";
     public final static String pkl = ".pkl";
     public final static String dta = ".dta";
     public final static String mgf = ".mgf";
