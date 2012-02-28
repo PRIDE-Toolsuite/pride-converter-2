@@ -16,6 +16,7 @@ import uk.ac.ebi.pride.tools.converter.gui.interfaces.ConverterForm;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ValidationListener;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
+import uk.ac.ebi.pride.tools.converter.gui.util.PreferenceManager;
 import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateUtilities;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
@@ -123,6 +124,15 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         //init templates
         TemplateUtilities.initTemplateFolders();
         initValidation();
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                //write user preference file
+                PreferenceManager.getInstance().writePreferencesToFile();
+                System.out.println("Stored user preferences.");
+            }
+        });
 
     }
 
@@ -486,7 +496,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
     private void quit() {
         int value = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit this application?", "Please confirm", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (value == JOptionPane.YES_OPTION) {
-            if (exitToApplicationSelector){
+            if (exitToApplicationSelector) {
                 setVisible(false);
                 ConverterApplicationSelector.main(new String[]{});
                 dispose();
@@ -882,5 +892,17 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
     public void setExitToApplicationSelector(boolean exitToApplicationSelector) {
         this.exitToApplicationSelector = exitToApplicationSelector;
+    }
+
+    public int getErrorMessageCount() {
+        return errorMessageCount;
+    }
+
+    public int getWarningMessageCount() {
+        return warningMessageCount;
+    }
+
+    public int getInfoMessageCount() {
+        return infoMessageCount;
     }
 }

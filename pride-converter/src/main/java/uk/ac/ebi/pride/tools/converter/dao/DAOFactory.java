@@ -51,6 +51,7 @@ public class DAOFactory {
             this.helpResource = helpResource;
             this.allowDirectory = allowDirectory;
             this.allowExternalSpectra = allowExternalSpectra;
+            this.filter = fileFilter;
         }
 
         public static DAO_FORMAT getDAOForSearchengineOption(String searchEngineOption) {

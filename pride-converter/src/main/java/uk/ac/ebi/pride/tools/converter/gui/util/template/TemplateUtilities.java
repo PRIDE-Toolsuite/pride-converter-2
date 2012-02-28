@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui.util.template;
 
 import org.apache.log4j.Logger;
+import uk.ac.ebi.pride.tools.converter.gui.util.PreferenceManager;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshallerFactory;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.unmarshaller.ReportUnmarshaller;
@@ -23,7 +24,7 @@ public class TemplateUtilities {
 
     private static final Logger logger = Logger.getLogger(TemplateUtilities.class);
     private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final String BASE_TEMPLATE_PATH = ".prideconverter" + FILE_SEPARATOR + "template";
+    private static final String BASE_TEMPLATE_PATH = PreferenceManager.PROGRAM_BASE_DIR + FILE_SEPARATOR + "template";
 
     public static final String PLEASE_SELECT = "Please select";
     public static final String PLEASE_SELECT_OR_TYPE = "Please select or type";
@@ -74,7 +75,7 @@ public class TemplateUtilities {
             userHomeDir = System.getProperty("java.io.tmpdir");
         }
 
-        File prideConvDir = new File(userHomeDir, ".prideconverter");
+        File prideConvDir = new File(userHomeDir, PreferenceManager.PROGRAM_BASE_DIR);
         if (!prideConvDir.exists()) {
             if (!prideConvDir.mkdir()) {
                 throw new ConverterException("Could not create template directory: " + prideConvDir.getAbsolutePath());
