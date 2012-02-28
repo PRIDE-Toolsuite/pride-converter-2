@@ -8,7 +8,6 @@ import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
-import uk.ac.ebi.pride.tools.converter.gui.model.DataType;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
@@ -120,8 +119,6 @@ public class FilterInformationForm extends AbstractForm {
 
     @Override
     public void finish() throws GUIException {
-        ConverterData.getInstance().setType(DataType.PRIDE_XML);
-        DAOFactory.DAO_FORMAT daoFormat = DAOFactory.DAO_FORMAT.getDAOForSearchengineOption(DataType.PRIDE_XML.getEngineName().toLowerCase());
-        ConverterData.getInstance().setDaoFormat(daoFormat);
+        ConverterData.getInstance().setDaoFormat(DAOFactory.DAO_FORMAT.PRIDE);
     }
 }

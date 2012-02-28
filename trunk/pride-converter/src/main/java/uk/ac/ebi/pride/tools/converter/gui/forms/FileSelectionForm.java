@@ -23,6 +23,7 @@ import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
+import uk.ac.ebi.pride.tools.converter.gui.util.PreferenceManager;
 import uk.ac.ebi.pride.tools.converter.gui.validator.rules.PrideMergerFileRule;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
@@ -105,7 +106,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private void loadDataFiles(ActionEvent e) {
         Set<File> tableFiles = new TreeSet<File>();
         tableFiles.addAll(dataFileTable.getFiles());
-        tableFiles.addAll(chooseFiles(true, ConverterData.getInstance().getType().isAllowDirectory(), ConverterData.getInstance().getType().getFilter()));
+        tableFiles.addAll(chooseFiles(true, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().getFilter()));
         dataFileTable.clearFiles();
         dataFileTable.addFiles(tableFiles);
     }
@@ -647,6 +648,9 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         //will be called by each file table but we only care about the data files for now
         if (e.getSource().equals(dataFileTable.getModel())) {
             validationListerner.fireValidationListener(dataFileTable.getFiles().size() > 0);
+            if (format.equals(OutputFormat.PRIDE_XML) && !Boolean.valueOf(PreferenceManager.getInstance().getProperty(PreferenceManager.PREFERENCE.IGNORE_MULTIPLE_FILE_EDITING))) {
+
+            }
         }
     }
 
@@ -658,7 +662,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         if (format.equals(OutputFormat.MZTAB)) {
             //add mztab-specific options
             DAOProperty<String> gelIdentifier = new DAOProperty<String>(IOUtilities.GEL_IDENTIFIER, null);
-            gelIdentifier.setDescription("Sets the gel identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.");
+            gelIdentifier.setDescription("Sets the gel identifierz to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.");
             props.add(gelIdentifier);
 
             DAOProperty<String> spotIdentifier = new DAOProperty<String>(IOUtilities.SPOT_IDENTIFIER, null);
