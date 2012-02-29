@@ -182,7 +182,10 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
     private boolean useWeightedScoring = true;
     private boolean reportAllSpectrumIdentificationItems = false;
     private String decoyAccessionPrecursor;
-
+    /**
+     * Directory where the spectra files can be found.
+     */
+    private String specFileDirectory;
     /**
      * Creates a new MzIdentmlDAO based on the passed
      * mzIdentML file.
@@ -336,6 +339,16 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
         // if the file exists, just return it
         if (specFile.exists())
             return specFile;
+        // if the spec file directory is set, check there
+        if (specFileDirectory != null && specFileDirectory.length() > 0) {
+        	File specFileDir = new File(specFileDirectory);
+        	if (!specFileDir.isDirectory())
+        		throw new InvalidFormatException("The spectrum location must only be specified as a directory. The original filenames must not be changed.");
+        	
+        	specFile = new File(specFileDir.getAbsolutePath() + File.separator + specFile.getName());
+        	if (specFile.exists())
+        		return specFile;
+        }
         // if it doesn't exist check in the current directory
         specFile = new File(specFile.getName());
         if (specFile.exists())
@@ -709,6 +722,11 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
     }
 
     @Override
+	public void setExternalSpectrumFile(String filename) {	
+    	this.specFileDirectory = filename;
+	}
+
+	@Override
     public String getExperimentTitle() {
         // get the attributes
         Map<String, String> attributes = unmarshaller.getElementAttributes(unmarshaller.getMzIdentMLId(), MzIdentML.class);
