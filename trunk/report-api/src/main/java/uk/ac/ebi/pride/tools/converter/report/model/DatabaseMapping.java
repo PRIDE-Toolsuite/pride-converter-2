@@ -134,10 +134,6 @@ public class DatabaseMapping
 
         uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping that = (uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping) o;
 
-        if (curatedDatabaseName != null ? !curatedDatabaseName.equals(that.curatedDatabaseName) : that.curatedDatabaseName != null)
-            return false;
-        if (curatedDatabaseVersion != null ? !curatedDatabaseVersion.equals(that.curatedDatabaseVersion) : that.curatedDatabaseVersion != null)
-            return false;
         if (searchEngineDatabaseName != null ? !searchEngineDatabaseName.equals(that.searchEngineDatabaseName) : that.searchEngineDatabaseName != null)
             return false;
         if (searchEngineDatabaseVersion != null ? !searchEngineDatabaseVersion.equals(that.searchEngineDatabaseVersion) : that.searchEngineDatabaseVersion != null)
@@ -150,8 +146,6 @@ public class DatabaseMapping
     public int hashCode() {
         int result = searchEngineDatabaseName != null ? searchEngineDatabaseName.hashCode() : 0;
         result = 31 * result + (searchEngineDatabaseVersion != null ? searchEngineDatabaseVersion.hashCode() : 0);
-        result = 31 * result + (curatedDatabaseName != null ? curatedDatabaseName.hashCode() : 0);
-        result = 31 * result + (curatedDatabaseVersion != null ? curatedDatabaseVersion.hashCode() : 0);
         return result;
     }
 
