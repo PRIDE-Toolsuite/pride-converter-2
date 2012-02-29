@@ -276,15 +276,18 @@ public class XTandemDAOTest extends TestCase {
 		Iterator<Identification> it = dao.getIdentificationIterator(false);
 
 		int nIdCount = 0;
+		int nullCount = 0;
 
 		while (it.hasNext()) {
 			Identification i = it.next();
 
-			assertNotNull(i);
+			if (i == null)
+				nullCount++;
 
 			nIdCount++;
 		}
 
+		assertEquals(nullCount, 78);
 		assertEquals(1732, nIdCount);
 	}
 }
