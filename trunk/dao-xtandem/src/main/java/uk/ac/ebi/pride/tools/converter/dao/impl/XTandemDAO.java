@@ -164,6 +164,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      *
      */
     public enum SupportedProperty {
+    	EXPECT_THRESHOLD("expect_threshold"),
     	USE_INTERNAL_SPECTA("use_internal_spectra");
     	
     	private String name;
@@ -232,6 +233,10 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      */
     private boolean useInternalSpectra = false;
     /**
+     * The expect threshold used above which PSMs are ignored.
+     */
+    private Double expectThreshold = 0.05;
+    /**
      * The currently set user properties. This object
      * is only used to return the set properties. The
      * actual property values are stored in member
@@ -270,6 +275,10 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     public static Collection<DAOProperty> getSupportedProperties() {
         List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
         
+        DAOProperty<Double> expectThreshold = new DAOProperty<Double>(SupportedProperty.EXPECT_THRESHOLD.getName(), 0.05, 0.0, 1.0);
+        expectThreshold.setDescription("the maximum X!Tandem expect value allowed for peptide hits to be reported. The default value is 0.05");
+        supportedProperties.add(expectThreshold);
+        
         DAOProperty<Boolean> useInternalSpectra = new DAOProperty<Boolean>(SupportedProperty.USE_INTERNAL_SPECTA.getName(), false);
         useInternalSpectra.setDescription("if this parameter is set to \"true\" the spectra stored in the X!Tandem file are used irrespective of whether an external peak list file is referenced. These spectra are highly preprocessed and do not properly represent the input spectra. This option should only be used if the original spectra are not available.");
         supportedProperties.add(useInternalSpectra);
@@ -283,6 +292,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         
         // set the actual supported values
         useInternalSpectra = Boolean.parseBoolean( properties.getProperty(SupportedProperty.USE_INTERNAL_SPECTA.getName(), "false") );
+        expectThreshold = Double.parseDouble( properties.getProperty(SupportedProperty.EXPECT_THRESHOLD.getName(), "0.05") );
         
         // reset the spectra dao
         spectraDAO = null;
@@ -416,6 +426,10 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             	
                 // process every domain in the peptide
                 for (Domain domain : peptide.getDomains()) {
+                	// ignore domains above the threshold
+                	if (domain.getDomainExpect() > expectThreshold)
+                		continue;
+                	
                     // expect the first peptide to be the highest ranking one (= smalles expect value)
                     if (minExpect == null)
                         minExpect = domain.getDomainExpect();
@@ -1118,7 +1132,11 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         identification.setSearchEngine("X!Tandem");
 
         // add the peptides
-        identification.getPeptide().addAll(convertPeptides(peptides, prescanMode));
+        List<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertedPeptides = convertPeptides(peptides, prescanMode);
+        // if the protein has no peptides (threshold) return null
+        if (convertedPeptides.size() < 1)
+        	return null;
+        identification.getPeptide().addAll(convertedPeptides);
 
         // add the additional information (only in prescan mode)
         if (prescanMode) {
@@ -1140,7 +1158,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * @param prescanMode Indicates whether in prescan mode.
      * @return An ArrayList of PrideConverter peptides.
      */
-    private ArrayList<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertPeptides(Collection<Peptide> peptides, boolean prescanMode) {
+    private List<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertPeptides(Collection<Peptide> peptides, boolean prescanMode) {
         // intialize the return variable
         ArrayList<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertedPeptides = new ArrayList<uk.ac.ebi.pride.tools.converter.report.model.Peptide>();
 
@@ -1148,6 +1166,10 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         for (Peptide peptide : peptides) {
             // process the different domains
             for (Domain domain : peptide.getDomains()) {
+            	// make sure the domain is below the threshold
+            	if (domain.getDomainExpect() > expectThreshold)
+            		continue;
+            	
                 // create the converted peptide object
                 uk.ac.ebi.pride.tools.converter.report.model.Peptide convertedPeptide = new uk.ac.ebi.pride.tools.converter.report.model.Peptide();
 
