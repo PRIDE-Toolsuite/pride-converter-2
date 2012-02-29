@@ -106,6 +106,8 @@ minProbability.setDescription(
 );
 }}}
 
+Every DAO *must* provide at least one option for the user to set a minimum threshold for peptides to be reported unless the supported file format doesn't allow such a filter. The example above shows the minimum probability threshold used for Mascot results.
+
 ----
 
 = The _DAO_ Interface =
