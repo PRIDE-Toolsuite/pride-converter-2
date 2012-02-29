@@ -28,6 +28,7 @@ public class ConverterData {
 
     private TreeSet<FileBean> dataFiles = new TreeSet<FileBean>();
     private List<String> mzTabFiles = new ArrayList<String>();
+    private List<String> spectrumFiles = new ArrayList<String>();
     private Properties options = new Properties();
     private DAOFactory.DAO_FORMAT daoFormat = null;
     private FileBean masterFile = null;
@@ -153,9 +154,20 @@ public class ConverterData {
         return mzTabFiles;
     }
 
+    /**
+     * Returns a list of spectrum file paths. This collection is independent of the data stored in the FileBean
+     * collection and should be used in the mapping of the spectrum files to the proper input files.
+     *
+     * @return
+     */
+    public List<String> getSpectrumFiles() {
+        return spectrumFiles;
+    }
+
     public void reset() {
         dataFiles.clear();
         mzTabFiles.clear();
+        spectrumFiles.clear();
         validationMessages.clear();
         options = new Properties();
         daoFormat = null;
@@ -183,6 +195,7 @@ public class ConverterData {
         customeReportFields.clear();
         dataFiles.clear();
         mzTabFiles.clear();
+        spectrumFiles.clear();
     }
 
     public Set<PTM> getPTMs() {
@@ -243,6 +256,7 @@ public class ConverterData {
         sb.append("ConverterData");
         sb.append("{dataFiles=").append(dataFiles);
         sb.append(", mzTabFiles=").append(mzTabFiles);
+        sb.append(", spectrumFiles=").append(spectrumFiles);
         sb.append(", options=").append(options);
         sb.append(", daoFormat=").append(daoFormat);
         sb.append(", masterFile=").append(masterFile);

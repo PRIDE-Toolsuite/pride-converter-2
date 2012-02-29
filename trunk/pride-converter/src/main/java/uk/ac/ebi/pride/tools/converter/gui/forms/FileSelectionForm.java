@@ -10,7 +10,6 @@ import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.dao.Utils;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.FastaFileFilter;
@@ -62,17 +61,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         if (format.equals(OutputFormat.MZTAB)
                 || format.equals(OutputFormat.PRIDE_MERGED_XML)
                 || format.equals(OutputFormat.PRIDE_FILTERED_XML)) {
-            //disable tabs for fasta & mztab
+            //disable tabs for fasta / mztab / spectra
             fileTabbedPane.setEnabledAt(1, false);
             fileTabbedPane.setEnabledAt(2, false);
+            fileTabbedPane.setEnabledAt(3, false);
             forceRegenerationBox.setEnabled(false);
         }
 
-        TreeSet<String> scores = new TreeSet<String>();
-        for (Utils.PEPTIDE_SCORE_PARAM param : Utils.PEPTIDE_SCORE_PARAM.values()) {
-            scores.add(param.getName());
-        }
-        scoreFilterComboBox.setModel(new DefaultComboBoxModel(scores.toArray()));
     }
 
     private Collection<File> chooseFiles(boolean allowMultipleSelection, boolean allowDirectory, FileFilter filter) {
@@ -88,7 +83,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         }
 
         if (allowDirectory) {
-            chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         } else {
             chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         }
@@ -129,7 +124,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     private void loadSpectrumFiles(ActionEvent e) {
         Set<File> tableFiles = new HashSet<File>();
-        tableFiles.addAll(chooseFiles(false, false, null));
+        tableFiles.addAll(chooseFiles(true, true, null));
         spectrumFileTable.clearFiles();
         spectrumFileTable.addFiles(tableFiles);
     }
@@ -183,11 +178,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         panel2 = new JPanel();
         panel8 = new JPanel();
         forceRegenerationBox = new JCheckBox();
-        panel9 = new JPanel();
-        checkBox1 = new JCheckBox();
-        scoreFilterComboBox = new JComboBox();
-        operationFilterComboBox = new JComboBox();
-        scoreValueField = new JTextField();
         fileTabbedPane = new JTabbedPane();
         panel3 = new JPanel();
         scrollPane1 = new JScrollPane();
@@ -220,7 +210,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 //======== panel2 ========
         {
             panel2.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.panel2.border")));
-            panel2.setLayout(new GridLayout(3, 0));
+            panel2.setLayout(new GridLayout(2, 0));
 
             //======== panel8 ========
             {
@@ -231,28 +221,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                 panel8.add(forceRegenerationBox);
             }
             panel2.add(panel8);
-
-            //======== panel9 ========
-            {
-                panel9.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-                //---- checkBox1 ----
-                checkBox1.setText(bundle.getString("SelecFilePanel.checkBox1.text"));
-                panel9.add(checkBox1);
-                panel9.add(scoreFilterComboBox);
-
-                //---- operationFilterComboBox ----
-                operationFilterComboBox.setModel(new DefaultComboBoxModel(new String[]{
-                        ">",
-                        "<"
-                }));
-                panel9.add(operationFilterComboBox);
-
-                //---- scoreValueField ----
-                scoreValueField.setColumns(5);
-                panel9.add(scoreValueField);
-            }
-            panel2.add(panel9);
         }
 
 //======== fileTabbedPane ========
@@ -542,11 +510,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JPanel panel2;
     private JPanel panel8;
     private JCheckBox forceRegenerationBox;
-    private JPanel panel9;
-    private JCheckBox checkBox1;
-    private JComboBox scoreFilterComboBox;
-    private JComboBox operationFilterComboBox;
-    private JTextField scoreValueField;
     private JTabbedPane fileTabbedPane;
     private JPanel panel3;
     private JScrollPane scrollPane1;
@@ -692,7 +655,12 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                 //if we have several mztab files, don't generate the report files now as there will be a subsequent
                 //step where the user must confirm the input file/mztab file assignment. The report generation will
                 //be done in the next step
+                boolean hasMultipleTabFiles = false;
+                MzTabFileMappingForm mzTabFileMappingForm = null;
                 if (mzTabFileTable.getFiles().size() > 1) {
+
+                    //update flag
+                    hasMultipleTabFiles = true;
 
                     //only store input files, the logic will be handled by other form
                     for (File inputFile : dataFileTable.getFiles()) {
@@ -703,16 +671,17 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         ConverterData.getInstance().getDataFiles().add(fileBean);
                     }
 
+                    //store options for next form
+                    ConverterData.getInstance().setOptions(getOptions());
+
                     //store mztab files externally to fileBeans
                     for (File mzTabFile : mzTabFileTable.getFiles()) {
                         ConverterData.getInstance().getMztabFiles().add(mzTabFile.getAbsolutePath());
                     }
 
-                    //store options for next form
-                    ConverterData.getInstance().setOptions(getOptions());
-
                     //register a new form to deal with the mapping
-                    NavigationPanel.getInstance().registerFormAfter(new MzTabFileMappingForm(), this);
+                    mzTabFileMappingForm = new MzTabFileMappingForm();
+                    NavigationPanel.getInstance().registerFormAfter(mzTabFileMappingForm, this);
 
                 } else {
                     File mzTabFile = null;
@@ -732,6 +701,75 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         ConverterData.getInstance().getDataFiles().add(fileBean);
                     }
 
+                }
+
+                //if we have several spectrum files, don't generate the report files now as there will be a subsequent
+                //step where the user must confirm the input file/spectrum file assignment. The report generation will
+                //be done in the next step
+                boolean hasMultipleSpectrumFiles = false;
+                if (spectrumFileTable.getFiles().size() > 1) {
+
+                    //update flag
+                    hasMultipleSpectrumFiles = true;
+
+                    //only store input files, the logic will be handled by other form
+                    //only store the input files if they haven't already been stored in the mztab block above
+                    if (ConverterData.getInstance().getDataFiles().isEmpty()) {
+                        for (File inputFile : dataFileTable.getFiles()) {
+                            FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                            if (sequenceFile != null) {
+                                fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
+                            }
+                            ConverterData.getInstance().getDataFiles().add(fileBean);
+                        }
+                    }
+
+                    //store spectra files externally to fileBeans
+                    for (File spectrumFile : spectrumFileTable.getFiles()) {
+                        ConverterData.getInstance().getSpectrumFiles().add(spectrumFile.getAbsolutePath());
+                    }
+
+                    //store options for next form
+                    ConverterData.getInstance().setOptions(getOptions());
+
+                    //register a new form to deal with the mapping
+                    if (hasMultipleTabFiles) {
+                        NavigationPanel.getInstance().registerFormAfter(new SpectrumFileMappingForm(), mzTabFileMappingForm);
+                        mzTabFileMappingForm.setDeferReportFileGeneration(true);
+                    } else {
+                        NavigationPanel.getInstance().registerFormAfter(new SpectrumFileMappingForm(), this);
+                    }
+
+                } else {
+                    File spectrumFile = null;
+                    //we only have 1/0 mztab file
+                    if (!spectrumFileTable.getFiles().isEmpty()) {
+                        spectrumFile = spectrumFileTable.getFiles().iterator().next();
+                    }
+
+                    //if there is only one spectrum file, it will be added to all input files
+                    if (ConverterData.getInstance().getDataFiles().isEmpty()) {
+                        //if beans haven't been stored yet, do so now
+                        for (File inputFile : dataFileTable.getFiles()) {
+                            FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                            if (sequenceFile != null) {
+                                fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
+                            }
+                            if (spectrumFile != null) {
+                                fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
+                            }
+                            ConverterData.getInstance().getDataFiles().add(fileBean);
+                        }
+                    } else {
+                        //otherwise just update the existing beans
+                        for (FileBean fileBean : ConverterData.getInstance().getDataFiles()) {
+                            fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
+                        }
+                    }
+
+                }
+
+                if (!hasMultipleTabFiles && !hasMultipleSpectrumFiles) {
                     IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected(), true);
                 }
                 break;

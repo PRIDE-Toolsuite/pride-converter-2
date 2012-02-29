@@ -1,5 +1,5 @@
 /*
- * Created by JFormDesigner on Thu Feb 02 11:53:00 GMT 2012
+ * Created by JFormDesigner on Wed Feb 29 11:50:59 GMT 2012
  */
 
 package uk.ac.ebi.pride.tools.converter.gui.forms;
@@ -25,12 +25,8 @@ import java.util.Vector;
 /**
  * @author User #3
  */
-public class MzTabFileMappingForm extends AbstractForm {
-
-    //if set to true, will only update the mztab mappings and let another form generate the report files
-    private boolean deferReportFileGeneration = false;
-
-    public MzTabFileMappingForm() {
+public class SpectrumFileMappingForm extends AbstractForm {
+    public SpectrumFileMappingForm() {
         initComponents();
     }
 
@@ -44,17 +40,6 @@ public class MzTabFileMappingForm extends AbstractForm {
 
         //======== scrollPane1 ========
         {
-
-            //---- mappingTable ----
-            mappingTable.setModel(new DefaultTableModel(
-                    new Object[][]{
-                            {null, null},
-                            {null, null},
-                    },
-                    new String[]{
-                            "Input File", "MzTab File"
-                    }
-            ));
             scrollPane1.setViewportView(mappingTable);
         }
 
@@ -84,10 +69,6 @@ public class MzTabFileMappingForm extends AbstractForm {
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 
-    public void setDeferReportFileGeneration(boolean deferReportFileGeneration) {
-        this.deferReportFileGeneration = deferReportFileGeneration;
-    }
-
     @Override
     public Collection<ValidatorMessage> validateForm() throws ValidatorException {
 
@@ -95,7 +76,7 @@ public class MzTabFileMappingForm extends AbstractForm {
         DefaultTableModel model = (DefaultTableModel) mappingTable.getModel();
         for (int i = 0; i < model.getRowCount(); i++) {
             if (model.getValueAt(i, 1) == null || "".equals(model.getValueAt(i, 1))) {
-                msgs.add(new ValidatorMessage("No mzTab file set for " + model.getValueAt(i, 0).toString(), MessageLevel.WARN));
+                msgs.add(new ValidatorMessage("No spectrum file set for " + model.getValueAt(i, 0).toString(), MessageLevel.WARN));
             }
         }
         return msgs;
@@ -120,7 +101,7 @@ public class MzTabFileMappingForm extends AbstractForm {
 
     @Override
     public String getFormName() {
-        return "File Selection - MzTab";
+        return "File Selection - Spectra";
     }
 
     @Override
@@ -137,23 +118,8 @@ public class MzTabFileMappingForm extends AbstractForm {
     public void start() {
         //update table model for file mapping
         updateTableModel();
-        //set initial table values
-        setInitialMapping();
         //update validation listener
         validationListerner.fireValidationListener(true);
-    }
-
-    private void setInitialMapping() {
-
-        DefaultTableModel model = (DefaultTableModel) mappingTable.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String inputFile = model.getValueAt(i, 0).toString();
-            String possibleMzTabFile = inputFile + ConverterData.MZTAB;
-            if (ConverterData.getInstance().getMztabFiles().contains(possibleMzTabFile)) {
-                model.setValueAt(possibleMzTabFile, i, 1);
-            }
-        }
-
     }
 
     private void updateTableModel() {
@@ -168,7 +134,7 @@ public class MzTabFileMappingForm extends AbstractForm {
 
         Vector<Object> headers = new Vector<Object>();
         headers.add("Input File");
-        headers.add("MzTab File");
+        headers.add("Spectrum File");
 
         mappingTable.setModel(new DefaultTableModel(data, headers) {
             boolean[] columnEditable = new boolean[]{
@@ -182,10 +148,10 @@ public class MzTabFileMappingForm extends AbstractForm {
         });
         {
             TableColumn col = mappingTable.getColumnModel().getColumn(1);
-            col.setCellEditor(new MzTabComboBoxEditor(ConverterData.getInstance().getMztabFiles()));
+            col.setCellEditor(new SpectrumComboBoxEditor(ConverterData.getInstance().getSpectrumFiles()));
             // If the cell should appear like a combobox in its
             // non-editing state, also set the combobox renderer
-            col.setCellRenderer(new MzTabComboBoxRenderer(ConverterData.getInstance().getMztabFiles()));
+            col.setCellRenderer(new SpectrumComboBoxRenderer(ConverterData.getInstance().getSpectrumFiles()));
         }
 
 
@@ -193,34 +159,32 @@ public class MzTabFileMappingForm extends AbstractForm {
 
     @Override
     public void finish() throws GUIException {
-        //update mztab file mapping
+        //update spectrum file mapping
         DefaultTableModel model = (DefaultTableModel) mappingTable.getModel();
         for (int i = 0; i < model.getRowCount(); i++) {
             String inputFile = model.getValueAt(i, 0).toString();
-            String mzTabFile = (String) model.getValueAt(i, 1);
-            if (mzTabFile != null && !"".equals(mzTabFile)) {
+            String spectrumFile = (String) model.getValueAt(i, 1);
+            if (spectrumFile != null && !"".equals(spectrumFile)) {
                 //update file bean
-                ConverterData.getInstance().getFileBeanByInputFileName(inputFile).setMzTabFile(mzTabFile);
+                ConverterData.getInstance().getFileBeanByInputFileName(inputFile).setSpectrumFile(spectrumFile);
             }
         }
 
-        if (!deferReportFileGeneration) {
-            //generate report files
-            IOUtilities.generateReportFiles(ConverterData.getInstance().getOptions(), ConverterData.getInstance().getDataFiles(), true, true);
-        }
+        //generate report files
+        IOUtilities.generateReportFiles(ConverterData.getInstance().getOptions(), ConverterData.getInstance().getDataFiles(), true, true);
 
     }
 
-    private class MzTabComboBoxEditor extends DefaultCellEditor {
-        public MzTabComboBoxEditor(Collection<String> mztabFiles) {
-            super(new JComboBox(mztabFiles.toArray()));
+    private class SpectrumComboBoxEditor extends DefaultCellEditor {
+        public SpectrumComboBoxEditor(Collection<String> spectrumFiles) {
+            super(new JComboBox(spectrumFiles.toArray()));
             setClickCountToStart(1);
         }
     }
 
-    private class MzTabComboBoxRenderer extends JComboBox implements TableCellRenderer {
-        public MzTabComboBoxRenderer(Collection<String> mzTabFiles) {
-            super(mzTabFiles.toArray());
+    private class SpectrumComboBoxRenderer extends JComboBox implements TableCellRenderer {
+        public SpectrumComboBoxRenderer(Collection<String> spectrumFiles) {
+            super(spectrumFiles.toArray());
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
