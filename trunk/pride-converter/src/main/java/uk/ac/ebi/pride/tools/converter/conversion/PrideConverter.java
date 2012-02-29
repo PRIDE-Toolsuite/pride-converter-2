@@ -37,6 +37,7 @@ public class PrideConverter {
     private static String reportFile;
     private static String outputFile;
     private static String sourceFile;
+    private static String spectraFile;
     private static String fastaFile;
     private static String mztabFile;
     private static String engine;   //will always be set to lowercase
@@ -66,6 +67,11 @@ public class PrideConverter {
             // mode - required
             if (line.hasOption(PrideConverterCLIOptions.OPTIONS.MODE.getValue())) {
                 mode = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.MODE.getValue()).toLowerCase();
+            }
+            
+            // spectra file - optional
+            if (line.hasOption(PrideConverterCLIOptions.OPTIONS.SPECTRA_FILE.getValue())) {
+            	spectraFile = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPECTRA_FILE.getValue());
             }
 
             // ---------------------------------------------------------------- help/version
@@ -148,6 +154,9 @@ public class PrideConverter {
             }
 
             DAO dao = DAOFactory.getInstance().getDAO(sourceFile, daoFormat);
+            
+            if (spectraFile != null)
+            	dao.setExternalSpectrumFile(spectraFile);
 
             // run in prescan mode
             if ("prescan".equals(mode)) {

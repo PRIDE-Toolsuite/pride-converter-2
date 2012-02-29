@@ -1,15 +1,35 @@
 package uk.ac.ebi.pride.tools.converter.dao;
 
-import uk.ac.ebi.pride.tools.converter.dao.impl.*;
-import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
-import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
-
-import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
+
+import javax.swing.filechooser.FileFilter;
+
+import uk.ac.ebi.pride.tools.converter.dao.impl.DtaDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MascotDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MgfDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.Ms2DAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MzDataDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MzIdentmlDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MzXmlDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MzmlDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.PklDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.XTandemDAO;
+import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.DTAFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MGFFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MSGFFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MascotFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzDataFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzIdentMLFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzMLFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzXMLFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.PKLFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.PrideFileFilter;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.XTandemFileFilter;
+import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,21 +40,21 @@ import java.util.Properties;
 public class DAOFactory {
 
     public enum DAO_FORMAT {
-        PRIDE("pride", "PRIDE", false, "help.ui.dao.pride", false, false, new PrideFileFilter()),
-        MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot", false, false, new MascotFileFilter()),
-        SEQUEST("sequest", "Sequest", false, null, false, false, null),
-        OMSSA("omssa", "OMSSA", false, null, false, false, null),
-        MS_LIMS("mslims", "ms_lims", false, null, false, false, null),
-        X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem", false, true, new XTandemFileFilter()),
-        MGF("mgf", "MGF", true, "help.ui.dao.mgf", false, false, new MGFFileFilter()),
-        MZIDENTML("mzidentml", "mzIdentML", false, "help.ui.dao.mzidentml", false, false, new MzIdentMLFileFilter()),
-        DTA("dta", "DTA", true, "help.ui.dao.dta", true, false, new DTAFileFilter()),
-        PKL("pkl", "PKL", true, "help.ui.dao.pkl", true, false, new PKLFileFilter()),
-        MS2("ms2", "MS2", true, "help.ui.dao.ms2", false, false, new MGFFileFilter()),
-        MZML("mzml", "mzML", true, "help.ui.dao.mzml", false, false, new MzMLFileFilter()),
-        MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, new MzXMLFileFilter()),
-        MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, new MzDataFileFilter()),
-        MSGF("msgf", "MSGF", true, "help.ui.dao.msgf", false, false, new MSGFFileFilter());
+        PRIDE("pride", "PRIDE", false, "help.ui.dao.pride", false, false, false, new PrideFileFilter()),
+        MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot", false, false, false, new MascotFileFilter()),
+        SEQUEST("sequest", "Sequest", false, null, false, true, false, null),
+        OMSSA("omssa", "OMSSA", false, null, false, false, false, null),
+        MS_LIMS("mslims", "ms_lims", false, null, false, false, false, null),
+        X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem", false, true, false, new XTandemFileFilter()),
+        MGF("mgf", "MGF", true, "help.ui.dao.mgf", false, false, false, new MGFFileFilter()),
+        MZIDENTML("mzidentml", "mzIdentML", false, "help.ui.dao.mzidentml", false, true, true, new MzIdentMLFileFilter()),
+        DTA("dta", "DTA", true, "help.ui.dao.dta", true, false, false, new DTAFileFilter()),
+        PKL("pkl", "PKL", true, "help.ui.dao.pkl", true, false, false, new PKLFileFilter()),
+        MS2("ms2", "MS2", true, "help.ui.dao.ms2", false, false, false, new MGFFileFilter()),
+        MZML("mzml", "mzML", true, "help.ui.dao.mzml", false, false, false, new MzMLFileFilter()),
+        MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, false, new MzXMLFileFilter()),
+        MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, new MzDataFileFilter()),
+        MSGF("msgf", "MSGF", true, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter());
 
         private String commandLineName;
         private String niceName;
@@ -43,14 +63,16 @@ public class DAOFactory {
         private FileFilter filter;
         private boolean allowDirectory;
         private boolean allowExternalSpectra;
+        private boolean externalSpectraIsDirectory;
 
-        private DAO_FORMAT(String commandLineName, String niceName, boolean spectrumOnly, String helpResource, boolean allowDirectory, boolean allowExternalSpectra, FileFilter fileFilter) {
+        private DAO_FORMAT(String commandLineName, String niceName, boolean spectrumOnly, String helpResource, boolean allowDirectory, boolean allowExternalSpectra, boolean externalSpectraIsDirectory, FileFilter fileFilter) {
             this.commandLineName = commandLineName;
             this.niceName = niceName;
             this.spectrumOnly = spectrumOnly;
             this.helpResource = helpResource;
             this.allowDirectory = allowDirectory;
             this.allowExternalSpectra = allowExternalSpectra;
+            this.externalSpectraIsDirectory = externalSpectraIsDirectory;
             this.filter = fileFilter;
         }
 
@@ -93,6 +115,9 @@ public class DAOFactory {
             return allowDirectory;
         }
 
+		public boolean isExternalSpectraIsDirectory() {
+			return externalSpectraIsDirectory;
+		}
     }
 
     public enum GEL_COORDINATE_HANDLER_TYPE {
@@ -160,7 +185,8 @@ public class DAOFactory {
 
     }
 
-    public Collection<DAOProperty> getSupportedProperties(DAO_FORMAT format) {
+    @SuppressWarnings("rawtypes")
+	public Collection<DAOProperty> getSupportedProperties(DAO_FORMAT format) {
 
         switch (format) {
             case MASCOT:

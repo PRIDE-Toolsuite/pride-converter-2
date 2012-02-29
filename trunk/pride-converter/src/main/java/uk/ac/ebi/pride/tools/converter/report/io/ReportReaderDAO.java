@@ -38,6 +38,7 @@ public class ReportReaderDAO implements DAO, FastaHandler {
     private String searchDatabaseVersion;
     private SearchResultIdentifier searchResultIdentifier;
     private ConfigurationOptions configuration;
+    private String externalSpectraFilename;
 
     public ReportReaderDAO(File reportFile) {
         reader = new ReportReader(reportFile);
@@ -83,8 +84,17 @@ public class ReportReaderDAO implements DAO, FastaHandler {
     public void setReader(ReportReader reader) {
         this.reader = reader;
     }
+    
+    public String getExternalSpectrumFile() {
+    	return experimentShortLabel;
+    }
 
-    public List<CV> getCvLookup() {
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+		this.externalSpectraFilename = filename;
+	}
+
+	public List<CV> getCvLookup() {
         return cvLookup;
     }
 
