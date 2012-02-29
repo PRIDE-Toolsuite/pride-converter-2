@@ -122,6 +122,11 @@ public class MzmlDAO extends AbstractPeakListDAO implements DAO {
     }
 
     @Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable
+	}
+
+	@Override
     public String getExperimentTitle() {
         // not supported
         return "Unknown mzML experiment";
