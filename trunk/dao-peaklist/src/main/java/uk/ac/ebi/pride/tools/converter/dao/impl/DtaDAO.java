@@ -89,8 +89,13 @@ public class DtaDAO extends AbstractPeakListDAO implements DAO {
         // no configuration supported for this DAO
         return new Properties();
     }
-
+    
     @Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable to the DTA dao
+	}
+
+	@Override
     public String getExperimentTitle() {
         // not supported
         return "Unknown title";

@@ -103,6 +103,11 @@ public class Ms2DAO extends AbstractPeakListDAO implements DAO {
         // no configuration supported for this DAO
         return new Properties();
     }
+    
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable to the dao
+	}
 
     @Override
     public String getExperimentTitle() {
