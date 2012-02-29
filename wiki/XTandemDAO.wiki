@@ -10,7 +10,7 @@ If available the original spectra can be retrieved from the searched peak list f
 
 = Parameters =
 
-*Spectrum File*: Allows to manually set the path to the spectrum source file. If this property is set any file referenced in the actual X!Tandem file will be ignored.
+*Expect Threshold*: The maximum expect value a peptide may have to still be included in the PRIDE XML file. All peptides with an expect value greater than the set threshold will be ignored.
 
 *Use Internal Spectra*: If this parameter is set to "true" the spectra stored in the X!Tandem file are used irrespective of whether an external peak list file is referenced. These spectra are highly preprocessed and do not properly represent the input spectra. This option should only be used if the original spectra are not available.
 
