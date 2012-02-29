@@ -164,7 +164,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      *
      */
     public enum SupportedProperty {
-    	SPECTRUM_FILE("spectrum_file"),
     	USE_INTERNAL_SPECTA("use_internal_spectra");
     	
     	private String name;
@@ -270,10 +269,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     @SuppressWarnings("rawtypes")
     public static Collection<DAOProperty> getSupportedProperties() {
         List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
-    	
-    	DAOProperty<String> spectrumFilePath = new DAOProperty<String>(SupportedProperty.SPECTRUM_FILE.getName(), null);
-        spectrumFilePath.setDescription("allows to manually set the path to the spectrum source file. If this property is set any file referenced in the actual X!Tandem file will be ignored.");
-        supportedProperties.add(spectrumFilePath);
         
         DAOProperty<Boolean> useInternalSpectra = new DAOProperty<Boolean>(SupportedProperty.USE_INTERNAL_SPECTA.getName(), false);
         useInternalSpectra.setDescription("if this parameter is set to \"true\" the spectra stored in the X!Tandem file are used irrespective of whether an external peak list file is referenced. These spectra are highly preprocessed and do not properly represent the input spectra. This option should only be used if the original spectra are not available.");
@@ -287,7 +282,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         properties = props;
         
         // set the actual supported values
-        manualSpectrumFilePath = properties.getProperty(SupportedProperty.SPECTRUM_FILE.getName(), null);
         useInternalSpectra = Boolean.parseBoolean( properties.getProperty(SupportedProperty.USE_INTERNAL_SPECTA.getName(), "false") );
         
         // reset the spectra dao
@@ -299,7 +293,12 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         return properties;
     }
     
-    /**
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+		manualSpectrumFilePath = filename;
+	}
+
+	/**
      * Returns the spectraDAO to be used for the
      * given spectrum file. Makes sure only one
      * instance of the DAO is created and only
