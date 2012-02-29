@@ -107,6 +107,11 @@ public class MzDataDAO extends AbstractPeakListDAO implements DAO {
 		// no configuration supported
 		return new Properties();
 	}
+    
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable to the dao
+	}
 
 	@Override
 	public String getExperimentTitle() throws InvalidFormatException {

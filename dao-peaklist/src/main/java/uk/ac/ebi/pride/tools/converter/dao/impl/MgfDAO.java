@@ -106,6 +106,11 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
         // as the DAO supports no properties, an empty object is returned
         return new Properties();
     }
+    
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable to the dao
+	}
 
     @Override
     public String getExperimentTitle() {
