@@ -17,6 +17,7 @@ public class PrideConverterCLIOptions {
 
         REPORT_FILE("reportfile"),
         SOURCE_FILE("sourcefile"),
+        SPECTRA_FILE("spectrafile"),
         OUTPUT_FILE("outputfile"),
         FASTA_FILE("fastafile"),
         FASTA_FORMAT("fastaformat"),
@@ -62,6 +63,11 @@ public class PrideConverterCLIOptions {
                 .hasArg()
                 .withDescription("full path and filename of source file. ")
                 .create(OPTIONS.SOURCE_FILE.getValue());
+        
+        Option spectraFile = OptionBuilder.withArgName("file")
+        		.hasArg()
+        		.withDescription("overwrites the path to the spectrum file(s) with the set value. This can either specifiy a directory containing multiple MS data files referenced in the search result file or one MS data file directly depending on the file format.")
+        		.create(OPTIONS.SPECTRA_FILE.getValue());
 
         Option outputFile = OptionBuilder.withArgName("file")
                 .hasArg()
@@ -124,6 +130,7 @@ public class PrideConverterCLIOptions {
         options.addOption(property);
         options.addOption(reportFile);
         options.addOption(sourceFile);
+        options.addOption(spectraFile);
         options.addOption(outputFile);
         options.addOption(fastaFile);
         options.addOption(mzTabFile);

@@ -22,8 +22,13 @@ public class ReportTestDAO implements DAO {
     public String getExperimentShortLabel() {
         return "Platelets MetOx";  //To change body of implemented methods use File | Settings | File Templates.
     }
+    
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable
+	}
 
-    public Param getExperimentParams() {
+	public Param getExperimentParams() {
         Param p = new Param();
         p.getCvParam().add(new CvParam("PRIDE", "PRIDE:0000097", "Project", "COFRADIC proteome of unstimulated human blood platelets"));
         p.getUserParam().add(new UserParam("COFRADICType", "MethionineCOFRADIC"));
