@@ -253,10 +253,6 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 		searchEngine.setDescription("MSGF files do not contain the search engine used to identify a protein. This parameter sets the given search engine. Default value is \"MSGF\"");
 		properties.add(searchEngine);
 		
-		DAOProperty<String> mzxmlPath = new DAOProperty<String>("mzxml_path", null);
-		searchEngine.setDescription("path to the folder where the mzXML files can be found. If this parameter is not set the mzXML file will be search for in the MSGF file's directory.");
-		properties.add(mzxmlPath);
-		
 		DAOProperty<Boolean> addCarbamidomethylation = new DAOProperty<Boolean>("add_carbamidomethylation", false);
 		addCarbamidomethylation.setDescription("MSGF files cannot report modifications. If this parameter is set to \"true\" a Carbamidomethylation is added to every C.");
 		properties.add(addCarbamidomethylation);
@@ -268,7 +264,6 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 		properties = props;
 		
 		searchEngine = properties.getProperty("search_engine", "MSGF");
-		mzxmlFolderPath = properties.getProperty("mzxml_path", null);
 		addModCarbamidomethylation = Boolean.parseBoolean( 
 				properties.getProperty("add_carbamidomethylation", "false") );
 	}
@@ -276,6 +271,11 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 	public Properties getConfiguration() {
 		// no configuration supported
 		return properties;
+	}
+
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+    	mzxmlFolderPath = filename;
 	}
 
 	public String getExperimentTitle() throws InvalidFormatException {
