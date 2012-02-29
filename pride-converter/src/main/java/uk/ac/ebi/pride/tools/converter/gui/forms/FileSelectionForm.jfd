@@ -92,6 +92,16 @@
         <object class="com.jformdesigner.model.FormLayoutManager"> 
          <class>javax.swing.JTabbedPane</class> 
         </object> 
+        <void method="setProperty"> 
+         <string>border</string> 
+         <object class="javax.swing.border.SoftBevelBorder"> 
+          <int>0</int> 
+          <null/> 
+          <null/> 
+          <null/> 
+          <null/> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>fileTabbedPane</string> 
         </void> 
