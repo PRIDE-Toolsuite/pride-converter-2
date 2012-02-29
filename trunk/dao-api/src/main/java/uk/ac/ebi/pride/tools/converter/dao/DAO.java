@@ -194,6 +194,12 @@ public interface DAO {
      * The identification iterator may return null for an identification
      */
     public Iterator<Identification> getIdentificationIterator(boolean prescanMode) throws InvalidFormatException;
+    /**
+     * Sets the external spectrum file to the given filename. This function
+     * is ignored by DAOs that do not require external spectrum files.
+     * @param filename
+     */
+    public void setExternalSpectrumFile(String filename);
 
     /*
     These handlers need to be passed to the IdentificationIterator so that the identification objects can be properly
