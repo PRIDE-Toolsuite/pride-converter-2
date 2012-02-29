@@ -292,3 +292,9 @@ This method will return an iterator that will return individual identification o
 In *prescan-mode* the complete Identification and Peptide objects should be returned without the peptide's fragment ion annotation. Peptide items have to contain all the PTMs.
 
 In *conversion-mode* (= !prescanMode) Peptide and Protein objects should *NOT* contain any additional parameters and peptidePTMs should *NOT* be included. Furthermore, the different handlers should also <b>NOT</b> be invoked. Peptide FragmentIon annotations are mandatory (if applicable) in scanMode. The identification iterator may return null for an identification.
+
+=== setExternalSpectrumFile ===
+
+Some search engines only store the identification data in the search result file. The spectra are then referenced in an additional MS data file.
+
+Generally, a DAO should look for the referenced MS data file in the current working directory and the directory the search engine result is present. This function can furthermore pass a path to the MS data file and should overwrite the behavior described before.
