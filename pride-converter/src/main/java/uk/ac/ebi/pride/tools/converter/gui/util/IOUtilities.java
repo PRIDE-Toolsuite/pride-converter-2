@@ -232,6 +232,9 @@ public class IOUtilities {
 
         DAO dao = DAOFactory.getInstance().getDAO(fileBean.getInputFile(), ConverterData.getInstance().getDaoFormat());
         dao.setConfiguration(options);
+        if (fileBean.getSpectrumFile() != null) {
+            dao.setExternalSpectrumFile(fileBean.getSpectrumFile());
+        }
 
         ReportWriter writer = new ReportWriter(reportFile);
         writer.setDAO(dao);

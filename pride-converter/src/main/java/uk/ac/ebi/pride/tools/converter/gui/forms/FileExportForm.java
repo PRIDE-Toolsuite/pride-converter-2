@@ -164,6 +164,11 @@ public class FileExportForm extends AbstractForm {
                     //update DAO configuration based on report
                     dao.setConfiguration(options);
 
+                    //update DAO to use external spectrum file if required
+                    if (fileBean.getSpectrumFile() != null) {
+                        dao.setExternalSpectrumFile(fileBean.getSpectrumFile());
+                    }
+
                     //write xml
                     PrideXmlWriter out = new PrideXmlWriter(prideFile, reader, dao, filterPanel1.isGzipped());
                     out.setIncludeOnlyIdentifiedSpectra(filterPanel1.isIncludeOnlyIdentifiedSpectra());

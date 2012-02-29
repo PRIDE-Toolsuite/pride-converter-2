@@ -13,6 +13,7 @@ public class FileBean implements Comparable<FileBean> {
     private String outputFile;
     private String mzTabFile;
     private String sequenceFile;
+    private String spectrumFile;
 
     public FileBean(String inputFile) {
         this.inputFile = inputFile;
@@ -52,6 +53,14 @@ public class FileBean implements Comparable<FileBean> {
 
     public void setSequenceFile(String sequenceFile) {
         this.sequenceFile = sequenceFile;
+    }
+
+    public String getSpectrumFile() {
+        return spectrumFile;
+    }
+
+    public void setSpectrumFile(String spectrumFile) {
+        this.spectrumFile = spectrumFile;
     }
 
     @Override
