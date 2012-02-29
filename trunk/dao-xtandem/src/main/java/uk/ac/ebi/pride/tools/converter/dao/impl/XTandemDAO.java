@@ -1126,7 +1126,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         identification.setDatabase(sourcePath + (sequenceSourceDescription.get(sourcePath) != null ? " (" + sequenceSourceDescription.get(sourcePath) + ")" : ""));
         identification.setDatabaseVersion("");
 
-        identification.setScore(protein.getSummedScore());
+        identification.setScore(0.0);
         identification.setThreshold(0.0);
 
         identification.setSearchEngine("X!Tandem");
