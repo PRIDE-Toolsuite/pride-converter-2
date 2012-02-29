@@ -54,6 +54,14 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         initCaches();
         masterInformationLabel.setVisible(isMaster);
 
+        //disable key/arrow selection, as it causes unpredictable behaviour
+        speciesComboBox.setKeySelectionManager(new IgnoreKeySelectionManager());
+        speciesComboBox.addKeyListener(new IgnoreKeySelectionManager());
+        tissueComboBox.setKeySelectionManager(new IgnoreKeySelectionManager());
+        tissueComboBox.addKeyListener(new IgnoreKeySelectionManager());
+        cellComboBox.setKeySelectionManager(new IgnoreKeySelectionManager());
+        cellComboBox.addKeyListener(new IgnoreKeySelectionManager());
+
     }
 
     private Set<String> getSuggestedOntologies(String resourceKey) {
@@ -523,5 +531,29 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         f.pack();
         f.setVisible(true);
     }
+
+    //don't want to have keyboard input for combobox
+    private class IgnoreKeySelectionManager implements JComboBox.KeySelectionManager, KeyListener {
+        @Override
+        public int selectionForKey(char aKey, ComboBoxModel aModel) {
+            return -1;
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            e.consume();
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            e.consume();
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            e.consume();
+        }
+    }
+
 
 }

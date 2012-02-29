@@ -9,6 +9,7 @@
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModAnnotationCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModDatabaseCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMModAccessionCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.PTMMappingCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.DatabaseMappingCheck"/>
 
 </objectRuleList>

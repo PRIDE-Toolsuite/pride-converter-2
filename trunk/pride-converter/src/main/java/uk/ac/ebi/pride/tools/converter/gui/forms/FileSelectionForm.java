@@ -30,6 +30,7 @@ import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
 import javax.help.CSH;
 import javax.swing.*;
+import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -225,6 +226,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
 //======== fileTabbedPane ========
         {
+            fileTabbedPane.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
 
             //======== panel3 ========
             {
@@ -762,8 +764,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         }
                     } else {
                         //otherwise just update the existing beans
-                        for (FileBean fileBean : ConverterData.getInstance().getDataFiles()) {
-                            fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
+                        if (spectrumFile != null) {
+                            for (FileBean fileBean : ConverterData.getInstance().getDataFiles()) {
+                                fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
+                            }
                         }
                     }
 
