@@ -344,6 +344,11 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
         generateSupportedProperties();
         return supportedProperties;
     }
+    
+    @Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable to the dao
+	}
 
     /**
      * Detault constructor. Expects the result file as parameter.
