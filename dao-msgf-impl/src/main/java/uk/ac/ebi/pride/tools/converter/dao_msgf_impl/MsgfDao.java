@@ -95,6 +95,11 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 	 */
 	private String mzxmlFolderPath = null;
 	/**
+	 * The maximum probability a peptide may have
+	 * to still be reported in the PRIDE XML file.
+	 */
+	private Double peptideThreshold = 0.05;
+	/**
 	 * Indicates whether a carbamidomehtylation should be
 	 * added to every C.
 	 */
@@ -148,6 +153,9 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 				
 				// process the peptide
 				MsgfPeptide peptide = createMsgfPeptide(fields, header);
+				if (peptide.getpValue() > peptideThreshold)
+					continue;
+				
 				proteins.get(accession).addPeptide(peptide);
 				peptideCount++;
 				
@@ -249,6 +257,10 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 	public static Collection<DAOProperty> getSupportedProperties() {
 		List<DAOProperty> properties = new ArrayList<DAOProperty>();
 		
+		DAOProperty<Double> peptideThreshold = new DAOProperty<Double>("peptide_threshold", 0.05, 0.0, 0.1);
+		peptideThreshold.setDescription("maximum p-value a peptide may have to still be reported in the PRIDE XML file.");
+		properties.add(peptideThreshold);
+		
 		DAOProperty<String> searchEngine = new DAOProperty<String>("search_engine", "MSGF");
 		searchEngine.setDescription("MSGF files do not contain the search engine used to identify a protein. This parameter sets the given search engine. Default value is \"MSGF\"");
 		properties.add(searchEngine);
@@ -266,6 +278,7 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 		searchEngine = properties.getProperty("search_engine", "MSGF");
 		addModCarbamidomethylation = Boolean.parseBoolean( 
 				properties.getProperty("add_carbamidomethylation", "false") );
+		peptideThreshold = Double.parseDouble( properties.getProperty("peptide_threshold", "0.05") );
 	}
 
 	public Properties getConfiguration() {
@@ -473,6 +486,9 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 	}
 
 	private Identification convertIdentification(MsgfProtein protein) {
+		if (protein.getPeptides().size() < 1)
+			return null;
+		
 		Identification identification = new Identification();
 		
 		identification.setAccession(protein.getAccession());
