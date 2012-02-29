@@ -10,6 +10,7 @@ import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
+import uk.ac.ebi.pride.tools.converter.dao.Utils;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.FastaFileFilter;
@@ -66,12 +67,20 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             fileTabbedPane.setEnabledAt(2, false);
             forceRegenerationBox.setEnabled(false);
         }
+
+        TreeSet<String> scores = new TreeSet<String>();
+        for (Utils.PEPTIDE_SCORE_PARAM param : Utils.PEPTIDE_SCORE_PARAM.values()) {
+            scores.add(param.getName());
+        }
+        scoreFilterComboBox.setModel(new DefaultComboBoxModel(scores.toArray()));
     }
 
     private Collection<File> chooseFiles(boolean allowMultipleSelection, boolean allowDirectory, FileFilter filter) {
 
         JFileChooser chooser = new JFileChooser();
-        chooser.setFileFilter(filter);
+        if (filter != null) {
+            chooser.setFileFilter(filter);
+        }
         chooser.setMultiSelectionEnabled(allowMultipleSelection);
         String lastUsedDirectory = ConverterData.getInstance().getLastSelectedDirectory();
         if (lastUsedDirectory != null) {
@@ -118,6 +127,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     }
 
+    private void loadSpectrumFiles(ActionEvent e) {
+        Set<File> tableFiles = new HashSet<File>();
+        tableFiles.addAll(chooseFiles(false, false, null));
+        spectrumFileTable.clearFiles();
+        spectrumFileTable.addFiles(tableFiles);
+    }
+
     private void loadSequenceFiles(ActionEvent e) {
         Set<File> tableFiles = new HashSet<File>();
         //only 1 sequence file allowed per conversion
@@ -160,13 +176,18 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         fastaFormat = HandlerFactory.FASTA_FORMAT.UNIPROT_MATCH_AC;
     }
 
-
     private void initComponents() {
 //        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
         panel2 = new JPanel();
+        panel8 = new JPanel();
         forceRegenerationBox = new JCheckBox();
+        panel9 = new JPanel();
+        checkBox1 = new JCheckBox();
+        scoreFilterComboBox = new JComboBox();
+        operationFilterComboBox = new JComboBox();
+        scoreValueField = new JTextField();
         fileTabbedPane = new JTabbedPane();
         panel3 = new JPanel();
         scrollPane1 = new JScrollPane();
@@ -185,6 +206,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         scrollPane2 = new JScrollPane();
         mzTabFileTable = new FileTable();
         button2 = new JButton();
+        panel1 = new JPanel();
+        scrollPane4 = new JScrollPane();
+        spectrumFileTable = new FileTable();
+        button5 = new JButton();
         panel7 = new JPanel();
         tableScrollPane = new JScrollPane();
         parserOptionTable = new ParserOptionTable();
@@ -195,11 +220,39 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 //======== panel2 ========
         {
             panel2.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.panel2.border")));
-            panel2.setLayout(new FlowLayout());
+            panel2.setLayout(new GridLayout(3, 0));
 
-            //---- forceRegenerationBox ----
-            forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
-            panel2.add(forceRegenerationBox);
+            //======== panel8 ========
+            {
+                panel8.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+                //---- forceRegenerationBox ----
+                forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
+                panel8.add(forceRegenerationBox);
+            }
+            panel2.add(panel8);
+
+            //======== panel9 ========
+            {
+                panel9.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+                //---- checkBox1 ----
+                checkBox1.setText(bundle.getString("SelecFilePanel.checkBox1.text"));
+                panel9.add(checkBox1);
+                panel9.add(scoreFilterComboBox);
+
+                //---- operationFilterComboBox ----
+                operationFilterComboBox.setModel(new DefaultComboBoxModel(new String[]{
+                        ">",
+                        "<"
+                }));
+                panel9.add(operationFilterComboBox);
+
+                //---- scoreValueField ----
+                scoreValueField.setColumns(5);
+                panel9.add(scoreValueField);
+            }
+            panel2.add(panel9);
         }
 
 //======== fileTabbedPane ========
@@ -377,6 +430,47 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             }
             fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel5.tab.title"), panel5);
 
+
+            //======== panel1 ========
+            {
+
+                //======== scrollPane4 ========
+                {
+                    scrollPane4.setViewportView(spectrumFileTable);
+                }
+
+                //---- button5 ----
+                button5.setText(bundle.getString("SelecFilePanel.button5.text"));
+                button5.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        loadSpectrumFiles(e);
+                    }
+                });
+
+                GroupLayout panel1Layout = new GroupLayout(panel1);
+                panel1.setLayout(panel1Layout);
+                panel1Layout.setHorizontalGroup(
+                        panel1Layout.createParallelGroup()
+                                .addGroup(panel1Layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addGroup(panel1Layout.createParallelGroup()
+                                                .addComponent(scrollPane4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                                                .addComponent(button5, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                        .addContainerGap())
+                );
+                panel1Layout.setVerticalGroup(
+                        panel1Layout.createParallelGroup()
+                                .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(button5, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap())
+                );
+            }
+            fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel1.tab.title"), panel1);
+
         }
 
 //======== panel7 ========
@@ -404,7 +498,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             panel7Layout.setVerticalGroup(
                     panel7Layout.createParallelGroup()
                             .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(parserOptionHelpButton))
             );
@@ -417,20 +511,20 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
                                         .addComponent(panel7, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(fileTabbedPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
-                                        .addComponent(panel2, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
+                                        .addComponent(fileTabbedPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(fileTabbedPane, GroupLayout.PREFERRED_SIZE, 238, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel7, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(panel2, GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
@@ -446,7 +540,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
     private JPanel panel2;
+    private JPanel panel8;
     private JCheckBox forceRegenerationBox;
+    private JPanel panel9;
+    private JCheckBox checkBox1;
+    private JComboBox scoreFilterComboBox;
+    private JComboBox operationFilterComboBox;
+    private JTextField scoreValueField;
     private JTabbedPane fileTabbedPane;
     private JPanel panel3;
     private JScrollPane scrollPane1;
@@ -465,6 +565,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JScrollPane scrollPane2;
     private FileTable mzTabFileTable;
     private JButton button2;
+    private JPanel panel1;
+    private JScrollPane scrollPane4;
+    private FileTable spectrumFileTable;
+    private JButton button5;
     private JPanel panel7;
     private JScrollPane tableScrollPane;
     private ParserOptionTable parserOptionTable;
@@ -546,6 +650,14 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
         //update option table
         updateOptionTable();
+
+        //enable the spectrum file tab on request
+        if (ConverterData.getInstance().getDaoFormat().isAllowExternalSpectra()) {
+            fileTabbedPane.setEnabledAt(3, true);
+        } else {
+            fileTabbedPane.setEnabledAt(3, false);
+        }
+
 
         //fire the table listener - this is required if users go back & forth without changing the
         //table content
