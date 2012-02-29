@@ -99,6 +99,11 @@ public class MzXmlDAO extends AbstractPeakListDAO {
 		return new Properties();
 	}
 
+	@Override
+	public void setExternalSpectrumFile(String filename) {
+		// not applicable
+	}
+
 	public String getExperimentTitle() {
 		return "Unknown mzXML experiment.";
 	}
