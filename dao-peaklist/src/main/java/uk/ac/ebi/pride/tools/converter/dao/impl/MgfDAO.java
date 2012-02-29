@@ -342,8 +342,12 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
         Map<Double, Double> peakList = query.getPeakList();
         
         // convert the peak list to the required byte arrays
-        ArrayList<Double> masses = new ArrayList<Double>(peakList.keySet());
-        ArrayList<Double> intensities = new ArrayList<Double>(masses.size());
+        List<Double> masses;
+        if (peakList != null)
+        	masses = new ArrayList<Double>(peakList.keySet());
+        else
+        	masses = Collections.emptyList();
+        List<Double> intensities = new ArrayList<Double>(masses.size());
         
         Collections.sort(masses);
 

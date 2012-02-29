@@ -289,8 +289,12 @@ public class DtaDAO extends AbstractPeakListDAO implements DAO {
         Map<Double, Double> peakList = dtaSpec.getPeakList();
         
         // convert the peak list to the required byte arrays
-        ArrayList<Double> masses = new ArrayList<Double>(peakList.keySet());
-        ArrayList<Double> intensities = new ArrayList<Double>(masses.size());
+        List<Double> masses;
+        if (peakList != null)
+        	masses = new ArrayList<Double>(peakList.keySet());
+        else
+        	masses = Collections.emptyList();
+        List<Double> intensities = new ArrayList<Double>(masses.size());
 
         Collections.sort(masses);
         
@@ -336,9 +340,12 @@ public class DtaDAO extends AbstractPeakListDAO implements DAO {
         instrument.setMsLevel(2);
 
         // sort the masses to get the minimum and max
-        Collections.sort(masses);
-        Float rangeStart = new Float(masses.get(0));
-        Float rangeStop = new Float(masses.get(masses.size() - 1));
+        Float rangeStart = new Float(0), rangeStop = new Float(0);
+        if (masses.size() > 0) {
+	        Collections.sort(masses);
+	        rangeStart = new Float(masses.get(0));
+	        rangeStop = new Float(masses.get(masses.size() - 1));
+        }
 
         instrument.setMzRangeStart(rangeStart);
         instrument.setMzRangeStop(rangeStop);
