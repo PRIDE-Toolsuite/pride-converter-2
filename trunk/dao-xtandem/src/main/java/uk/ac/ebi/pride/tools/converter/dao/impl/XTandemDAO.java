@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +43,7 @@ import uk.ac.ebi.pride.tools.converter.report.model.Reference;
 import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
 import uk.ac.ebi.pride.tools.converter.report.model.Software;
 import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
+import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
@@ -630,6 +630,14 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     	Integer missedCleavages = inputParams.getScoringMissCleavageSites();
     	if (missedCleavages != null)
     		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_MISSED_CLEAVAGES.getParam(missedCleavages));
+    	
+    	// check whether k-score was used
+    	if (xtandemFile.getXTandemParser().getInputParamMap().containsKey("SCORING_ALGORITHM")) {
+    		params.getUserParam().add(
+    				new UserParam(	"X!Tandem scoring algorithm", 
+    								xtandemFile.getXTandemParser().getInputParamMap().get("SCORING_ALGORITHM"))
+    		);
+    	}
     	
         return params;
     }
