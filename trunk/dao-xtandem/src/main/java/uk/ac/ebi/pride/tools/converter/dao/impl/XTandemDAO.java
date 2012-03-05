@@ -1149,8 +1149,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         // add the additional information (only in prescan mode)
         if (prescanMode) {
             Param additional = new Param();
-
-            additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(protein.getExpectValue()));
+//            additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(protein.getExpectValue()));
 
             identification.setAdditional(additional);
         }
