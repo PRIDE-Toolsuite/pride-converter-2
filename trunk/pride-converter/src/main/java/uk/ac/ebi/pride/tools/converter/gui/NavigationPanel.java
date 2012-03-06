@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author User #3
  */
-public class NavigationPanel extends JFrame implements ValidationListener {
+public class NavigationPanel extends JFrame implements ValidationListener, WindowListener {
 
     private static final Logger logger = Logger.getLogger(NavigationPanel.class);
 
@@ -128,6 +128,11 @@ public class NavigationPanel extends JFrame implements ValidationListener {
                 System.out.println("Stored user preferences.");
             }
         });
+
+        //this is to ensure that the navigation window always asks to confirm
+        //before exiting
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(this);
 
     }
 
@@ -568,16 +573,16 @@ public class NavigationPanel extends JFrame implements ValidationListener {
             }
         }
         if (errorMessageCount > 0) {
-            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("error.png")));
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/error.png")));
             validationStatus.repaint();
         } else if (warningMessageCount > 0) {
-            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("warning.png")));
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/warning.png")));
             validationStatus.repaint();
         } else if (infoMessageCount > 0) {
-            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("information.png")));
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/information.png")));
             validationStatus.repaint();
         } else {
-            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("ok.png")));
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/ok.png")));
             validationStatus.repaint();
         }
     }
@@ -866,5 +871,35 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
     public int getSelectedIndex() {
         return selectedIndex;
+    }
+
+    //////////////////////////////////////////////////////////////// WindowListener Interface
+    @Override
+    public void windowOpened(WindowEvent e) {
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        quit();
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
     }
 }
