@@ -4,9 +4,8 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
 import uk.ac.ebi.pride.tools.converter.report.model.Sequence;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,11 +32,11 @@ import java.util.regex.Pattern;
 public class FastaHandlerImpl extends AbstractFastaHandlerImpl {
 
     private static final Pattern FULL_UNIPROT_LINE_PATTERN = Pattern.compile("[a-zA-Z]*\\|([A-Z0-9]*)\\|([A-Z0-9_]*) .*");
-    private static final Pattern FIRST_WORD_LINE_PATTERN = Pattern.compile("([\\w.-]*)\\s?.*");
+    private static final Pattern FIRST_WORD_LINE_PATTERN = Pattern.compile("([\\w.|-]*)\\s?.*");
     private static final Logger logger = Logger.getLogger(FastaHandlerImpl.class);
-    private HashMap<String, String> submittedAcToFastaIdLine = new HashMap<String, String>();
-    private HashMap<String, String> submittedAcToDesiredAc = new HashMap<String, String>();
-    private HashMap<String, String> fastaIdLineToDesiredAc = new HashMap<String, String>();
+    private Map<String, String> submittedAcToFastaIdLine = new LinkedHashMap<String, String>();
+    private Map<String, String> submittedAcToDesiredAc = new LinkedHashMap<String, String>();
+    private Map<String, String> fastaIdLineToDesiredAc = new LinkedHashMap<String, String>();
     private HandlerFactory.FASTA_FORMAT format;
 
     public FastaHandlerImpl(String fastaFilePath, HandlerFactory.FASTA_FORMAT format) {
@@ -133,10 +132,11 @@ public class FastaHandlerImpl extends AbstractFastaHandlerImpl {
             if (!ac.equals(identification.getAccession())) {
                 identification.setCuratedAccession(ac);
             }
-            return identification;
         } else {
-            throw new ConverterException("Could not find sequence matching accession: " + identification.getAccession());
+            System.err.println("Could not find sequence matching accession: " + identification.getAccession());
+            logger.error("Could not find sequence matching accession: " + identification.getAccession());
         }
+        return identification;
     }
 
     @Override
