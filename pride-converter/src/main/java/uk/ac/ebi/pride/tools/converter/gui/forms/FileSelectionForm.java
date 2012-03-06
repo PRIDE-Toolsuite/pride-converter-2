@@ -51,7 +51,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     private OutputFormat format;
 
-    private HandlerFactory.FASTA_FORMAT fastaFormat;
+    //default
+    private HandlerFactory.FASTA_FORMAT fastaFormat = HandlerFactory.FASTA_FORMAT.FULL;
 
     public FileSelectionForm(OutputFormat format) {
         initComponents();

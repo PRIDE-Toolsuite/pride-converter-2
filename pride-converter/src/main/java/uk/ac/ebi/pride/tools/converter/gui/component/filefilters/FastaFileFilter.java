@@ -20,7 +20,7 @@ public class FastaFileFilter extends FileFilter {
         }
         String extension = FileUtils.getExtension(file);
         if (extension != null) {
-            return (extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("fasta"));
+            return (extension.equalsIgnoreCase(FileUtils.txt) || extension.equalsIgnoreCase(FileUtils.fasta));
         } else return false;
     }
 
