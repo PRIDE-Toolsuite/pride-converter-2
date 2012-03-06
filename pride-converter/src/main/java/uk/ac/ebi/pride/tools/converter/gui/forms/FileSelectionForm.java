@@ -604,6 +604,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("fileselection.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.file";
     }

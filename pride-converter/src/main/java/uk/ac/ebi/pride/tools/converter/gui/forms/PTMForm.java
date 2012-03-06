@@ -127,6 +127,11 @@ public class PTMForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("ptm.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.ptms";
     }

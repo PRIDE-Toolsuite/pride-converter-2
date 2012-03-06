@@ -109,6 +109,11 @@ public class MergerInformationForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("mergerinformation.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.merger.information";
     }

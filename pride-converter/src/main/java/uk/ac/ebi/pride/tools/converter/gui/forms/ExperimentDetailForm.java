@@ -349,6 +349,11 @@ public class ExperimentDetailForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("experimentdetail.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.experimentdetails";
     }

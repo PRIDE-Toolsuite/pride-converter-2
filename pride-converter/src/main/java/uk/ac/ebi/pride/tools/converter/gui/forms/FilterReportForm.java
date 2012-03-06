@@ -6,7 +6,6 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
-import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
@@ -139,6 +138,11 @@ public class FilterReportForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("filterreport.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.filter.report";
     }
@@ -191,7 +195,6 @@ public class FilterReportForm extends AbstractForm {
             cm.getColumn(1).setResizable(false);
         }
 
-        NavigationPanel.getInstance().hideValidatorMessages();
     }
 
     @Override

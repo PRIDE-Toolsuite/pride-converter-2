@@ -10,6 +10,8 @@ import org.jdesktop.swingx.error.ErrorLevel;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.component.list.IconListCellRenderer;
+import uk.ac.ebi.pride.tools.converter.gui.component.list.IconListModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ProgressDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.TabbedValidationDialog;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ConverterForm;
@@ -31,9 +33,7 @@ import javax.help.HelpSetException;
 import javax.swing.*;
 import javax.swing.text.DefaultEditorKit;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
@@ -103,13 +103,8 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         initComponents();
 
         //update the jlist selection model so that only the system-selected value is highlighted
-        panelList.setCellRenderer(new DefaultListCellRenderer() {
-            public Component getListCellRendererComponent(JList list, Object value, int index,
-                                                          boolean isSelected, boolean cellHasFocus) {
-                super.getListCellRendererComponent(list, value, index, index == selectedIndex, index == selectedIndex);
-                return this;
-            }
-        });
+        panelList.setCellRenderer(new IconListCellRenderer());
+        panelList.setModel(new IconListModel());
         panelList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         try {
@@ -206,7 +201,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         form.addValidationListener(this);
 
         //add to panel list display
-        ((DefaultListModel) panelList.getModel()).addElement(form.getFormName());
+        ((IconListModel) panelList.getModel()).addElement(form.getFormName(), form.getFormIcon());
     }
 
     /**
@@ -245,7 +240,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
         //add to panel list display
 
-        ((DefaultListModel) panelList.getModel()).add(index + 1, formToRegister.getFormName());
+        ((IconListModel) panelList.getModel()).add(index + 1, formToRegister.getFormName(), formToRegister.getFormIcon());
         panelList.validate();
     }
 
@@ -338,6 +333,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
                                     //update description
                                     panelDescription.setText(forms.get(selectedIndex).getFormDescription());
+                                    formNameLabel.setText(forms.get(selectedIndex).getFormName());
 
                                     //update navigation list
                                     panelList.clearSelection();
@@ -433,6 +429,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
             //update description
             panelDescription.setText(forms.get(selectedIndex).getFormDescription());
+            formNameLabel.setText(forms.get(selectedIndex).getFormName());
 
             //update help button action
             CSH.setHelpIDString(helpButton, forms.get(selectedIndex).getHelpResource());
@@ -529,6 +526,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
         //set description
         panelDescription.setText(forms.get(0).getFormDescription());
+        formNameLabel.setText(forms.get(0).getFormName());
 
         //update help button action
         CSH.setHelpIDString(helpButton, forms.get(0).getHelpResource());
@@ -541,6 +539,7 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         selectedIndex = 0;
         ConverterForm form = forms.get(selectedIndex);
         form.start();
+
 
         pack();
         setVisible(true);
@@ -568,25 +567,19 @@ public class NavigationPanel extends JFrame implements ValidationListener {
                 }
             }
         }
-        errorCountLabel.setText(errorMessageCount + " errors");
-        warningCountLabel.setText(warningMessageCount + " warnings");
-        infoCountLabel.setText(infoMessageCount + " messages");
-        if (errorMessageCount + warningMessageCount + infoMessageCount > 0) {
-            viewMessageButton.setEnabled(true);
+        if (errorMessageCount > 0) {
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("error.png")));
+            validationStatus.repaint();
+        } else if (warningMessageCount > 0) {
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("warning.png")));
+            validationStatus.repaint();
+        } else if (infoMessageCount > 0) {
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("information.png")));
+            validationStatus.repaint();
         } else {
-            viewMessageButton.setEnabled(false);
+            validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("ok.png")));
+            validationStatus.repaint();
         }
-    }
-
-    public void hideValidatorMessages() {
-        errorCountLabel.setVisible(false);
-        warningCountLabel.setVisible(false);
-        infoCountLabel.setVisible(false);
-        viewMessageButton.setVisible(false);
-    }
-
-    private void showValidationMessages() {
-        showValidationMessages(null);
     }
 
     private void showValidationMessages(String selectedForm) {
@@ -613,6 +606,10 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         }
     }
 
+    private void validationStatusMouseClicked() {
+        showValidationMessages(null);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -624,16 +621,13 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         progressBar1 = new JProgressBar();
         contentPanel = new JPanel();
         panel4 = new JPanel();
-        helpButton = new JButton();
         nextButton = new JButton();
         backButton = new JButton();
         clearButton = new JButton();
         quitButton = new JButton();
-        panel2 = new JPanel();
-        viewMessageButton = new JButton();
-        infoCountLabel = new JLabel();
-        warningCountLabel = new JLabel();
-        errorCountLabel = new JLabel();
+        validationStatus = new JLabel();
+        helpButton = new JButton();
+        formNameLabel = new JLabel();
 
         //======== this ========
         setTitle("PRIDE Converter");
@@ -701,15 +695,6 @@ public class NavigationPanel extends JFrame implements ValidationListener {
         //======== panel4 ========
         {
 
-            //---- helpButton ----
-            helpButton.setText("Help");
-            helpButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    help();
-                }
-            });
-
             //---- nextButton ----
             nextButton.setText("Next");
             nextButton.addActionListener(new ActionListener() {
@@ -746,14 +731,23 @@ public class NavigationPanel extends JFrame implements ValidationListener {
                 }
             });
 
+            //---- validationStatus ----
+            validationStatus.setIcon(new ImageIcon(getClass().getResource("/images/ok.png")));
+            validationStatus.setHorizontalAlignment(SwingConstants.CENTER);
+            validationStatus.setToolTipText("Click to view validation messages");
+            validationStatus.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    validationStatusMouseClicked();
+                }
+            });
+
             GroupLayout panel4Layout = new GroupLayout(panel4);
             panel4.setLayout(panel4Layout);
             panel4Layout.setHorizontalGroup(
                     panel4Layout.createParallelGroup()
-                            .addGroup(panel4Layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(helpButton)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 358, Short.MAX_VALUE)
+                            .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
+                                    .addContainerGap(402, Short.MAX_VALUE)
                                     .addComponent(quitButton)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(clearButton)
@@ -761,75 +755,37 @@ public class NavigationPanel extends JFrame implements ValidationListener {
                                     .addComponent(backButton)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(nextButton)
-                                    .addContainerGap())
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(validationStatus, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                                    .addGap(4, 4, 4))
             );
             panel4Layout.setVerticalGroup(
                     panel4Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
-                                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(helpButton)
-                                            .addComponent(nextButton)
-                                            .addComponent(backButton)
-                                            .addComponent(clearButton)
-                                            .addComponent(quitButton))
-                                    .addContainerGap())
+                            .addGroup(panel4Layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addGroup(panel4Layout.createParallelGroup()
+                                            .addComponent(validationStatus, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE)
+                                            .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(nextButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(backButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(clearButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                    .addComponent(quitButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
         }
 
-        //======== panel2 ========
-        {
-            panel2.setBorder(new DropShadowBorder());
+        //---- helpButton ----
+        helpButton.setIcon(new ImageIcon(getClass().getResource("/images/help.png")));
+        helpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                help();
+            }
+        });
 
-            //---- viewMessageButton ----
-            viewMessageButton.setText("View all validation messages");
-            viewMessageButton.setEnabled(false);
-            viewMessageButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    showValidationMessages();
-                }
-            });
-
-            //---- infoCountLabel ----
-            infoCountLabel.setText("0 Messages");
-            infoCountLabel.setForeground(Color.blue);
-
-            //---- warningCountLabel ----
-            warningCountLabel.setText("0 Warnings");
-            warningCountLabel.setForeground(new Color(255, 102, 0));
-
-            //---- errorCountLabel ----
-            errorCountLabel.setText("0 Errors");
-            errorCountLabel.setForeground(Color.red);
-
-            GroupLayout panel2Layout = new GroupLayout(panel2);
-            panel2.setLayout(panel2Layout);
-            panel2Layout.setHorizontalGroup(
-                    panel2Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                                    .addContainerGap(222, Short.MAX_VALUE)
-                                    .addComponent(errorCountLabel)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(warningCountLabel)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(infoCountLabel)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(viewMessageButton)
-                                    .addContainerGap())
-            );
-            panel2Layout.setVerticalGroup(
-                    panel2Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                                    .addContainerGap(12, Short.MAX_VALUE)
-                                    .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(viewMessageButton)
-                                            .addComponent(infoCountLabel)
-                                            .addComponent(warningCountLabel)
-                                            .addComponent(errorCountLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
-                                    .addContainerGap())
-            );
-        }
+        //---- formNameLabel ----
+        formNameLabel.setText("text");
+        formNameLabel.setFont(new Font("Dialog", Font.BOLD, 20));
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
@@ -842,7 +798,10 @@ public class NavigationPanel extends JFrame implements ValidationListener {
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addComponent(contentPanel, GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
                                         .addComponent(panel4, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                                                .addComponent(formNameLabel, GroupLayout.DEFAULT_SIZE, 653, Short.MAX_VALUE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(helpButton)))
                                 .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
@@ -851,9 +810,11 @@ public class NavigationPanel extends JFrame implements ValidationListener {
                                 .addContainerGap()
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                                                .addComponent(contentPanel, GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
+                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(helpButton)
+                                                        .addComponent(formNameLabel, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(contentPanel, GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(panel4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                         .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -874,16 +835,13 @@ public class NavigationPanel extends JFrame implements ValidationListener {
     private JProgressBar progressBar1;
     private JPanel contentPanel;
     private JPanel panel4;
-    private JButton helpButton;
     private JButton nextButton;
     private JButton backButton;
     private JButton clearButton;
     private JButton quitButton;
-    private JPanel panel2;
-    private JButton viewMessageButton;
-    private JLabel infoCountLabel;
-    private JLabel warningCountLabel;
-    private JLabel errorCountLabel;
+    private JLabel validationStatus;
+    private JButton helpButton;
+    private JLabel formNameLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     public HelpBroker getHelpBroker() {
@@ -904,5 +862,9 @@ public class NavigationPanel extends JFrame implements ValidationListener {
 
     public int getInfoMessageCount() {
         return infoMessageCount;
+    }
+
+    public int getSelectedIndex() {
+        return selectedIndex;
     }
 }

@@ -108,6 +108,11 @@ public class FileExportForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("fileexport.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.export";
     }

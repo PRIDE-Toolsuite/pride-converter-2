@@ -138,6 +138,11 @@ public class AnnotationDoneForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("annotationdone.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.review";
     }

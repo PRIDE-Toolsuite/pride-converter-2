@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -148,4 +149,13 @@ public abstract class AbstractForm extends JPanel implements ConverterForm {
         return filtered;
     }
 
+    protected Icon getFormIcon(String resourceId) {
+
+        URL icomImage = getClass().getClassLoader().getResource(config.getString(resourceId));
+        if (icomImage == null) {
+            icomImage = getClass().getClassLoader().getResource("images/default.png");
+        }
+        return new ImageIcon(icomImage);
+
+    }
 }

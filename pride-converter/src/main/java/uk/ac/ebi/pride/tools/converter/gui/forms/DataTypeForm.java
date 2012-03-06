@@ -529,6 +529,11 @@ public class DataTypeForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("datatype.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.format";
     }

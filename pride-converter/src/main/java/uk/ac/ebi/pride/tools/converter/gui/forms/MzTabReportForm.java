@@ -2,7 +2,6 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
-import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
@@ -53,6 +52,11 @@ public class MzTabReportForm extends AbstractForm {
     @Override
     public String getFormDescription() {
         return config.getString("mztabreport.form.description");
+    }
+
+    @Override
+    public Icon getFormIcon() {
+        return getFormIcon("mztabreport.form.icon");
     }
 
     @Override
@@ -108,7 +112,6 @@ public class MzTabReportForm extends AbstractForm {
             cm.getColumn(1).setResizable(false);
         }
 
-        NavigationPanel.getInstance().hideValidatorMessages();
     }
 
     @Override

@@ -460,6 +460,11 @@ public class InstrumentForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("instrument.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.instrument";
     }
