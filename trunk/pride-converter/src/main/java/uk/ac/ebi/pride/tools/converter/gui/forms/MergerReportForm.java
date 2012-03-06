@@ -6,7 +6,6 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
-import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
@@ -143,6 +142,11 @@ public class MergerReportForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("mergereport.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.merger.report";
     }
@@ -179,8 +183,6 @@ public class MergerReportForm extends AbstractForm {
             TableColumnModel cm = fileTable.getColumnModel();
             cm.getColumn(0).setResizable(false);
         }
-
-        NavigationPanel.getInstance().hideValidatorMessages();
 
     }
 

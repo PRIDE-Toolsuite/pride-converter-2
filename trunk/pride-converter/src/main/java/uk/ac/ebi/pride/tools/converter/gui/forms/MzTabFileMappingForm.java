@@ -129,6 +129,11 @@ public class MzTabFileMappingForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("fileselectionextra.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.fileextra";
     }

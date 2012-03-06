@@ -154,6 +154,11 @@ public class ReferenceForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("reference.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.references";
     }

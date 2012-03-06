@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, comp panel1:::p::p, space :::p, par l {comp contentPanel::::721:x:1, comp panel4::l:::x, comp panel2::l:::x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par l {seq t {comp contentPanel::::565:x, space :::p, comp panel2:::p::p, space :::p, comp panel4:::p::p}, comp panel1::l:::x:1}, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, comp panel1:::p::p, space :::p, par l {comp contentPanel::::721:x:1, comp panel4::l:::x, seq t {comp formNameLabel::::653:x, space s:::p, comp helpButton:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {seq t {par b {comp helpButton::b:p::p, comp formNameLabel::b:p:24:p}, space :::p, comp contentPanel::::587:x, space :::p, comp panel4:::p::p}, comp panel1::l:::x:1}, space :::p}}"
 		} ) {
 			name: "this"
 			"title": "PRIDE Converter"
@@ -48,15 +48,10 @@ new FormModel {
 				"border": new org.jdesktop.swingx.border.DropShadowBorder( sfield java.awt.Color black, 5, 0.5f, 12, false, false, true, true )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq l {space :::p, comp helpButton:::p::p, space ::358:x, comp quitButton:::p::p, space :::p, comp clearButton:::p::p, space :::p, comp backButton:::p::p, space :::p, comp nextButton:::p::p, space :::p}}"
-				"$verticalGroup": "par l {seq t {space :::x, par b {comp helpButton::b:p::p, comp nextButton::b:p::p, comp backButton::b:p::p, comp clearButton::b:p::p, comp quitButton::b:p::p}, space :::p}}"
+				"$horizontalGroup": "par l {seq t {space ::402:x, comp quitButton:::p::p, space :::p, comp clearButton:::p::p, space :::p, comp backButton:::p::p, space :::p, comp nextButton:::p::p, space :::p, comp validationStatus:::p:24:p, space :p:4:p}}"
+				"$verticalGroup": "par l {seq l {space :::p, par l {comp validationStatus::t::25:x:1, par b:l {comp nextButton::t:::x:1, comp backButton::t:::x:1, comp clearButton::t:::x:1, comp quitButton::t:::x:1}}, space :::x}}"
 			} ) {
 				name: "panel4"
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "helpButton"
-					"text": "Help"
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "help", false ) )
-				} )
 				add( new FormComponent( "javax.swing.JButton" ) {
 					name: "nextButton"
 					"text": "Next"
@@ -77,34 +72,23 @@ new FormModel {
 					"text": "Quit"
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "quit", false ) )
 				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "validationStatus"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/ok.png" )
+					"horizontalAlignment": 0
+					"toolTipText": "Click to view validation messages"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "validationStatusMouseClicked", false ) )
+				} )
 			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq t {space ::222:x, comp errorCountLabel:::p::p, space u:::p, comp warningCountLabel:::p::p, space u:::p, comp infoCountLabel:::p::p, space :::p, comp viewMessageButton:::p::p, space :::p}}"
-				"$verticalGroup": "par l {seq t {space ::12:x, par b {comp viewMessageButton::b:p::p, comp infoCountLabel::b:p::p, comp warningCountLabel::b:p::p, comp errorCountLabel::b:p:15:p}, space :::p}}"
-			} ) {
-				name: "panel2"
-				"border": new org.jdesktop.swingx.border.DropShadowBorder( sfield java.awt.Color black, 5, 0.5f, 12, false, false, true, true )
-				add( new FormComponent( "javax.swing.JButton" ) {
-					name: "viewMessageButton"
-					"text": "View all validation messages"
-					"enabled": false
-					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "showValidationMessages", false ) )
-				} )
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "infoCountLabel"
-					"text": "0 Messages"
-					"foreground": sfield java.awt.Color blue
-				} )
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "warningCountLabel"
-					"text": "0 Warnings"
-					"foreground": new java.awt.Color( 255, 102, 0, 255 )
-				} )
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "errorCountLabel"
-					"text": "0 Errors"
-					"foreground": sfield java.awt.Color red
-				} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "helpButton"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/help.png" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "help", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "formNameLabel"
+				"text": "text"
+				"font": new java.awt.Font( "Dialog", 1, 20 )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )

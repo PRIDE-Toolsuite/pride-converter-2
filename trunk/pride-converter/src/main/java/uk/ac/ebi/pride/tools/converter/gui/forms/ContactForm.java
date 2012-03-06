@@ -188,6 +188,11 @@ public class ContactForm extends AbstractForm implements TableModelListener {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("contact.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.contacts";
     }

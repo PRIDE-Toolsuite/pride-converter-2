@@ -114,7 +114,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
         dialog.setVisible(true);
     }
 
-    public void selectMasterFilePanel(){
+    public void selectMasterFilePanel() {
         tabbedPane1.setSelectedIndex(0);
     }
 
@@ -325,6 +325,11 @@ public class SampleForm extends AbstractForm implements ActionListener {
     @Override
     public String getFormDescription() {
         return config.getString("sample.form.description");
+    }
+
+    @Override
+    public Icon getFormIcon() {
+        return getFormIcon("sample.form.icon");
     }
 
     @Override

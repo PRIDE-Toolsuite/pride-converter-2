@@ -108,6 +108,11 @@ public class FilterInformationForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("filterinformation.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.filter.information";
     }

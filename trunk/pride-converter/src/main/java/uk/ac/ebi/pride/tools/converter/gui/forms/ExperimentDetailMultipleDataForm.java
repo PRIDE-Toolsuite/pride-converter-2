@@ -8,7 +8,6 @@ import psidev.psi.tools.validator.Context;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
-import psidev.psi.tools.validator.rules.Rule;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ExperimentDetailMultiTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ExperimentDetailMultiTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
@@ -20,7 +19,6 @@ import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -139,6 +137,11 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
     @Override
     public String getFormDescription() {
         return config.getString("experimentdetailsextra.form.description");
+    }
+
+    @Override
+    public Icon getFormIcon() {
+        return getFormIcon("experimentdetailsextra.form.icon");
     }
 
     @Override

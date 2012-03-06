@@ -5,6 +5,7 @@ import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
+import javax.swing.*;
 import java.util.Collection;
 
 /**
@@ -26,6 +27,8 @@ public interface ConverterForm {
     public void loadTemplate(String templateName);
 
     public String getFormName();
+
+    public Icon getFormIcon();
 
     public String getFormDescription();
 

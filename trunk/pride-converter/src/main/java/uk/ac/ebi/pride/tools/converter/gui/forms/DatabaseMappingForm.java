@@ -132,6 +132,11 @@ public class DatabaseMappingForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("databasemapping.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.databasemapping";
     }

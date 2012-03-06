@@ -377,6 +377,11 @@ public class ProtocolForm extends AbstractForm {
     }
 
     @Override
+    public Icon getFormIcon() {
+        return getFormIcon("protocol.form.icon");
+    }
+
+    @Override
     public String getHelpResource() {
         return "help.ui.protocol";
     }
