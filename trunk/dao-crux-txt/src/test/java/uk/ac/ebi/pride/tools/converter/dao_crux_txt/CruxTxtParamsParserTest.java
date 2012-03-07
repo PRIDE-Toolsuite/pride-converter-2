@@ -2,10 +2,10 @@ package uk.ac.ebi.pride.tools.converter.dao_crux_txt;
 
 
 import junit.framework.TestCase;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxParametersParserResult;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxTxtParamsParser;
 
 import java.io.File;
-import java.util.Properties;
 
 /**
  * @author Jose A. Dianes
@@ -13,21 +13,25 @@ import java.util.Properties;
  */
 public class CruxTxtParamsParserTest extends TestCase {
 
-    private String paramsFilePath = "src/test/resources/search.params-short.txt";
-    Properties properties;
+    private String paramsFilePath = "src/test/resources/search.params.txt";
+    CruxParametersParserResult parserResult;
     
     public void setUp() throws Exception {
 
     }
 
     public void testParse() throws Exception {
-        properties = CruxTxtParamsParser.parse(new File(paramsFilePath));
-        
-        assertEquals(properties.size(), 5);
+        parserResult = CruxTxtParamsParser.parse(new File(paramsFilePath));
+//        assertEquals(parserResult.properties.size(), 83);
+        assertEquals(parserResult.properties.getProperty("comparison").compareTo("eq"), 0);
+        assertFalse(parserResult.properties.getProperty("comparison").compareTo("wrong-value") == 0);
+    }
 
-        assertEquals(properties.getProperty("comparison").compareTo("eq"), 0);
+    public void testCheckVariableIsFixed() throws Exception {
 
-        assertFalse(properties.getProperty("comparison").compareTo("wrong-value") == 0);
+    }
+
+    public void testCheckRepeatedAAInMod() throws Exception {
 
     }
 }

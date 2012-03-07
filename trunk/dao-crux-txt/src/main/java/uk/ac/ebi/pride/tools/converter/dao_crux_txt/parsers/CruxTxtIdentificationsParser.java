@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxPeptide;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxProtein;
-import uk.ac.ebi.pride.tools.converter.dao_crux_txt.results.CruxParserResults;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.*;
@@ -63,8 +62,9 @@ public class CruxTxtIdentificationsParser {
      * @return A Map of proteins to peptides (1 to n) obtained from the file
      * @throws ConverterException
      */
-    public static CruxParserResults parse(File identificationsFile) throws ConverterException {
-        return parse(identificationsFile, "");
+    public static CruxIdentificationsParserResult parse(File identificationsFile) throws ConverterException {
+        CruxIdentificationsParserResult res =  parse(identificationsFile, "");
+        return res;
     }
     
     /**
@@ -73,11 +73,11 @@ public class CruxTxtIdentificationsParser {
      * @return A Map of proteins to peptides (1 to n) obtained from the file
      * @throws ConverterException
      */
-    public static CruxParserResults parse(File identificationsFile, String prefix) throws ConverterException {
+    public static CruxIdentificationsParserResult parse(File identificationsFile, String prefix) throws ConverterException {
         if (identificationsFile == null)
             throw new ConverterException("Input identifications file was not set.");
 
-        CruxParserResults res = new CruxParserResults();
+        CruxIdentificationsParserResult res = new CruxIdentificationsParserResult();
         res.proteins = new LinkedHashMap<String, CruxProtein>();
         res.identifiedSpecIds = new LinkedList<Integer>();
         res.peptideCount = 0;
@@ -117,6 +117,8 @@ public class CruxTxtIdentificationsParser {
                     res.proteins.get(accession).addPeptide(peptide);
 
                 }
+
+                res.peptideCount++;
 
             }
 
@@ -175,6 +177,9 @@ public class CruxTxtIdentificationsParser {
      */
     private static CruxPeptide createCruxPeptide(String[] fields,
                                                  Map<String, Integer> header) {
+        // we may have several proteins in the protein_id field, comma separated
+        String[] proteinIds = fields[header.get("protein id")].split(",");
+        String[] flankingAA = fields[header.get("flanking aa")].split(",");
 
         CruxPeptide peptide = new CruxPeptide(
                 Integer.parseInt(fields[header.get("scan")]),
@@ -187,7 +192,9 @@ public class CruxTxtIdentificationsParser {
                 Integer.parseInt(fields[header.get("xcorr rank")]),
                 Integer.parseInt(fields[header.get("matches/spectrum")]),
                 fields[header.get("sequence")],
-                fields[header.get("cleavage type")]
+                fields[header.get("cleavage type")],
+                proteinIds,
+                flankingAA
         );
 
         return peptide;

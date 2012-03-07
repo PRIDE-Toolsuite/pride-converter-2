@@ -1,14 +1,25 @@
 package uk.ac.ebi.pride.tools.converter.dao_crux_txt.model;
 
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.report.model.PTM;
+import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Its pretty much a POJO representing a peptide
  * @author Jose A. Dianes
  * @version $Id$
  */
 public class CruxPeptide {
+    /**
+     * General expressions
+     */
+    private static final String modRegex = "\\[-?\\d+\\.\\d+\\]";
 
-	//private final String protein_id;
-    //private final String flanking_aa;
 	private final int scan;
     private final int charge;
     private final double specPrecursorMZ;
@@ -20,10 +31,12 @@ public class CruxPeptide {
     private final int matchesSpectrum;
     private final String sequence;
     private final String claveageType;
+    private Map<String, String> flankingAA;
 
 	public CruxPeptide(int scan, int charge, double specPrecursorMZ, double specNeutralMass, 
                        double peptideMass, double deltaCn, double xcorrScore, int xcorrRank,
-                       int matchesSpectrum, String sequence, String claveageType) {
+                       int matchesSpectrum, String sequence, String claveageType, String [] proteinIds, String [] flankingAA) {
+        if (proteinIds.length != flankingAA.length) throw new ConverterException("Not enough flanking AA for proteins");
         this.scan = scan;
         this.charge = charge;
         this.specPrecursorMZ = specPrecursorMZ;
@@ -35,6 +48,13 @@ public class CruxPeptide {
         this.matchesSpectrum = matchesSpectrum;
         this.sequence = sequence;
         this.claveageType = claveageType;
+        // Create a map with protein IDs and flanking AAs
+        this.flankingAA = new HashMap<String, String>();
+        int pos = 0;
+        for (String proteinId: proteinIds) {
+            this.flankingAA.put(proteinId, flankingAA[pos]) ;
+            pos++;
+        }
 	}
 
     public int getScan() {
@@ -164,4 +184,160 @@ public class CruxPeptide {
 
 		return true;
 	}
+
+                               /* todo - REPORT ALSO FIXED!! they are not in the sequence, we have to look for them in the list of PTMs in the DAO */
+    /**
+     * Returns a list of peptide PTMs associated with this Crux peptide. It includes variable and fixed PTMs (including
+     * terminal modifications). It makes use of the parameter parsing result where it can find information about the 
+     * variable and fixed modifications defined during the search.
+     *
+     * It makes several checks about the existence or not in the param file of the modifications in the sequence, throwing
+     * ConverterExcetion (unchecked) when wrong.
+     * 
+     * @return A Collection of PeptidePTM associated with this Crux peptide.
+     */
+    public Collection<PeptidePTM> getPTMs(CruxParametersParserResult params) {
+        
+        LinkedList<PeptidePTM> result = new LinkedList<PeptidePTM>();
+        
+        // Add variable PTMs - they are specified in the peptide sequence
+        // first we check potential terminal modifications in pos 0 and length-1 (n and c terms)
+        // after we process in between modifications accessing the aaToPTM map
+        Map<Integer, String> mods = getModifications(sequence);
+
+        // Check nterm modification
+        if (mods.containsKey(1)) {
+            String[] modDelta = mods.get(1).split("[\\[\\]]");
+            if ((params.ntermPTM != null) && (params.ntermPTM.getSearchEnginePTMLabel().equals(modDelta[1]+"@nterm"))) {
+                PeptidePTM newPeptidePTM = newPeptidePtm(params.ntermPTM, 0); // nterm is before the first aa (pos 1)
+                result.add(newPeptidePTM);
+                // remove mod from the list so it is not included in the in between ones
+                mods.remove(1);
+            }
+        }
+
+        // Check cterm modification
+        String lastMod = getLastMod();
+        if (lastMod != null) { // if there is a mod in the last aa of the sequence...
+            String[] modDelta = lastMod.split("[\\[\\]]"); // get just the aa and the delta
+            if ((params.ctermPTM != null) && (params.ctermPTM.getSearchEnginePTMLabel().equals(modDelta[1]+"@cterm"))) {
+                PeptidePTM newPeptidePTM = newPeptidePtm(params.ctermPTM,
+                        (Integer) mods.keySet().toArray()[mods.size() - 1] + 1); // cterm is after last aa
+                result.add(newPeptidePTM);
+                // remove mod from the list so it is not included in the in between ones
+                mods.remove((Integer)mods.keySet().toArray()[mods.size()-1]);
+            }
+        }
+
+        // in between mods...
+        for (Map.Entry<Integer, String> mod: mods.entrySet()) {
+            String[] modDelta = mod.getValue().split("[\\[\\]]");
+            PTM ptm = params.aaToPtm.get(mod.getValue());
+            if (ptm == null) throw new ConverterException("Undefined variable PTM in peptide sequence: "+sequence);
+            else {
+                PeptidePTM newPeptidePtm = newPeptidePtm(ptm, mod.getKey());
+                // todo: check if this is correct or residue = single aa
+                result.add(newPeptidePtm);
+            }
+        }
+
+        // Add now fixed modifications. They are in the params.aaToFixedPTM. For each one check if the AA is in our
+        // sequence. If it is, add an associated PeptidePTM to the result list
+        int pos = 0;
+        for (String aa: getAllAAInSequence(sequence)) {
+            // If the aa is in the fixed mods map, add a PeptidePTM
+            if (params.aaToFixedPtm.containsKey(aa)) {
+                PeptidePTM newPTM = newPeptidePtm(params.aaToFixedPtm.get(aa), pos+1);
+                result.add(newPTM);
+            }
+            pos++;
+        }
+        
+        // don't forget about fixed term...
+        if (params.ntermFixedPTM != null) {
+            PeptidePTM newPtm = newPeptidePtm(params.ntermFixedPTM, 0);
+            result.add(newPtm);
+        }
+        if (params.ctermFixedPTM != null) {
+            PeptidePTM newPtm = newPeptidePtm(params.ntermFixedPTM,
+                    (Integer)mods.keySet().toArray()[mods.size()-1] + 1); // cterm is after last aa
+            result.add(newPtm);
+        }
+        
+        return result;
+    }
+
+    /**
+     * Gets the last modification in the sequence if present
+     * @return The last modification including the aa. Null if not present.
+     */
+    private String getLastMod() {
+        String res = null;
+        // define a regular expression that matches modifications
+        Pattern regex = Pattern.compile( modRegex +"$" );
+        // get a matcher object
+        Matcher m = regex.matcher(sequence);
+        
+        if (m.find()) {
+            int pos = m.start() - 1; // get the aa
+            res = sequence.substring(pos, m.end());
+        }
+        return res;
+    }
+
+    /**
+     * Returns a map of modifications and their positions. It has to be true that the position of a modification at
+     * the end of the input is equals to the length of the peptide sequence with modifications not counting for this
+     * length. Modifications match the regular expression: \\[\\d+\\.\\d+\\]      (e.g. [19.9956])
+     * IMPORTANT: Modifications in the result are in the same order that in the sequence.
+     * 
+     * @param sequence The peptide sequence containing peptides and modifications
+     * @return A Map of modifications and their positions. Mods include the preceding AA.
+     */
+    private Map<Integer, String> getModifications(String sequence) {
+        HashMap<Integer, String> res = new HashMap<Integer, String>();
+
+        // define a regular expression that matches modifications
+        Pattern regex = Pattern.compile(modRegex);
+
+        // get a matcher object
+        Matcher m = regex.matcher(sequence);
+
+        // start looking for modifications
+        int totalModsSize = 0; // accumulated total modifications size
+        int numMods = 1;
+        while( m.find() ) {
+            int pos = m.start() - 1; // include the preceding AA
+            String mod = sequence.substring(pos, m.end()); 
+            res.put( pos - totalModsSize + numMods, mod );
+            totalModsSize += mod.length();
+            numMods++;
+        }
+
+        return res;
+    }
+    
+    private String [] getAllAAInSequence(String sequence) {
+        String [] tempAss = sequence.replaceAll(modRegex,"").split("");
+        String [] aas = Arrays.copyOfRange(tempAss, 1, tempAss.length);
+
+        return aas;
+    }
+    
+    private PeptidePTM newPeptidePtm(PTM ptm, long location) {
+        PeptidePTM newPeptidePtm = new PeptidePTM();
+        newPeptidePtm.setSearchEnginePTMLabel(ptm.getSearchEnginePTMLabel());
+        newPeptidePtm.setFixedModification(ptm.isFixedModification());
+        newPeptidePtm.setResidues(ptm.getResidues());
+        newPeptidePtm.setModLocation(location);
+        return newPeptidePtm;
+    }
+    
+    public String getPrevAA(String proteinId) {
+        return ""+this.flankingAA.get(proteinId).charAt(0);
+    }
+    
+    public String getNextAA(String proteinId) {
+        return ""+this.flankingAA.get(proteinId).charAt(1);
+    }
 }
