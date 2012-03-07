@@ -1,6 +1,14 @@
 package uk.ac.ebi.pride.tools.converter.dao.handler.impl;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
 import org.apache.log4j.Logger;
+
 import uk.ac.ebi.pride.mztab_java.MzTabFile;
 import uk.ac.ebi.pride.mztab_java.MzTabParsingException;
 import uk.ac.ebi.pride.mztab_java.model.Param.ParamType;
@@ -11,14 +19,16 @@ import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.Utils;
 import uk.ac.ebi.pride.tools.converter.dao.handler.ExternalHandler;
 import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
-import uk.ac.ebi.pride.tools.converter.report.model.*;
+import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
+import uk.ac.ebi.pride.tools.converter.report.model.GelBasedData;
+import uk.ac.ebi.pride.tools.converter.report.model.Identification;
+import uk.ac.ebi.pride.tools.converter.report.model.Param;
+import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
+import uk.ac.ebi.pride.tools.converter.report.model.Point;
+import uk.ac.ebi.pride.tools.converter.report.model.SimpleGel;
+import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.utils.AccessionResolver;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
 
 /**
  * Extracts quantitative and gel-based data
@@ -99,6 +109,37 @@ public class MzTabHandler implements ExternalHandler {
         } catch (MzTabParsingException e) {
             throw new ConverterException("Failed to parse mzTab file: " + e.getMessage(), e);
         }
+    }
+    
+    /**
+     * Returns the parameters that were used to generate the mzTab
+     * file in case it was generated using PRIDE Converter. In case
+     * no DAO Configuration is found in the mzTab file NULL is returned.
+     * @return The DAO configuration or NULL in case the mzTab file was not created using PRIDE Converter.
+     */
+    public Properties getDaoConfiguration() {
+    	Properties configuration = new Properties();
+    	List<uk.ac.ebi.pride.mztab_java.model.Param> parameters = unit.getCustomParams();
+    	boolean prideConverterGenerated = false;
+    	
+    	for (uk.ac.ebi.pride.mztab_java.model.Param param : parameters) {
+    		if ("MzTab generation software".equals(param.getName()) && "PRIDE Converter".equals(param.getValue())) {
+    			prideConverterGenerated = true;
+    			continue;
+    		}
+    		
+    		// make sure it's a DAO configuration
+    		if (!param.getName().startsWith("pride_converter_dao_"))
+    			continue;
+    		
+    		String name = param.getName().substring(20);
+    		configuration.setProperty(name, param.getValue());
+    	}
+    	
+    	if (!prideConverterGenerated)
+    		return null;
+    	
+    	return configuration;
     }
 
     @Override
@@ -402,7 +443,7 @@ public class MzTabHandler implements ExternalHandler {
                 param.getCvParam().add(QuantitationCvParams.getSubsampleDescription(subsampleIndex, subsample.getDescription()));
 
             // add the reagent
-            uk.ac.ebi.pride.mztab_java.model.Param reagentParam = subsample.getQuantitationReagent();
+            uk.ac.ebi.pride.mztab_java.model.Param reagentParam = subsample.getQuantificationReagent();
             // make sure the reagent is set and a cvParam
             if (reagentParam != null && reagentParam.getType() == ParamType.CV_PARAM) {
                 CvParam reportParam = convertCvParam(reagentParam);

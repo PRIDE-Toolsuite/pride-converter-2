@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -143,106 +144,130 @@ public class MzTabWriter {
 
     private void processMetadata() throws InvalidFormatException {
         // create a unit to hold the metadata
-        unit = new Unit();
-
-        unit.setUnitId("TMP_" + System.currentTimeMillis());
-
-        // title
-        if (dao.getExperimentTitle() != null && dao.getExperimentTitle().length() > 0)
-            unit.setTitle(dao.getExperimentTitle());
-
-        // set the unit
-        mztabFile.setUnit(unit);
+    	try {
+	        unit = new Unit();
+	
+	        unit.setUnitId("TMP_" + System.currentTimeMillis());
+	
+	        // title
+	        if (dao.getExperimentTitle() != null && dao.getExperimentTitle().length() > 0)
+	            unit.setTitle(dao.getExperimentTitle());
+	
+	        // add the used DAO options
+	        Properties properties = dao.getConfiguration();
+	        List<Param> customParams = new ArrayList<Param>();
+	        
+	        customParams.add(new Param("MzTab generation software", "PRIDE Converter"));
+	        
+	        for (String name : properties.stringPropertyNames()) {
+	        	String value = properties.getProperty(name);
+	        	Param propertyParam = new Param("pride_converter_dao_" + name, value);
+	        	customParams.add(propertyParam);
+	        }
+	        
+	        unit.setCustomParams(customParams);
+	        
+	        // set the unit
+	        mztabFile.setUnit(unit);
+    	}
+    	catch (MzTabParsingException e) {
+    		throw new InvalidFormatException(e);
+    	}
     }
 
     private void processProteins() throws InvalidFormatException {
-        // save the unit id
-        String unitId = unit.getUnitId();
-
-        // iterate over the proteins
-        Iterator<Identification> it = dao.getIdentificationIterator(true);
-
-        while (it.hasNext()) {
-            Identification identification = it.next();
-
-            // make sure it's not null
-            if (identification == null)
-                continue;
-
-            // create a new protein object
-            Protein protein = new Protein();
-
-            protein.setAccession(identification.getAccession());
-            protein.setUnitId(unitId);
-            // set the description if available
-            String descripion = getFirstParamValue(identification.getAdditional().getCvParam(), DAOCvParams.PROTEIN_NAME.getAccession());
-            protein.setDescription(descripion);
-            // check if there's a species param
-            List<CvParam> speciesParams = getParamForCvLabel(identification.getAdditional().getCvParam(), "NEWT");
-
-            if (speciesParams.size() == 1) {
-                protein.setTaxid(speciesParams.get(0).getAccession());
-                protein.setSpecies(speciesParams.get(0).getValue());
-            }
-
-            // database and database version
-            protein.setDatabase(identification.getDatabase());
-            protein.setDatabaseVersion(identification.getDatabaseVersion());
-            
-            // check if it's a .dat input file
-            if (dao instanceof MascotDAO) {
-            	ParamList searchEngineList = new ParamList(1);
-            	searchEngineList.add(new Param("MS", "MS:1001207", "Mascot", ""));
-            	protein.setSearchEngine(searchEngineList);
-            }
-            else if (dao instanceof XTandemDAO) {
-            	ParamList searchEngineList = new ParamList(1);
-            	searchEngineList.add(new Param("MS", "MS:1001476", "X!Tandem", ""));
-            	protein.setSearchEngine(searchEngineList);
-            }
-
-            // get the number of peptides
-            protein.setNumPeptides(identification.getPeptide().size());
-            HashSet<String> peptideSequences = new HashSet<String>();
-            for (Peptide p : identification.getPeptide()) {
-                peptideSequences.add(p.getSequence() + p.getPTM().toString());
-            }
-            protein.setNumPeptidesDistinct(peptideSequences.size());
-
-            // add the indistinguishable accessions to the ambiguitiy members
-            List<String> indistinguishableAccessions = getParam(identification.getAdditional().getCvParam(), DAOCvParams.INDISTINGUISHABLE_ACCESSION.getAccession());
-            protein.setAmbiguityMembers(indistinguishableAccessions);
-
-            // set the modifications
-            protein.setModifications(null);
-            
-            // set the optional columns
-            try {
-	            if (gelIdentifier != null && gelIdentifier.length() > 0) {
-	            	protein.setCustomColumn(OptionalColumn.GEL_IDENTIFIER.getColumnHeader(), 
-	            			gelIdentifier);
+    	try {
+	        // save the unit id
+	        String unitId = unit.getUnitId();
+	
+	        // iterate over the proteins
+	        Iterator<Identification> it = dao.getIdentificationIterator(true);
+	
+	        while (it.hasNext()) {
+	            Identification identification = it.next();
+	
+	            // make sure it's not null
+	            if (identification == null)
+	                continue;
+	
+	            // create a new protein object
+	            Protein protein = new Protein();
+	
+	            protein.setAccession(identification.getAccession());
+	            protein.setUnitId(unitId);
+	            // set the description if available
+	            String descripion = getFirstParamValue(identification.getAdditional().getCvParam(), DAOCvParams.PROTEIN_NAME.getAccession());
+	            protein.setDescription(descripion);
+	            // check if there's a species param
+	            List<CvParam> speciesParams = getParamForCvLabel(identification.getAdditional().getCvParam(), "NEWT");
+	
+	            if (speciesParams.size() == 1) {
+	                protein.setTaxid(speciesParams.get(0).getAccession());
+	                protein.setSpecies(speciesParams.get(0).getValue());
 	            }
-	            if (spotId != null && spotId.length() > 0) {
-	            	protein.setCustomColumn(OptionalColumn.SPOT_IDENTIFIER.getColumnHeader(), 
-	            			spotId);
+	
+	            // database and database version
+	            protein.setDatabase(identification.getDatabase());
+	            protein.setDatabaseVersion(identification.getDatabaseVersion());
+	            
+	            // check if it's a .dat input file
+	            if (dao instanceof MascotDAO) {
+	            	ParamList searchEngineList = new ParamList(1);
+	            	searchEngineList.add(new Param("MS", "MS:1001207", "Mascot", ""));
+	            	protein.setSearchEngine(searchEngineList);
 	            }
-            } catch (MzTabParsingException e) {
-				throw new ConverterException("Failed to generate mzTab file: " + e.getMessage());
-			}
-
-            // process the protein's peptides
-            processIdentificationPeptides(identification);
-
-            // add the protein
-            try {
-                mztabFile.addProtein(protein);
-            } catch (MzTabParsingException e) {
-                logger.error(e.getMessage());
-            }
-        }
+	            else if (dao instanceof XTandemDAO) {
+	            	ParamList searchEngineList = new ParamList(1);
+	            	searchEngineList.add(new Param("MS", "MS:1001476", "X!Tandem", ""));
+	            	protein.setSearchEngine(searchEngineList);
+	            }
+	
+	            // get the number of peptides
+	            protein.setNumPeptides(identification.getPeptide().size());
+	            HashSet<String> peptideSequences = new HashSet<String>();
+	            for (Peptide p : identification.getPeptide()) {
+	                peptideSequences.add(p.getSequence() + p.getPTM().toString());
+	            }
+	            protein.setNumPeptidesDistinct(peptideSequences.size());
+	
+	            // add the indistinguishable accessions to the ambiguitiy members
+	            List<String> indistinguishableAccessions = getParam(identification.getAdditional().getCvParam(), DAOCvParams.INDISTINGUISHABLE_ACCESSION.getAccession());
+	            protein.setAmbiguityMembers(indistinguishableAccessions);
+	
+	            // set the modifications
+	            protein.setModifications(null);
+	            
+	            // set the optional columns
+	            try {
+		            if (gelIdentifier != null && gelIdentifier.length() > 0) {
+		            	protein.setCustomColumn(OptionalColumn.GEL_IDENTIFIER.getColumnHeader(), 
+		            			gelIdentifier);
+		            }
+		            if (spotId != null && spotId.length() > 0) {
+		            	protein.setCustomColumn(OptionalColumn.SPOT_IDENTIFIER.getColumnHeader(), 
+		            			spotId);
+		            }
+	            } catch (MzTabParsingException e) {
+					throw new ConverterException("Failed to generate mzTab file: " + e.getMessage());
+				}
+	
+	            // process the protein's peptides
+	            processIdentificationPeptides(identification);
+	
+	            // add the protein
+	            try {
+	                mztabFile.addProtein(protein);
+	            } catch (MzTabParsingException e) {
+	                logger.error(e.getMessage());
+	            }
+	        }
+    	}
+    	catch (MzTabParsingException e) {
+    		throw new InvalidFormatException(e);
+    	}
     }
 
-    private void processIdentificationPeptides(Identification identification) {
+    private void processIdentificationPeptides(Identification identification) throws MzTabParsingException {
         // iterate over all the peptides
         for (Peptide p : identification.getPeptide()) {
             // initialize the new peptide
@@ -310,7 +335,7 @@ public class MzTabWriter {
      * @param peptide
      * @return
      */
-    private ParamList getPeptideSearchEngineScores(Peptide peptide) {
+    private ParamList getPeptideSearchEngineScores(Peptide peptide) throws MzTabParsingException {
         ParamList scoreParams = new ParamList();
 
         for (CvParam param : peptide.getAdditional().getCvParam()) {
