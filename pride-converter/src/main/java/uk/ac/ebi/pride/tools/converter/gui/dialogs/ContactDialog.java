@@ -73,8 +73,11 @@ public class ContactDialog extends AbstractDialog {
     public void edit(ReportObject object) {
         Contact c = (Contact) object;
         nameField.setText(c.getName());
+        validateRequiredField(nameField, null);
         emailField.setText(c.getContactInfo());
+        validateRequiredField(emailField, null);
         institutionField.setText(c.getInstitution());
+        validateRequiredField(institutionField, null);
         okButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()) && isNonNullTextField(institutionField.getText()));
         saveButton.setEnabled(isNonNullTextField(nameField.getText()) && isNonNullTextField(emailField.getText()) && isNonNullTextField(institutionField.getText()));
     }

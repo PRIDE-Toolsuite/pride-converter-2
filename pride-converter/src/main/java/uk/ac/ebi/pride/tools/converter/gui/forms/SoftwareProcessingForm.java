@@ -7,12 +7,11 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 import org.apache.log4j.Logger;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
-import uk.ac.ebi.pride.tools.converter.report.model.DataProcessing;
-import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.Software;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
@@ -37,6 +36,7 @@ public class SoftwareProcessingForm extends AbstractForm {
     public SoftwareProcessingForm() {
         initComponents();
         addTermButton.setOwner(processingTable);
+        addTermButton1.setOwner(expAdditionalTable);
         updateTermButtonCvList(addTermButton, "softwareprocessing.suggested.cv");
     }
 
@@ -79,14 +79,15 @@ public class SoftwareProcessingForm extends AbstractForm {
         softwareCommentField = new JTextArea();
         label5 = new JLabel();
         label6 = new JLabel();
+        label7 = new JLabel();
+        scrollPane3 = new JScrollPane();
+        expAdditionalTable = new ParamTable();
+        addTermButton1 = new AddTermButton();
 
         //======== this ========
 
         //---- label1 ----
         label1.setText(bundle.getString("SoftwareProcessingForm.label1.text"));
-
-        //---- addTermButton ----
-        addTermButton.setText(bundle.getString("SoftwareProcessingForm.addTermButton.text"));
 
         //======== scrollPane1 ========
         {
@@ -166,14 +167,14 @@ public class SoftwareProcessingForm extends AbstractForm {
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(panel1Layout.createParallelGroup()
                                             .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addComponent(softwareNameField, GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+                                                    .addComponent(softwareNameField, GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
                                                     .addGap(18, 18, 18)
                                                     .addComponent(label3)
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(label6, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(softwareVersionField, GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE))
-                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE))
+                                                    .addComponent(softwareVersionField, GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
+                                            .addComponent(scrollPane2))
                                     .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
@@ -194,32 +195,54 @@ public class SoftwareProcessingForm extends AbstractForm {
             );
         }
 
+        //---- label7 ----
+        label7.setText(bundle.getString("SoftwareProcessingForm.label7.text"));
+
+        //======== scrollPane3 ========
+        {
+            scrollPane3.setViewportView(expAdditionalTable);
+        }
+
+        //---- addTermButton1 ----
+        addTermButton1.setMargin(new Insets(1, 14, 2, 14));
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
-                                        .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
+                                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label1)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 379, Short.MAX_VALUE)
-                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 439, Short.MAX_VALUE)
+                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(label7)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 342, Short.MAX_VALUE)
+                                                .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(7, 7, 7)
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup()
                                         .addComponent(label1, GroupLayout.Alignment.TRAILING)
                                         .addComponent(addTermButton, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(label7))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -241,6 +264,10 @@ public class SoftwareProcessingForm extends AbstractForm {
     private JTextArea softwareCommentField;
     private JLabel label5;
     private JLabel label6;
+    private JLabel label7;
+    private JScrollPane scrollPane3;
+    private ParamTable expAdditionalTable;
+    private AddTermButton addTermButton1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override
@@ -259,6 +286,7 @@ public class SoftwareProcessingForm extends AbstractForm {
         softwareCommentField.setText(null);
         softwareVersionField.setText(null);
         processingTable.removeAll();
+        expAdditionalTable.removeAll();
         //inactivate next button
         validationListerner.fireValidationListener(false);
     }
@@ -267,6 +295,42 @@ public class SoftwareProcessingForm extends AbstractForm {
     public void save(ReportReaderDAO dao) {
         dao.setSoftware(makeSoftware());
         dao.setProcessingMethod(makeProcessingMethod());
+        saveExperimentalAdditionalParams(dao);
+    }
+
+    private void saveExperimentalAdditionalParams(ReportReaderDAO dao) {
+
+        Param p = new Param();
+        p.getCvParam().addAll(expAdditionalTable.getCvParamList());
+        p.getUserParam().addAll(expAdditionalTable.getUserParamList());
+        Param daoParam = dao.getExperimentParams();
+        if (daoParam != null) {
+            for (CvParam cv : daoParam.getCvParam()) {
+                if (cv.getAccession().equals(DAOCvParams.PRIDE_PROJECT.getAccession()) ||
+                        cv.getAccession().equals(DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession())) {
+                    p.getCvParam().add(cv);
+                }
+            }
+        }
+        dao.setExperimentParams(p);
+
+    }
+
+    private void loadExperimentalAdditionalParams(ReportReaderDAO dao) {
+
+        Param p = dao.getExperimentParams();
+        if (p != null) {
+            for (CvParam cv : p.getCvParam()) {
+                if (cv.getAccession().equals(DAOCvParams.PRIDE_PROJECT.getAccession()) ||
+                        cv.getAccession().equals(DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession())) {
+                    continue;
+                }
+                expAdditionalTable.add(cv);
+            }
+            for (UserParam u : p.getUserParam()) {
+                expAdditionalTable.add(u);
+            }
+        }
     }
 
     private Param makeProcessingMethod() {
@@ -291,6 +355,7 @@ public class SoftwareProcessingForm extends AbstractForm {
             softwareCommentField.setText(dao.getSoftware().getComments());
             softwareVersionField.setText(dao.getSoftware().getVersion());
             processingTable.add(dao.getProcessingMethod());
+            loadExperimentalAdditionalParams(dao);
             isLoaded = true;
         }
         //fire validation listener on load

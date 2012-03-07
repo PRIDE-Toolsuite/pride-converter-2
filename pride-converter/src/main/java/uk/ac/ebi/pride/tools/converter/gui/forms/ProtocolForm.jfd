@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space :::p, par l {seq {comp scrollPane1:::p:85:p, space :::p, comp protocolTableScrollPane::::580:x}, seq l {comp label4:::p::p, space :::p, comp protocolName:::p:187:p, space :::p, comp label5:::p:12:p, space :::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq t {comp label1:::p::p, space ::221:x, comp addStepButton:::p::p, space :::p, comp removeStepButton:::p::p, space :::p, comp addTermButton:::p::p}}, space :::p}}</string> 
+        <string>par l {seq {space :::p, par l {seq {comp scrollPane1:::p:85:p, space :::p, comp protocolTableScrollPane::::592:x}, seq l {comp label4:::p::p, space :::p, comp protocolName:::p:187:p, space :::p, comp label5:::p:12:p, space :::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq t {comp label1:::p::p, space ::293:x, comp addStepButton:::p::p, space :::p, comp removeStepButton:::p::p, space :::p, comp addTermButton:::p::p}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, par b {comp loadButton::b:p::p, comp saveButton::b:p::p, comp label4::b:p::p, comp protocolName::b:p::p, comp label5::b:p::p}, space u:::p, par b {comp addStepButton::b:p::p, comp removeStepButton::b:p::p, comp addTermButton::b:p::p, comp label1::b:p::p}, space :::p, par t {comp scrollPane1::::288:x:1, comp protocolTableScrollPane::::288:x:1}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par b {comp loadButton::b:p::p, comp saveButton::b:p::p, comp label4::b:p::p, comp protocolName::b:p::p, comp label5::b:p::p}, space u:::p, par b {comp addStepButton::b:p::p, comp removeStepButton::b:p::p, comp addTermButton::b:p::p, comp label1::b:p::p}, space :::p, par t {comp scrollPane1::::299:x:1, comp protocolTableScrollPane::::299:x:1}, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -250,10 +250,12 @@
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
         <void method="setProperty"> 
-         <string>text</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>ProtocolForm.addTermButton.text</string> 
+         <string>margin</string> 
+         <object class="java.awt.Insets"> 
+          <int>1</int> 
+          <int>14</int> 
+          <int>2</int> 
+          <int>14</int> 
          </object> 
         </void> 
         <void property="name"> 

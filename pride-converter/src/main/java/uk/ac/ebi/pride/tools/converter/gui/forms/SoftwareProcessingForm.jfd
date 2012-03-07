@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp panel1::l:::x, comp scrollPane1::l::633:x, seq l {comp label1:::p::p, space ::379:x, comp addTermButton:::p::p}}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par l {comp scrollPane1::l::633:x, comp panel1::l:::x, seq l {comp label1:::p::p, space ::439:x, comp addTermButton:::p::p}, seq t {comp label7:::p::p, space ::342:x, comp addTermButton1:::p::p}, comp scrollPane3::l::633:x}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :p:7:p, comp panel1:::p:152:p, space :::p, par l {comp label1::t:p::p, comp addTermButton::t:p::p}, space :::p, comp scrollPane1::::248:x, space :::p}}</string> 
+        <string>par l {seq l {space :p:7:p, comp panel1:::p::p, space :::p, par l {comp label1::t:p::p, comp addTermButton::t:p::p}, space :::p, comp scrollPane1::::115:x, space u:::p, par t {comp addTermButton1:::p::p, comp label7:::p::p}, space :::p, comp scrollPane3::::119:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -53,13 +53,6 @@
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>SoftwareProcessingForm.addTermButton.text</string> 
-         </object> 
-        </void> 
         <void property="name"> 
          <string>addTermButton</string> 
         </void> 
@@ -91,7 +84,7 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq {par l {comp label4::l:p::p, seq l {space :::p, comp label2:::p::p, space :::p, comp label5:::p::p}}, space :::p, par l {seq {comp softwareNameField::::253:x, space s:::p, comp label3:::p::p, space :::p, comp label6:::p:15:p, space :::p, comp softwareVersionField::::191:x}, comp scrollPane2::::543:x:1}, space :::p}}</string> 
+          <string>par l {seq {par l {comp label4::l:p::p, seq l {space :::p, comp label2:::p::p, space :::p, comp label5:::p::p}}, space :::p, par l {seq {comp softwareNameField::::254:x, space s:::p, comp label3:::p::p, space :::p, comp label6:::p:15:p, space :::p, comp softwareVersionField::::192:x}, comp scrollPane2:::::x:1}, space :::p}}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
@@ -267,6 +260,57 @@
         </void> 
        </object> 
       </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SoftwareProcessingForm.label7.text</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>label7</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JScrollPane</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>javax.swing.JScrollPane</class> 
+        </object> 
+        <void property="name"> 
+         <string>scrollPane3</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable</string> 
+          <void property="name"> 
+           <string>expAdditionalTable</string> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
+        <void method="setProperty"> 
+         <string>margin</string> 
+         <object class="java.awt.Insets"> 
+          <int>1</int> 
+          <int>14</int> 
+          <int>2</int> 
+          <int>14</int> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>addTermButton1</string> 
+        </void> 
+       </object> 
+      </void> 
      </object> 
      <object class="com.jformdesigner.model.FormLayoutConstraints"> 
       <null/> 
@@ -281,7 +325,7 @@
        <string>size</string> 
        <object class="java.awt.Dimension"> 
         <int>645</int> 
-        <int>450</int> 
+        <int>480</int> 
        </object> 
       </void> 
      </object> 

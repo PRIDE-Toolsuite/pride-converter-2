@@ -22,7 +22,7 @@ public abstract class BaseTableModel<T extends ReportObject> extends DefaultTabl
     // Resouce bundle to get messages, and internalization
     protected static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
 
-    protected static final int WIDTH = 25;
+    public static final int SMALL_WIDTH = 25;
 
     // type for each column
     protected Class[] columnTypes;
@@ -82,15 +82,15 @@ public abstract class BaseTableModel<T extends ReportObject> extends DefaultTabl
     }
 
     protected void constructTableColumnModel(JTable table) {
-        tableColumnModel.getColumn(0).setMaxWidth(WIDTH);
-        tableColumnModel.getColumn(0).setMinWidth(WIDTH);
-        tableColumnModel.getColumn(0).setPreferredWidth(WIDTH);
+        tableColumnModel.getColumn(0).setMaxWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(0).setMinWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(0).setPreferredWidth(SMALL_WIDTH);
         tableColumnModel.getColumn(0).setCellRenderer(new RowNumberRenderer());
 
         //second to last column will be the delete column
-        tableColumnModel.getColumn(getColumnCount() - 2).setMaxWidth(WIDTH);
-        tableColumnModel.getColumn(getColumnCount() - 2).setMinWidth(WIDTH);
-        tableColumnModel.getColumn(getColumnCount() - 2).setPreferredWidth(WIDTH);
+        tableColumnModel.getColumn(getColumnCount() - 2).setMaxWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(getColumnCount() - 2).setMinWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(getColumnCount() - 2).setPreferredWidth(SMALL_WIDTH);
         //Add delete column to table
         new DeleteIconColumn(table, tableColumnModel.getColumn(getColumnCount() - 2));
 

@@ -57,9 +57,10 @@ public class AddTermButton extends JButton {
     }
 
     private void initComponents() {
-        ResourceBundle bundle = ResourceBundle.getBundle("messages");
-
-        setText(bundle.getString("AddTermButton.this.text"));
+//        ResourceBundle bundle = ResourceBundle.getBundle("messages");
+//        setText(bundle.getString("AddTermButton.this.text"));
+        setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/add.png")));
+        setText(null);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {

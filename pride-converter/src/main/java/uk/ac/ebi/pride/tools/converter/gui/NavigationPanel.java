@@ -615,6 +615,14 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         showValidationMessages(null);
     }
 
+    private void validationStatusMouseEntered() {
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void validationStatusMouseExited() {
+        setCursor(Cursor.getDefaultCursor());
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -744,6 +752,16 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     validationStatusMouseClicked();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    validationStatusMouseEntered();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    validationStatusMouseExited();
                 }
             });
 

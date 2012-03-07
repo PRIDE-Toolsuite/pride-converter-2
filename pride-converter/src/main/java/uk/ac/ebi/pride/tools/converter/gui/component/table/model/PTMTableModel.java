@@ -3,12 +3,10 @@ package uk.ac.ebi.pride.tools.converter.gui.component.table.model;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.RowNumberRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.model.DecoratedReportObject;
-import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.utils.ModUtils;
 
-import javax.management.monitor.MonitorNotification;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Iterator;
@@ -63,9 +61,9 @@ public class PTMTableModel extends BaseTableModel<PTM> {
 
     @Override
     protected void constructTableColumnModel(JTable table) {
-        tableColumnModel.getColumn(0).setMaxWidth(WIDTH);
-        tableColumnModel.getColumn(0).setMinWidth(WIDTH);
-        tableColumnModel.getColumn(0).setPreferredWidth(WIDTH);
+        tableColumnModel.getColumn(0).setMaxWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(0).setMinWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(0).setPreferredWidth(SMALL_WIDTH);
         tableColumnModel.getColumn(0).setCellRenderer(new RowNumberRenderer());
 
         //last column will contain the object itself
@@ -82,8 +80,8 @@ public class PTMTableModel extends BaseTableModel<PTM> {
         String modName = ptm.getModName();
         //check to see if we need to highlight the PTM if it has multiple possible PTMs
         DecoratedPTM decoratedPTM = new DecoratedPTM(ptm);
-        if (ModUtils.canMapToMultiplePreferredMods(decoratedPTM)){
-            decoratedPTM.setBackground(new Color(255,255,153));
+        if (ModUtils.canMapToMultiplePreferredMods(decoratedPTM)) {
+            decoratedPTM.setBackground(new Color(255, 255, 153));
         }
 
         return new Object[]{"",
@@ -118,14 +116,14 @@ public class PTMTableModel extends BaseTableModel<PTM> {
 
     }
 
-    public class DecoratedPTM extends PTM implements DecoratedReportObject<PTM>{
+    public class DecoratedPTM extends PTM implements DecoratedReportObject<PTM> {
 
         private PTM ptm;
         private Color background;
 
         public DecoratedPTM(PTM ptm) {
             //need to avoid multiple levels of decoration
-            if (ptm instanceof DecoratedPTM){
+            if (ptm instanceof DecoratedPTM) {
                 this.ptm = ((DecoratedPTM) ptm).getInner();
             } else {
                 this.ptm = ptm;

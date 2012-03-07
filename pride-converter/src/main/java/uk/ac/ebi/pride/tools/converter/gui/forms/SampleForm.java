@@ -26,6 +26,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -44,7 +45,6 @@ public class SampleForm extends AbstractForm implements ActionListener {
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
         tabbedPane1 = new JTabbedPane();
         masterSamplePanel = new SamplePanel();
-        label1 = new JLabel();
         customSampleButton = new JButton();
 
         //======== this ========
@@ -60,9 +60,6 @@ public class SampleForm extends AbstractForm implements ActionListener {
             tabbedPane1.addTab(bundle.getString("SampleForm.masterSamplePanel.tab.title"), masterSamplePanel);
 
         }
-
-        //---- label1 ----
-        label1.setText(bundle.getString("SampleForm.label1.text"));
 
         //---- customSampleButton ----
         customSampleButton.setText(bundle.getString("SampleForm.customSampleButton.text"));
@@ -80,22 +77,17 @@ public class SampleForm extends AbstractForm implements ActionListener {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup()
-                                        .addComponent(tabbedPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(label1)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 471, Short.MAX_VALUE)
-                                                .addComponent(customSampleButton)))
+                                        .addComponent(tabbedPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE)
+                                        .addComponent(customSampleButton, GroupLayout.Alignment.TRAILING))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(label1)
-                                        .addComponent(customSampleButton))
+                                .addComponent(customSampleButton)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tabbedPane1, GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
+                                .addComponent(tabbedPane1, GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -105,7 +97,6 @@ public class SampleForm extends AbstractForm implements ActionListener {
     // Generated using JFormDesigner non-commercial license
     private JTabbedPane tabbedPane1;
     private SamplePanel masterSamplePanel;
-    private JLabel label1;
     private JButton customSampleButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
@@ -114,25 +105,48 @@ public class SampleForm extends AbstractForm implements ActionListener {
         dialog.setVisible(true);
     }
 
-    public void selectMasterFilePanel() {
-        tabbedPane1.setSelectedIndex(0);
+    private String getShortSourceFilePath(String filePath) {
+        //return foo/bar instead of bla/baz/foo/bar
+
+        int lastSep = filePath.lastIndexOf(File.separator);
+        int secondLastSep = -1;
+        if (lastSep < 0) {
+            return filePath;
+        } else {
+            String tmpFilePath = filePath.substring(0, lastSep);
+            secondLastSep = tmpFilePath.lastIndexOf(File.separator);
+        }
+        if (secondLastSep > 0) {
+            return filePath.substring(secondLastSep + 1);
+        } else {
+            return filePath;
+        }
+
     }
 
     public void addPaneForSample(String sourceFile, ReportBean rb) {
+
+        String displayLabel = getShortSourceFilePath(sourceFile);
 
         //check to see if sourcefile is already loaded
         boolean matchFound = false;
         //start at 1 as the first tab will always be the master file
         for (int i = 1; i < tabbedPane1.getTabCount(); i++) {
             if (tabbedPane1.getTitleAt(i).equals(sourceFile)) {
-                matchFound = true;
-                tabbedPane1.setSelectedIndex(i);
-                break;
+                //sanity check!
+                SamplePanel samplePane = (SamplePanel) tabbedPane1.getComponentAt(i);
+                if (samplePane.getSourceFile().equals(sourceFile)) {
+                    matchFound = true;
+                    tabbedPane1.setSelectedIndex(i);
+                    break;
+                }
             }
         }
 
         if (!matchFound) {
             SamplePanel samplePanel = new SamplePanel();
+            //for later tracking
+            samplePanel.setSourceFile(sourceFile);
             try {
                 //if there's already a bean with custom information, use that
                 if (rb != null && rb.getSampleDescription() != null) {
@@ -155,7 +169,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
             }
 
             samplePanel.addValidationListener(validationListerner);
-            tabbedPane1.add(sourceFile, samplePanel);
+            tabbedPane1.add(displayLabel, samplePanel);
 
             ButtonTabComponent button = new ButtonTabComponent(tabbedPane1);
             button.addActionListener(this);
@@ -189,13 +203,12 @@ public class SampleForm extends AbstractForm implements ActionListener {
                 SamplePanel panel = (SamplePanel) tabbedPane1.getComponentAt(i);
                 //store description in memory for now, it will be validated later
                 Description sample = panel.getSampleDescription();
-                String fileName = tabbedPane1.getTitleAt(i);
-                ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fileName);
+                ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(panel.getSourceFile());
                 if (rb != null) {
                     rb.setSampleName(panel.getSampleName());
                     rb.setSampleDescription(sample);
                 } else {
-                    throw new IllegalStateException("Could not find report bean for file: " + fileName);
+                    throw new IllegalStateException("Could not find report bean for file: " + panel.getSourceFile());
                 }
 
                 //no sense looping further
@@ -216,7 +229,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
         Set<String> validatedTabs = new HashSet<String>();
         for (int i = 0; i < tabbedPane1.getTabCount(); i++) {
             SamplePanel samplePanel = (SamplePanel) tabbedPane1.getComponentAt(i);
-            validatedTabs.add(tabbedPane1.getTitleAt(i));
+            validatedTabs.add(samplePanel.getSourceFile());
             messages.addAll(validator.validate(samplePanel.getSampleDescription()));
         }
 
@@ -279,7 +292,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
 
             SamplePanel panel = (SamplePanel) tabbedPane1.getComponentAt(i);
             Description sample = panel.getSampleDescription();
-            String fileName = tabbedPane1.getTitleAt(i);
+            String fileName = panel.getSourceFile();
             ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fileName);
             if (rb != null) {
                 rb.setSampleName(panel.getSampleName());
@@ -306,11 +319,16 @@ public class SampleForm extends AbstractForm implements ActionListener {
         }
 
         if (!isLoaded) {
-            tabbedPane1.setTitleAt(0, ConverterData.getInstance().getMasterFile().getInputFile());
+
+            if (ConverterData.getInstance().getDataFiles().size() > 1) {
+                tabbedPane1.setTitleAt(0, "Master Record");
+                masterSamplePanel.setMasterPanel(true);
+            } else {
+                tabbedPane1.setTitleAt(0, getShortSourceFilePath(ConverterData.getInstance().getMasterFile().getInputFile()));
+            }
             masterSamplePanel.setSampleName(dao.getSampleName());
             masterSamplePanel.setSampleComment(dao.getSampleComment());
             masterSamplePanel.setSampleParams(dao.getSampleParams());
-            masterSamplePanel.setMasterPanel(true);
             isLoaded = true;
         }
         //fire validation listener on load

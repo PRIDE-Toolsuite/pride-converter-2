@@ -175,18 +175,24 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         fastaFormat = HandlerFactory.FASTA_FORMAT.UNIPROT_MATCH_AC;
     }
 
-    private void toggleAdvancedOptions(MouseEvent e) {
-        if (e.getClickCount() == 2) {
-            advancedOptionPanel.setVisible(!advancedOptionPanel.isVisible());
-        }
+    private void showHideLabelMouseClicked(MouseEvent e) {
+        advancedOptionPanel.setVisible(!advancedOptionPanel.isVisible());
+    }
+
+    private void showHideLabelMouseEntered() {
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void showHideLabelMouseExited() {
+        setCursor(Cursor.getDefaultCursor());
     }
 
     private void initComponents() {
 //        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
-        panel2 = new JPanel();
         advancedOptionPanel = new JPanel();
+        gridOptionPanel = new JPanel();
         panel8 = new JPanel();
         forceRegenerationBox = new JCheckBox();
         fileTabbedPane = new JTabbedPane();
@@ -215,22 +221,17 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         tableScrollPane = new JScrollPane();
         parserOptionTable = new ParserOptionTable();
         parserOptionHelpButton = new JButton();
+        showHideLabel = new JLabel();
 
 //======== this ========
 
-//======== panel2 ========
+//======== advancedOptionPanel ========
         {
-            panel2.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.panel2.border")));
-            panel2.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    toggleAdvancedOptions(e);
-                }
-            });
+            advancedOptionPanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.advancedOptionPanel.border")));
 
-            //======== advancedOptionPanel ========
+            //======== gridOptionPanel ========
             {
-                advancedOptionPanel.setLayout(new GridLayout(2, 0));
+                gridOptionPanel.setLayout(new GridLayout(2, 0));
 
                 //======== panel8 ========
                 {
@@ -240,20 +241,20 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
                     panel8.add(forceRegenerationBox);
                 }
-                advancedOptionPanel.add(panel8);
+                gridOptionPanel.add(panel8);
             }
 
-            GroupLayout panel2Layout = new GroupLayout(panel2);
-            panel2.setLayout(panel2Layout);
-            panel2Layout.setHorizontalGroup(
-                    panel2Layout.createParallelGroup()
-                            .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(advancedOptionPanel, GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
+            GroupLayout advancedOptionPanelLayout = new GroupLayout(advancedOptionPanel);
+            advancedOptionPanel.setLayout(advancedOptionPanelLayout);
+            advancedOptionPanelLayout.setHorizontalGroup(
+                    advancedOptionPanelLayout.createParallelGroup()
+                            .addGroup(advancedOptionPanelLayout.createSequentialGroup()
+                                    .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
                                     .addContainerGap())
             );
-            panel2Layout.setVerticalGroup(
-                    panel2Layout.createParallelGroup()
-                            .addComponent(advancedOptionPanel, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+            advancedOptionPanelLayout.setVerticalGroup(
+                    advancedOptionPanelLayout.createParallelGroup()
+                            .addComponent(gridOptionPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
             );
         }
 
@@ -489,12 +490,34 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             parserOptionHelpButton.setText(bundle.getString("SelecFilePanel.parserOptionHelpButton.text"));
             parserOptionHelpButton.setEnabled(false);
 
+            //---- showHideLabel ----
+            showHideLabel.setText(bundle.getString("SelecFilePanel.showHideLabel.text"));
+            showHideLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+            showHideLabel.setForeground(new Color(0, 51, 255));
+            showHideLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    showHideLabelMouseClicked(e);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    showHideLabelMouseEntered();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    showHideLabelMouseExited();
+                }
+            });
+
             GroupLayout panel7Layout = new GroupLayout(panel7);
             panel7.setLayout(panel7Layout);
             panel7Layout.setHorizontalGroup(
                     panel7Layout.createParallelGroup()
                             .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                                    .addContainerGap(511, Short.MAX_VALUE)
+                                    .addComponent(showHideLabel)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 330, Short.MAX_VALUE)
                                     .addComponent(parserOptionHelpButton))
                             .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
             );
@@ -503,7 +526,9 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
                                     .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(parserOptionHelpButton))
+                                    .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                            .addComponent(parserOptionHelpButton)
+                                            .addComponent(showHideLabel)))
             );
         }
 
@@ -514,7 +539,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(advancedOptionPanel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(panel7, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(fileTabbedPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
                                 .addContainerGap())
@@ -527,7 +552,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(advancedOptionPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
@@ -542,8 +567,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JPanel panel2;
     private JPanel advancedOptionPanel;
+    private JPanel gridOptionPanel;
     private JPanel panel8;
     private JCheckBox forceRegenerationBox;
     private JTabbedPane fileTabbedPane;
@@ -572,6 +597,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JScrollPane tableScrollPane;
     private ParserOptionTable parserOptionTable;
     private JButton parserOptionHelpButton;
+    private JLabel showHideLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     private Properties getOptions() {
@@ -692,6 +718,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     sequenceFile = sequenceFileTable.getFiles().iterator().next();
                     ConverterData.getInstance().setFastaFormat(fastaFormat);
                 }
+
+//                //if we have tab files, we need to check to see if the DAO options are consistently set
+//                for (File tabFile : mzTabFileTable.getFiles()){
+//                    MzTabHandler
+//                }
 
                 //if we have several mztab files, don't generate the report files now as there will be a subsequent
                 //step where the user must confirm the input file/mztab file assignment. The report generation will

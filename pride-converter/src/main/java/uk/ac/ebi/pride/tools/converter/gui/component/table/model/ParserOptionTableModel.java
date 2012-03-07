@@ -195,9 +195,17 @@ public class ParserOptionTableModel implements TableModel {
     }
 
     public Properties getProperties() {
+
+        //get properties
         Properties props = new Properties();
         for (int i = 0; i < properties.size(); i++) {
-            props.setProperty(properties.get(i).getName(), values.get(i).toString());
+            String value = values.get(i).toString();
+            //filter out empty string values for properties that are not defined as strings
+            //this causes errors down the line
+            if (!String.class.equals(properties.get(i).getValueClass()) && "".equals(value)) {
+                value = null;
+            }
+            props.setProperty(properties.get(i).getName(), value);
         }
         return props;
     }

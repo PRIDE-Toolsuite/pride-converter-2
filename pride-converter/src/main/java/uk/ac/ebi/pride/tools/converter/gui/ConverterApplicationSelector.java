@@ -1,6 +1,5 @@
 package uk.ac.ebi.pride.tools.converter.gui;
 
-import java.awt.event.*;
 import uk.ac.ebi.pride.tools.converter.conversion.PrideConverter;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ImageDialog;
 import uk.ac.ebi.pride.tools.converter.gui.forms.*;
@@ -14,6 +13,8 @@ import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.util.Properties;
 
@@ -53,11 +54,12 @@ public class ConverterApplicationSelector extends JFrame {
         SimpleAttributeSet attribs = new SimpleAttributeSet();
         StyleConstants.setFontSize(attribs, 10);
         StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
-        textPane1.setParagraphAttributes(attribs,true);
-        textPane2.setParagraphAttributes(attribs,true);
-        textPane3.setParagraphAttributes(attribs,true);
-        textPane4.setParagraphAttributes(attribs,true);
-        textPane5.setParagraphAttributes(attribs,true);
+        textPane1.setParagraphAttributes(attribs, true);
+        textPane2.setParagraphAttributes(attribs, true);
+        textPane3.setParagraphAttributes(attribs, true);
+        textPane4.setParagraphAttributes(attribs, true);
+        textPane5.setParagraphAttributes(attribs, true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
@@ -227,7 +229,7 @@ public class ConverterApplicationSelector extends JFrame {
     }
 
     private void label1MouseClicked(MouseEvent e) {
-        if (e.getClickCount() == 3){
+        if (e.getClickCount() == 3) {
             ImageDialog about = new ImageDialog(this);
             about.setVisible(true);
         }
@@ -341,62 +343,62 @@ public class ConverterApplicationSelector extends JFrame {
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(contentPaneLayout.createParallelGroup()
+                contentPaneLayout.createParallelGroup()
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(label1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 632, GroupLayout.PREFERRED_SIZE))
-                                .addGroup(contentPaneLayout.createSequentialGroup()
-                                    .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(textPane3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-                                        .addComponent(textPane2, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-                                        .addComponent(textPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-                                        .addComponent(textPane4, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(filterButton, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                                        .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                                        .addComponent(converterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
-                                        .addComponent(mzTabButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE))))
-                            .addGap(8, 8, 8))
-                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
-                            .addComponent(textPane5, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
-                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE)
-                            .addContainerGap())))
+                                .addContainerGap()
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 626, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(label1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 632, GroupLayout.PREFERRED_SIZE))
+                                                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                                        .addComponent(textPane3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                                                                        .addComponent(textPane2, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                                                                        .addComponent(textPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                                                                        .addComponent(textPane4, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE))
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                                        .addComponent(filterButton, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                                                                        .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                                                                        .addComponent(converterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE)
+                                                                        .addComponent(mzTabButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 257, Short.MAX_VALUE))))
+                                                .addGap(8, 8, 8))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                                                .addComponent(textPane5, GroupLayout.DEFAULT_SIZE, 371, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 259, GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap())))
         );
         contentPaneLayout.setVerticalGroup(
-            contentPaneLayout.createParallelGroup()
-                .addGroup(contentPaneLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(label2)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(label1)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(textPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addComponent(converterButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(textPane2)
-                        .addComponent(mzTabButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                        .addComponent(textPane3))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(filterButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                        .addComponent(textPane4))
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(textPane5)
-                        .addComponent(exitButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
-                    .addContainerGap(13, Short.MAX_VALUE))
+                contentPaneLayout.createParallelGroup()
+                        .addGroup(contentPaneLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(label2)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(label1)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup()
+                                        .addComponent(textPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(converterButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(textPane2)
+                                        .addComponent(mzTabButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                                        .addComponent(textPane3))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(filterButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                                        .addComponent(textPane4))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(textPane5)
+                                        .addComponent(exitButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                                .addContainerGap(13, Short.MAX_VALUE))
         );
         setSize(660, 570);
         setLocationRelativeTo(getOwner());
@@ -426,8 +428,6 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new DataTypeForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_XML));
             panel.registerForm(new ExperimentDetailForm());
-            panel.registerForm(new ContactForm());
-            panel.registerForm(new ReferenceForm());
             panel.registerForm(new SampleForm());
             panel.registerForm(new ProtocolForm());
             panel.registerForm(new InstrumentForm());

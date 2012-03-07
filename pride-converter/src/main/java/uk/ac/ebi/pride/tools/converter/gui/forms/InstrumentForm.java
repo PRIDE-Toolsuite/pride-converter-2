@@ -228,13 +228,13 @@ public class InstrumentForm extends AbstractForm {
         }
 
         //---- addDetectorButton ----
-        addDetectorButton.setText(bundle.getString("InstrumentForm.addDetectorButton.text"));
+        addDetectorButton.setMargin(new Insets(1, 14, 2, 14));
 
         //---- addSourceButton ----
-        addSourceButton.setText(bundle.getString("InstrumentForm.addSourceButton.text"));
+        addSourceButton.setMargin(new Insets(1, 14, 2, 14));
 
         //---- addTermButton ----
-        addTermButton.setText(bundle.getString("InstrumentForm.addTermButton.text"));
+        addTermButton.setMargin(new Insets(1, 14, 2, 14));
 
         //---- removeAnalyzerButton ----
         removeAnalyzerButton.setText(bundle.getString("InstrumentForm.removeAnalyzerButton.text"));
@@ -278,11 +278,11 @@ public class InstrumentForm extends AbstractForm {
                                                 .addComponent(saveButton))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label1)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 411, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 524, Short.MAX_VALUE)
                                                 .addComponent(addSourceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label2)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
                                                 .addComponent(addAnalyzerButton)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(removeAnalyzerButton)
@@ -294,7 +294,7 @@ public class InstrumentForm extends AbstractForm {
                                                 .addComponent(analyzerScrollPane, GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label3)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 385, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 511, Short.MAX_VALUE)
                                                 .addComponent(addDetectorButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap())
         );
@@ -315,7 +315,7 @@ public class InstrumentForm extends AbstractForm {
                                         .addComponent(addSourceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label1))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addGroup(layout.createSequentialGroup()
@@ -328,14 +328,14 @@ public class InstrumentForm extends AbstractForm {
                                                 .addComponent(label2)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)))
                                 .addGroup(layout.createParallelGroup()
-                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                                        .addComponent(analyzerScrollPane, GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                                        .addComponent(analyzerScrollPane, GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(addDetectorButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label3))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
+                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
