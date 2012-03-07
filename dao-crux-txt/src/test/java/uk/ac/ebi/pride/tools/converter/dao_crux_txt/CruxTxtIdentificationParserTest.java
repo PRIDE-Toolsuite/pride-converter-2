@@ -1,8 +1,8 @@
 package uk.ac.ebi.pride.tools.converter.dao_crux_txt;
 
 import junit.framework.TestCase;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxIdentificationsParserResult;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxTxtIdentificationsParser;
-import uk.ac.ebi.pride.tools.converter.dao_crux_txt.results.CruxParserResults;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.File;
@@ -18,7 +18,7 @@ public class CruxTxtIdentificationParserTest extends TestCase {
     private String decoyFilePath = "src/test/resources/search.decoy-short.txt";
     private String wrongFilePath = "src/test/resources/search.target-short-wrong.txt";
     private Map<String, Integer> header;
-    private CruxParserResults parserResults;
+    private CruxIdentificationsParserResult parserResults;
 
     public void testParseHeader() throws Exception {
         header = CruxTxtIdentificationsParser.parseHeader(new File(targetFilePath));
@@ -48,7 +48,7 @@ public class CruxTxtIdentificationParserTest extends TestCase {
 
         assertEquals(parserResults.proteins.size(), 39);
 
-        assertEquals(parserResults.peptideCount, 39);
+        assertEquals(parserResults.peptideCount, 10);
 
     }
 
@@ -57,7 +57,7 @@ public class CruxTxtIdentificationParserTest extends TestCase {
 
         assertEquals(parserResults.proteins.size(), 19);
 
-        assertEquals(parserResults.peptideCount, 19);
+        assertEquals(parserResults.peptideCount, 10);
 
     }
 
