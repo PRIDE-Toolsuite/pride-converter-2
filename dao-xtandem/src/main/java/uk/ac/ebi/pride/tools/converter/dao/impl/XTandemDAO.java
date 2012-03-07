@@ -614,16 +614,16 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     	
     	// set the fragment error
     	Double fragmentError = inputParams.getSpectrumMonoIsoMassError();
-    	if (fragmentError != null)
+    	if (fragmentError != null && fragmentError > 0)
     		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_FRAGMENT_MASS_TOLERANCE.getParam(fragmentError));
     	
     	// set the parent error
     	Double minusValue = inputParams.getSpectrumParentMonoIsoMassErrorMinus();
-    	if (minusValue != null)
+    	if (minusValue != null && minusValue > 0)
     		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_TOLERANCE_MINUS_VALUE.getParam(minusValue));
     	
     	Double plusValue = inputParams.getSpectrumParentMonoIsoMassErrorPlus();
-    	if (plusValue != null)
+    	if (plusValue != null && plusValue > 0)
     		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_TOLERANCE_PLUS_VALUE.getParam(plusValue));
     	
     	// maximum missed cleavages
