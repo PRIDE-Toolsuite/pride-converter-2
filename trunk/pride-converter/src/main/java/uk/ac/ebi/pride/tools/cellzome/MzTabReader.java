@@ -86,7 +86,7 @@ public class MzTabReader {
             Collection<Subsample> ss = new ArrayList<Subsample>();
             for (int i = 0; i < subSampleNb; i++) {
                 Subsample s = new Subsample(unit.getUnitId(), i + 1); //+1 because ssamples start from 1
-                s.setQuantitationReagent(params[i]);
+                s.setQuantificationReagent(params[i]);
                 s.setDescription(getDescription(accession, i));
                 ss.add(s);
             }

@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.dao.handler.impl;
 
 import java.net.URL;
+import java.util.Properties;
 
 import junit.framework.TestCase;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
@@ -60,4 +61,12 @@ public class MzTabHandlerTest extends TestCase {
 		assertEquals(QuantitationCvParams.EMPAI_QUANTIFIED.getAccession(), param.getCvParam().get(2).getAccession());
 	}
 
+	public void testGetDaoConfiguration() {
+		Properties properties = handler.getDaoConfiguration();
+		
+		assertNotNull(properties);
+		assertEquals(15, properties.size());
+		assertEquals("true", properties.getProperty("enable_protein_grouping"));
+		assertEquals("10.0", properties.getProperty("ignore_below_ions_score"));
+	}
 }
