@@ -13,11 +13,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp label3::t:p::p, comp label2::t:p::p, comp label1:::p::p}, space :::p, par t {comp projectNameInput::t::417:x, comp experimentTitleInput::l::417:x, comp shortNameInput::t::417:x}, space :::p, par l {comp label4:::p::p, comp label5:::p::p, comp label6:::p::p}, space :p:175:p}, seq l {comp panel1:::::x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par l {seq l {comp scrollPane2::::718:x, space :::p}, seq {par t {comp label3::t:p::p, comp label2::t:p::p, comp label1:::p::p, comp label7:::p::p}, space :::p, par l {comp scrollPane1::::417:x, comp projectNameInput::t::417:x, comp experimentTitleInput::l::417:x, comp shortNameInput::t::417:x}, space :::p, par l {comp label4:::p::p, comp label5:::p::p, comp label6:::p::p}, space :p:175:p}, seq t {comp contactLabel:::p::p, space :::p, comp label8:::p:36:p, space ::485:x, comp addContactButton:::p:128:p, space :::p}, seq t {comp scrollPane3::::718:x, space :::p}, seq t {comp label9:::p::p, space ::501:x, comp addreferenceButton:::p::p, space :::p}}}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :p:15:p, par b {comp projectNameInput::b:p:30:p, comp label4::b:p::p, comp label1::b:p::p}, space :p::p, par b {comp experimentTitleInput::b:p:30:p, comp label5::b:p::p, comp label2::b:p::p}, space :p::p, par b {comp shortNameInput::b:p:30:p, comp label6::b:p::p, comp label3::b:p::p}, space :::p, comp panel1:::::x, space :::p}}</string> 
+        <string>par l {seq l {space :p:15:p, par b {comp projectNameInput::b:p:30:p, comp label4::b:p::p, comp label1::b:p::p}, space :p::p, par b {comp experimentTitleInput::b:p:30:p, comp label5::b:p::p, comp label2::b:p::p}, space :p::p, par b {comp shortNameInput::b:p:30:p, comp label6::b:p::p, comp label3::b:p::p}, space :::p, par l {seq {comp label7:::p::p, space :p:35:p, par t {comp addContactButton:::p:23:p, par b {comp contactLabel::b:p::p, comp label8::b:p::p}}}, comp scrollPane1:::p:44:p}, space :::p, comp scrollPane3::::110:x, space :::p, par t {comp addreferenceButton:::p::p, comp label9:::p::p}, space :::p, comp scrollPane2::::115:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -132,99 +132,6 @@
        </object> 
       </void> 
       <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JPanel</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>org.jdesktop.layout.GroupLayout</class> 
-         <void method="setProperty"> 
-          <string>$horizontalGroup</string> 
-          <string>par l {seq t {par t {seq l {space :::p, comp scrollPane2::::702:x}, comp scrollPane1::l::708:x, seq t {space :::p, comp label7:::p::p, space ::434:x, comp addTermButton:::p::p}}, space :::p}}</string> 
-         </void> 
-         <void method="setProperty"> 
-          <string>$verticalGroup</string> 
-          <string>par l {seq l {comp scrollPane1:::p:76:p, space :::p, par t {comp addTermButton:::p::p, comp label7::t:p::p}, space :::p, comp scrollPane2::::197:x, space :::p}}</string> 
-         </void> 
-        </object> 
-        <void method="setProperty"> 
-         <string>border</string> 
-         <object class="javax.swing.border.TitledBorder"> 
-          <string>Description</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>panel1</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JScrollPane</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>javax.swing.JScrollPane</class> 
-          </object> 
-          <void property="name"> 
-           <string>scrollPane1</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JTextPane</string> 
-            <void property="name"> 
-             <string>descriptionPane</string> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Experiment Additional Parameters</string> 
-          </void> 
-          <void property="name"> 
-           <string>label7</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JScrollPane</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>javax.swing.JScrollPane</class> 
-          </object> 
-          <void property="name"> 
-           <string>scrollPane2</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable</string> 
-            <void property="name"> 
-             <string>paramTable1</string> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Add Param</string> 
-          </void> 
-          <void property="name"> 
-           <string>addTermButton</string> 
-          </void> 
-          <void method="auxiliary"> 
-           <void method="setProperty"> 
-            <string>JavaCodeGenerator.customCreateCode</string> 
-            <string>new AddTermButton(true);</string> 
-           </void> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JLabel</string> 
         <void method="setProperty"> 
@@ -293,6 +200,171 @@
         </void> 
         <void property="name"> 
          <string>label6</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>Description</string> 
+        </void> 
+        <void property="name"> 
+         <string>label7</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JScrollPane</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>javax.swing.JScrollPane</class> 
+        </object> 
+        <void property="name"> 
+         <string>scrollPane1</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JTextPane</string> 
+          <void property="name"> 
+           <string>descriptionPane</string> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JScrollPane</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>javax.swing.JScrollPane</class> 
+        </object> 
+        <void property="name"> 
+         <string>scrollPane3</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable</string> 
+          <void method="setProperty"> 
+           <string>model</string> 
+           <object class="com.jformdesigner.model.SwingTableModel"> 
+            <object class="java.util.Vector"/> 
+            <object class="java.util.Vector"/> 
+            <object class="java.util.Vector"/> 
+            <object class="java.util.Vector"/> 
+            <object class="java.util.Vector"/> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>contactTable</string> 
+          </void> 
+          <void method="auxiliary"> 
+           <void method="setProperty"> 
+            <string>JavaCodeGenerator.typeParameters</string> 
+            <string>Contact</string> 
+           </void> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>Contacts</string> 
+        </void> 
+        <void property="name"> 
+         <string>contactLabel</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>Add Contact</string> 
+        </void> 
+        <void property="name"> 
+         <string>addContactButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>addContactAction</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>*</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>foreground</string> 
+         <object class="java.awt.Color" field="red"/> 
+        </void> 
+        <void property="name"> 
+         <string>label8</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>Add Reference</string> 
+        </void> 
+        <void property="name"> 
+         <string>addreferenceButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>addReferenceAction</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JScrollPane</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>javax.swing.JScrollPane</class> 
+        </object> 
+        <void property="name"> 
+         <string>scrollPane2</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable</string> 
+          <void property="name"> 
+           <string>referenceTable</string> 
+          </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>References</string> 
+        </void> 
+        <void property="name"> 
+         <string>label9</string> 
         </void> 
        </object> 
       </void> 

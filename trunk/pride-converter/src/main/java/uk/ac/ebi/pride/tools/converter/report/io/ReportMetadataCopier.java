@@ -9,9 +9,7 @@ import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: rcote
@@ -31,8 +29,6 @@ public class ReportMetadataCopier {
             logger.warn("Reading metada from master file:" + masterFile.getAbsolutePath());
             ReportReader masterReader = new ReportReader(masterFile);
 
-            Metadata masterMetadata = masterReader.getMetadata();
-
             List<PTM> masterPTMs = new ArrayList<PTM>();
 
             Iterator<PTM> iPTM = masterReader.getPTMIterator();
@@ -46,38 +42,47 @@ public class ReportMetadataCopier {
                 masterDatabaseMappings.add(iDBM.next());
             }
 
-            // from here we don't need to read from the masterReportFile anymore so we release the handles
-            masterReader = null;
-            masterFile = null;
-
             for (String reportFileName : reportFileNames) {
                 File reportFile = new File(reportFileName);
                 String outFileName;
                 if (reportFile.exists()) {
 
                     //copySingleMetadata will override certain param collections
-                    //To avoid stale params from being written to the wrong file, keep track of the original
-                    //values here and reset them before the next loop in the iteration
-                    Description sample = new Description();
-                    sample.setComment(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getComment());
-                    sample.getCvParam().addAll(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getCvParam());
-                    sample.getUserParam().addAll(masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getUserParam());
-                    String sampleName = masterMetadata.getMzDataDescription().getAdmin().getSampleName();
-                    Param expAdditional = new Param();
-                    expAdditional.getCvParam().addAll(masterMetadata.getExperimentAdditional().getCvParam());
-                    expAdditional.getUserParam().addAll(masterMetadata.getExperimentAdditional().getUserParam());
-                    Param processingMethod = new Param();
-                    processingMethod.getCvParam().addAll(masterMetadata.getMzDataDescription().getDataProcessing().getProcessingMethod().getCvParam());
-                    processingMethod.getUserParam().addAll(masterMetadata.getMzDataDescription().getDataProcessing().getProcessingMethod().getUserParam());
+                    //To avoid stale params from being written to the wrong file, always read the metadata fresh
+                    Metadata masterMetadata = masterReader.getMetadata();
+
+                    //remove any annotations that should only be in the master file but not
+                    //not to any other file
+                    ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(masterReader.getSearchResultIdentifier().getSourceFilePath());
+                    if (rb != null) {
+                        //remove custom params that will already have been written to master report file
+                        //but must not be written to the copied files
+                        Set<String> observedParams = new HashSet<String>();
+                        if (rb.getSampleDescription() != null) {
+                            Description sample = rb.getSampleDescription();
+                            for (CvParam cv : sample.getCvParam()) {
+                                observedParams.add(cv.getAccession());
+                            }
+                            for (UserParam user : sample.getUserParam()) {
+                                observedParams.add(user.getName());
+                            }
+                        }
+                        for (Iterator<CvParam> i = masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getCvParam().iterator(); i.hasNext(); ) {
+                            CvParam cv = i.next();
+                            if (observedParams.contains(cv.getAccession())) {
+                                i.remove();
+                            }
+                        }
+                        for (Iterator<UserParam> i = masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getUserParam().iterator(); i.hasNext(); ) {
+                            UserParam user = i.next();
+                            if (observedParams.contains(user.getName())) {
+                                i.remove();
+                            }
+                        }
+                    }
 
                     //write file
                     outFileName = copySingleMetadata(masterMetadata, masterPTMs, masterDatabaseMappings, reportFile);
-
-                    //reset params
-                    masterMetadata.getMzDataDescription().getAdmin().setSampleName(sampleName);
-                    masterMetadata.getMzDataDescription().getAdmin().setSampleDescription(sample);
-                    masterMetadata.setExperimentAdditional(expAdditional);
-                    masterMetadata.getMzDataDescription().getDataProcessing().setProcessingMethod(processingMethod);
 
                 } else {
                     throw new ConverterException("Report file does not exist: " + reportFile);
@@ -106,21 +111,6 @@ public class ReportMetadataCopier {
         //don't remap PTMs from the master
         writer.setAutomaticallyMapPreferredPTMs(false);
 
-        //neet to update short label / experiment title
-        ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(dao.getSourceFile().getPathToFile());
-        if (rb != null) {
-            masterMetadata.setShortLabel(rb.getShortLabel());
-            masterMetadata.setTitle(rb.getExperimentTitle());
-            if (rb.getSampleDescription() != null) {
-                Description sample = rb.getSampleDescription();
-                //merge custom params with master params
-                sample = mergeSampleParams(sample, masterMetadata.getMzDataDescription().getAdmin().getSampleDescription(), dao.getSampleParams());
-                //set params to be marshalled out
-                masterMetadata.getMzDataDescription().getAdmin().setSampleDescription(sample);
-                masterMetadata.getMzDataDescription().getAdmin().setSampleName(rb.getSampleName());
-            }
-        }
-
         //need to update experiment additional params
         masterMetadata.setExperimentAdditional(mergeParams(masterMetadata.getExperimentAdditional(), dao.getExperimentParams()));
 
@@ -139,24 +129,36 @@ public class ReportMetadataCopier {
      * masterDAO) and compares them to the daoParam object (obtained from the file DAO). If the daoParam
      * does not contain a param from the master, it will be added. If it does already contain a param,
      * that param will not be overwritten.
+     * <p/>
+     * DOES NOT CHANGE THE INPUT OBJECTS
+     * <p/>
+     * PACKAGE METHOD so that it can be used by ReportWriter
      *
      * @param masterParams
      * @param daoParams
      * @return
      */
-    private static Param mergeParams(Param masterParams, Param daoParams) {
+    static Param mergeParams(Param masterParams, Param daoParams) {
 
+        //create new return object
+        Param retval = new Param();
+        //add objects in original dao object
+        retval.getCvParam().addAll(daoParams.getCvParam());
+        retval.getUserParam().addAll(daoParams.getUserParam());
+
+        //loop over masterParams and add those not already in dao object to retval object
         for (CvParam cv : masterParams.getCvParam()) {
             if (!containsAccession(daoParams.getCvParam(), cv.getAccession())) {
-                daoParams.getCvParam().add(cv);
+                retval.getCvParam().add(cv);
             }
         }
+        //loop over masterParams and add those not already in dao object to retval object
         for (UserParam up : masterParams.getUserParam()) {
             if (!containsName(daoParams.getUserParam(), up.getName())) {
-                daoParams.getUserParam().add(up);
+                retval.getUserParam().add(up);
             }
         }
-        return daoParams;
+        return retval;
     }
 
     /**
@@ -164,12 +166,21 @@ public class ReportMetadataCopier {
      * masterDAO) and compares them to the customDescription object (created manually). If the customDescription
      * does not contain a param from the master, it will be added. If it does already contain a param,
      * that param will not be overwritten. Does the same with params coming from the DAO
+     * <p/>
+     * DOES NOT CHANGE THE ORIGINAL OBJECTS
+     * <p/>
+     * PACKAGE METHOD so that it can be used by ReportWriter
      *
      * @param masterParams
      * @param daoParams
      * @return
      */
-    private static Description mergeSampleParams(Description customDescription, Param masterParams, Param daoParams) {
+    static Description mergeSampleParams(Description customDescription, Param masterParams, Param daoParams) {
+
+        Description retval = new Description();
+        retval.setComment(customDescription.getComment());
+        retval.getCvParam().addAll(customDescription.getCvParam());
+        retval.getUserParam().addAll(customDescription.getUserParam());
 
         //check to see if we have a newt annotation. if we do, don't copy any annotation from the master/dao.
         boolean hasNEWT = false;
@@ -189,11 +200,11 @@ public class ReportMetadataCopier {
             //
             if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
                 if (!hasNEWT) {
-                    customDescription.getCvParam().add(cv);
+                    retval.getCvParam().add(cv);
                 }
             } else {
                 if (!containsAccession(customDescription.getCvParam(), cv.getAccession())) {
-                    customDescription.getCvParam().add(cv);
+                    retval.getCvParam().add(cv);
                 }
             }
         }
@@ -207,26 +218,26 @@ public class ReportMetadataCopier {
             //
             if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
                 if (!hasNEWT) {
-                    customDescription.getCvParam().add(cv);
+                    retval.getCvParam().add(cv);
                 }
             } else {
                 if (!containsAccession(customDescription.getCvParam(), cv.getAccession())) {
-                    customDescription.getCvParam().add(cv);
+                    retval.getCvParam().add(cv);
                 }
             }
         }
 
         for (UserParam up : daoParams.getUserParam()) {
             if (!containsName(customDescription.getUserParam(), up.getName())) {
-                customDescription.getUserParam().add(up);
+                retval.getUserParam().add(up);
             }
         }
         for (UserParam up : masterParams.getUserParam()) {
             if (!containsName(customDescription.getUserParam(), up.getName())) {
-                customDescription.getUserParam().add(up);
+                retval.getUserParam().add(up);
             }
         }
-        return customDescription;
+        return retval;
     }
 
     private static boolean containsAccession(List<CvParam> cvParam, String accession) {

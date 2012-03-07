@@ -10,6 +10,7 @@ import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.panels.model.SampleCvComboBoxModel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ComboValueCvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.CvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
@@ -21,6 +22,7 @@ import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
 
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -39,7 +41,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private ResourceBundle config;
     private Set<String> subsamples = new HashSet<String>();
     private boolean isMaster = false;
-
+    private String sourceFile;
     private boolean isAllowMultipleValues = false;
 
     public SamplePanel() {
@@ -292,9 +294,6 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             scrollPane1.setViewportView(paramTable1);
         }
 
-        //---- addTermButton1 ----
-        addTermButton1.setText("Add Param");
-
         //---- label8 ----
         label8.setText("*");
         label8.setForeground(Color.red);
@@ -343,7 +342,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                                         .addComponent(sampleCommentField, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label5)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 385, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 365, Short.MAX_VALUE)
                                                 .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                                 .addContainerGap())
         );
@@ -373,7 +372,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                         .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label5))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
@@ -437,6 +436,38 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             }
 
         }
+
+        updateColumnWidths();
+
+    }
+
+    private void updateColumnWidths() {
+
+        //update table column widths
+        TableColumnModel model = paramTable1.getColumnModel();
+        //set the width of the rest of the columns
+        int total = model.getTotalColumnWidth();
+        //first and last row are fixed width
+        total = total - (BaseTableModel.SMALL_WIDTH * 2);
+        //the rest of the columns should be proportionally spaced as such
+        // 1 cv 5%
+        // 2 accession 15%
+        // 3 name 30%
+        // 4 value 30%
+        model.getColumn(1).setWidth((int) Math.floor(total * 0.10));
+        model.getColumn(1).setMinWidth((int) Math.floor(total * 0.10));
+        model.getColumn(1).setPreferredWidth((int) Math.floor(total * 0.10));
+        model.getColumn(2).setWidth((int) Math.floor(total * 0.20));
+        model.getColumn(2).setMinWidth((int) Math.floor(total * 0.20));
+        model.getColumn(2).setPreferredWidth((int) Math.floor(total * 0.20));
+        model.getColumn(3).setWidth((int) Math.floor(total * 0.35));
+        model.getColumn(3).setMinWidth((int) Math.floor(total * 0.35));
+        model.getColumn(3).setPreferredWidth((int) Math.floor(total * 0.35));
+        model.getColumn(4).setWidth((int) Math.floor(total * 0.35));
+        model.getColumn(4).setMinWidth((int) Math.floor(total * 0.35));
+        model.getColumn(4).setPreferredWidth((int) Math.floor(total * 0.35));
+        paramTable1.setColumnModel(model);
+
     }
 
     public Param getSampleParams() {
@@ -525,9 +556,18 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         masterInformationLabel.repaint();
     }
 
+    public String getSourceFile() {
+        return sourceFile;
+    }
+
+    public void setSourceFile(String sourceFile) {
+        this.sourceFile = sourceFile;
+    }
+
     public static void main(String[] args) {
         JFrame f = new JFrame();
-        f.add(new SamplePanel());
+        SamplePanel s = new SamplePanel();
+        f.add(s);
         f.pack();
         f.setVisible(true);
     }

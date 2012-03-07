@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq l {space :::p, par l {comp tabbedPane1::t::788:x, seq l {comp label1:::p::p, space ::471:x, comp customSampleButton:::p::p}}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par l {comp tabbedPane1::t::776:x, comp customSampleButton::t:p::p}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, par l {comp label1:::p::p, comp customSampleButton:::p::p}, space :::p, comp tabbedPane1::::617:x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, comp customSampleButton:::p::p, space :::p, comp tabbedPane1::::605:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -69,21 +69,6 @@
            </object> 
           </void> 
          </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>SampleForm.label1.text</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>label1</string> 
         </void> 
        </object> 
       </void> 

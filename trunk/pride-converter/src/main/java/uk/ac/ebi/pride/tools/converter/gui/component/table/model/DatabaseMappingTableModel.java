@@ -48,9 +48,9 @@ public class DatabaseMappingTableModel extends BaseTableModel<DatabaseMapping> {
 
     @Override
     protected void constructTableColumnModel(JTable table) {
-        tableColumnModel.getColumn(0).setMaxWidth(WIDTH);
-        tableColumnModel.getColumn(0).setMinWidth(WIDTH);
-        tableColumnModel.getColumn(0).setPreferredWidth(WIDTH);
+        tableColumnModel.getColumn(0).setMaxWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(0).setMinWidth(SMALL_WIDTH);
+        tableColumnModel.getColumn(0).setPreferredWidth(SMALL_WIDTH);
         tableColumnModel.getColumn(0).setCellRenderer(new RowNumberRenderer());
 
         //last column will contain the object itself

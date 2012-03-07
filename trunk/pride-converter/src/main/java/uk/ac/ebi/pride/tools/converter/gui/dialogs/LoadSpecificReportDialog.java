@@ -41,9 +41,6 @@ public class LoadSpecificReportDialog extends JDialog {
     private void updateList() {
         TreeSet<String> files = new TreeSet<String>();
         files.addAll(ConverterData.getInstance().getInputFiles());
-        //update label for master file
-        files.remove(ConverterData.getInstance().getMasterFile().getInputFile());
-        files.add(ConverterData.getInstance().getMasterFile().getInputFile() + " [master file]");
         sourceFileList.setListData(files.toArray());
     }
 
@@ -56,12 +53,8 @@ public class LoadSpecificReportDialog extends JDialog {
     private void okButtonActionPerformed() {
         if (sourceFileList.getSelectedIndex() > -1) {
             String fileName = sourceFileList.getSelectedValue().toString();
-            if (fileName.indexOf("[master file]") < 0){
-                ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fileName);
-                callback.addPaneForSample(fileName, rb);
-            } else {
-                callback.selectMasterFilePanel();
-            }
+            ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fileName);
+            callback.addPaneForSample(fileName, rb);
             setVisible(false);
         }
     }
@@ -110,18 +103,18 @@ public class LoadSpecificReportDialog extends JDialog {
                 GroupLayout contentPanelLayout = new GroupLayout(contentPanel);
                 contentPanel.setLayout(contentPanelLayout);
                 contentPanelLayout.setHorizontalGroup(
-                    contentPanelLayout.createParallelGroup()
-                        .addGroup(contentPanelLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
-                            .addContainerGap())
+                        contentPanelLayout.createParallelGroup()
+                                .addGroup(contentPanelLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                                        .addContainerGap())
                 );
                 contentPanelLayout.setVerticalGroup(
-                    contentPanelLayout.createParallelGroup()
-                        .addGroup(contentPanelLayout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                            .addContainerGap())
+                        contentPanelLayout.createParallelGroup()
+                                .addGroup(contentPanelLayout.createSequentialGroup()
+                                        .addContainerGap()
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                                        .addContainerGap())
                 );
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
@@ -130,8 +123,8 @@ public class LoadSpecificReportDialog extends JDialog {
             {
                 buttonBar.setBorder(new EmptyBorder(12, 0, 0, 0));
                 buttonBar.setLayout(new GridBagLayout());
-                ((GridBagLayout)buttonBar.getLayout()).columnWidths = new int[] {0, 85, 80};
-                ((GridBagLayout)buttonBar.getLayout()).columnWeights = new double[] {1.0, 0.0, 0.0};
+                ((GridBagLayout) buttonBar.getLayout()).columnWidths = new int[]{0, 85, 80};
+                ((GridBagLayout) buttonBar.getLayout()).columnWeights = new double[]{1.0, 0.0, 0.0};
 
                 //---- okButton ----
                 okButton.setText("OK");
@@ -142,8 +135,8 @@ public class LoadSpecificReportDialog extends JDialog {
                     }
                 });
                 buttonBar.add(okButton, new GridBagConstraints(1, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 5), 0, 0));
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 5), 0, 0));
 
                 //---- cancelButton ----
                 cancelButton.setText("Cancel");
@@ -154,8 +147,8 @@ public class LoadSpecificReportDialog extends JDialog {
                     }
                 });
                 buttonBar.add(cancelButton, new GridBagConstraints(2, 0, 1, 1, 0.0, 0.0,
-                    GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                    new Insets(0, 0, 0, 0), 0, 0));
+                        GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                        new Insets(0, 0, 0, 0), 0, 0));
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
         }

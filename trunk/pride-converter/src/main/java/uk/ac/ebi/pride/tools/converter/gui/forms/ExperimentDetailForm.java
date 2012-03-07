@@ -4,37 +4,56 @@
 
 package uk.ac.ebi.pride.tools.converter.gui.forms;
 
+import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
-import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
-import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ContactTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ReferencesTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.ContactDialog;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.ReferenceDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
+import uk.ac.ebi.pride.tools.converter.report.model.Contact;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
+import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
+import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * @author User #3
  */
-public class ExperimentDetailForm extends AbstractForm {
+public class ExperimentDetailForm extends AbstractForm implements TableModelListener {
 
     private boolean doneOnce = false;
 
     public ExperimentDetailForm() {
         initComponents();
-        addTermButton.setOwner(paramTable1);
+
+        //update reference table
+        referenceTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        ReferencesTableModel referenceTableModel = new ReferencesTableModel();
+        referenceTable.setModel(referenceTableModel);
+        referenceTable.setColumnModel(referenceTableModel.getTableColumnModel(referenceTable));
+
+        //update contact table
+        ContactTableModel contactTableModel = new ContactTableModel();
+        contactTableModel.addTableModelListener(this);
+        contactTable.setModel(contactTableModel);
+        contactTable.setColumnModel(contactTableModel.getTableColumnModel(contactTable));
+        contactTable.setEnableRowValidation(true);
+
     }
 
     private void experimentDetailsRequiredFieldKeyTyped(KeyEvent e) {
@@ -51,14 +70,24 @@ public class ExperimentDetailForm extends AbstractForm {
         } else if (e.getSource().equals(shortNameInput)) {
             s3 += e.getKeyChar();
         }
-        validationListerner.fireValidationListener(isNonNullTextField(s1) && isNonNullTextField(s2) && isNonNullTextField(s3));
+        validationListerner.fireValidationListener(isNonNullTextField(s1) && isNonNullTextField(s2) && isNonNullTextField(s3) && contactTable.getAll().size() > 0);
     }
 
     private void experimentDetailsRequiredFieldFocusLost(FocusEvent e) {
         //fire super method to update component background
         validateRequiredField(e.getComponent(), null);
         //validate form and fire validationListener
-        validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()));
+        validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()) && contactTable.getAll().size() > 0);
+    }
+
+    private void addContactAction(ActionEvent e) {
+        ContactDialog contactDialog = new ContactDialog(NavigationPanel.getInstance(), contactTable);
+        contactDialog.setVisible(true);
+    }
+
+    private void addReferenceAction(ActionEvent e) {
+        ReferenceDialog referenceDialog = new ReferenceDialog(NavigationPanel.getInstance(), referenceTable);
+        referenceDialog.setVisible(true);
     }
 
     private void initComponents() {
@@ -70,16 +99,21 @@ public class ExperimentDetailForm extends AbstractForm {
         label1 = new JLabel();
         label2 = new JLabel();
         label3 = new JLabel();
-        panel1 = new JPanel();
-        scrollPane1 = new JScrollPane();
-        descriptionPane = new JTextPane();
-        label7 = new JLabel();
-        scrollPane2 = new JScrollPane();
-        paramTable1 = new ParamTable();
-        addTermButton = new AddTermButton(true);
         label4 = new JLabel();
         label5 = new JLabel();
         label6 = new JLabel();
+        label7 = new JLabel();
+        scrollPane1 = new JScrollPane();
+        descriptionPane = new JTextPane();
+        scrollPane3 = new JScrollPane();
+        contactTable = new BaseTable<Contact>();
+        contactLabel = new JLabel();
+        addContactButton = new JButton();
+        label8 = new JLabel();
+        addreferenceButton = new JButton();
+        scrollPane2 = new JScrollPane();
+        referenceTable = new BaseTable();
+        label9 = new JLabel();
 
         //======== this ========
 
@@ -134,57 +168,6 @@ public class ExperimentDetailForm extends AbstractForm {
         //---- label3 ----
         label3.setText("Short Label");
 
-        //======== panel1 ========
-        {
-            panel1.setBorder(new TitledBorder("Description"));
-
-            //======== scrollPane1 ========
-            {
-                scrollPane1.setViewportView(descriptionPane);
-            }
-
-            //---- label7 ----
-            label7.setText("Experiment Additional Parameters");
-
-            //======== scrollPane2 ========
-            {
-                scrollPane2.setViewportView(paramTable1);
-            }
-
-            //---- addTermButton ----
-            addTermButton.setText("Add Param");
-
-            GroupLayout panel1Layout = new GroupLayout(panel1);
-            panel1.setLayout(panel1Layout);
-            panel1Layout.setHorizontalGroup(
-                    panel1Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                            .addGroup(GroupLayout.Alignment.LEADING, panel1Layout.createSequentialGroup()
-                                                    .addContainerGap()
-                                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 702, Short.MAX_VALUE))
-                                            .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addContainerGap()
-                                                    .addComponent(label7)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 434, Short.MAX_VALUE)
-                                                    .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                    .addContainerGap())
-            );
-            panel1Layout.setVerticalGroup(
-                    panel1Layout.createParallelGroup()
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 76, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                            .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(label7))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                                    .addContainerGap())
-            );
-        }
-
         //---- label4 ----
         label4.setText("*");
         label4.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -200,30 +183,98 @@ public class ExperimentDetailForm extends AbstractForm {
         label6.setFont(new Font("Dialog", Font.PLAIN, 12));
         label6.setForeground(Color.red);
 
+        //---- label7 ----
+        label7.setText("Description");
+
+        //======== scrollPane1 ========
+        {
+            scrollPane1.setViewportView(descriptionPane);
+        }
+
+        //======== scrollPane3 ========
+        {
+
+            //---- contactTable ----
+            contactTable.setModel(new DefaultTableModel());
+            scrollPane3.setViewportView(contactTable);
+        }
+
+        //---- contactLabel ----
+        contactLabel.setText("Contacts");
+
+        //---- addContactButton ----
+        addContactButton.setText("Add Contact");
+        addContactButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addContactAction(e);
+            }
+        });
+
+        //---- label8 ----
+        label8.setText("*");
+        label8.setForeground(Color.red);
+
+        //---- addreferenceButton ----
+        addreferenceButton.setText("Add Reference");
+        addreferenceButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addReferenceAction(e);
+            }
+        });
+
+        //======== scrollPane2 ========
+        {
+            scrollPane2.setViewportView(referenceTable);
+        }
+
+        //---- label9 ----
+        label9.setText("References");
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(label3)
-                                        .addComponent(label2)
-                                        .addComponent(label1))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(projectNameInput, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
-                                        .addComponent(experimentTitleInput, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
-                                        .addComponent(shortNameInput, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(label4)
-                                        .addComponent(label5)
-                                        .addComponent(label6))
-                                .addGap(175, 175, 175))
                         .addGroup(layout.createSequentialGroup()
-                                .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup()
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
+                                                .addContainerGap())
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(label3)
+                                                        .addComponent(label2)
+                                                        .addComponent(label1)
+                                                        .addComponent(label7))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup()
+                                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                                                        .addComponent(projectNameInput, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                                                        .addComponent(experimentTitleInput, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
+                                                        .addComponent(shortNameInput, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup()
+                                                        .addComponent(label4)
+                                                        .addComponent(label5)
+                                                        .addComponent(label6))
+                                                .addGap(175, 175, 175))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(contactLabel)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(label8, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 485, Short.MAX_VALUE)
+                                                .addComponent(addContactButton, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+                                                .addContainerGap())
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
+                                                .addContainerGap())
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(label9)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 501, Short.MAX_VALUE)
+                                                .addComponent(addreferenceButton)
+                                                .addContainerGap())))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
@@ -244,7 +295,24 @@ public class ExperimentDetailForm extends AbstractForm {
                                         .addComponent(label6)
                                         .addComponent(label3))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup()
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(label7)
+                                                .addGap(35, 35, 35)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(addContactButton, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                                .addComponent(contactLabel)
+                                                                .addComponent(label8))))
+                                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(addreferenceButton)
+                                        .addComponent(label9))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -258,44 +326,77 @@ public class ExperimentDetailForm extends AbstractForm {
     private JLabel label1;
     private JLabel label2;
     private JLabel label3;
-    private JPanel panel1;
-    private JScrollPane scrollPane1;
-    private JTextPane descriptionPane;
-    private JLabel label7;
-    private JScrollPane scrollPane2;
-    private ParamTable paramTable1;
-    private AddTermButton addTermButton;
     private JLabel label4;
     private JLabel label5;
     private JLabel label6;
+    private JLabel label7;
+    private JScrollPane scrollPane1;
+    private JTextPane descriptionPane;
+    private JScrollPane scrollPane3;
+    private BaseTable<Contact> contactTable;
+    private JLabel contactLabel;
+    private JButton addContactButton;
+    private JLabel label8;
+    private JButton addreferenceButton;
+    private JScrollPane scrollPane2;
+    private BaseTable referenceTable;
+    private JLabel label9;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 
     @Override
-    public Collection<ValidatorMessage> validateForm() {
-        //nothing to validate
-        return Collections.emptyList();
+    public Collection<ValidatorMessage> validateForm() throws ValidatorException {
+
+        ReportObjectValidator validator = ValidatorFactory.getInstance().getReportValidator();
+        Collection<ValidatorMessage> messages = new ArrayList<ValidatorMessage>();
+        messages.addAll(validator.validate(contactTable.getAll()));
+        messages.addAll(validator.validate(referenceTable.getAll()));
+        return messages;
+
     }
 
     @Override
     public void clear() {
         isLoaded = false;
+
         projectNameInput.setText(null);
         experimentTitleInput.setText(null);
         shortNameInput.setText(null);
         descriptionPane.setText(null);
-        paramTable1.removeAll();
+
+        referenceTable.removeAll();
+        contactTable.removeAll();
+
         //inactivate next button
         validationListerner.fireValidationListener(false);
     }
 
     @Override
     public void save(ReportReaderDAO dao) {
-        Param p = new Param();
-        p.getCvParam().addAll(paramTable1.getCvParamList());
+
+        //save references
+        dao.setReferences(referenceTable.getAll());
+
+        //save contacts
+        dao.setContacts(contactTable.getAll());
+
+        //update pride project
+        Param p = dao.getExperimentParams();
+        //remove existing project param & description here
+        for (Iterator<CvParam> i = p.getCvParam().iterator(); i.hasNext(); ) {
+            CvParam cv = i.next();
+            if (cv.getAccession().equals(DAOCvParams.PRIDE_PROJECT.getAccession())) {
+                i.remove();
+            }
+            if (cv.getAccession().equals(DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession())) {
+                i.remove();
+            }
+        }
+        //add new project tag
         p.getCvParam().add(new CvParam(DAOCvParams.PRIDE_PROJECT.getCv(), DAOCvParams.PRIDE_PROJECT.getAccession(), DAOCvParams.PRIDE_PROJECT.getName(), projectNameInput.getText()));
-        p.getUserParam().addAll(paramTable1.getUserParamList());
+        p.getCvParam().add(new CvParam(DAOCvParams.EXPERIMENT_DESCRIPTION.getCv(), DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession(), DAOCvParams.EXPERIMENT_DESCRIPTION.getName(), descriptionPane.getText()));
         dao.setExperimentParams(p);
+
         //only save the data if it's not due to be modified in the next form
         //i.e. if we have more than 1 source file
         if (ConverterData.getInstance().getInputFiles().size() == 1) {
@@ -309,16 +410,17 @@ public class ExperimentDetailForm extends AbstractForm {
         if (!isLoaded) {
             experimentTitleInput.setText(dao.getExperimentTitle());
             shortNameInput.setText(dao.getExperimentShortLabel());
+            referenceTable.addAll(dao.getReferences());
+            contactTable.addAll(dao.getContacts());
+
             Param param = dao.getExperimentParams();
             for (CvParam cv : param.getCvParam()) {
                 if (DAOCvParams.PRIDE_PROJECT.getAccession().equals(cv.getAccession())) {
                     projectNameInput.setText(cv.getValue());
-                } else {
-                    paramTable1.add(cv);
                 }
-            }
-            for (UserParam up : param.getUserParam()) {
-                paramTable1.add(up);
+                if (DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession().equals(cv.getAccession())) {
+                    descriptionPane.setText(cv.getValue());
+                }
             }
             isLoaded = true;
         }
@@ -335,7 +437,12 @@ public class ExperimentDetailForm extends AbstractForm {
         }
 
         //fire validation listener on load
-        validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()));
+        validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()) && contactTable.getAll().size() > 0);
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()) && contactTable.getAll().size() > 0);
     }
 
     @Override
@@ -361,7 +468,7 @@ public class ExperimentDetailForm extends AbstractForm {
     @Override
     public void start() {
         //validate form and fire validationListener - required for back & forth when no changes occur
-        validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()));
+        validationListerner.fireValidationListener(isNonNullTextField(projectNameInput.getText()) && isNonNullTextField(experimentTitleInput.getText()) && isNonNullTextField(shortNameInput.getText()) && contactTable.getAll().size() > 0);
     }
 
     @Override

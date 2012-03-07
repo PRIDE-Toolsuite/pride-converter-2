@@ -220,7 +220,7 @@ public class ProtocolForm extends AbstractForm {
         });
 
         //---- addTermButton ----
-        addTermButton.setText(bundle.getString("ProtocolForm.addTermButton.text"));
+        addTermButton.setMargin(new Insets(1, 14, 2, 14));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -232,7 +232,7 @@ public class ProtocolForm extends AbstractForm {
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE))
+                                                .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label4)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -245,7 +245,7 @@ public class ProtocolForm extends AbstractForm {
                                                 .addComponent(saveButton))
                                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(label1)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 221, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 293, Short.MAX_VALUE)
                                                 .addComponent(addStepButton)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(removeStepButton)
@@ -271,8 +271,8 @@ public class ProtocolForm extends AbstractForm {
                                         .addComponent(label1))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
-                                        .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+                                        .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents

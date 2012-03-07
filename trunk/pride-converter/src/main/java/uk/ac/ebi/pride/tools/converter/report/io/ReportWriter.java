@@ -7,7 +7,9 @@ import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.handler.ExternalHandler;
 import uk.ac.ebi.pride.tools.converter.dao.handler.FastaHandler;
 import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.DecoratedReportObject;
+import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshallerFactory;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
@@ -118,6 +120,22 @@ public class ReportWriter {
 
             //write searchResultIdentifier
             marshall(out, dao.getSearchResultIdentifier());
+
+            //neet to update short label / experiment title
+            //check to see if we have a custom bean and safely override the data!
+            ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(dao.getSourceFile().getPathToFile());
+            if (rb != null) {
+                meta.setShortLabel(rb.getShortLabel());
+                meta.setTitle(rb.getExperimentTitle());
+                if (rb.getSampleDescription() != null) {
+                    Description sample = rb.getSampleDescription();
+                    //merge custom params with master params
+                    sample = ReportMetadataCopier.mergeSampleParams(sample, meta.getMzDataDescription().getAdmin().getSampleDescription(), dao.getSampleParams());
+                    //set params to be marshalled out
+                    meta.getMzDataDescription().getAdmin().setSampleDescription(sample);
+                    meta.getMzDataDescription().getAdmin().setSampleName(rb.getSampleName());
+                }
+            }
 
             //update sample params in case they contain subsample information
             Description sample = meta.getMzDataDescription().getAdmin().getSampleDescription();
