@@ -281,6 +281,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         
         DAOProperty<Boolean> useInternalSpectra = new DAOProperty<Boolean>(SupportedProperty.USE_INTERNAL_SPECTA.getName(), false);
         useInternalSpectra.setDescription("if this parameter is set to \"true\" the spectra stored in the X!Tandem file are used irrespective of whether an external peak list file is referenced. These spectra are highly preprocessed and do not properly represent the input spectra. This option should only be used if the original spectra are not available.");
+        useInternalSpectra.setAdvanced(true);
         supportedProperties.add(useInternalSpectra);
         
         return supportedProperties;
