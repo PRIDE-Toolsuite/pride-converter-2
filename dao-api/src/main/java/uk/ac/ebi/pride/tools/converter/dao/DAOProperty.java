@@ -39,6 +39,10 @@ public class DAOProperty<TYPE> {
      * Collection of allowed values. Null if not applicable.
      */
     private Collection<TYPE> allowedValues;
+    /**
+     * Indicates that the given option is an advanced option.
+     */
+    private boolean isAdvanced = false;
 
     private Class clz = Object.class;
 
@@ -132,4 +136,12 @@ public class DAOProperty<TYPE> {
     public Class getValueClass() {
         return clz;
     }
+
+	public boolean isAdvanced() {
+		return isAdvanced;
+	}
+
+	public void setAdvanced(boolean isAdvanced) {
+		this.isAdvanced = isAdvanced;
+	}    
 }
