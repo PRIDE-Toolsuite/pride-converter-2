@@ -346,9 +346,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                                     panelList.repaint();
                                     panelList.setSelectedIndex(selectedIndex);
 
-                                    //update progressbar
-                                    progressBar1.setValue(selectedIndex + 1);
-
                                     //update help button action
                                     CSH.setHelpIDString(helpButton, forms.get(selectedIndex).getHelpResource());
                                     helpButton.addActionListener(new CSH.DisplayHelpFromSource(mainHelpBroker));
@@ -428,9 +425,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
             panelList.revalidate();
             panelList.repaint();
             panelList.setSelectedIndex(selectedIndex);
-
-            //update progressbar
-            progressBar1.setValue(selectedIndex + 1);
 
             //update description
             panelDescription.setText(forms.get(selectedIndex).getFormDescription());
@@ -521,11 +515,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
 
     public void reset() {
 
-        //update progress bar boundaries
-        progressBar1.setMinimum(0);
-        progressBar1.setMaximum(formNames.size());
-        progressBar1.setValue(0);
-
         //the next button will be reenabled by fireValidationListener(true)
         nextButton.setEnabled(false);
 
@@ -598,6 +587,10 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         dialog.setVisible(true);
     }
 
+    public void hideValidationIcon() {
+        validationStatus.setVisible(false);
+    }
+
     @Override
     public void fireValidationListener(boolean isValid) {
         nextButton.setEnabled(isValid);
@@ -631,7 +624,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         panelList = new JList(new DefaultListModel());
         scrollPane2 = new JScrollPane();
         panelDescription = new JTextArea();
-        progressBar1 = new JProgressBar();
+        label1 = new JLabel();
         contentPanel = new JPanel();
         panel4 = new JPanel();
         nextButton = new JButton();
@@ -671,8 +664,9 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                 scrollPane2.setViewportView(panelDescription);
             }
 
-            //---- progressBar1 ----
-            progressBar1.setForeground(new Color(0, 102, 102));
+            //---- label1 ----
+            label1.setText("Progress");
+            label1.setFont(new Font("Dialog", Font.BOLD, 20));
 
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
@@ -681,20 +675,21 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                             .addGroup(panel1Layout.createSequentialGroup()
                                     .addContainerGap()
                                     .addGroup(panel1Layout.createParallelGroup()
-                                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                                            .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(scrollPane2, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
+                                            .addGroup(panel1Layout.createParallelGroup()
+                                                    .addComponent(scrollPane2, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(label1)))
                                     .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
                     panel1Layout.createParallelGroup()
                             .addGroup(panel1Layout.createSequentialGroup()
                                     .addContainerGap()
-                                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 341, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(label1)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(progressBar1, GroupLayout.PREFERRED_SIZE, 16, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 325, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
                                     .addContainerGap())
             );
         }
@@ -855,7 +850,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
     private JList panelList;
     private JScrollPane scrollPane2;
     private JTextArea panelDescription;
-    private JProgressBar progressBar1;
+    private JLabel label1;
     private JPanel contentPanel;
     private JPanel panel4;
     private JButton nextButton;

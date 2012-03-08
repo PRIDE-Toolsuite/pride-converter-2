@@ -6,6 +6,7 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.LineWrapCellRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ValidatorMessageTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
@@ -27,6 +28,7 @@ public class ReportForm extends AbstractForm {
 
     public ReportForm() {
         initComponents();
+        NavigationPanel.getInstance().hideValidationIcon();
     }
 
 

@@ -13,6 +13,7 @@ import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
@@ -51,7 +52,7 @@ public class DataTypeForm extends AbstractForm {
         spectraOnlyButtons.add(ms2Radio);
         spectraOnlyButtons.add(mgfRadio);
         spectraOnlyButtons.add(mzdataButton);
-        spectraOnlyButtons.add(msgfRadio);
+        spectraOnlyButtons.add(mzxmlButton);
 
     }
 
@@ -267,20 +268,21 @@ public class DataTypeForm extends AbstractForm {
         scrollPane1 = new JScrollPane();
         descriptionArea = new JEditorPane();
         label1 = new JLabel();
-        panel3 = new JPanel();
+        panel2 = new JPanel();
         panel1 = new JPanel();
         mascotRadio = new JRadioButton();
         macOsWarningLabel = new JLabel();
-        mzMLRadio = new JRadioButton();
-        xtandemRadio = new JRadioButton();
+        msgfRadio = new JRadioButton();
         mzIdentMLRadio = new JRadioButton();
+        xtandemRadio = new JRadioButton();
+        panel4 = new JPanel();
+        mzMLRadio = new JRadioButton();
         mzdataButton = new JRadioButton();
         mzxmlButton = new JRadioButton();
         dtaRadioSingle = new JRadioButton();
-        pklRadioSingle = new JRadioButton();
-        ms2Radio = new JRadioButton();
         mgfRadio = new JRadioButton();
-        msgfRadio = new JRadioButton();
+        ms2Radio = new JRadioButton();
+        pklRadioSingle = new JRadioButton();
         dataTypeGroup = new ButtonGroup();
 
         //======== this ========
@@ -305,9 +307,10 @@ public class DataTypeForm extends AbstractForm {
         //---- label1 ----
         label1.setText(bundle.getString("WelcomeScreen.label1.text"));
 
-        //======== panel3 ========
+        //======== panel2 ========
         {
-            panel3.setLayout(new GridLayout(6, 2));
+            panel2.setBorder(new TitledBorder(bundle.getString("WelcomeScreen.panel2.border_2")));
+            panel2.setLayout(new GridLayout(0, 2));
 
             //======== panel1 ========
             {
@@ -329,97 +332,7 @@ public class DataTypeForm extends AbstractForm {
                 macOsWarningLabel.setFont(new Font("Dialog", Font.ITALIC, 10));
                 panel1.add(macOsWarningLabel);
             }
-            panel3.add(panel1);
-
-            //---- mzMLRadio ----
-            mzMLRadio.setText(bundle.getString("WelcomeScreen.mzMLRadio.text"));
-            mzMLRadio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mzMLRadioActionPerformed(e);
-                }
-            });
-            panel3.add(mzMLRadio);
-
-            //---- xtandemRadio ----
-            xtandemRadio.setText(bundle.getString("WelcomeScreen.xtandemRadio.text"));
-            xtandemRadio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    xtandemRadioActionPerformed(e);
-                }
-            });
-            panel3.add(xtandemRadio);
-
-            //---- mzIdentMLRadio ----
-            mzIdentMLRadio.setText(bundle.getString("WelcomeScreen.mzIdentMLRadio.text"));
-            mzIdentMLRadio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mzIdentMLRadioActionPerformed(e);
-                }
-            });
-            panel3.add(mzIdentMLRadio);
-
-            //---- mzdataButton ----
-            mzdataButton.setText(bundle.getString("WelcomeScreen.mzdataButton.text"));
-            mzdataButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mzdataButtonActionPerformed(e);
-                }
-            });
-            panel3.add(mzdataButton);
-
-            //---- mzxmlButton ----
-            mzxmlButton.setText(bundle.getString("WelcomeScreen.mzxmlButton.text"));
-            mzxmlButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mzxmlButtonActionPerformed();
-                }
-            });
-            panel3.add(mzxmlButton);
-
-            //---- dtaRadioSingle ----
-            dtaRadioSingle.setText(bundle.getString("WelcomeScreen.dtaRadioSingle.text"));
-            dtaRadioSingle.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    dtaRadioActionPerformed(e);
-                }
-            });
-            panel3.add(dtaRadioSingle);
-
-            //---- pklRadioSingle ----
-            pklRadioSingle.setText(bundle.getString("WelcomeScreen.pklRadioSingle.text"));
-            pklRadioSingle.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    pklRadioActionPerformed(e);
-                }
-            });
-            panel3.add(pklRadioSingle);
-
-            //---- ms2Radio ----
-            ms2Radio.setText(bundle.getString("WelcomeScreen.ms2Radio.text"));
-            ms2Radio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    ms2RadioActionPerformed(e);
-                }
-            });
-            panel3.add(ms2Radio);
-
-            //---- mgfRadio ----
-            mgfRadio.setText(bundle.getString("WelcomeScreen.mgfRadio.text"));
-            mgfRadio.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    mgfRadioActionPerformed(e);
-                }
-            });
-            panel3.add(mgfRadio);
+            panel2.add(panel1);
 
             //---- msgfRadio ----
             msgfRadio.setText(bundle.getString("WelcomeScreen.msgfRadio.text"));
@@ -429,7 +342,103 @@ public class DataTypeForm extends AbstractForm {
                     msgfRadioActionPerformed(e);
                 }
             });
-            panel3.add(msgfRadio);
+            panel2.add(msgfRadio);
+
+            //---- mzIdentMLRadio ----
+            mzIdentMLRadio.setText(bundle.getString("WelcomeScreen.mzIdentMLRadio.text"));
+            mzIdentMLRadio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mzIdentMLRadioActionPerformed(e);
+                }
+            });
+            panel2.add(mzIdentMLRadio);
+
+            //---- xtandemRadio ----
+            xtandemRadio.setText(bundle.getString("WelcomeScreen.xtandemRadio.text"));
+            xtandemRadio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    xtandemRadioActionPerformed(e);
+                }
+            });
+            panel2.add(xtandemRadio);
+        }
+
+        //======== panel4 ========
+        {
+            panel4.setBorder(new TitledBorder(bundle.getString("WelcomeScreen.panel4.border")));
+            panel4.setLayout(new GridLayout(0, 2));
+
+            //---- mzMLRadio ----
+            mzMLRadio.setText(bundle.getString("WelcomeScreen.mzMLRadio.text"));
+            mzMLRadio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mzMLRadioActionPerformed(e);
+                }
+            });
+            panel4.add(mzMLRadio);
+
+            //---- mzdataButton ----
+            mzdataButton.setText(bundle.getString("WelcomeScreen.mzdataButton.text"));
+            mzdataButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mzdataButtonActionPerformed(e);
+                }
+            });
+            panel4.add(mzdataButton);
+
+            //---- mzxmlButton ----
+            mzxmlButton.setText(bundle.getString("WelcomeScreen.mzxmlButton.text"));
+            mzxmlButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mzxmlButtonActionPerformed();
+                }
+            });
+            panel4.add(mzxmlButton);
+
+            //---- dtaRadioSingle ----
+            dtaRadioSingle.setText(bundle.getString("WelcomeScreen.dtaRadioSingle.text"));
+            dtaRadioSingle.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dtaRadioActionPerformed(e);
+                }
+            });
+            panel4.add(dtaRadioSingle);
+
+            //---- mgfRadio ----
+            mgfRadio.setText(bundle.getString("WelcomeScreen.mgfRadio.text"));
+            mgfRadio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    mgfRadioActionPerformed(e);
+                }
+            });
+            panel4.add(mgfRadio);
+
+            //---- ms2Radio ----
+            ms2Radio.setText(bundle.getString("WelcomeScreen.ms2Radio.text"));
+            ms2Radio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    ms2RadioActionPerformed(e);
+                }
+            });
+            panel4.add(ms2Radio);
+
+            //---- pklRadioSingle ----
+            pklRadioSingle.setText(bundle.getString("WelcomeScreen.pklRadioSingle.text"));
+            pklRadioSingle.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    pklRadioActionPerformed(e);
+                }
+            });
+            panel4.add(pklRadioSingle);
         }
 
         GroupLayout layout = new GroupLayout(this);
@@ -439,8 +448,9 @@ public class DataTypeForm extends AbstractForm {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup()
-                                        .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
-                                        .addComponent(panel3, GroupLayout.DEFAULT_SIZE, 568, Short.MAX_VALUE)
+                                        .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
+                                        .addComponent(panel4, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
+                                        .addComponent(panel2, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
                                         .addComponent(label1))
                                 .addContainerGap())
         );
@@ -450,24 +460,26 @@ public class DataTypeForm extends AbstractForm {
                                 .addContainerGap()
                                 .addComponent(label1)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel3, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                                .addComponent(panel4, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
         //---- dataTypeGroup ----
         dataTypeGroup.add(mascotRadio);
-        dataTypeGroup.add(mzMLRadio);
-        dataTypeGroup.add(xtandemRadio);
+        dataTypeGroup.add(msgfRadio);
         dataTypeGroup.add(mzIdentMLRadio);
+        dataTypeGroup.add(xtandemRadio);
+        dataTypeGroup.add(mzMLRadio);
         dataTypeGroup.add(mzdataButton);
         dataTypeGroup.add(mzxmlButton);
         dataTypeGroup.add(dtaRadioSingle);
-        dataTypeGroup.add(pklRadioSingle);
-        dataTypeGroup.add(ms2Radio);
         dataTypeGroup.add(mgfRadio);
-        dataTypeGroup.add(msgfRadio);
+        dataTypeGroup.add(ms2Radio);
+        dataTypeGroup.add(pklRadioSingle);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
@@ -476,20 +488,21 @@ public class DataTypeForm extends AbstractForm {
     private JScrollPane scrollPane1;
     private JEditorPane descriptionArea;
     private JLabel label1;
-    private JPanel panel3;
+    private JPanel panel2;
     private JPanel panel1;
     private JRadioButton mascotRadio;
     private JLabel macOsWarningLabel;
-    private JRadioButton mzMLRadio;
-    private JRadioButton xtandemRadio;
+    private JRadioButton msgfRadio;
     private JRadioButton mzIdentMLRadio;
+    private JRadioButton xtandemRadio;
+    private JPanel panel4;
+    private JRadioButton mzMLRadio;
     private JRadioButton mzdataButton;
     private JRadioButton mzxmlButton;
     private JRadioButton dtaRadioSingle;
-    private JRadioButton pklRadioSingle;
-    private JRadioButton ms2Radio;
     private JRadioButton mgfRadio;
-    private JRadioButton msgfRadio;
+    private JRadioButton ms2Radio;
+    private JRadioButton pklRadioSingle;
     private ButtonGroup dataTypeGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 

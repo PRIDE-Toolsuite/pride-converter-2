@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq l {space :::p, par l {comp scrollPane1::l::633:x, comp panel1::l:::x, seq l {comp label1:::p::p, space ::439:x, comp addTermButton:::p::p}, seq t {comp label7:::p::p, space ::342:x, comp addTermButton1:::p::p}, comp scrollPane3::l::633:x}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, par t {comp panel1::l:::x, comp scrollPane1::l::633:x, seq t {comp label1:::p::p, space ::383:x, comp addTermButton:::p::p, space :::p, comp processingMethodEditButton:::p::p}, seq t {comp label7:::p::p, space ::286:x, comp addTermButton1:::p::p, space :::p, comp expAdditionalEditButton:::p::p}, comp scrollPane3::l::633:x}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :p:7:p, comp panel1:::p::p, space :::p, par l {comp label1::t:p::p, comp addTermButton::t:p::p}, space :::p, comp scrollPane1::::115:x, space u:::p, par t {comp addTermButton1:::p::p, comp label7:::p::p}, space :::p, comp scrollPane3::::119:x, space :::p}}</string> 
+        <string>par l {seq l {space :p:7:p, comp panel1:::p:152:p, space u:::p, par t {comp addTermButton::t:p::p, comp processingMethodEditButton:::p::p, comp label1:::p::p}, space :p:6:p, comp scrollPane1::::113:x, space u:::p, par t {comp addTermButton1:::p::p, comp label7:::p::p, comp expAdditionalEditButton:::p::p}, space :::p, comp scrollPane3::::114:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -53,6 +53,13 @@
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SoftwareProcessingForm.addTermButton.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>addTermButton</string> 
         </void> 
@@ -88,7 +95,7 @@
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq {par b {comp softwareNameField::b:p::p, comp label5::b:p::p, comp label2::b:p::p, comp label3::b:p::p, comp label6::b:p::p, comp softwareVersionField::b:p::p}, space :::p, par l {comp label4:::p::p, comp scrollPane2:::p:96:p}, space :::p}}</string> 
+          <string>par l {seq {par b {comp softwareNameField::b:p::p, comp label5::b:p::p, comp label2::b:p::p, comp label3::b:p::p, comp label6::b:p::p, comp softwareVersionField::b:p::p}, space :::p, par l {comp label4:::p::p, comp scrollPane2:::p:96:p}, space :::x}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -298,16 +305,71 @@
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
         <void method="setProperty"> 
-         <string>margin</string> 
-         <object class="java.awt.Insets"> 
-          <int>1</int> 
-          <int>14</int> 
-          <int>2</int> 
-          <int>14</int> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SoftwareProcessingForm.addTermButton1.toolTipText</string> 
          </object> 
         </void> 
         <void property="name"> 
          <string>addTermButton1</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object id="SwingIcon0" class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/edit.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SoftwareProcessingForm.processingMethodEditButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>processingMethodEditButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>editButtonActionPerformed</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object idref="SwingIcon0"/> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SoftwareProcessingForm.expAdditionalEditButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>expAdditionalEditButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>editButtonActionPerformed</string> 
+          <boolean>true</boolean> 
+         </object> 
         </void> 
        </object> 
       </void> 

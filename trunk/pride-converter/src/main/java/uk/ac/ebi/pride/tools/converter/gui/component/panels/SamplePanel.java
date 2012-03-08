@@ -11,15 +11,14 @@ import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.panels.model.SampleCvComboBoxModel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParamTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ComboValueCvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.CvParamDialog;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.ValidationListener;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateUtilities;
-import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
-import uk.ac.ebi.pride.tools.converter.report.model.Description;
-import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -205,6 +204,20 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
     }
 
+    private void editButtonActionPerformed() {
+        if (paramTable1.getSelectedRowCount() > 0) {
+            //convert table selected row to underlying model row
+            int modelSelectedRow = paramTable1.convertRowIndexToModel(paramTable1.getSelectedRow());
+            //get object
+            ReportObject objToEdit = ((ParamTableModel) paramTable1.getModel()).get(modelSelectedRow);
+            Class clazz = objToEdit.getClass();
+            //show editing dialog for object
+            AbstractDialog dialog = AbstractDialog.getInstance(paramTable1, clazz);
+            dialog.edit(objToEdit);
+            dialog.setVisible(true);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -226,6 +239,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         label8 = new JLabel();
         panel1 = new JPanel();
         masterInformationLabel = new JLabel();
+        editButton = new JButton();
 
         //======== this ========
 
@@ -294,6 +308,9 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             scrollPane1.setViewportView(paramTable1);
         }
 
+        //---- addTermButton1 ----
+        addTermButton1.setToolTipText("Add");
+
         //---- label8 ----
         label8.setText("*");
         label8.setForeground(Color.red);
@@ -306,6 +323,16 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             masterInformationLabel.setText("Sample annotations entered in this form will be copied across to all files unless overridden.");
             panel1.add(masterInformationLabel);
         }
+
+        //---- editButton ----
+        editButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        editButton.setToolTipText("Edit");
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editButtonActionPerformed();
+            }
+        });
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -342,8 +369,10 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                                         .addComponent(sampleCommentField, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label5)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 365, Short.MAX_VALUE)
-                                                .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 389, Short.MAX_VALUE)
+                                                .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(editButton)))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -370,7 +399,8 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                 .addGap(14, 14, 14)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label5))
+                                        .addComponent(label5)
+                                        .addComponent(editButton))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -400,6 +430,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private JLabel label8;
     private JPanel panel1;
     private JLabel masterInformationLabel;
+    private JButton editButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     public String getSampleName() {

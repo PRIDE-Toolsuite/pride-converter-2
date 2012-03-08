@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp scrollPane2::l::623:x:1, comp scrollPane1::l::623:x:1, seq l {comp label4:::p::p, space :::p, comp instrumentNameField:::p:202:p, space :::p, comp label5:::p::p, space u:::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq t {comp label1:::p::p, space ::524:x, comp addSourceButton:::p::p}, seq t {comp label2:::p::p, space ::217:x, comp addAnalyzerButton:::p::p, space :::p, comp removeAnalyzerButton:::p::p, space :::p, comp addTermButton:::p::p}, seq l {comp scrollPane3:::p:86:p, space :p:4:p, comp analyzerScrollPane::::533:x}, seq t {comp label3:::p::p, space ::511:x, comp addDetectorButton:::p::p}}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par l {comp scrollPane2::l::623:x:1, comp scrollPane1::l::623:x:1, seq l {par t {seq l {comp label4:::p::p, space :::p, comp instrumentNameField:::p:202:p, space :::p, comp label5:::p::p, space u:::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq t {comp label1:::p::p, space ::468:x, comp addSourceButton:::p::p}, seq t {comp label2:::p::p, space ::161:x, comp addAnalyzerButton:::p::p, space :::p, comp removeAnalyzerButton:::p::p, space :::p, comp addTermButton:::p::p}, seq t {comp label3:::p::p, space ::455:x, comp addDetectorButton:::p::p}}, space :::p, par t {par l {comp sourceEditButton:::p::p, comp analyzerEditButton::l:p::p}, comp detectorEditButton::t:p::p}}, seq {comp scrollPane3:::p:86:p, space :p:4:p, comp analyzerScrollPane::::533:x}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, par t {par b:t {comp loadButton::b:p::p, comp saveButton::b:p::p}, par b:t {comp instrumentNameField::b:p::p, comp label5::b:p::p, comp label4::b:p::p}}, space :p:8:p, par t {comp addSourceButton:::p::p, comp label1:::p::p}, space :::p, comp scrollPane1::::105:x, space u:::p, par t {seq {par b {comp addTermButton::b:p::p, comp removeAnalyzerButton::b:p::p, comp addAnalyzerButton::b:p::p}, space :5:5:5}, seq t {comp label2:::p::p, space :::p}}, par l {comp scrollPane3::::101:x, comp analyzerScrollPane::::101:x}, space u:::p, par t {comp addDetectorButton:::p::p, comp label3:::p::p}, space :::p, comp scrollPane2::::112:x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par t {comp sourceEditButton::t:p::p, seq t {par t {par b:t {comp loadButton::b:p::p, comp saveButton::b:p::p}, par b:t {comp instrumentNameField::b:p::p, comp label5::b:p::p, comp label4::b:p::p}}, space :p:8:p, par t {comp addSourceButton:::p::p, comp label1:::p::p}}}, space :::p, comp scrollPane1::::104:x, space u:::p, par t {par b:t {comp addAnalyzerButton::b:p::p, comp removeAnalyzerButton::b:p::p}, comp addTermButton:::p::p, comp analyzerEditButton:::p::p, comp label2::t:p::p}, space :::p, par l {comp analyzerScrollPane::::103:x, comp scrollPane3::t::103:x}, space u:::p, par t {comp addDetectorButton:::p::p, comp label3:::p::p, comp detectorEditButton:::p::p}, space :::p, comp scrollPane2::::111:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -265,6 +265,13 @@
           <int>14</int> 
          </object> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>InstrumentForm.addDetectorButton.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>addDetectorButton</string> 
         </void> 
@@ -282,6 +289,13 @@
           <int>14</int> 
          </object> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>InstrumentForm.addSourceButton.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>addSourceButton</string> 
         </void> 
@@ -297,6 +311,13 @@
           <int>14</int> 
           <int>2</int> 
           <int>14</int> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>InstrumentForm.addTermButton.toolTipText</string> 
          </object> 
         </void> 
         <void property="name"> 
@@ -362,6 +383,107 @@
         </void> 
         <void property="name"> 
          <string>label3</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object id="SwingIcon0" class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/edit.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>margin</string> 
+         <object id="Insets0" class="java.awt.Insets"> 
+          <int>1</int> 
+          <int>14</int> 
+          <int>2</int> 
+          <int>14</int> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>InstrumentForm.sourceEditButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>sourceEditButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>editParam</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object idref="SwingIcon0"/> 
+        </void> 
+        <void method="setProperty"> 
+         <string>margin</string> 
+         <object idref="Insets0"/> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>InstrumentForm.analyzerEditButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>analyzerEditButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>editParam</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object idref="SwingIcon0"/> 
+        </void> 
+        <void method="setProperty"> 
+         <string>margin</string> 
+         <object idref="Insets0"/> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>InstrumentForm.detectorEditButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>detectorEditButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>editParam</string> 
+          <boolean>true</boolean> 
+         </object> 
         </void> 
        </object> 
       </void> 

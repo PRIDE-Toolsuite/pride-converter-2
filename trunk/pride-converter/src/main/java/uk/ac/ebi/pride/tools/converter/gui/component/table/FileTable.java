@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui.component.table;
 
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.FileTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.util.Colours;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -17,9 +18,6 @@ import java.util.Collection;
  *         Time: 10:33
  */
 public class FileTable extends JTable {
-
-    private static final Color grey = new Color(219, 213, 218);
-    private static final Color lightBlue = new Color(100, 117, 245);
 
     public FileTable() {
         FileTableModel ft = new FileTableModel();
@@ -54,10 +52,10 @@ public class FileTable extends JTable {
         Component c = super.prepareRenderer(renderer, rowIndex,
                 vColIndex);
         if (isCellSelected(rowIndex, vColIndex)) {
-            c.setBackground(lightBlue);
+            c.setBackground(Colours.lightBlue);
         } else {
             if (rowIndex % 2 == 0) {
-                c.setBackground(grey);
+                c.setBackground(Colours.grey);
             } else {
                 c.setBackground(getBackground());
             }

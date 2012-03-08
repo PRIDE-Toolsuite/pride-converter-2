@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq l {space :::p, par l {comp scrollPane1::l::368:x, comp label1::l:p::p}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, par t {comp scrollPane1::l::673:x, seq t {comp label1:::p::p, space ::586:x, comp editButton:::p::p}, seq l {comp label2:::p::p, space s:::p, comp errorLegend:::p:20:p, space :::p, comp label3:::p::p, space s:::p, comp ambiguousLegend:::p:20:p, space :::p, comp label4:::p::p}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, comp label1:::p::p, space :::p, comp scrollPane1::::332:x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par t {comp editButton:::p::p, comp label1:::p::p}, space :::p, comp scrollPane1::::296:x, space :::p, par b {comp label2::b:p::p, comp errorLegend::b:p::p, comp label3::b:p::p, comp ambiguousLegend::b:p::p, comp label4::b:p::p}, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -75,6 +75,105 @@
         </void> 
        </object> 
       </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/edit.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>PTMDialog.editButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>editButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>editButtonActionPerformed</string> 
+          <boolean>false</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>PTMDialog.label2.text</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>label2</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JTextField</string> 
+        <void method="setProperty"> 
+         <string>editable</string> 
+         <boolean>false</boolean> 
+        </void> 
+        <void property="name"> 
+         <string>errorLegend</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>PTMDialog.label3.text</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>label3</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JTextField</string> 
+        <void method="setProperty"> 
+         <string>editable</string> 
+         <boolean>false</boolean> 
+        </void> 
+        <void property="name"> 
+         <string>ambiguousLegend</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>PTMDialog.label4.text</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>label4</string> 
+        </void> 
+       </object> 
+      </void> 
      </object> 
      <object class="com.jformdesigner.model.FormLayoutConstraints"> 
       <null/> 
@@ -88,7 +187,7 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>380</int> 
+        <int>685</int> 
         <int>365</int> 
        </object> 
       </void> 

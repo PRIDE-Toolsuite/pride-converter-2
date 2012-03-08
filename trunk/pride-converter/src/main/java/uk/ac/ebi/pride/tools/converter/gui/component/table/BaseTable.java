@@ -5,6 +5,7 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
 import uk.ac.ebi.pride.tools.converter.gui.model.DecoratedReportObject;
+import uk.ac.ebi.pride.tools.converter.gui.util.Colours;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
@@ -28,10 +29,6 @@ import java.util.List;
 public class BaseTable<T extends ReportObject> extends JTable implements CvUpdatable<T> {
 
     private static final int DOUBLE_CLICK_COUNT = 2;
-
-    public static final Color grey = new Color(219, 213, 218);
-    public static final Color lightBlue = new Color(100, 117, 245);
-    public static final Color errorRed = new Color(255, 102, 102);
 
     private BaseTable<T> _this;
     protected int modelSelectedRow;
@@ -99,7 +96,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
         Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
 
         if (isCellSelected(rowIndex, vColIndex)) {
-            c.setBackground(lightBlue);
+            c.setBackground(Colours.lightBlue);
         } else {
 
             if (enableRowValidation) {
@@ -115,7 +112,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
                         ReportObjectValidator validator = ValidatorFactory.getInstance().getReportValidator();
                         //if object has errors
                         if (validator.hasError(objToValidate)) {
-                            c.setBackground(errorRed);
+                            c.setBackground(Colours.errorRed);
                         } else {
 
                             Color bgCol = null;
@@ -124,9 +121,9 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
                                 bgCol = decoratedReportObject.getBackground();
                             }
                             //no errors and no predeficed color - use alternate colors
-                            if (bgCol == null){
+                            if (bgCol == null) {
                                 if (rowIndex % 2 == 0 && useAlternateRowColor) {
-                                    bgCol = grey;
+                                    bgCol = Colours.grey;
                                 } else {
                                     bgCol = getBackground();
                                 }
@@ -144,7 +141,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
             } else {
                 //just alternate colours
                 if (rowIndex % 2 == 0 && useAlternateRowColor) {
-                    c.setBackground(grey);
+                    c.setBackground(Colours.grey);
                 } else {
                     c.setBackground(getBackground());
                 }
