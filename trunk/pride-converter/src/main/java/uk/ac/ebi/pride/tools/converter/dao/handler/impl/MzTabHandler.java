@@ -1,6 +1,10 @@
 package uk.ac.ebi.pride.tools.converter.dao.handler.impl;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -109,6 +113,63 @@ public class MzTabHandler implements ExternalHandler {
         } catch (MzTabParsingException e) {
             throw new ConverterException("Failed to parse mzTab file: " + e.getMessage(), e);
         }
+    }
+    
+    /**
+     * Reads the DAO configuration parameters stored in an
+     * mzTab file directly from the file without parsing the
+     * whole mzTab file.
+     * @param mzTabFile The mzTab file to get the configuration from.
+     * @return The DAO's configuration or NULL in case no configuration is stored in the mzTab file.
+     */
+    public static Properties readDaoConfigrationFromFile(File mzTabFile) {
+    	try {
+			BufferedReader in = new BufferedReader(new FileReader(mzTabFile));
+			String line;
+			Properties configuration = new Properties();
+			boolean containsConfiguration = false;
+			// read and parse the file line by line
+			while ((line = in.readLine()) != null) {
+				// get all additional params
+				if (!line.startsWith("MTD"))
+					continue;
+				// stop if we're outside the metadata section
+				if (line.startsWith("PRH") || line.startsWith("PEH"))
+					break;
+				// check if it was generated using PRIDE Converter
+				if (line.contains("MzTab generation software,PRIDE Converter"))
+					containsConfiguration = true;
+				// ignore all non-params
+				if (!line.contains("pride_converter_dao_"))
+					continue;
+				// get the parameter name and value
+				int index = line.indexOf("pride_converter_dao_");
+				if (index < 0)
+					continue;
+				
+				int index1 = line.indexOf(',', index);
+				if (index1 < 0)
+					continue;
+				
+				int index2 = line.indexOf(']', index1);
+				if (index2 < 0)
+					continue;
+				
+				String name = line.substring(index + 20, index1).trim();
+				String value = line.substring(index1 + 1, index2).trim();
+				
+				configuration.setProperty(name, value);
+			}
+			
+			if (!containsConfiguration)
+				return null;
+			
+			return configuration;
+		} catch (FileNotFoundException e) {
+			throw new ConverterException("Could not find specified mzTab file.", e);
+		} catch (IOException e) {
+			throw new ConverterException("Failed to read mzTab file.", e);
+		}
     }
     
     /**
