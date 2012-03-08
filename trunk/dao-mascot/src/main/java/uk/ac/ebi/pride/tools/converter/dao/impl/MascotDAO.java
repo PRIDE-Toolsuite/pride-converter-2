@@ -261,11 +261,13 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
         // remove duplicates from same query (same sequence, same query)
         DAOProperty<Boolean> dupeSameQuery = new DAOProperty<Boolean>(SupportedProperties.DUPE_SAME_QUERY.getName(), (Boolean) SupportedProperties.DUPE_SAME_QUERY.getDefaultValue());
         dupeSameQuery.setDescription("Indicates whether duplicate peptides having the same sequence and coming from the same query (= spectrum) should be removed. These peptides may have different modifications reported.");
+        dupeSameQuery.setAdvanced(true);
         supportedProperties.add(dupeSameQuery);
 
         // remove duplicates from different query (same sequence, different mods)
         DAOProperty<Boolean> dupeDiffQuery = new DAOProperty<Boolean>(SupportedProperties.DUPE_DIFF_QUERY.getName(), (Boolean) SupportedProperties.DUPE_DIFF_QUERY.getDefaultValue());
         dupeDiffQuery.setDescription("Indicates whether duplicate peptides having the same sequence (but maybe different modifications) coming from different queries (= spectra) should be removed.");
+        dupeDiffQuery.setAdvanced(true);
         supportedProperties.add(dupeDiffQuery);
 
         // error tolerant searches
@@ -281,6 +283,7 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
         // protein grouping (old version)
         DAOProperty<Boolean> proteinGrouping = new DAOProperty<Boolean>(SupportedProperties.ENABLE_GROUPING.getName(), (Boolean) SupportedProperties.ENABLE_GROUPING.getDefaultValue());
         proteinGrouping.setDescription("Indicates whether the grouping mode (Occam's Razor, see Mascot documentation) should be enabled. This is the default behaviour for Mascot. This mode is not equivalent to the protein clustering introduced in Mascot 2.3.");
+        proteinGrouping.setAdvanced(true);
         supportedProperties.add(proteinGrouping);
 
         // ignore below ions score (0 default)
@@ -291,11 +294,13 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
         // compatibility mode
         DAOProperty<Boolean> compMode = new DAOProperty<Boolean>(SupportedProperties.COMPATIBILITY_MODE.getName(), (Boolean) SupportedProperties.COMPATIBILITY_MODE.getDefaultValue());
         compMode.setDescription("If set to true (default) the precuror charge will also be reported at the spectrum level using the best ranked peptide's charge state. This might lead to wrong precursor charges being reported. The correct charge state is always additionally reported at the peptide level.");
+        compMode.setAdvanced(true);
         supportedProperties.add(compMode);
         
         // remove empty spectra
         DAOProperty<Boolean> removeEmptySpec = new DAOProperty<Boolean>(SupportedProperties.REMOVE_EMPTY_SPECTRA.getName(), (Boolean) SupportedProperties.REMOVE_EMPTY_SPECTRA.getDefaultValue());
         removeEmptySpec.setDescription("If set to true (default) spectra without any peaks are ignored and not reported in the PRIDE XML file.");
+        removeEmptySpec.setAdvanced(true);
         supportedProperties.add(removeEmptySpec);
         
         // use homology threshold
