@@ -237,6 +237,11 @@ public class MzTabHandler implements ExternalHandler {
         // get the peptide from the mzTab file
         Collection<uk.ac.ebi.pride.mztab_java.model.Peptide> mzTabPeptides = mzTabFile.getProteinPeptides(accession, unitId);
 
+        if (mzTabPeptides == null) {
+        	logger.warn("The peptide '" + peptide.getSequence() + "' in " + accession + " was not found in the mzTab file.");
+        	return peptide;
+        }
+        
         // get the peptide scores
         Map<String, Double> peptideScores = Utils.extractPeptideScores(peptide);
 
@@ -249,7 +254,7 @@ public class MzTabHandler implements ExternalHandler {
                 for (uk.ac.ebi.pride.mztab_java.model.Param scoreParam : p.getSearchEngineScore()) {
                     // check if the value is the same as in the peptide object
                     if (peptideScores.containsKey(scoreParam.getAccession()) &&
-                            peptideScores.get(scoreParam.getAccession()).equals(scoreParam.getValue())) {
+                            peptideScores.get(scoreParam.getAccession()).toString().equals(scoreParam.getValue())) {
                         mzTabPeptide = p;
                         break;
                     }
@@ -263,7 +268,7 @@ public class MzTabHandler implements ExternalHandler {
 
         // if the peptide wasn't found in the mzTabFile log the problem and return
         if (mzTabPeptide == null) {
-            logger.warn("The peptide '" + peptide.getSequence() + "' in " + accession + " was not found in the mzTab file.");
+            logger.warn("The peptide '" + peptide.getSequence() + "' in " + accession + " was not found in the mzTab file ("+ peptideScores.toString() +").");
             return peptide;
         }
 
