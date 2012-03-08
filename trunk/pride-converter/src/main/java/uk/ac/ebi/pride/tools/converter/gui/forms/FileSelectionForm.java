@@ -11,6 +11,7 @@ import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
+import uk.ac.ebi.pride.tools.converter.dao.handler.impl.MzTabHandler;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.FastaFileFilter;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzTabFileFilter;
@@ -27,6 +28,7 @@ import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.gui.util.PreferenceManager;
 import uk.ac.ebi.pride.tools.converter.gui.validator.rules.PrideMergerFileRule;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import javax.help.CSH;
 import javax.swing.*;
@@ -1056,6 +1058,12 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         if (tab.exists()) {
                             fileBean.setSequenceFile(tab.getAbsolutePath());
                         }
+                        //if we have tab files, we need to check to see if the DAO options are consistently set
+                        Properties tabOptions = MzTabHandler.readDaoConfigrationFromFile(tab);
+                        if (tabOptions != null && !tabOptions.equals(getOptions())) {
+                            throw new ConverterException("The DAO options set in the mzTab file do not match those set for the XML conversion");
+                        }
+
                     }
                     //update spectrum file
                     if (singleSpectrumFile.getText() != null && !"".equals(singleSpectrumFile.getText().trim())) {
@@ -1079,10 +1087,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         ConverterData.getInstance().setFastaFormat(fastaFormat);
                     }
 
-//                //if we have tab files, we need to check to see if the DAO options are consistently set
-//                for (File tabFile : mzTabFileTable.getFiles()){
-//                    MzTabHandler
-//                }
+                    //if we have tab files, we need to check to see if the DAO options are consistently set
+                    for (File tabFile : mzTabFileTable.getFiles()) {
+                        Properties tabOptions = MzTabHandler.readDaoConfigrationFromFile(tabFile);
+                        if (tabOptions != null && !tabOptions.equals(getOptions())) {
+                            throw new ConverterException("The DAO options set in the mzTab file do not match those set for the XML conversion");
+                        }
+                    }
 
                     //if we have several mztab files, don't generate the report files now as there will be a subsequent
                     //step where the user must confirm the input file/mztab file assignment. The report generation will
