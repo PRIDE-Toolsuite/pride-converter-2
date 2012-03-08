@@ -1,5 +1,6 @@
 package uk.ac.ebi.pride.tools.converter.dao.handler.impl;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Properties;
 
@@ -11,11 +12,14 @@ import uk.ac.ebi.pride.tools.converter.report.model.Param;
 
 public class MzTabHandlerTest extends TestCase {
 	private MzTabHandler handler;
+	private File sourcefile;
 
 	public void setUp() throws Exception {
 		URL testFile = getClass().getClassLoader().getResource("mztab_handler_test.txt");
 		
 		assertNotNull(testFile);
+		
+		sourcefile = new File(testFile.toURI());
 		
 		handler = new MzTabHandler(testFile.getPath());
 	}
@@ -63,6 +67,15 @@ public class MzTabHandlerTest extends TestCase {
 
 	public void testGetDaoConfiguration() {
 		Properties properties = handler.getDaoConfiguration();
+		
+		assertNotNull(properties);
+		assertEquals(15, properties.size());
+		assertEquals("true", properties.getProperty("enable_protein_grouping"));
+		assertEquals("10.0", properties.getProperty("ignore_below_ions_score"));
+	}
+	
+	public void testReadDaoConfigurationFromFile() {
+		Properties properties = MzTabHandler.readDaoConfigrationFromFile(sourcefile);
 		
 		assertNotNull(properties);
 		assertEquals(15, properties.size());
