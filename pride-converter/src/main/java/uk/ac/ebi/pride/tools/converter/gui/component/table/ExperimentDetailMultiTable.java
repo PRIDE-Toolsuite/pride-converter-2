@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui.component.table;
 
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ExperimentDetailMultiTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.util.Colours;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -43,7 +44,7 @@ public class ExperimentDetailMultiTable extends JTable {
         Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
 
         if (isCellSelected(rowIndex, vColIndex)) {
-            c.setBackground(BaseTable.lightBlue);
+            c.setBackground(Colours.lightBlue);
         } else {
 
             //get object at row
@@ -51,11 +52,11 @@ public class ExperimentDetailMultiTable extends JTable {
             //get row state
             ExperimentDetailMultiTableModel model = (ExperimentDetailMultiTableModel) getModel();
             if (model.isErrorDetectedInRow(modelSelectedRow)) {
-                c.setBackground(BaseTable.errorRed);
+                c.setBackground(Colours.errorRed);
             } else {
                 //no errors - use alternate colors
                 if (rowIndex % 2 == 0) {
-                    c.setBackground(BaseTable.grey);
+                    c.setBackground(Colours.grey);
                 } else {
                     c.setBackground(getBackground());
                 }

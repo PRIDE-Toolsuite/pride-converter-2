@@ -13,8 +13,8 @@ new FormModel {
 			"$sizePolicy": 0
 			"minimumSize": new java.awt.Dimension( 1024, 768 )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-				"$horizontalGroup": "par l {seq l {space :::p, par l {comp scrollPane1::l::187:x, comp progressBar1::l:p:187:p, comp scrollPane2::t:p:187:p}, space :::p}}"
-				"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1:::p:341:p, space :::p, comp scrollPane2::::270:x, space u:::p, comp progressBar1:::p:16:p, space :::p}}"
+				"$horizontalGroup": "par l {seq l {space :::p, par l {comp scrollPane1::t::187:x, par l:l {comp scrollPane2::t:p:187:p, comp label1::l:p::p}}, space :::p}}"
+				"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :::p, comp scrollPane1:::p:325:p, space :::p, comp scrollPane2::::293:x, space :::p}}"
 			} ) {
 				name: "panel1"
 				"border": new org.jdesktop.swingx.border.DropShadowBorder( sfield java.awt.Color black, 5, 0.5f, 12, false, false, true, true )
@@ -38,9 +38,10 @@ new FormModel {
 						"wrapStyleWord": true
 					} )
 				} )
-				add( new FormComponent( "javax.swing.JProgressBar" ) {
-					name: "progressBar1"
-					"foreground": new java.awt.Color( 0, 102, 102, 255 )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": "Progress"
+					"font": new java.awt.Font( "Dialog", 1, 20 )
 				} )
 			} )
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.CardLayout ) ) {

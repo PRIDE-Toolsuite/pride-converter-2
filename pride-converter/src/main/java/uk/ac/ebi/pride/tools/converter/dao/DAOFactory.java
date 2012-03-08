@@ -1,35 +1,15 @@
 package uk.ac.ebi.pride.tools.converter.dao;
 
+import uk.ac.ebi.pride.tools.converter.dao.impl.*;
+import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
+import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
+import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+
+import javax.swing.filechooser.FileFilter;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Properties;
-
-import javax.swing.filechooser.FileFilter;
-
-import uk.ac.ebi.pride.tools.converter.dao.impl.DtaDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.MascotDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.MgfDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.Ms2DAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.MzDataDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.MzIdentmlDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.MzXmlDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.MzmlDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.PklDAO;
-import uk.ac.ebi.pride.tools.converter.dao.impl.XTandemDAO;
-import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.DTAFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MGFFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MSGFFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MascotFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzDataFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzIdentMLFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzMLFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzXMLFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.PKLFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.PrideFileFilter;
-import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.XTandemFileFilter;
-import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,7 +34,7 @@ public class DAOFactory {
         MZML("mzml", "mzML", true, "help.ui.dao.mzml", false, false, false, new MzMLFileFilter()),
         MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, false, new MzXMLFileFilter()),
         MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, new MzDataFileFilter()),
-        MSGF("msgf", "MSGF", true, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter());
+        MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter());
 
         private String commandLineName;
         private String niceName;
@@ -115,9 +95,9 @@ public class DAOFactory {
             return allowDirectory;
         }
 
-		public boolean isExternalSpectraIsDirectory() {
-			return externalSpectraIsDirectory;
-		}
+        public boolean isExternalSpectraIsDirectory() {
+            return externalSpectraIsDirectory;
+        }
     }
 
     public enum GEL_COORDINATE_HANDLER_TYPE {
@@ -186,7 +166,7 @@ public class DAOFactory {
     }
 
     @SuppressWarnings("rawtypes")
-	public Collection<DAOProperty> getSupportedProperties(DAO_FORMAT format) {
+    public Collection<DAOProperty> getSupportedProperties(DAO_FORMAT format) {
 
         switch (format) {
             case MASCOT:

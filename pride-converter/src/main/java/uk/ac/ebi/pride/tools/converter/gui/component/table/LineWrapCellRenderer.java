@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui.component.table;
 
+import uk.ac.ebi.pride.tools.converter.gui.util.Colours;
+
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -33,16 +35,16 @@ public class LineWrapCellRenderer extends JTextArea implements TableCellRenderer
 
         //FATAL > ERROR > WARN > INFO > DEBUG
         if ("FATAL".equals(value)) {
-            this.setBackground(new Color(51, 51, 51));
+            this.setBackground(Colours.fatalBlack);
             this.setForeground(Color.WHITE);
         } else if ("ERROR".equals(value)) {
-            this.setBackground(new Color(255, 51, 51));
+            this.setBackground(Colours.errorRed);
             this.setForeground(Color.WHITE);
         } else if ("WARN".equals(value)) {
-            this.setBackground(new Color(255, 255, 51));
+            this.setBackground(Colours.warnYellow);
             this.setForeground(Color.BLACK);
         } else if ("INFO".equals(value)) {
-            this.setBackground(new Color(51, 51, 255));
+            this.setBackground(Colours.infoBlue);
             this.setForeground(Color.WHITE);
         } else if ("DEBUG".equals(value)) {
             this.setBackground(Color.WHITE);

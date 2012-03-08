@@ -35,10 +35,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.*;
 
@@ -51,6 +48,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private static final Logger logger = Logger.getLogger(FileSelectionForm.class);
 
     private OutputFormat format;
+    private boolean singleFileSelectionMode = true;
 
     //default
     private HandlerFactory.FASTA_FORMAT fastaFormat = HandlerFactory.FASTA_FORMAT.FULL;
@@ -61,6 +59,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         mzTabFileTable.getModel().addTableModelListener(this);
         sequenceFileTable.getModel().addTableModelListener(this);
         this.format = format;
+        //enable tabs based on format
         if (format.equals(OutputFormat.MZTAB)
                 || format.equals(OutputFormat.PRIDE_MERGED_XML)
                 || format.equals(OutputFormat.PRIDE_FILTERED_XML)) {
@@ -68,10 +67,26 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             fileTabbedPane.setEnabledAt(1, false);
             fileTabbedPane.setEnabledAt(2, false);
             fileTabbedPane.setEnabledAt(3, false);
+
+            singleFastaFile.setEnabled(false);
+            browseFastaFileButton.setEnabled(false);
+            singleMzTabFile.setEnabled(false);
+            browseMzTabButton.setEnabled(false);
+            singleSpectrumFile.setEnabled(false);
+            browseSpectrumFileButton.setEnabled(false);
+
             forceRegenerationBox.setEnabled(false);
         }
+
         //hide advanced options
         advancedOptionPanel.setVisible(false);
+
+        //for merging xml files, always need more than one file
+        if (format.equals(OutputFormat.PRIDE_MERGED_XML)) {
+            showAdvancedFileSelection();
+            singleModeLabel.setVisible(false);
+        }
+
     }
 
     private Collection<File> chooseFiles(boolean allowMultipleSelection, boolean allowDirectory, FileFilter filter) {
@@ -175,16 +190,95 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         fastaFormat = HandlerFactory.FASTA_FORMAT.UNIPROT_MATCH_AC;
     }
 
+    private void showHandCursor() {
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void showDefaultCursor() {
+        setCursor(Cursor.getDefaultCursor());
+    }
+
+    private void showSimpleFileSelection() {
+        //empty out values
+        dataFileTable.clearFiles();
+        sequenceFileTable.clearFiles();
+        mzTabFileTable.clearFiles();
+        spectrumFileTable.clearFiles();
+
+        //update validation listener
+        if (validationListerner != null) {
+            validationListerner.fireValidationListener(false);
+        }
+
+        //update UI
+        remove(advancedFileSelectionPanel);
+        add(singleFilePanel, BorderLayout.NORTH);
+        revalidate();
+        repaint();
+
+        singleFileSelectionMode = true;
+    }
+
     private void showHideLabelMouseClicked(MouseEvent e) {
         advancedOptionPanel.setVisible(!advancedOptionPanel.isVisible());
     }
 
-    private void showHideLabelMouseEntered() {
-        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    private void showAdvancedFileSelection() {
+        //empty out values
+        singleFastaFile.setText(null);
+        singleMzTabFile.setText(null);
+        singleSourceFile.setText(null);
+        singleSpectrumFile.setText(null);
+
+        //update validation listener
+        if (validationListerner != null) {
+            validationListerner.fireValidationListener(false);
+        }
+
+        //update UI
+        remove(singleFilePanel);
+        add(advancedFileSelectionPanel, BorderLayout.NORTH);
+        revalidate();
+        repaint();
+
+        singleFileSelectionMode = false;
     }
 
-    private void showHideLabelMouseExited() {
-        setCursor(Cursor.getDefaultCursor());
+    private void browseSpectrumFileButtonActionPerformed() {
+        Collection<File> files = chooseFiles(false, false, null);
+        if (!files.isEmpty()) {
+            singleSpectrumFile.setText(files.iterator().next().getAbsolutePath());
+        }
+    }
+
+    private void browseMzTabButtonActionPerformed() {
+        Collection<File> files = chooseFiles(false, false, new MzTabFileFilter());
+        if (!files.isEmpty()) {
+            singleMzTabFile.setText(files.iterator().next().getAbsolutePath());
+        }
+    }
+
+    private void browseFastaFileButtonActionPerformed() {
+        Collection<File> files = chooseFiles(false, false, new FastaFileFilter());
+        if (!files.isEmpty()) {
+            singleFastaFile.setText(files.iterator().next().getAbsolutePath());
+        }
+    }
+
+    private void browseDataFileButtonActionPerformed() {
+        Collection<File> files = chooseFiles(false, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().getFilter());
+        if (!files.isEmpty()) {
+            singleSourceFile.setText(files.iterator().next().getAbsolutePath());
+            validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()));
+        }
+    }
+
+    private void singleSourceFileActionPerformed() {
+        validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
+    }
+
+    private void singleSourceFileFocusLost() {
+        validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
     }
 
     private void initComponents() {
@@ -195,6 +289,27 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         gridOptionPanel = new JPanel();
         panel8 = new JPanel();
         forceRegenerationBox = new JCheckBox();
+        parserOptionPanel = new JPanel();
+        tableScrollPane = new JScrollPane();
+        parserOptionTable = new ParserOptionTable();
+        parserOptionHelpButton = new JButton();
+        showHideLabel = new JLabel();
+        singleFilePanel = new JPanel();
+        dataFileLabel = new JLabel();
+        singleSourceFile = new JTextField();
+        browseDataFileButton = new JButton();
+        label2 = new JLabel();
+        singleFastaFile = new JTextField();
+        browseFastaFileButton = new JButton();
+        label3 = new JLabel();
+        singleMzTabFile = new JTextField();
+        browseMzTabButton = new JButton();
+        label4 = new JLabel();
+        singleSpectrumFile = new JTextField();
+        browseSpectrumFileButton = new JButton();
+        multipleModeLabel = new JLabel();
+        fastaFormatList = new JComboBox();
+        advancedFileSelectionPanel = new JPanel();
         fileTabbedPane = new JTabbedPane();
         panel3 = new JPanel();
         scrollPane1 = new JScrollPane();
@@ -217,13 +332,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         scrollPane4 = new JScrollPane();
         spectrumFileTable = new FileTable();
         button5 = new JButton();
-        panel7 = new JPanel();
-        tableScrollPane = new JScrollPane();
-        parserOptionTable = new ParserOptionTable();
-        parserOptionHelpButton = new JButton();
-        showHideLabel = new JLabel();
+        singleModeLabel = new JLabel();
 
 //======== this ========
+        setLayout(new BorderLayout());
 
 //======== advancedOptionPanel ========
         {
@@ -249,237 +361,19 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             advancedOptionPanelLayout.setHorizontalGroup(
                     advancedOptionPanelLayout.createParallelGroup()
                             .addGroup(advancedOptionPanelLayout.createSequentialGroup()
-                                    .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 647, Short.MAX_VALUE)
+                                    .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
                                     .addContainerGap())
             );
             advancedOptionPanelLayout.setVerticalGroup(
                     advancedOptionPanelLayout.createParallelGroup()
-                            .addComponent(gridOptionPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                            .addComponent(gridOptionPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             );
         }
+        add(advancedOptionPanel, BorderLayout.SOUTH);
 
-//======== fileTabbedPane ========
+//======== parserOptionPanel ========
         {
-            fileTabbedPane.setBorder(null);
-
-            //======== panel3 ========
-            {
-
-                //======== scrollPane1 ========
-                {
-                    scrollPane1.setViewportView(dataFileTable);
-                }
-
-                //---- button1 ----
-                button1.setText(bundle.getString("SelecFilePanel.button1.text"));
-                button1.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        loadDataFiles(e);
-                    }
-                });
-
-                GroupLayout panel3Layout = new GroupLayout(panel3);
-                panel3.setLayout(panel3Layout);
-                panel3Layout.setHorizontalGroup(
-                        panel3Layout.createParallelGroup()
-                                .addGroup(panel3Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(panel3Layout.createParallelGroup()
-                                                .addComponent(button1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
-                                        .addContainerGap())
-                );
-                panel3Layout.setVerticalGroup(
-                        panel3Layout.createParallelGroup()
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(button1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap())
-                );
-            }
-            fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel3.tab.title"), panel3);
-
-
-            //======== panel4 ========
-            {
-
-                //======== scrollPane3 ========
-                {
-                    scrollPane3.setViewportView(sequenceFileTable);
-                }
-
-                //---- button3 ----
-                button3.setText(bundle.getString("SelecFilePanel.button3.text"));
-                button3.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        loadSequenceFiles(e);
-                    }
-                });
-
-                //======== panel6 ========
-                {
-                    panel6.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.panel6.border")));
-                    panel6.setLayout(new FlowLayout());
-
-                    //---- fullIdButton ----
-                    fullIdButton.setText(bundle.getString("SelecFilePanel.fullIdButton.text"));
-                    fullIdButton.setSelected(true);
-                    fullIdButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            fullIdButtonActionPerformed(e);
-                        }
-                    });
-                    panel6.add(fullIdButton);
-
-                    //---- firstWordButton ----
-                    firstWordButton.setText(bundle.getString("SelecFilePanel.firstWordButton.text"));
-                    firstWordButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            firstWordButtonActionPerformed(e);
-                        }
-                    });
-                    panel6.add(firstWordButton);
-
-                    //---- uniprotIdButton ----
-                    uniprotIdButton.setText(bundle.getString("SelecFilePanel.uniprotIdButton.text"));
-                    uniprotIdButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            uniprotIdButtonActionPerformed(e);
-                        }
-                    });
-                    panel6.add(uniprotIdButton);
-
-                    //---- uniprotAcButton ----
-                    uniprotAcButton.setText(bundle.getString("SelecFilePanel.uniprotAcButton.text"));
-                    uniprotAcButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            uniprotAcButtonActionPerformed(e);
-                        }
-                    });
-                    panel6.add(uniprotAcButton);
-                }
-
-                GroupLayout panel4Layout = new GroupLayout(panel4);
-                panel4.setLayout(panel4Layout);
-                panel4Layout.setHorizontalGroup(
-                        panel4Layout.createParallelGroup()
-                                .addGroup(panel4Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(panel4Layout.createParallelGroup()
-                                                .addComponent(button3, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
-                                                .addComponent(panel6, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
-                                        .addContainerGap())
-                );
-                panel4Layout.setVerticalGroup(
-                        panel4Layout.createParallelGroup()
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(button3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap())
-                );
-            }
-            fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel4.tab.title"), panel4);
-
-
-            //======== panel5 ========
-            {
-
-                //======== scrollPane2 ========
-                {
-                    scrollPane2.setViewportView(mzTabFileTable);
-                }
-
-                //---- button2 ----
-                button2.setText(bundle.getString("SelecFilePanel.button2.text"));
-                button2.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        loadTabFiles(e);
-                    }
-                });
-
-                GroupLayout panel5Layout = new GroupLayout(panel5);
-                panel5.setLayout(panel5Layout);
-                panel5Layout.setHorizontalGroup(
-                        panel5Layout.createParallelGroup()
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(panel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                .addComponent(scrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
-                                                .addComponent(button2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                                        .addContainerGap())
-                );
-                panel5Layout.setVerticalGroup(
-                        panel5Layout.createParallelGroup()
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(button2, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap())
-                );
-            }
-            fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel5.tab.title"), panel5);
-
-
-            //======== panel1 ========
-            {
-
-                //======== scrollPane4 ========
-                {
-                    scrollPane4.setViewportView(spectrumFileTable);
-                }
-
-                //---- button5 ----
-                button5.setText(bundle.getString("SelecFilePanel.button5.text"));
-                button5.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        loadSpectrumFiles(e);
-                    }
-                });
-
-                GroupLayout panel1Layout = new GroupLayout(panel1);
-                panel1.setLayout(panel1Layout);
-                panel1Layout.setHorizontalGroup(
-                        panel1Layout.createParallelGroup()
-                                .addGroup(panel1Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addGroup(panel1Layout.createParallelGroup()
-                                                .addComponent(scrollPane4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
-                                                .addComponent(button5, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
-                                        .addContainerGap())
-                );
-                panel1Layout.setVerticalGroup(
-                        panel1Layout.createParallelGroup()
-                                .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                        .addContainerGap()
-                                        .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
-                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(button5, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap())
-                );
-            }
-            fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel1.tab.title"), panel1);
-
-        }
-
-//======== panel7 ========
-        {
-            panel7.setBorder(new TitledBorder(BorderFactory.createEmptyBorder(), bundle.getString("SelecFilePanel.panel7.border")));
+            parserOptionPanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.parserOptionPanel.border")));
 
             //======== tableScrollPane ========
             {
@@ -493,7 +387,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             //---- showHideLabel ----
             showHideLabel.setText(bundle.getString("SelecFilePanel.showHideLabel.text"));
             showHideLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-            showHideLabel.setForeground(new Color(0, 51, 255));
+            showHideLabel.setForeground(new Color(51, 51, 255));
             showHideLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -502,59 +396,465 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
-                    showHideLabelMouseEntered();
+                    showHandCursor();
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
-                    showHideLabelMouseExited();
+                    showDefaultCursor();
                 }
             });
 
-            GroupLayout panel7Layout = new GroupLayout(panel7);
-            panel7.setLayout(panel7Layout);
-            panel7Layout.setHorizontalGroup(
-                    panel7Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
+            GroupLayout parserOptionPanelLayout = new GroupLayout(parserOptionPanel);
+            parserOptionPanel.setLayout(parserOptionPanelLayout);
+            parserOptionPanelLayout.setHorizontalGroup(
+                    parserOptionPanelLayout.createParallelGroup()
+                            .addGroup(GroupLayout.Alignment.TRAILING, parserOptionPanelLayout.createSequentialGroup()
                                     .addComponent(showHideLabel)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 330, Short.MAX_VALUE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
                                     .addComponent(parserOptionHelpButton))
-                            .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 655, Short.MAX_VALUE)
+                            .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)
             );
-            panel7Layout.setVerticalGroup(
-                    panel7Layout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel7Layout.createSequentialGroup()
-                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+            parserOptionPanelLayout.setVerticalGroup(
+                    parserOptionPanelLayout.createParallelGroup()
+                            .addGroup(GroupLayout.Alignment.TRAILING, parserOptionPanelLayout.createSequentialGroup()
+                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(panel7Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                    .addGroup(parserOptionPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                             .addComponent(parserOptionHelpButton)
                                             .addComponent(showHideLabel)))
             );
         }
+        add(parserOptionPanel, BorderLayout.CENTER);
 
-        GroupLayout layout = new GroupLayout(this);
-        setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(advancedOptionPanel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(panel7, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(fileTabbedPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE))
-                                .addContainerGap())
-        );
-        layout.setVerticalGroup(
-                layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(fileTabbedPane, GroupLayout.PREFERRED_SIZE, 238, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(advancedOptionPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addContainerGap())
-        );
+//======== singleFilePanel ========
+        {
+            singleFilePanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.singleFilePanel.border")));
+
+            //---- dataFileLabel ----
+            dataFileLabel.setText(bundle.getString("SelecFilePanel.dataFileLabel.text"));
+
+            //---- singleSourceFile ----
+            singleSourceFile.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    singleSourceFileActionPerformed();
+                }
+            });
+            singleSourceFile.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    singleSourceFileFocusLost();
+                }
+            });
+
+            //---- browseDataFileButton ----
+            browseDataFileButton.setText(bundle.getString("SelecFilePanel.browseDataFileButton.text"));
+            browseDataFileButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    browseDataFileButtonActionPerformed();
+                }
+            });
+
+            //---- label2 ----
+            label2.setText(bundle.getString("SelecFilePanel.label2.text"));
+
+            //---- browseFastaFileButton ----
+            browseFastaFileButton.setText(bundle.getString("SelecFilePanel.browseFastaFileButton.text"));
+            browseFastaFileButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    browseFastaFileButtonActionPerformed();
+                }
+            });
+
+            //---- label3 ----
+            label3.setText(bundle.getString("SelecFilePanel.label3.text"));
+
+            //---- browseMzTabButton ----
+            browseMzTabButton.setText(bundle.getString("SelecFilePanel.browseMzTabButton.text"));
+            browseMzTabButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    browseMzTabButtonActionPerformed();
+                }
+            });
+
+            //---- label4 ----
+            label4.setText(bundle.getString("SelecFilePanel.label4.text"));
+
+            //---- browseSpectrumFileButton ----
+            browseSpectrumFileButton.setText(bundle.getString("SelecFilePanel.browseSpectrumFileButton.text"));
+            browseSpectrumFileButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    browseSpectrumFileButtonActionPerformed();
+                }
+            });
+
+            //---- multipleModeLabel ----
+            multipleModeLabel.setText(bundle.getString("SelecFilePanel.multipleModeLabel.text"));
+            multipleModeLabel.setForeground(new Color(51, 51, 255));
+            multipleModeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+            multipleModeLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            multipleModeLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    showAdvancedFileSelection();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    showHandCursor();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    showDefaultCursor();
+                }
+            });
+
+            //---- fastaFormatList ----
+            fastaFormatList.setModel(new DefaultComboBoxModel(new String[]{
+                    "Match Full ID Line",
+                    "Match First Word",
+                    "Match Uniprot AC",
+                    "Match Uniprot ID"
+            }));
+
+            GroupLayout singleFilePanelLayout = new GroupLayout(singleFilePanel);
+            singleFilePanel.setLayout(singleFilePanelLayout);
+            singleFilePanelLayout.setHorizontalGroup(
+                    singleFilePanelLayout.createParallelGroup()
+                            .addGroup(singleFilePanelLayout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addGroup(singleFilePanelLayout.createParallelGroup()
+                                            .addGroup(singleFilePanelLayout.createSequentialGroup()
+                                                    .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                            .addGroup(singleFilePanelLayout.createSequentialGroup()
+                                                                    .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                                            .addComponent(label2)
+                                                                            .addComponent(label4)
+                                                                            .addComponent(dataFileLabel))
+                                                                    .addGap(12, 12, 12))
+                                                            .addGroup(singleFilePanelLayout.createSequentialGroup()
+                                                                    .addComponent(label3)
+                                                                    .addGap(18, 18, 18)))
+                                                    .addGroup(singleFilePanelLayout.createParallelGroup()
+                                                            .addComponent(singleSourceFile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                                                            .addComponent(singleMzTabFile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                                                            .addComponent(singleSpectrumFile, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                                                            .addGroup(singleFilePanelLayout.createSequentialGroup()
+                                                                    .addComponent(singleFastaFile, GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(fastaFormatList, 0, 118, Short.MAX_VALUE)))
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(singleFilePanelLayout.createParallelGroup()
+                                                            .addComponent(browseDataFileButton)
+                                                            .addComponent(browseFastaFileButton)
+                                                            .addComponent(browseMzTabButton)
+                                                            .addComponent(browseSpectrumFileButton))
+                                                    .addContainerGap())
+                                            .addComponent(multipleModeLabel, GroupLayout.Alignment.TRAILING)))
+            );
+            singleFilePanelLayout.setVerticalGroup(
+                    singleFilePanelLayout.createParallelGroup()
+                            .addGroup(GroupLayout.Alignment.TRAILING, singleFilePanelLayout.createSequentialGroup()
+                                    .addComponent(multipleModeLabel)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                            .addComponent(singleSourceFile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(browseDataFileButton)
+                                            .addComponent(dataFileLabel))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                            .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(singleFastaFile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(browseFastaFileButton)
+                                                    .addComponent(label2))
+                                            .addComponent(fastaFormatList, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                            .addComponent(singleMzTabFile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(browseMzTabButton)
+                                            .addComponent(label3))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(singleFilePanelLayout.createParallelGroup()
+                                            .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                    .addComponent(singleSpectrumFile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(label4))
+                                            .addComponent(browseSpectrumFileButton))
+                                    .addContainerGap())
+            );
+        }
+        add(singleFilePanel, BorderLayout.NORTH);
+
+//======== advancedFileSelectionPanel ========
+        {
+
+            //======== fileTabbedPane ========
+            {
+                fileTabbedPane.setBorder(null);
+
+                //======== panel3 ========
+                {
+
+                    //======== scrollPane1 ========
+                    {
+                        scrollPane1.setViewportView(dataFileTable);
+                    }
+
+                    //---- button1 ----
+                    button1.setText(bundle.getString("SelecFilePanel.button1.text"));
+                    button1.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            loadDataFiles(e);
+                        }
+                    });
+
+                    GroupLayout panel3Layout = new GroupLayout(panel3);
+                    panel3.setLayout(panel3Layout);
+                    panel3Layout.setHorizontalGroup(
+                            panel3Layout.createParallelGroup()
+                                    .addGroup(panel3Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addGroup(panel3Layout.createParallelGroup()
+                                                    .addComponent(button1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
+                                            .addContainerGap())
+                    );
+                    panel3Layout.setVerticalGroup(
+                            panel3Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addContainerGap())
+                    );
+                }
+                fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel3.tab.title"), panel3);
+
+
+                //======== panel4 ========
+                {
+
+                    //======== scrollPane3 ========
+                    {
+                        scrollPane3.setViewportView(sequenceFileTable);
+                    }
+
+                    //---- button3 ----
+                    button3.setText(bundle.getString("SelecFilePanel.button3.text"));
+                    button3.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            loadSequenceFiles(e);
+                        }
+                    });
+
+                    //======== panel6 ========
+                    {
+                        panel6.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.panel6.border")));
+                        panel6.setLayout(new FlowLayout());
+
+                        //---- fullIdButton ----
+                        fullIdButton.setText(bundle.getString("SelecFilePanel.fullIdButton.text"));
+                        fullIdButton.setSelected(true);
+                        fullIdButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                fullIdButtonActionPerformed(e);
+                            }
+                        });
+                        panel6.add(fullIdButton);
+
+                        //---- firstWordButton ----
+                        firstWordButton.setText(bundle.getString("SelecFilePanel.firstWordButton.text"));
+                        firstWordButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                firstWordButtonActionPerformed(e);
+                            }
+                        });
+                        panel6.add(firstWordButton);
+
+                        //---- uniprotIdButton ----
+                        uniprotIdButton.setText(bundle.getString("SelecFilePanel.uniprotIdButton.text"));
+                        uniprotIdButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                uniprotIdButtonActionPerformed(e);
+                            }
+                        });
+                        panel6.add(uniprotIdButton);
+
+                        //---- uniprotAcButton ----
+                        uniprotAcButton.setText(bundle.getString("SelecFilePanel.uniprotAcButton.text"));
+                        uniprotAcButton.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                uniprotAcButtonActionPerformed(e);
+                            }
+                        });
+                        panel6.add(uniprotAcButton);
+                    }
+
+                    GroupLayout panel4Layout = new GroupLayout(panel4);
+                    panel4.setLayout(panel4Layout);
+                    panel4Layout.setHorizontalGroup(
+                            panel4Layout.createParallelGroup()
+                                    .addGroup(panel4Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addGroup(panel4Layout.createParallelGroup()
+                                                    .addComponent(button3, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                                                    .addComponent(panel6, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
+                                            .addContainerGap())
+                    );
+                    panel4Layout.setVerticalGroup(
+                            panel4Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(button3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addContainerGap())
+                    );
+                }
+                fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel4.tab.title"), panel4);
+
+
+                //======== panel5 ========
+                {
+
+                    //======== scrollPane2 ========
+                    {
+                        scrollPane2.setViewportView(mzTabFileTable);
+                    }
+
+                    //---- button2 ----
+                    button2.setText(bundle.getString("SelecFilePanel.button2.text"));
+                    button2.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            loadTabFiles(e);
+                        }
+                    });
+
+                    GroupLayout panel5Layout = new GroupLayout(panel5);
+                    panel5.setLayout(panel5Layout);
+                    panel5Layout.setHorizontalGroup(
+                            panel5Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addGroup(panel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(scrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                                                    .addComponent(button2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                            .addContainerGap())
+                    );
+                    panel5Layout.setVerticalGroup(
+                            panel5Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addContainerGap())
+                    );
+                }
+                fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel5.tab.title"), panel5);
+
+
+                //======== panel1 ========
+                {
+
+                    //======== scrollPane4 ========
+                    {
+                        scrollPane4.setViewportView(spectrumFileTable);
+                    }
+
+                    //---- button5 ----
+                    button5.setText(bundle.getString("SelecFilePanel.button5.text"));
+                    button5.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            loadSpectrumFiles(e);
+                        }
+                    });
+
+                    GroupLayout panel1Layout = new GroupLayout(panel1);
+                    panel1.setLayout(panel1Layout);
+                    panel1Layout.setHorizontalGroup(
+                            panel1Layout.createParallelGroup()
+                                    .addGroup(panel1Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addGroup(panel1Layout.createParallelGroup()
+                                                    .addComponent(scrollPane4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                                                    .addComponent(button5, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                            .addContainerGap())
+                    );
+                    panel1Layout.setVerticalGroup(
+                            panel1Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                            .addContainerGap()
+                                            .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(button5, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addContainerGap())
+                    );
+                }
+                fileTabbedPane.addTab(bundle.getString("SelecFilePanel.panel1.tab.title"), panel1);
+
+            }
+
+            //---- singleModeLabel ----
+            singleModeLabel.setText(bundle.getString("SelecFilePanel.singleModeLabel.text"));
+            singleModeLabel.setForeground(new Color(51, 51, 255));
+            singleModeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+            singleModeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            singleModeLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    showSimpleFileSelection();
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    showHandCursor();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    showDefaultCursor();
+                }
+            });
+
+            GroupLayout advancedFileSelectionPanelLayout = new GroupLayout(advancedFileSelectionPanel);
+            advancedFileSelectionPanel.setLayout(advancedFileSelectionPanelLayout);
+            advancedFileSelectionPanelLayout.setHorizontalGroup(
+                    advancedFileSelectionPanelLayout.createParallelGroup()
+                            .addGroup(advancedFileSelectionPanelLayout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addGroup(advancedFileSelectionPanelLayout.createParallelGroup()
+                                            .addComponent(fileTabbedPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
+                                            .addComponent(singleModeLabel, GroupLayout.Alignment.TRAILING))
+                                    .addContainerGap())
+            );
+            advancedFileSelectionPanelLayout.setVerticalGroup(
+                    advancedFileSelectionPanelLayout.createParallelGroup()
+                            .addGroup(GroupLayout.Alignment.TRAILING, advancedFileSelectionPanelLayout.createSequentialGroup()
+                                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(singleModeLabel)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(fileTabbedPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addContainerGap())
+            );
+        }
 
 //---- buttonGroup2 ----
         ButtonGroup buttonGroup2 = new ButtonGroup();
@@ -571,6 +871,27 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JPanel gridOptionPanel;
     private JPanel panel8;
     private JCheckBox forceRegenerationBox;
+    private JPanel parserOptionPanel;
+    private JScrollPane tableScrollPane;
+    private ParserOptionTable parserOptionTable;
+    private JButton parserOptionHelpButton;
+    private JLabel showHideLabel;
+    private JPanel singleFilePanel;
+    private JLabel dataFileLabel;
+    private JTextField singleSourceFile;
+    private JButton browseDataFileButton;
+    private JLabel label2;
+    private JTextField singleFastaFile;
+    private JButton browseFastaFileButton;
+    private JLabel label3;
+    private JTextField singleMzTabFile;
+    private JButton browseMzTabButton;
+    private JLabel label4;
+    private JTextField singleSpectrumFile;
+    private JButton browseSpectrumFileButton;
+    private JLabel multipleModeLabel;
+    private JComboBox fastaFormatList;
+    private JPanel advancedFileSelectionPanel;
     private JTabbedPane fileTabbedPane;
     private JPanel panel3;
     private JScrollPane scrollPane1;
@@ -593,11 +914,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JScrollPane scrollPane4;
     private FileTable spectrumFileTable;
     private JButton button5;
-    private JPanel panel7;
-    private JScrollPane tableScrollPane;
-    private ParserOptionTable parserOptionTable;
-    private JButton parserOptionHelpButton;
-    private JLabel showHideLabel;
+    private JLabel singleModeLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     private Properties getOptions() {
@@ -677,6 +994,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
         //update UI tabbed pane
         fileTabbedPane.setTitleAt(0, ConverterData.getInstance().getDaoFormat().getNiceName() + " files");
+        dataFileLabel.setText(ConverterData.getInstance().getDaoFormat().getNiceName() + " file");
 
         //update option table
         updateOptionTable();
@@ -684,10 +1002,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         //enable the spectrum file tab on request
         if (ConverterData.getInstance().getDaoFormat().isAllowExternalSpectra()) {
             fileTabbedPane.setEnabledAt(3, true);
+            singleSpectrumFile.setEnabled(true);
+            browseSpectrumFileButton.setEnabled(true);
         } else {
             fileTabbedPane.setEnabledAt(3, false);
+            singleSpectrumFile.setEnabled(false);
+            browseSpectrumFileButton.setEnabled(false);
         }
-
 
         //fire the table listener - this is required if users go back & forth without changing the
         //table content
@@ -705,88 +1026,75 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             //generate mztab files
             case MZTAB:
-                IOUtilities.generateMzTabFiles(getOptions(), dataFileTable.getFiles());
+                if (singleFileSelectionMode) {
+                    IOUtilities.generateMzTabFiles(getOptions(), Collections.singleton(new File(singleSourceFile.getText())));
+                } else {
+                    IOUtilities.generateMzTabFiles(getOptions(), dataFileTable.getFiles());
+                }
                 break;
 
             //will be generating pride xml file in the end
             case PRIDE_XML:
 
-                File sequenceFile = null;
-                //we only have 1/0 sequence file
-                if (!sequenceFileTable.getFiles().isEmpty()) {
-                    //store path and fasta type
-                    sequenceFile = sequenceFileTable.getFiles().iterator().next();
-                    ConverterData.getInstance().setFastaFormat(fastaFormat);
-                }
+                //store options for later use
+                ConverterData.getInstance().setOptions(getOptions());
+
+                if (singleFileSelectionMode) {
+
+                    //create filebean with source file
+                    FileBean fileBean = new FileBean(new File(singleSourceFile.getText()).getAbsolutePath());
+                    //update sequence file
+                    if (singleFastaFile.getText() != null && !"".equals(singleFastaFile.getText().trim())) {
+                        File fasta = new File(singleFastaFile.getText());
+                        if (fasta.exists()) {
+                            fileBean.setSequenceFile(fasta.getAbsolutePath());
+                        }
+                    }
+                    //update tab file
+                    if (singleMzTabFile.getText() != null && !"".equals(singleMzTabFile.getText().trim())) {
+                        File tab = new File(singleMzTabFile.getText());
+                        if (tab.exists()) {
+                            fileBean.setSequenceFile(tab.getAbsolutePath());
+                        }
+                    }
+                    //update spectrum file
+                    if (singleSpectrumFile.getText() != null && !"".equals(singleSpectrumFile.getText().trim())) {
+                        File spectrum = new File(singleSpectrumFile.getText());
+                        if (spectrum.exists()) {
+                            fileBean.setSequenceFile(spectrum.getAbsolutePath());
+                        }
+                    }
+                    ConverterData.getInstance().getDataFiles().add(fileBean);
+
+                    //convert single file
+                    IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected(), true);
+
+                } else {
+
+                    File sequenceFile = null;
+                    //we only have 1/0 sequence file
+                    if (!sequenceFileTable.getFiles().isEmpty()) {
+                        //store path and fasta type
+                        sequenceFile = sequenceFileTable.getFiles().iterator().next();
+                        ConverterData.getInstance().setFastaFormat(fastaFormat);
+                    }
 
 //                //if we have tab files, we need to check to see if the DAO options are consistently set
 //                for (File tabFile : mzTabFileTable.getFiles()){
 //                    MzTabHandler
 //                }
 
-                //if we have several mztab files, don't generate the report files now as there will be a subsequent
-                //step where the user must confirm the input file/mztab file assignment. The report generation will
-                //be done in the next step
-                boolean hasMultipleTabFiles = false;
-                MzTabFileMappingForm mzTabFileMappingForm = null;
-                if (mzTabFileTable.getFiles().size() > 1) {
+                    //if we have several mztab files, don't generate the report files now as there will be a subsequent
+                    //step where the user must confirm the input file/mztab file assignment. The report generation will
+                    //be done in the next step
+                    boolean hasMultipleTabFiles = false;
+                    MzTabFileMappingForm mzTabFileMappingForm = null;
+                    if (mzTabFileTable.getFiles().size() > 1) {
 
-                    //update flag
-                    hasMultipleTabFiles = true;
+                        //update flag
+                        hasMultipleTabFiles = true;
 
-                    //only store input files, the logic will be handled by other form
-                    for (File inputFile : dataFileTable.getFiles()) {
-                        FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
-                        if (sequenceFile != null) {
-                            fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
-                        }
-                        ConverterData.getInstance().getDataFiles().add(fileBean);
-                    }
-
-                    //store options for next form
-                    ConverterData.getInstance().setOptions(getOptions());
-
-                    //store mztab files externally to fileBeans
-                    for (File mzTabFile : mzTabFileTable.getFiles()) {
-                        ConverterData.getInstance().getMztabFiles().add(mzTabFile.getAbsolutePath());
-                    }
-
-                    //register a new form to deal with the mapping
-                    mzTabFileMappingForm = new MzTabFileMappingForm();
-                    NavigationPanel.getInstance().registerFormAfter(mzTabFileMappingForm, this);
-
-                } else {
-                    File mzTabFile = null;
-                    //we only have 1/0 mztab file
-                    if (!mzTabFileTable.getFiles().isEmpty()) {
-                        mzTabFile = mzTabFileTable.getFiles().iterator().next();
-                    }
-                    //if there is only one mztab file, it will be added to all input files
-                    for (File inputFile : dataFileTable.getFiles()) {
-                        FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
-                        if (sequenceFile != null) {
-                            fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
-                        }
-                        if (mzTabFile != null) {
-                            fileBean.setMzTabFile(mzTabFile.getAbsolutePath());
-                        }
-                        ConverterData.getInstance().getDataFiles().add(fileBean);
-                    }
-
-                }
-
-                //if we have several spectrum files, don't generate the report files now as there will be a subsequent
-                //step where the user must confirm the input file/spectrum file assignment. The report generation will
-                //be done in the next step
-                boolean hasMultipleSpectrumFiles = false;
-                if (spectrumFileTable.getFiles().size() > 1) {
-
-                    //update flag
-                    hasMultipleSpectrumFiles = true;
-
-                    //only store input files, the logic will be handled by other form
-                    //only store the input files if they haven't already been stored in the mztab block above
-                    if (ConverterData.getInstance().getDataFiles().isEmpty()) {
+                        //only store input files, the logic will be handled by other form
                         for (File inputFile : dataFileTable.getFiles()) {
                             FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
                             if (sequenceFile != null) {
@@ -794,57 +1102,105 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             }
                             ConverterData.getInstance().getDataFiles().add(fileBean);
                         }
-                    }
 
-                    //store spectra files externally to fileBeans
-                    for (File spectrumFile : spectrumFileTable.getFiles()) {
-                        ConverterData.getInstance().getSpectrumFiles().add(spectrumFile.getAbsolutePath());
-                    }
+                        //store mztab files externally to fileBeans
+                        for (File mzTabFile : mzTabFileTable.getFiles()) {
+                            ConverterData.getInstance().getMztabFiles().add(mzTabFile.getAbsolutePath());
+                        }
 
-                    //store options for next form
-                    ConverterData.getInstance().setOptions(getOptions());
+                        //register a new form to deal with the mapping
+                        mzTabFileMappingForm = new MzTabFileMappingForm();
+                        NavigationPanel.getInstance().registerFormAfter(mzTabFileMappingForm, this);
 
-                    //register a new form to deal with the mapping
-                    if (hasMultipleTabFiles) {
-                        NavigationPanel.getInstance().registerFormAfter(new SpectrumFileMappingForm(), mzTabFileMappingForm);
-                        mzTabFileMappingForm.setDeferReportFileGeneration(true);
                     } else {
-                        NavigationPanel.getInstance().registerFormAfter(new SpectrumFileMappingForm(), this);
-                    }
-
-                } else {
-                    File spectrumFile = null;
-                    //we only have 1/0 mztab file
-                    if (!spectrumFileTable.getFiles().isEmpty()) {
-                        spectrumFile = spectrumFileTable.getFiles().iterator().next();
-                    }
-
-                    //if there is only one spectrum file, it will be added to all input files
-                    if (ConverterData.getInstance().getDataFiles().isEmpty()) {
-                        //if beans haven't been stored yet, do so now
+                        File mzTabFile = null;
+                        //we only have 1/0 mztab file
+                        if (!mzTabFileTable.getFiles().isEmpty()) {
+                            mzTabFile = mzTabFileTable.getFiles().iterator().next();
+                        }
+                        //if there is only one mztab file, it will be added to all input files
                         for (File inputFile : dataFileTable.getFiles()) {
                             FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
                             if (sequenceFile != null) {
                                 fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
                             }
+                            if (mzTabFile != null) {
+                                fileBean.setMzTabFile(mzTabFile.getAbsolutePath());
+                            }
+                            ConverterData.getInstance().getDataFiles().add(fileBean);
+                        }
+
+                    }
+
+                    //if we have several spectrum files, don't generate the report files now as there will be a subsequent
+                    //step where the user must confirm the input file/spectrum file assignment. The report generation will
+                    //be done in the next step
+                    boolean hasMultipleSpectrumFiles = false;
+                    if (spectrumFileTable.getFiles().size() > 1) {
+
+                        //update flag
+                        hasMultipleSpectrumFiles = true;
+
+                        //only store input files, the logic will be handled by other form
+                        //only store the input files if they haven't already been stored in the mztab block above
+                        if (ConverterData.getInstance().getDataFiles().isEmpty()) {
+                            for (File inputFile : dataFileTable.getFiles()) {
+                                FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                                if (sequenceFile != null) {
+                                    fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
+                                }
+                                ConverterData.getInstance().getDataFiles().add(fileBean);
+                            }
+                        }
+
+                        //store spectra files externally to fileBeans
+                        for (File spectrumFile : spectrumFileTable.getFiles()) {
+                            ConverterData.getInstance().getSpectrumFiles().add(spectrumFile.getAbsolutePath());
+                        }
+
+                        //register a new form to deal with the mapping
+                        if (hasMultipleTabFiles) {
+                            NavigationPanel.getInstance().registerFormAfter(new SpectrumFileMappingForm(), mzTabFileMappingForm);
+                            mzTabFileMappingForm.setDeferReportFileGeneration(true);
+                        } else {
+                            NavigationPanel.getInstance().registerFormAfter(new SpectrumFileMappingForm(), this);
+                        }
+
+                    } else {
+                        File spectrumFile = null;
+                        //we only have 1/0 mztab file
+                        if (!spectrumFileTable.getFiles().isEmpty()) {
+                            spectrumFile = spectrumFileTable.getFiles().iterator().next();
+                        }
+
+                        //if there is only one spectrum file, it will be added to all input files
+                        if (ConverterData.getInstance().getDataFiles().isEmpty()) {
+                            //if beans haven't been stored yet, do so now
+                            for (File inputFile : dataFileTable.getFiles()) {
+                                FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                                if (sequenceFile != null) {
+                                    fileBean.setSequenceFile(sequenceFile.getAbsolutePath());
+                                }
+                                if (spectrumFile != null) {
+                                    fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
+                                }
+                                ConverterData.getInstance().getDataFiles().add(fileBean);
+                            }
+                        } else {
+                            //otherwise just update the existing beans
                             if (spectrumFile != null) {
-                                fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
-                            }
-                            ConverterData.getInstance().getDataFiles().add(fileBean);
-                        }
-                    } else {
-                        //otherwise just update the existing beans
-                        if (spectrumFile != null) {
-                            for (FileBean fileBean : ConverterData.getInstance().getDataFiles()) {
-                                fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
+                                for (FileBean fileBean : ConverterData.getInstance().getDataFiles()) {
+                                    fileBean.setSpectrumFile(spectrumFile.getAbsolutePath());
+                                }
                             }
                         }
+
                     }
 
-                }
+                    if (!hasMultipleTabFiles && !hasMultipleSpectrumFiles) {
+                        IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected(), true);
+                    }
 
-                if (!hasMultipleTabFiles && !hasMultipleSpectrumFiles) {
-                    IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected(), true);
                 }
                 break;
 
@@ -856,9 +1212,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             //filtering pride xml files
             case PRIDE_FILTERED_XML:
                 //only store input files, the logic will be handled by other form
-                for (File inputFile : dataFileTable.getFiles()) {
-                    FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
-                    ConverterData.getInstance().getDataFiles().add(fileBean);
+                if (singleFileSelectionMode) {
+                    FileBean fileBean = new FileBean(new File(singleSourceFile.getText()).getAbsolutePath());
+                } else {
+                    for (File inputFile : dataFileTable.getFiles()) {
+                        FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                        ConverterData.getInstance().getDataFiles().add(fileBean);
+                    }
                 }
                 break;
             default:

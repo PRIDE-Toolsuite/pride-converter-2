@@ -10,6 +10,8 @@ import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParamTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
@@ -18,10 +20,7 @@ import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
@@ -61,6 +60,26 @@ public class SoftwareProcessingForm extends AbstractForm {
         validationListerner.fireValidationListener(isNonNullTextField(s1) && isNonNullTextField(s2));
     }
 
+    private void editButtonActionPerformed(ActionEvent e) {
+        ParamTable table = null;
+        if (e.getSource().equals(expAdditionalEditButton)) {
+            table = expAdditionalTable;
+        } else if (e.getSource().equals(processingMethodEditButton)) {
+            table = processingTable;
+        }
+        if (table != null && table.getSelectedRowCount() > 0) {
+            //convert table selected row to underlying model row
+            int modelSelectedRow = table.convertRowIndexToModel(table.getSelectedRow());
+            //get object
+            ReportObject objToEdit = ((ParamTableModel) table.getModel()).get(modelSelectedRow);
+            Class clazz = objToEdit.getClass();
+            //show editing dialog for object
+            AbstractDialog dialog = AbstractDialog.getInstance(table, clazz);
+            dialog.edit(objToEdit);
+            dialog.setVisible(true);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -83,11 +102,16 @@ public class SoftwareProcessingForm extends AbstractForm {
         scrollPane3 = new JScrollPane();
         expAdditionalTable = new ParamTable();
         addTermButton1 = new AddTermButton();
+        processingMethodEditButton = new JButton();
+        expAdditionalEditButton = new JButton();
 
         //======== this ========
 
         //---- label1 ----
         label1.setText(bundle.getString("SoftwareProcessingForm.label1.text"));
+
+        //---- addTermButton ----
+        addTermButton.setToolTipText(bundle.getString("SoftwareProcessingForm.addTermButton.toolTipText"));
 
         //======== scrollPane1 ========
         {
@@ -191,7 +215,7 @@ public class SoftwareProcessingForm extends AbstractForm {
                                     .addGroup(panel1Layout.createParallelGroup()
                                             .addComponent(label4)
                                             .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE))
-                                    .addContainerGap())
+                                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
         }
 
@@ -204,45 +228,71 @@ public class SoftwareProcessingForm extends AbstractForm {
         }
 
         //---- addTermButton1 ----
-        addTermButton1.setMargin(new Insets(1, 14, 2, 14));
+        addTermButton1.setToolTipText(bundle.getString("SoftwareProcessingForm.addTermButton1.toolTipText"));
+
+        //---- processingMethodEditButton ----
+        processingMethodEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        processingMethodEditButton.setToolTipText(bundle.getString("SoftwareProcessingForm.processingMethodEditButton.toolTipText"));
+        processingMethodEditButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editButtonActionPerformed(e);
+            }
+        });
+
+        //---- expAdditionalEditButton ----
+        expAdditionalEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        expAdditionalEditButton.setToolTipText(bundle.getString("SoftwareProcessingForm.expAdditionalEditButton.toolTipText"));
+        expAdditionalEditButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editButtonActionPerformed(e);
+            }
+        });
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
-                                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label1)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 439, Short.MAX_VALUE)
-                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 383, Short.MAX_VALUE)
+                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(processingMethodEditButton))
+                                        .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label7)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 342, Short.MAX_VALUE)
-                                                .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 286, Short.MAX_VALUE)
+                                                .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(expAdditionalEditButton))
+                                        .addComponent(scrollPane3, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(7, 7, 7)
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(label1, GroupLayout.Alignment.TRAILING)
-                                        .addComponent(addTermButton, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(processingMethodEditButton)
+                                        .addComponent(label1))
+                                .addGap(6, 6, 6)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label7))
+                                        .addComponent(label7)
+                                        .addComponent(expAdditionalEditButton))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -268,6 +318,8 @@ public class SoftwareProcessingForm extends AbstractForm {
     private JScrollPane scrollPane3;
     private ParamTable expAdditionalTable;
     private AddTermButton addTermButton1;
+    private JButton processingMethodEditButton;
+    private JButton expAdditionalEditButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override

@@ -13,11 +13,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq l {space :::p, par l {seq l {comp scrollPane2::::718:x, space :::p}, seq {par t {comp label3::t:p::p, comp label2::t:p::p, comp label1:::p::p, comp label7:::p::p}, space :::p, par l {comp scrollPane1::::417:x, comp projectNameInput::t::417:x, comp experimentTitleInput::l::417:x, comp shortNameInput::t::417:x}, space :::p, par l {comp label4:::p::p, comp label5:::p::p, comp label6:::p::p}, space :p:175:p}, seq t {comp contactLabel:::p::p, space :::p, comp label8:::p:36:p, space ::485:x, comp addContactButton:::p:128:p, space :::p}, seq t {comp scrollPane3::::718:x, space :::p}, seq t {comp label9:::p::p, space ::501:x, comp addreferenceButton:::p::p, space :::p}}}}</string> 
+        <string>par l {seq l {space :::p, par l {seq l {comp scrollPane2::::718:x, space :::p}, seq {par t {comp label3::t:p::p, comp label2::t:p::p, comp label1:::p::p, comp label7:::p::p}, space :::p, par l {comp scrollPane1::::417:x, comp projectNameInput::t::417:x, comp experimentTitleInput::l::417:x, comp shortNameInput::t::417:x}, space :::p, par l {comp label4:::p::p, comp label5:::p::p, comp label6:::p::p}, space :p:175:p}, seq t {comp contactLabel:::p::p, space :::p, comp label8:::p:36:p, space ::507:x, comp addContactButton:::p::p, space :::p, comp contactEditButton:::p::p, space :::p}, seq t {comp scrollPane3::::718:x, space :::p}, seq t {comp label9:::p::p, space ::532:x, comp addreferenceButton:::p::p, space :::p, comp referenceEditButton:::p::p, space :::p}}}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :p:15:p, par b {comp projectNameInput::b:p:30:p, comp label4::b:p::p, comp label1::b:p::p}, space :p::p, par b {comp experimentTitleInput::b:p:30:p, comp label5::b:p::p, comp label2::b:p::p}, space :p::p, par b {comp shortNameInput::b:p:30:p, comp label6::b:p::p, comp label3::b:p::p}, space :::p, par l {seq {comp label7:::p::p, space :p:35:p, par t {comp addContactButton:::p:23:p, par b {comp contactLabel::b:p::p, comp label8::b:p::p}}}, comp scrollPane1:::p:44:p}, space :::p, comp scrollPane3::::110:x, space :::p, par t {comp addreferenceButton:::p::p, comp label9:::p::p}, space :::p, comp scrollPane2::::115:x, space :::p}}</string> 
+        <string>par l {seq l {space :p:15:p, par t {comp contactEditButton::t:p::p, seq t {par b {comp projectNameInput::b:p:30:p, comp label4::b:p::p, comp label1::b:p::p}, space :p::p, par b {comp experimentTitleInput::b:p:30:p, comp label5::b:p::p, comp label2::b:p::p}, space :p::p, par b {comp shortNameInput::b:p:30:p, comp label6::b:p::p, comp label3::b:p::p}, space :::p, par l {seq {comp label7:::p::p, space :p:35:p, par t {comp addContactButton:::p::p, par b {comp contactLabel::b:p::p, comp label8::b:p::p}}}, comp scrollPane1:::p:44:p}}}, space :::p, comp scrollPane3::::109:x, space :::p, par t {comp addreferenceButton:::p::p, comp label9:::p::p, comp referenceEditButton:::p::p}, space :::p, comp scrollPane2::::112:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -285,8 +285,15 @@
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JButton</string> 
         <void method="setProperty"> 
-         <string>text</string> 
-         <string>Add Contact</string> 
+         <string>icon</string> 
+         <object class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/add.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Add</string> 
         </void> 
         <void property="name"> 
          <string>addContactButton</string> 
@@ -321,8 +328,15 @@
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JButton</string> 
         <void method="setProperty"> 
-         <string>text</string> 
-         <string>Add Reference</string> 
+         <string>icon</string> 
+         <object class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/add.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Add</string> 
         </void> 
         <void property="name"> 
          <string>addreferenceButton</string> 
@@ -365,6 +379,60 @@
         </void> 
         <void property="name"> 
          <string>label9</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/edit.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Edit</string> 
+        </void> 
+        <void property="name"> 
+         <string>contactEditButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>contactEditButtonActionPerformed</string> 
+          <boolean>false</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/edit.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Edit</string> 
+        </void> 
+        <void property="name"> 
+         <string>referenceEditButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>referenceEditButtonActionPerformed</string> 
+          <boolean>false</boolean> 
+         </object> 
         </void> 
        </object> 
       </void> 

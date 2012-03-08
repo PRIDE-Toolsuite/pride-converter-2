@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.tools.converter.gui.component.table.model;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.RowNumberRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.model.DecoratedReportObject;
+import uk.ac.ebi.pride.tools.converter.gui.util.Colours;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.utils.ModUtils;
@@ -81,7 +82,7 @@ public class PTMTableModel extends BaseTableModel<PTM> {
         //check to see if we need to highlight the PTM if it has multiple possible PTMs
         DecoratedPTM decoratedPTM = new DecoratedPTM(ptm);
         if (ModUtils.canMapToMultiplePreferredMods(decoratedPTM)) {
-            decoratedPTM.setBackground(new Color(255, 255, 153));
+            decoratedPTM.setBackground(Colours.ambiguousYellow);
         }
 
         return new Object[]{"",

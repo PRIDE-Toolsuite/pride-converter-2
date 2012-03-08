@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq l {space :::p, par l {comp scrollPane1::l::508:x, comp label1::l:p::p}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par l {comp scrollPane1::l::508:x, seq t {comp label1:::p::p, space ::316:x, comp editButton:::p::p}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, comp label1:::p::p, space :::p, comp scrollPane1::::342:x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par t {comp editButton:::p::p, comp label1:::p::p}, space :::p, comp scrollPane1::::331:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -81,6 +81,36 @@
             <string>DatabaseMapping</string> 
            </void> 
           </void> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JButton</string> 
+        <void method="setProperty"> 
+         <string>icon</string> 
+         <object class="com.jformdesigner.model.SwingIcon"> 
+          <int>0</int> 
+          <string>/images/formatselection.png</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>DataBaseInformationPanel.editButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>editButton</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ActionListener</string> 
+          <string>actionPerformed</string> 
+          <string>editButtonActionPerformed</string> 
+          <boolean>false</boolean> 
          </object> 
         </void> 
        </object> 

@@ -9,11 +9,14 @@ import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.LoadTemplateDialog;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateType;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.report.model.Protocol;
+import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
@@ -80,8 +83,12 @@ public class ProtocolForm extends AbstractForm {
                 list1.setListData(paginateProtocolSteps(protocolSteps));
             }
             list1.setSelectedIndex(0);
-            protocolTableScrollPane.setViewportView(protocolStepTables.firstElement());
-            addTermButton.setOwner(protocolStepTables.firstElement());
+            if (!protocolStepTables.isEmpty()) {
+                protocolTableScrollPane.setViewportView(protocolStepTables.firstElement());
+                addTermButton.setOwner(protocolStepTables.firstElement());
+            } else {
+                protocolTableScrollPane.setViewportView(null);
+            }
             revalidate();
             repaint();
 
@@ -121,6 +128,23 @@ public class ProtocolForm extends AbstractForm {
         dialog.setVisible(true);
     }
 
+    private void editButtonActionPerformed(ActionEvent e) {
+        if (list1.getSelectedIndex() > -1) {
+            ParamTable table = protocolStepTables.get(list1.getSelectedIndex());
+            if (table.getSelectedRowCount() > 0) {
+                //convert table selected row to underlying model row
+                int modelSelectedRow = table.convertRowIndexToModel(table.getSelectedRow());
+                //get object
+                ReportObject objToEdit = ((BaseTableModel) table.getModel()).get(modelSelectedRow);
+                Class clazz = objToEdit.getClass();
+                //show editing dialog for object
+                AbstractDialog dialog = AbstractDialog.getInstance(table, clazz);
+                dialog.edit(objToEdit);
+                dialog.setVisible(true);
+            }
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -138,6 +162,7 @@ public class ProtocolForm extends AbstractForm {
         addStepButton = new JButton();
         removeStepButton = new JButton();
         addTermButton = new AddTermButton();
+        editButton = new JButton();
 
         //======== this ========
 
@@ -221,6 +246,18 @@ public class ProtocolForm extends AbstractForm {
 
         //---- addTermButton ----
         addTermButton.setMargin(new Insets(1, 14, 2, 14));
+        addTermButton.setToolTipText(bundle.getString("ProtocolForm.addTermButton.toolTipText"));
+
+        //---- editButton ----
+        editButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        editButton.setMargin(new Insets(1, 14, 2, 14));
+        editButton.setToolTipText(bundle.getString("ProtocolForm.editButton.toolTipText"));
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editButtonActionPerformed(e);
+            }
+        });
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -230,49 +267,56 @@ public class ProtocolForm extends AbstractForm {
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup()
                                         .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup()
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(label4)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(protocolName, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(loadButton)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(saveButton))
+                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                                .addComponent(label1)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
+                                                                .addComponent(addStepButton)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(removeStepButton)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(editButton))
+                                        .addGroup(layout.createSequentialGroup()
                                                 .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(label4)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(protocolName, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(loadButton)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(saveButton))
-                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(label1)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 293, Short.MAX_VALUE)
-                                                .addComponent(addStepButton)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(removeStepButton)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                                                .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(loadButton)
-                                        .addComponent(saveButton)
-                                        .addComponent(label4)
-                                        .addComponent(protocolName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label5))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(addStepButton)
-                                        .addComponent(removeStepButton)
-                                        .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label1))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(loadButton)
+                                                        .addComponent(saveButton)
+                                                        .addComponent(label4)
+                                                        .addComponent(protocolName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label5))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(addStepButton)
+                                                        .addComponent(removeStepButton)
+                                                        .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label1)))
+                                        .addComponent(editButton))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
-                                        .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
+                                        .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -293,6 +337,7 @@ public class ProtocolForm extends AbstractForm {
     private JButton addStepButton;
     private JButton removeStepButton;
     private AddTermButton addTermButton;
+    private JButton editButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

@@ -9,8 +9,10 @@ import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ContactTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ReferencesTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ContactDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ReferenceDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
@@ -18,6 +20,7 @@ import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.Contact;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
+import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
@@ -90,6 +93,35 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         referenceDialog.setVisible(true);
     }
 
+    private void contactEditButtonActionPerformed() {
+        if (contactTable.getSelectedRowCount() > 0) {
+            //convert table selected row to underlying model row
+            int modelSelectedRow = contactTable.convertRowIndexToModel(contactTable.getSelectedRow());
+            //get object
+            ReportObject objToEdit = ((BaseTableModel) contactTable.getModel()).get(modelSelectedRow);
+            Class clazz = objToEdit.getClass();
+            //show editing dialog for object
+            AbstractDialog dialog = AbstractDialog.getInstance(contactTable, clazz);
+            dialog.edit(objToEdit);
+            dialog.setVisible(true);
+        }
+    }
+
+    private void referenceEditButtonActionPerformed() {
+        if (referenceTable.getSelectedRowCount() > 0) {
+            //convert table selected row to underlying model row
+            int modelSelectedRow = referenceTable.convertRowIndexToModel(referenceTable.getSelectedRow());
+            //get object
+            ReportObject objToEdit = ((BaseTableModel) referenceTable.getModel()).get(modelSelectedRow);
+            Class clazz = objToEdit.getClass();
+            //show editing dialog for object
+            AbstractDialog dialog = AbstractDialog.getInstance(referenceTable, clazz);
+            dialog.edit(objToEdit);
+            dialog.setVisible(true);
+        }
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -114,6 +146,8 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         scrollPane2 = new JScrollPane();
         referenceTable = new BaseTable();
         label9 = new JLabel();
+        contactEditButton = new JButton();
+        referenceEditButton = new JButton();
 
         //======== this ========
 
@@ -203,7 +237,8 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         contactLabel.setText("Contacts");
 
         //---- addContactButton ----
-        addContactButton.setText("Add Contact");
+        addContactButton.setIcon(new ImageIcon(getClass().getResource("/images/add.png")));
+        addContactButton.setToolTipText("Add");
         addContactButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -216,7 +251,8 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         label8.setForeground(Color.red);
 
         //---- addreferenceButton ----
-        addreferenceButton.setText("Add Reference");
+        addreferenceButton.setIcon(new ImageIcon(getClass().getResource("/images/add.png")));
+        addreferenceButton.setToolTipText("Add");
         addreferenceButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -231,6 +267,26 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
 
         //---- label9 ----
         label9.setText("References");
+
+        //---- contactEditButton ----
+        contactEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        contactEditButton.setToolTipText("Edit");
+        contactEditButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                contactEditButtonActionPerformed();
+            }
+        });
+
+        //---- referenceEditButton ----
+        referenceEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        referenceEditButton.setToolTipText("Edit");
+        referenceEditButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                referenceEditButtonActionPerformed();
+            }
+        });
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -264,55 +320,63 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
                                                 .addComponent(contactLabel)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(label8, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 485, Short.MAX_VALUE)
-                                                .addComponent(addContactButton, GroupLayout.PREFERRED_SIZE, 128, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 507, Short.MAX_VALUE)
+                                                .addComponent(addContactButton)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(contactEditButton)
                                                 .addContainerGap())
                                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 718, Short.MAX_VALUE)
                                                 .addContainerGap())
                                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(label9)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 501, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 532, Short.MAX_VALUE)
                                                 .addComponent(addreferenceButton)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(referenceEditButton)
                                                 .addContainerGap())))
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(15, 15, 15)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(projectNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label4)
-                                        .addComponent(label1))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(experimentTitleInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label5)
-                                        .addComponent(label2))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                        .addComponent(shortNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label6)
-                                        .addComponent(label3))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(contactEditButton)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addComponent(label7)
-                                                .addGap(35, 35, 35)
-                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(addContactButton, GroupLayout.PREFERRED_SIZE, 23, GroupLayout.PREFERRED_SIZE)
-                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                                .addComponent(contactLabel)
-                                                                .addComponent(label8))))
-                                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(projectNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label4)
+                                                        .addComponent(label1))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(experimentTitleInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label5)
+                                                        .addComponent(label2))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                        .addComponent(shortNameInput, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(label6)
+                                                        .addComponent(label3))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup()
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(label7)
+                                                                .addGap(35, 35, 35)
+                                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                                        .addComponent(addContactButton)
+                                                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                                                                .addComponent(contactLabel)
+                                                                                .addComponent(label8))))
+                                                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 44, GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
+                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(addreferenceButton)
-                                        .addComponent(label9))
+                                        .addComponent(label9)
+                                        .addComponent(referenceEditButton))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -341,6 +405,8 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
     private JScrollPane scrollPane2;
     private BaseTable referenceTable;
     private JLabel label9;
+    private JButton contactEditButton;
+    private JButton referenceEditButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 
