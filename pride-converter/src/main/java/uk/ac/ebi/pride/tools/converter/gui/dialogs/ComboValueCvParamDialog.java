@@ -44,7 +44,8 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         nameField.getEditor().getEditorComponent().addKeyListener(this);
         initSuggestedCVs(suggestedCVs);
         if (comboBoxValues != null) {
-            valueComboBox.setModel(new DefaultComboBoxModel(comboBoxValues.toArray()));
+            TreeSet<String> sortedValues = new TreeSet<String>(comboBoxValues);
+            valueComboBox.setModel(new DefaultComboBoxModel(sortedValues.toArray()));
         }
     }
 
@@ -56,7 +57,8 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         nameField.getEditor().getEditorComponent().addKeyListener(this);
         initSuggestedCVs(suggestedCVs);
         if (comboBoxValues != null) {
-            valueComboBox.setModel(new DefaultComboBoxModel(comboBoxValues.toArray()));
+            TreeSet<String> sortedValues = new TreeSet<String>(comboBoxValues);
+            valueComboBox.setModel(new DefaultComboBoxModel(sortedValues.toArray()));
         }
     }
 
