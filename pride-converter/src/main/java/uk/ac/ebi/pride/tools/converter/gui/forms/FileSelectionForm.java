@@ -55,6 +55,9 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     //default
     private HandlerFactory.FASTA_FORMAT fastaFormat = HandlerFactory.FASTA_FORMAT.FULL;
 
+    private ParserOptionTable allOptionTable = new ParserOptionTable();
+    private ParserOptionTable noAdvancedOptionTable = new ParserOptionTable();
+
     public FileSelectionForm(OutputFormat format) {
         initComponents();
         dataFileTable.getModel().addTableModelListener(this);
@@ -237,10 +240,16 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
         //flip visibility state to panel and table options
         advancedOptionPanel.setVisible(!isVisible);
-//        ParserOptionTableModel model = (ParserOptionTableModel) parserOptionTable.getModel();
-//        model.showAdvancedProperties(!isVisible);
-//        parserOptionTable.revalidate();
-//        parserOptionTable.repaint();
+        if (isVisible) {
+            //set viewport - switch to simple optiosn
+            tableScrollPane.setViewportView(noAdvancedOptionTable);
+            tableScrollPane.setColumnHeader(null);
+        } else {
+            //set viewport - switch to all optiosn
+            tableScrollPane.setViewportView(allOptionTable);
+            tableScrollPane.setColumnHeader(null);
+        }
+
     }
 
     private void showAdvancedFileSelection() {
@@ -1340,16 +1349,26 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             props.addAll(DAOFactory.getInstance().getSupportedProperties(ConverterData.getInstance().getDaoFormat()));
         }
 
-//        parserOptionTable = new ParserOptionTable(props, false);
-//        ParserOptionTableModel model = (ParserOptionTableModel) parserOptionTable.getModel();
-//        model.showAdvancedProperties(false);
-        parserOptionTable = new ParserOptionTable(props, true);
 
-        parserOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
-        tableScrollPane.setViewportView(parserOptionTable);
+        //create two views on the same properties
+        allOptionTable = new ParserOptionTable(props, true);
+        noAdvancedOptionTable = new ParserOptionTable(props, false);
+
+        //update cell editor
+        allOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
+        noAdvancedOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
 
         //don't show table headers
-        parserOptionTable.setTableHeader(null);
+        allOptionTable.setTableHeader(null);
+        noAdvancedOptionTable.setTableHeader(null);
+
+        //backend will now have same value map so that the values will be consistently shared across both tables
+        ParserOptionTableModel allOptionTableModel = (ParserOptionTableModel) allOptionTable.getModel();
+        ParserOptionTableModel noAdvancedOptionTableModel = (ParserOptionTableModel) noAdvancedOptionTable.getModel();
+        noAdvancedOptionTableModel.setValues(allOptionTableModel.getValues());
+
+        //set viewport - no advanced options by default
+        tableScrollPane.setViewportView(noAdvancedOptionTable);
         tableScrollPane.setColumnHeader(null);
 
         if (ConverterData.getInstance().getDaoFormat().getHelpResource() != null) {

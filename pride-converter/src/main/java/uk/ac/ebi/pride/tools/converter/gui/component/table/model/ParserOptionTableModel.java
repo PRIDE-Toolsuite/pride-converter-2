@@ -53,7 +53,7 @@ public class ParserOptionTableModel extends AbstractTableModel {
 
     public void showAdvancedProperties(boolean showAdvancedProperties) {
         this.showAdvancedProperties = showAdvancedProperties;
-//        fireTableDataChanged();
+        fireTableDataChanged();
     }
 
     /**
@@ -213,5 +213,13 @@ public class ParserOptionTableModel extends AbstractTableModel {
             }
         }
         return props;
+    }
+
+    public Map<String, Object> getValues() {
+        return values;
+    }
+
+    public void setValues(Map<String, Object> values) {
+        this.values = values;
     }
 }
