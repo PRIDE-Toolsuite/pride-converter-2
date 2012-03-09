@@ -15,10 +15,29 @@ public class
         HandlerFactory {
 
     public enum FASTA_FORMAT {
-        FULL,
-        UNIPROT_MATCH_ID,
-        UNIPROT_MATCH_AC,
-        FIRST_WORD
+        FULL("Match Full ID Line"),
+        UNIPROT_MATCH_ID("Match Uniprot ID"),
+        UNIPROT_MATCH_AC("Match Uniprot AC"),
+        FIRST_WORD("Match First Word");
+
+        private String displayString;
+
+        FASTA_FORMAT(String displayString) {
+            this.displayString = displayString;
+        }
+
+        public String getDisplayString() {
+            return displayString;
+        }
+
+        public static FASTA_FORMAT getFastaFormatByDisplayString(String displayString) {
+            for (FASTA_FORMAT format : values()) {
+                if (format.getDisplayString().equals(displayString)) {
+                    return format;
+                }
+            }
+            return null;
+        }
     }
 
     public enum EXTERNAL_HANDLER {

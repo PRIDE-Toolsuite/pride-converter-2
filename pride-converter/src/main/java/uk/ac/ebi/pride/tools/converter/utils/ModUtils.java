@@ -103,6 +103,7 @@ public class ModUtils {
                 if (canMap && mod != null) {
 
                     ptm.setModAccession(mod.getIdPsiMod());
+                    ptm.setModName(mod.getShortNamePsiMod());
                     ptm.setModDatabase(MOD_DATABASE);
                     ptm.setModDatabaseVersion(MOD_VERSION);
                     ptm.getAdditional().getCvParam().clear();
@@ -111,6 +112,7 @@ public class ModUtils {
                 } else {
                     //return mod unmapped
                     ptm.setModAccession(null);
+                    ptm.setModName(null);
                     ptm.setModDatabase(null);
                     ptm.setModDatabaseVersion(null);
                     ptm.getAdditional().getCvParam().clear();

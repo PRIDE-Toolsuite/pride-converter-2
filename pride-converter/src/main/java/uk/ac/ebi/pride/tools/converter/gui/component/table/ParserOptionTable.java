@@ -16,12 +16,12 @@ import java.util.Collection;
 public class ParserOptionTable extends JTable {
 
     public ParserOptionTable() {
-        super(new ParserOptionTableModel(null));
+        super(new ParserOptionTableModel(null, true));
         putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     }
 
-    public ParserOptionTable(Collection<DAOProperty> props) {
-        super(new ParserOptionTableModel(props));
+    public ParserOptionTable(Collection<DAOProperty> props, boolean showAdvancedProperties) {
+        super(new ParserOptionTableModel(props, showAdvancedProperties));
         putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     }
 
@@ -36,6 +36,5 @@ public class ParserOptionTable extends JTable {
         }
         return super.getCellRenderer(row, column);
     }
-
 
 }

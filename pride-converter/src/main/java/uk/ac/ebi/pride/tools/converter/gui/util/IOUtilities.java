@@ -118,7 +118,6 @@ public class IOUtilities {
                 FileBean fileBean = new FileBean(absolutePath);
 
                 DAO dao = DAOFactory.getInstance().getDAO(absolutePath, ConverterData.getInstance().getDaoFormat());
-                dao.setConfiguration(options);
 
                 // check if a gel or spot identifier is present
                 String gelId = null, spotId = null;
@@ -126,14 +125,21 @@ public class IOUtilities {
 
                 if (options.getProperty(GEL_IDENTIFIER) != null && !"".equals(options.getProperty(GEL_IDENTIFIER))) {
                     gelId = options.getProperty(GEL_IDENTIFIER);
+                    //do not pass non-dao option
+                    options.remove(GEL_IDENTIFIER);
                 }
                 if (options.getProperty(SPOT_IDENTIFIER) != null && !"".equals(options.getProperty(SPOT_IDENTIFIER))) {
                     spotId = options.getProperty(SPOT_IDENTIFIER);
+                    //do not pass non-dao option
+                    options.remove(SPOT_IDENTIFIER);
                 }
                 if (options.getProperty(SPOT_REGULAR_EXPRESSION) != null && !"".equals(options.getProperty(SPOT_REGULAR_EXPRESSION))) {
                     String regex = options.getProperty(SPOT_REGULAR_EXPRESSION);
                     spotPattern = Pattern.compile(regex);
+                    //do not pass non-dao option
+                    options.remove(SPOT_REGULAR_EXPRESSION);
                 }
+                dao.setConfiguration(options);
 
                 // write the mztab file
                 MzTabWriter writer;
