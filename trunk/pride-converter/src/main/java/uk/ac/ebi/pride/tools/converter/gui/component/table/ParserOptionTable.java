@@ -16,7 +16,7 @@ import java.util.Collection;
 public class ParserOptionTable extends JTable {
 
     public ParserOptionTable() {
-        super(new ParserOptionTableModel(null, true));
+        super(new ParserOptionTableModel(null, false));
         putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
     }
 
