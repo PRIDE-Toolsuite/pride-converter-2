@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import psidev.psi.tools.validator.Context;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorMessage;
+import psidev.psi.tools.validator.rules.Rule;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
@@ -28,7 +29,6 @@ import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.gui.util.PreferenceManager;
 import uk.ac.ebi.pride.tools.converter.gui.validator.rules.PrideMergerFileRule;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import javax.help.CSH;
 import javax.swing.*;
@@ -72,6 +72,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             singleFastaFile.setEnabled(false);
             browseFastaFileButton.setEnabled(false);
+            fastaFormatList.setEditable(false);
             singleMzTabFile.setEnabled(false);
             browseMzTabButton.setEnabled(false);
             singleSpectrumFile.setEnabled(false);
@@ -88,6 +89,14 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             showAdvancedFileSelection();
             singleModeLabel.setVisible(false);
         }
+
+        //update fasta format values
+        Vector<String> formats = new Vector<String>();
+        for (HandlerFactory.FASTA_FORMAT fmt : HandlerFactory.FASTA_FORMAT.values()) {
+            formats.add(fmt.getDisplayString());
+        }
+        fastaFormatList.setModel(new DefaultComboBoxModel(formats));
+        fastaFormatList.setSelectedItem(HandlerFactory.FASTA_FORMAT.FULL.getDisplayString());
 
     }
 
@@ -222,7 +231,16 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     private void showHideLabelMouseClicked(MouseEvent e) {
-        advancedOptionPanel.setVisible(!advancedOptionPanel.isVisible());
+
+        //get current state
+        boolean isVisible = advancedOptionPanel.isVisible();
+
+        //flip visibility state to panel and table options
+        advancedOptionPanel.setVisible(!isVisible);
+//        ParserOptionTableModel model = (ParserOptionTableModel) parserOptionTable.getModel();
+//        model.showAdvancedProperties(!isVisible);
+//        parserOptionTable.revalidate();
+//        parserOptionTable.repaint();
     }
 
     private void showAdvancedFileSelection() {
@@ -283,19 +301,30 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
     }
 
+    private void fastaFormatListItemStateChanged(ItemEvent e) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            //update fasta format
+            if (fastaFormatList.getSelectedItem() != null) {
+                fastaFormat = HandlerFactory.FASTA_FORMAT.getFastaFormatByDisplayString(fastaFormatList.getSelectedItem().toString());
+            } else {
+                fastaFormat = HandlerFactory.FASTA_FORMAT.FULL;
+            }
+        }
+    }
+
     private void initComponents() {
 //        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
+        parserOptionPanel = new JPanel();
+        tableScrollPane = new JScrollPane();
+        parserOptionTable = new ParserOptionTable();
+        showHideLabel = new JLabel();
         advancedOptionPanel = new JPanel();
         gridOptionPanel = new JPanel();
         panel8 = new JPanel();
         forceRegenerationBox = new JCheckBox();
-        parserOptionPanel = new JPanel();
-        tableScrollPane = new JScrollPane();
-        parserOptionTable = new ParserOptionTable();
         parserOptionHelpButton = new JButton();
-        showHideLabel = new JLabel();
         singleFilePanel = new JPanel();
         dataFileLabel = new JLabel();
         singleSourceFile = new JTextField();
@@ -339,40 +368,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 //======== this ========
         setLayout(new BorderLayout());
 
-//======== advancedOptionPanel ========
-        {
-            advancedOptionPanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.advancedOptionPanel.border")));
-
-            //======== gridOptionPanel ========
-            {
-                gridOptionPanel.setLayout(new GridLayout(2, 0));
-
-                //======== panel8 ========
-                {
-                    panel8.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-                    //---- forceRegenerationBox ----
-                    forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
-                    panel8.add(forceRegenerationBox);
-                }
-                gridOptionPanel.add(panel8);
-            }
-
-            GroupLayout advancedOptionPanelLayout = new GroupLayout(advancedOptionPanel);
-            advancedOptionPanel.setLayout(advancedOptionPanelLayout);
-            advancedOptionPanelLayout.setHorizontalGroup(
-                    advancedOptionPanelLayout.createParallelGroup()
-                            .addGroup(advancedOptionPanelLayout.createSequentialGroup()
-                                    .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
-                                    .addContainerGap())
-            );
-            advancedOptionPanelLayout.setVerticalGroup(
-                    advancedOptionPanelLayout.createParallelGroup()
-                            .addComponent(gridOptionPanel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            );
-        }
-        add(advancedOptionPanel, BorderLayout.SOUTH);
-
 //======== parserOptionPanel ========
         {
             parserOptionPanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.parserOptionPanel.border")));
@@ -381,10 +376,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             {
                 tableScrollPane.setViewportView(parserOptionTable);
             }
-
-            //---- parserOptionHelpButton ----
-            parserOptionHelpButton.setText(bundle.getString("SelecFilePanel.parserOptionHelpButton.text"));
-            parserOptionHelpButton.setEnabled(false);
 
             //---- showHideLabel ----
             showHideLabel.setText(bundle.getString("SelecFilePanel.showHideLabel.text"));
@@ -407,24 +398,70 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                 }
             });
 
+            //======== advancedOptionPanel ========
+            {
+                advancedOptionPanel.setBorder(null);
+
+                //======== gridOptionPanel ========
+                {
+                    gridOptionPanel.setLayout(new GridLayout(2, 0));
+
+                    //======== panel8 ========
+                    {
+                        panel8.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+                        //---- forceRegenerationBox ----
+                        forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
+                        panel8.add(forceRegenerationBox);
+                    }
+                    gridOptionPanel.add(panel8);
+                }
+
+                GroupLayout advancedOptionPanelLayout = new GroupLayout(advancedOptionPanel);
+                advancedOptionPanel.setLayout(advancedOptionPanelLayout);
+                advancedOptionPanelLayout.setHorizontalGroup(
+                        advancedOptionPanelLayout.createParallelGroup()
+                                .addGroup(advancedOptionPanelLayout.createSequentialGroup()
+                                        .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                                        .addContainerGap())
+                );
+                advancedOptionPanelLayout.setVerticalGroup(
+                        advancedOptionPanelLayout.createParallelGroup()
+                                .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
+                );
+            }
+
+            //---- parserOptionHelpButton ----
+            parserOptionHelpButton.setText(bundle.getString("SelecFilePanel.parserOptionHelpButton.text"));
+            parserOptionHelpButton.setEnabled(false);
+
             GroupLayout parserOptionPanelLayout = new GroupLayout(parserOptionPanel);
             parserOptionPanel.setLayout(parserOptionPanelLayout);
             parserOptionPanelLayout.setHorizontalGroup(
                     parserOptionPanelLayout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, parserOptionPanelLayout.createSequentialGroup()
-                                    .addComponent(showHideLabel)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 340, Short.MAX_VALUE)
-                                    .addComponent(parserOptionHelpButton))
-                            .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 665, Short.MAX_VALUE)
+                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
+                                    .addGroup(parserOptionPanelLayout.createParallelGroup()
+                                            .addGroup(GroupLayout.Alignment.TRAILING, parserOptionPanelLayout.createSequentialGroup()
+                                                    .addContainerGap(476, Short.MAX_VALUE)
+                                                    .addComponent(showHideLabel))
+                                            .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
+                                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
+                                                    .addComponent(advancedOptionPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                                                    .addComponent(parserOptionHelpButton)))
+                                    .addContainerGap())
             );
             parserOptionPanelLayout.setVerticalGroup(
                     parserOptionPanelLayout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, parserOptionPanelLayout.createSequentialGroup()
-                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
+                                    .addComponent(showHideLabel)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(parserOptionPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                            .addComponent(parserOptionHelpButton)
-                                            .addComponent(showHideLabel)))
+                                    .addComponent(tableScrollPane, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(parserOptionPanelLayout.createParallelGroup()
+                                            .addComponent(advancedOptionPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(parserOptionHelpButton))
+                                    .addContainerGap(8, Short.MAX_VALUE))
             );
         }
         add(parserOptionPanel, BorderLayout.CENTER);
@@ -524,6 +561,12 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     "Match Uniprot AC",
                     "Match Uniprot ID"
             }));
+            fastaFormatList.addItemListener(new ItemListener() {
+                @Override
+                public void itemStateChanged(ItemEvent e) {
+                    fastaFormatListItemStateChanged(e);
+                }
+            });
 
             GroupLayout singleFilePanelLayout = new GroupLayout(singleFilePanel);
             singleFilePanel.setLayout(singleFilePanelLayout);
@@ -631,7 +674,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             panel3Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
                                             .addContainerGap()
-                                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(button1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                             .addContainerGap())
@@ -722,7 +765,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                             .addContainerGap()
                                             .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                                            .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(button3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                             .addContainerGap())
@@ -763,7 +806,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             panel5Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                                             .addContainerGap()
-                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(button2, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                             .addContainerGap())
@@ -804,7 +847,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             panel1Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
                                             .addContainerGap()
-                                            .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                            .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                             .addComponent(button5, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
                                             .addContainerGap())
@@ -869,15 +912,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
+    private JPanel parserOptionPanel;
+    private JScrollPane tableScrollPane;
+    private ParserOptionTable parserOptionTable;
+    private JLabel showHideLabel;
     private JPanel advancedOptionPanel;
     private JPanel gridOptionPanel;
     private JPanel panel8;
     private JCheckBox forceRegenerationBox;
-    private JPanel parserOptionPanel;
-    private JScrollPane tableScrollPane;
-    private ParserOptionTable parserOptionTable;
     private JButton parserOptionHelpButton;
-    private JLabel showHideLabel;
     private JPanel singleFilePanel;
     private JLabel dataFileLabel;
     private JTextField singleSourceFile;
@@ -929,6 +972,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     @Override
     public Collection<ValidatorMessage> validateForm() {
 
+        System.err.println(getOptions());
+
         //if we're running the merger
         if (format.equals(OutputFormat.PRIDE_MERGED_XML)) {
             //check to see that we have at least two files
@@ -937,6 +982,29 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                 ValidatorMessage error = new ValidatorMessage("You must provide at least two files to merge", MessageLevel.ERROR, new Context("Pride Merger"), new PrideMergerFileRule());
                 msgs.add(error);
                 return msgs;
+            }
+        }
+
+        if (format.equals(OutputFormat.PRIDE_XML)) {
+            //check that possible mztab files are generated with the same options
+
+            if (singleFileSelectionMode) {
+                //if we have tab files, we need to check to see if the DAO options are consistently set
+                if (singleMzTabFile.getText() != null && !"".equals(singleMzTabFile.getText())) {
+                    Properties tabOptions = MzTabHandler.readDaoConfigrationFromFile(new File(singleMzTabFile.getText()));
+                    if (tabOptions != null && !tabOptions.equals(getOptions())) {
+                        return Collections.singleton(new ValidatorMessage("mzTab files generated with a different set of DAO options than those set for XML conversion", MessageLevel.ERROR, new Context("DAO Options"), new DAOOptionRule()));
+                    }
+                }
+
+            } else {
+                //if we have tab files, we need to check to see if the DAO options are consistently set
+                for (File tabFile : mzTabFileTable.getFiles()) {
+                    Properties tabOptions = MzTabHandler.readDaoConfigrationFromFile(tabFile);
+                    if (tabOptions != null && !tabOptions.equals(getOptions())) {
+                        return Collections.singleton(new ValidatorMessage("mzTab files generated with a different set of DAO options than those set for XML conversion", MessageLevel.ERROR, new Context("DAO Options"), new DAOOptionRule()));
+                    }
+                }
             }
         }
 
@@ -1040,6 +1108,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
                 //store options for later use
                 ConverterData.getInstance().setOptions(getOptions());
+                ConverterData.getInstance().setFastaFormat(fastaFormat);
 
                 if (singleFileSelectionMode) {
 
@@ -1058,12 +1127,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         if (tab.exists()) {
                             fileBean.setSequenceFile(tab.getAbsolutePath());
                         }
-                        //if we have tab files, we need to check to see if the DAO options are consistently set
-                        Properties tabOptions = MzTabHandler.readDaoConfigrationFromFile(tab);
-                        if (tabOptions != null && !tabOptions.equals(getOptions())) {
-                            throw new ConverterException("The DAO options set in the mzTab file do not match those set for the XML conversion");
-                        }
-
                     }
                     //update spectrum file
                     if (singleSpectrumFile.getText() != null && !"".equals(singleSpectrumFile.getText().trim())) {
@@ -1084,15 +1147,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     if (!sequenceFileTable.getFiles().isEmpty()) {
                         //store path and fasta type
                         sequenceFile = sequenceFileTable.getFiles().iterator().next();
-                        ConverterData.getInstance().setFastaFormat(fastaFormat);
-                    }
-
-                    //if we have tab files, we need to check to see if the DAO options are consistently set
-                    for (File tabFile : mzTabFileTable.getFiles()) {
-                        Properties tabOptions = MzTabHandler.readDaoConfigrationFromFile(tabFile);
-                        if (tabOptions != null && !tabOptions.equals(getOptions())) {
-                            throw new ConverterException("The DAO options set in the mzTab file do not match those set for the XML conversion");
-                        }
                     }
 
                     //if we have several mztab files, don't generate the report files now as there will be a subsequent
@@ -1286,7 +1340,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             props.addAll(DAOFactory.getInstance().getSupportedProperties(ConverterData.getInstance().getDaoFormat()));
         }
 
-        parserOptionTable = new ParserOptionTable(props);
+//        parserOptionTable = new ParserOptionTable(props, false);
+//        ParserOptionTableModel model = (ParserOptionTableModel) parserOptionTable.getModel();
+//        model.showAdvancedProperties(false);
+        parserOptionTable = new ParserOptionTable(props, true);
+
         parserOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
         tableScrollPane.setViewportView(parserOptionTable);
 
@@ -1304,4 +1362,25 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     }
 
+    private class DAOOptionRule implements Rule {
+        @Override
+        public String getId() {
+            return "DAO Options";
+        }
+
+        @Override
+        public String getName() {
+            return "Inconsistent DAO options rule";
+        }
+
+        @Override
+        public String getDescription() {
+            return "This rule checks for inconsistent use of DAO options between PRIDE Converter toolsuite tools";
+        }
+
+        @Override
+        public Collection<String> getHowToFixTips() {
+            return null;
+        }
+    }
 }

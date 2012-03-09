@@ -2,12 +2,8 @@ package uk.ac.ebi.pride.tools.converter.gui.component.table.model;
 
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Properties;
+import javax.swing.table.AbstractTableModel;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,36 +11,49 @@ import java.util.Properties;
  * Date: 13/12/11
  * Time: 14:38
  */
-public class ParserOptionTableModel implements TableModel {
+public class ParserOptionTableModel extends AbstractTableModel {
 
-    private List<DAOProperty> properties = new ArrayList<DAOProperty>();
+    private List<DAOProperty> allProperties = new ArrayList<DAOProperty>();
+    private List<DAOProperty> propertiesNoAdvanced = new ArrayList<DAOProperty>();
     private String[] COLUMN_HEADERS = {"Property Name", "Property Value"};
     private boolean[] COLUMN_EDITABLE = {false, true};
-    private List<Object> values = new ArrayList<Object>();
+    private Map<String, Object> values = new HashMap<String, Object>();
+    private boolean showAdvancedProperties = false;
 
-    public ParserOptionTableModel(Collection<DAOProperty> props) {
+    public ParserOptionTableModel(Collection<DAOProperty> props, boolean showAdvancedProperties) {
         if (props != null) {
-            properties.addAll(props);
-            initValues(properties);
+            allProperties.addAll(props);
+            for (DAOProperty property : props) {
+                if (!property.isAdvanced()) {
+                    propertiesNoAdvanced.add(property);
+                }
+            }
+            initValues(allProperties);
         }
+        this.showAdvancedProperties = showAdvancedProperties;
     }
 
     private void initValues(List<DAOProperty> props) {
         for (DAOProperty prop : props) {
             if (prop.getValueClass().equals(Boolean.class)) {
-                values.add(prop.getDefaultValue());
+                values.put(prop.getName(), prop.getDefaultValue());
             } else {
                 if (prop.getAllowedValues() != null && !prop.getAllowedValues().isEmpty()) {
-                    values.add(prop.getAllowedValues());
+                    values.put(prop.getName(), prop.getAllowedValues());
                 } else {
                     if (prop.getDefaultValue() == null) {
-                        values.add("");
+                        values.put(prop.getName(), "");
                     } else {
-                        values.add(prop.getDefaultValue());
+                        values.put(prop.getName(), prop.getDefaultValue());
                     }
                 }
             }
         }
+    }
+
+    public void showAdvancedProperties(boolean showAdvancedProperties) {
+        this.showAdvancedProperties = showAdvancedProperties;
+//        fireTableDataChanged();
     }
 
     /**
@@ -58,7 +67,11 @@ public class ParserOptionTableModel implements TableModel {
      */
     @Override
     public int getRowCount() {
-        return properties.size();
+        if (showAdvancedProperties) {
+            return allProperties.size();
+        } else {
+            return propertiesNoAdvanced.size();
+        }
     }
 
     /**
@@ -126,13 +139,18 @@ public class ParserOptionTableModel implements TableModel {
      */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        DAOProperty prop = properties.get(rowIndex);
+        DAOProperty prop;
+        if (showAdvancedProperties) {
+            prop = allProperties.get(rowIndex);
+        } else {
+            prop = propertiesNoAdvanced.get(rowIndex);
+        }
         if (columnIndex == 0) {
             //return name
             return cleanup(prop.getName());
         } else {
             //return value
-            return values.get(rowIndex);
+            return values.get(prop.getName());
         }
     }
 
@@ -148,31 +166,16 @@ public class ParserOptionTableModel implements TableModel {
      */
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+
         if (columnIndex == 1) {
-            values.set(rowIndex, aValue);
+            DAOProperty prop;
+            if (showAdvancedProperties) {
+                prop = allProperties.get(rowIndex);
+            } else {
+                prop = propertiesNoAdvanced.get(rowIndex);
+            }
+            values.put(prop.getName(), aValue);
         }
-    }
-
-    /**
-     * Adds a listener to the list that is notified each time a change
-     * to the data model occurs.
-     *
-     * @param l the TableModelListener
-     */
-    @Override
-    public void addTableModelListener(TableModelListener l) {
-        /* no op */
-    }
-
-    /**
-     * Removes a listener from the list that is notified each time a
-     * change to the data model occurs.
-     *
-     * @param l the TableModelListener
-     */
-    @Override
-    public void removeTableModelListener(TableModelListener l) {
-        /* no op */
     }
 
     //replace "a_property_name" with "A Property Name"
@@ -196,16 +199,18 @@ public class ParserOptionTableModel implements TableModel {
 
     public Properties getProperties() {
 
-        //get properties
+        //get allProperties
         Properties props = new Properties();
-        for (int i = 0; i < properties.size(); i++) {
-            String value = values.get(i).toString();
-            //filter out empty string values for properties that are not defined as strings
+        for (DAOProperty prop : allProperties) {
+            String value = values.get(prop.getName()).toString();
+            //filter out empty string values for allProperties that are not defined as strings
             //this causes errors down the line
-            if (!String.class.equals(properties.get(i).getValueClass()) && "".equals(value)) {
+            if (!String.class.equals(prop.getValueClass()) && "".equals(value)) {
                 value = null;
             }
-            props.setProperty(properties.get(i).getName(), value);
+            if (value != null) {
+                props.setProperty(prop.getName(), value);
+            }
         }
         return props;
     }
