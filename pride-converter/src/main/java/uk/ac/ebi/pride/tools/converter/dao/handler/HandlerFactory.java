@@ -11,8 +11,7 @@ import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
  * Time: 16:25:14
  * To change this template use File | Settings | File Templates.
  */
-public class
-        HandlerFactory {
+public class HandlerFactory {
 
     public enum FASTA_FORMAT {
         FULL("Match Full ID Line"),
