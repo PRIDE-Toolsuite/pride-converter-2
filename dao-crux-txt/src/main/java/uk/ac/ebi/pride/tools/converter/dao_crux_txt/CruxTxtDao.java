@@ -111,14 +111,14 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
      * @param decoyFile
      * @param propertiesFile
      */
-	public CruxTxtDao(File targetFile, File decoyFile, File propertiesFile) {
+	public CruxTxtDao(File targetFile, File decoyFile, File propertiesFile) {    // todo: this should be a folder containing all the files, DAO constructor get just one file
 		this.targetFile = targetFile;
 		this.propertiesFile = propertiesFile;
         this.decoyFile = decoyFile;
 
 		// parse the Crux files
         proteins = CruxTxtIdentificationsParser.parse(targetFile).proteins;
-        proteinsDecoy = CruxTxtIdentificationsParser.parse(decoyFile, "DECOY_").proteins; // todo: Right now, we do nothing with the decoy two extra columns
+        proteinsDecoy = CruxTxtIdentificationsParser.parse(decoyFile, "DECOY_").proteins; // todo: create a separate structure for decoy, add special ID internal prefix.
         params = CruxTxtParamsParser.parse(propertiesFile);
 	}
 
@@ -132,7 +132,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         spectrumFilePath.setDescription("Allows to manually set the path to the spectrum source file. This should be mandatory since, in Crux, spectra files are not references within the identification or parameter files.");
         supportedProperties.add(spectrumFilePath);
 
-        // todo: add more properties here as required/supported
+        // todo: add more properties here as required/supported  - we need the one to prefix decoy identifications?
 
 
         return supportedProperties;
@@ -245,7 +245,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
         file.setPathToFile(targetFile.getAbsolutePath());
         file.setNameOfFile(targetFile.getName());
-        file.setFileType("MSGF file"); // FIXME: put correct thing here
+        file.setFileType("Crux file");
 
         return file;
 	}
@@ -272,7 +272,10 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
      * @throws InvalidFormatException
      */
 	public Software getSoftware() throws InvalidFormatException {
-		return new Software();
+        Software s = new Software();
+        s.setName("Crux");
+        s.setVersion("");
+		return s;
 	}
 
     /**
