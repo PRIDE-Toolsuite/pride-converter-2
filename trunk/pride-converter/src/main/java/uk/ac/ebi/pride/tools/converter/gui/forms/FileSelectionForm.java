@@ -227,10 +227,35 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         //update UI
         remove(advancedFileSelectionPanel);
         add(singleFilePanel, BorderLayout.NORTH);
+        singleFilePanel.revalidate();
+        singleFilePanel.repaint();
         revalidate();
         repaint();
 
         singleFileSelectionMode = true;
+    }
+
+    private void showAdvancedFileSelection() {
+        //empty out values
+        singleFastaFile.setText(null);
+        singleMzTabFile.setText(null);
+        singleSourceFile.setText(null);
+        singleSpectrumFile.setText(null);
+
+        //update validation listener
+        if (validationListerner != null) {
+            validationListerner.fireValidationListener(false);
+        }
+
+        //update UI
+        remove(singleFilePanel);
+        add(advancedFileSelectionPanel, BorderLayout.NORTH);
+        advancedFileSelectionPanel.revalidate();
+        advancedFileSelectionPanel.repaint();
+        revalidate();
+        repaint();
+
+        singleFileSelectionMode = false;
     }
 
     private void showHideLabelMouseClicked(MouseEvent e) {
@@ -250,27 +275,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             tableScrollPane.setColumnHeader(null);
         }
 
-    }
-
-    private void showAdvancedFileSelection() {
-        //empty out values
-        singleFastaFile.setText(null);
-        singleMzTabFile.setText(null);
-        singleSourceFile.setText(null);
-        singleSpectrumFile.setText(null);
-
-        //update validation listener
-        if (validationListerner != null) {
-            validationListerner.fireValidationListener(false);
-        }
-
-        //update UI
-        remove(singleFilePanel);
-        add(advancedFileSelectionPanel, BorderLayout.NORTH);
-        revalidate();
-        repaint();
-
-        singleFileSelectionMode = false;
     }
 
     private void browseSpectrumFileButtonActionPerformed() {
@@ -325,15 +329,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 //        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
 // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
-        parserOptionPanel = new JPanel();
-        tableScrollPane = new JScrollPane();
-        parserOptionTable = new ParserOptionTable();
-        showHideLabel = new JLabel();
-        advancedOptionPanel = new JPanel();
-        gridOptionPanel = new JPanel();
-        panel8 = new JPanel();
-        forceRegenerationBox = new JCheckBox();
-        parserOptionHelpButton = new JButton();
         singleFilePanel = new JPanel();
         dataFileLabel = new JLabel();
         singleSourceFile = new JTextField();
@@ -349,6 +344,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         browseSpectrumFileButton = new JButton();
         multipleModeLabel = new JLabel();
         fastaFormatList = new JComboBox();
+        parserOptionPanel = new JPanel();
+        tableScrollPane = new JScrollPane();
+        parserOptionTable = new ParserOptionTable();
+        showHideLabel = new JLabel();
+        advancedOptionPanel = new JPanel();
+        gridOptionPanel = new JPanel();
+        panel8 = new JPanel();
+        forceRegenerationBox = new JCheckBox();
+        parserOptionHelpButton = new JButton();
         advancedFileSelectionPanel = new JPanel();
         fileTabbedPane = new JTabbedPane();
         panel3 = new JPanel();
@@ -377,107 +381,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 //======== this ========
         setLayout(new BorderLayout());
 
-//======== parserOptionPanel ========
-        {
-            parserOptionPanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.parserOptionPanel.border")));
-
-            //======== tableScrollPane ========
-            {
-                tableScrollPane.setViewportView(parserOptionTable);
-            }
-
-            //---- showHideLabel ----
-            showHideLabel.setText(bundle.getString("SelecFilePanel.showHideLabel.text"));
-            showHideLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
-            showHideLabel.setForeground(new Color(51, 51, 255));
-            showHideLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    showHideLabelMouseClicked(e);
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    showHandCursor();
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    showDefaultCursor();
-                }
-            });
-
-            //======== advancedOptionPanel ========
-            {
-                advancedOptionPanel.setBorder(null);
-
-                //======== gridOptionPanel ========
-                {
-                    gridOptionPanel.setLayout(new GridLayout(2, 0));
-
-                    //======== panel8 ========
-                    {
-                        panel8.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-                        //---- forceRegenerationBox ----
-                        forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
-                        panel8.add(forceRegenerationBox);
-                    }
-                    gridOptionPanel.add(panel8);
-                }
-
-                GroupLayout advancedOptionPanelLayout = new GroupLayout(advancedOptionPanel);
-                advancedOptionPanel.setLayout(advancedOptionPanelLayout);
-                advancedOptionPanelLayout.setHorizontalGroup(
-                        advancedOptionPanelLayout.createParallelGroup()
-                                .addGroup(advancedOptionPanelLayout.createSequentialGroup()
-                                        .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
-                                        .addContainerGap())
-                );
-                advancedOptionPanelLayout.setVerticalGroup(
-                        advancedOptionPanelLayout.createParallelGroup()
-                                .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)
-                );
-            }
-
-            //---- parserOptionHelpButton ----
-            parserOptionHelpButton.setText(bundle.getString("SelecFilePanel.parserOptionHelpButton.text"));
-            parserOptionHelpButton.setEnabled(false);
-
-            GroupLayout parserOptionPanelLayout = new GroupLayout(parserOptionPanel);
-            parserOptionPanel.setLayout(parserOptionPanelLayout);
-            parserOptionPanelLayout.setHorizontalGroup(
-                    parserOptionPanelLayout.createParallelGroup()
-                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
-                                    .addGroup(parserOptionPanelLayout.createParallelGroup()
-                                            .addGroup(GroupLayout.Alignment.TRAILING, parserOptionPanelLayout.createSequentialGroup()
-                                                    .addContainerGap(476, Short.MAX_VALUE)
-                                                    .addComponent(showHideLabel))
-                                            .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
-                                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
-                                                    .addComponent(advancedOptionPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
-                                                    .addComponent(parserOptionHelpButton)))
-                                    .addContainerGap())
-            );
-            parserOptionPanelLayout.setVerticalGroup(
-                    parserOptionPanelLayout.createParallelGroup()
-                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
-                                    .addComponent(showHideLabel)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tableScrollPane, GroupLayout.PREFERRED_SIZE, 337, GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(parserOptionPanelLayout.createParallelGroup()
-                                            .addComponent(advancedOptionPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(parserOptionHelpButton))
-                                    .addContainerGap(8, Short.MAX_VALUE))
-            );
-        }
-        add(parserOptionPanel, BorderLayout.CENTER);
-
 //======== singleFilePanel ========
         {
             singleFilePanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.singleFilePanel.border")));
+            singleFilePanel.setMinimumSize(new Dimension(555, 301));
 
             //---- dataFileLabel ----
             dataFileLabel.setText(bundle.getString("SelecFilePanel.dataFileLabel.text"));
@@ -644,12 +551,115 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         }
         add(singleFilePanel, BorderLayout.NORTH);
 
+//======== parserOptionPanel ========
+        {
+            parserOptionPanel.setBorder(new TitledBorder(bundle.getString("SelecFilePanel.parserOptionPanel.border")));
+
+            //======== tableScrollPane ========
+            {
+                tableScrollPane.setViewportView(parserOptionTable);
+            }
+
+            //---- showHideLabel ----
+            showHideLabel.setText(bundle.getString("SelecFilePanel.showHideLabel.text"));
+            showHideLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
+            showHideLabel.setForeground(new Color(51, 51, 255));
+            showHideLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    showHideLabelMouseClicked(e);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    showHandCursor();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    showDefaultCursor();
+                }
+            });
+
+            //======== advancedOptionPanel ========
+            {
+                advancedOptionPanel.setBorder(null);
+
+                //======== gridOptionPanel ========
+                {
+                    gridOptionPanel.setLayout(new GridLayout(2, 0));
+
+                    //======== panel8 ========
+                    {
+                        panel8.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+                        //---- forceRegenerationBox ----
+                        forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
+                        panel8.add(forceRegenerationBox);
+                    }
+                    gridOptionPanel.add(panel8);
+                }
+
+                GroupLayout advancedOptionPanelLayout = new GroupLayout(advancedOptionPanel);
+                advancedOptionPanel.setLayout(advancedOptionPanelLayout);
+                advancedOptionPanelLayout.setHorizontalGroup(
+                        advancedOptionPanelLayout.createParallelGroup()
+                                .addGroup(advancedOptionPanelLayout.createSequentialGroup()
+                                        .addComponent(gridOptionPanel, GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                                        .addContainerGap())
+                );
+                advancedOptionPanelLayout.setVerticalGroup(
+                        advancedOptionPanelLayout.createParallelGroup()
+                                .addGroup(advancedOptionPanelLayout.createSequentialGroup()
+                                        .addComponent(gridOptionPanel, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
+                                        .addContainerGap(12, Short.MAX_VALUE))
+                );
+            }
+
+            //---- parserOptionHelpButton ----
+            parserOptionHelpButton.setText(bundle.getString("SelecFilePanel.parserOptionHelpButton.text"));
+            parserOptionHelpButton.setEnabled(false);
+
+            GroupLayout parserOptionPanelLayout = new GroupLayout(parserOptionPanel);
+            parserOptionPanel.setLayout(parserOptionPanelLayout);
+            parserOptionPanelLayout.setHorizontalGroup(
+                    parserOptionPanelLayout.createParallelGroup()
+                            .addGroup(GroupLayout.Alignment.TRAILING, parserOptionPanelLayout.createSequentialGroup()
+                                    .addGroup(parserOptionPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                            .addComponent(tableScrollPane, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 659, Short.MAX_VALUE)
+                                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
+                                                    .addContainerGap(477, Short.MAX_VALUE)
+                                                    .addComponent(showHideLabel))
+                                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
+                                                    .addContainerGap()
+                                                    .addComponent(advancedOptionPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(parserOptionHelpButton, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)))
+                                    .addContainerGap())
+            );
+            parserOptionPanelLayout.setVerticalGroup(
+                    parserOptionPanelLayout.createParallelGroup()
+                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
+                                    .addComponent(showHideLabel)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(tableScrollPane, GroupLayout.PREFERRED_SIZE, 226, GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(parserOptionPanelLayout.createParallelGroup()
+                                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
+                                                    .addComponent(parserOptionHelpButton)
+                                                    .addGap(62, 62, 62))
+                                            .addComponent(advancedOptionPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            );
+        }
+        add(parserOptionPanel, BorderLayout.CENTER);
+
 //======== advancedFileSelectionPanel ========
         {
+            advancedFileSelectionPanel.setBorder(null);
+            advancedFileSelectionPanel.setForeground(new Color(255, 0, 51));
 
             //======== fileTabbedPane ========
             {
-                fileTabbedPane.setBorder(null);
 
                 //======== panel3 ========
                 {
@@ -672,20 +682,20 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     panel3.setLayout(panel3Layout);
                     panel3Layout.setHorizontalGroup(
                             panel3Layout.createParallelGroup()
-                                    .addGroup(panel3Layout.createSequentialGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
                                             .addContainerGap()
-                                            .addGroup(panel3Layout.createParallelGroup()
-                                                    .addComponent(button1, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
+                                            .addGroup(panel3Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(button1, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE))
                                             .addContainerGap())
                     );
                     panel3Layout.setVerticalGroup(
                             panel3Layout.createParallelGroup()
-                                    .addGroup(GroupLayout.Alignment.TRAILING, panel3Layout.createSequentialGroup()
+                                    .addGroup(panel3Layout.createSequentialGroup()
                                             .addContainerGap()
-                                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(button1, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(button1)
                                             .addContainerGap())
                     );
                 }
@@ -764,8 +774,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                             .addContainerGap()
                                             .addGroup(panel4Layout.createParallelGroup()
                                                     .addComponent(button3, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
-                                                    .addComponent(panel6, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE))
+                                                    .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
+                                                    .addComponent(panel6, GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE))
                                             .addContainerGap())
                     );
                     panel4Layout.setVerticalGroup(
@@ -774,9 +784,9 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                             .addContainerGap()
                                             .addComponent(panel6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
+                                            .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(button3, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(button3)
                                             .addContainerGap())
                     );
                 }
@@ -807,7 +817,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                                             .addContainerGap()
                                             .addGroup(panel5Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(scrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
+                                                    .addComponent(scrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
                                                     .addComponent(button2, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
                                             .addContainerGap())
                     );
@@ -815,9 +825,9 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             panel5Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel5Layout.createSequentialGroup()
                                             .addContainerGap()
-                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(button2, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(button2)
                                             .addContainerGap())
                     );
                 }
@@ -848,17 +858,17 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                     .addGroup(panel1Layout.createSequentialGroup()
                                             .addContainerGap()
                                             .addGroup(panel1Layout.createParallelGroup()
-                                                    .addComponent(scrollPane4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 646, Short.MAX_VALUE)
-                                                    .addComponent(button5, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+                                                    .addComponent(button5, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+                                                    .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE))
                                             .addContainerGap())
                     );
                     panel1Layout.setVerticalGroup(
                             panel1Layout.createParallelGroup()
                                     .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
                                             .addContainerGap()
-                                            .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                                            .addComponent(scrollPane4, GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
                                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(button5, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(button5)
                                             .addContainerGap())
                     );
                 }
@@ -892,11 +902,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             advancedFileSelectionPanel.setLayout(advancedFileSelectionPanelLayout);
             advancedFileSelectionPanelLayout.setHorizontalGroup(
                     advancedFileSelectionPanelLayout.createParallelGroup()
-                            .addGroup(advancedFileSelectionPanelLayout.createSequentialGroup()
+                            .addGroup(GroupLayout.Alignment.TRAILING, advancedFileSelectionPanelLayout.createSequentialGroup()
                                     .addContainerGap()
-                                    .addGroup(advancedFileSelectionPanelLayout.createParallelGroup()
-                                            .addComponent(fileTabbedPane, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 663, Short.MAX_VALUE)
-                                            .addComponent(singleModeLabel, GroupLayout.Alignment.TRAILING))
+                                    .addGroup(advancedFileSelectionPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                            .addComponent(fileTabbedPane, GroupLayout.DEFAULT_SIZE, 661, Short.MAX_VALUE)
+                                            .addComponent(singleModeLabel))
                                     .addContainerGap())
             );
             advancedFileSelectionPanelLayout.setVerticalGroup(
@@ -905,7 +915,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                     .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(singleModeLabel)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(fileTabbedPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(fileTabbedPane, GroupLayout.PREFERRED_SIZE, 216, GroupLayout.PREFERRED_SIZE)
                                     .addContainerGap())
             );
         }
@@ -921,15 +931,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JPanel parserOptionPanel;
-    private JScrollPane tableScrollPane;
-    private ParserOptionTable parserOptionTable;
-    private JLabel showHideLabel;
-    private JPanel advancedOptionPanel;
-    private JPanel gridOptionPanel;
-    private JPanel panel8;
-    private JCheckBox forceRegenerationBox;
-    private JButton parserOptionHelpButton;
     private JPanel singleFilePanel;
     private JLabel dataFileLabel;
     private JTextField singleSourceFile;
@@ -945,6 +946,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JButton browseSpectrumFileButton;
     private JLabel multipleModeLabel;
     private JComboBox fastaFormatList;
+    private JPanel parserOptionPanel;
+    private JScrollPane tableScrollPane;
+    private ParserOptionTable parserOptionTable;
+    private JLabel showHideLabel;
+    private JPanel advancedOptionPanel;
+    private JPanel gridOptionPanel;
+    private JPanel panel8;
+    private JCheckBox forceRegenerationBox;
+    private JButton parserOptionHelpButton;
     private JPanel advancedFileSelectionPanel;
     private JTabbedPane fileTabbedPane;
     private JPanel panel3;
@@ -1134,14 +1144,16 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     if (singleMzTabFile.getText() != null && !"".equals(singleMzTabFile.getText().trim())) {
                         File tab = new File(singleMzTabFile.getText());
                         if (tab.exists()) {
-                            fileBean.setSequenceFile(tab.getAbsolutePath());
+                            fileBean.setMzTabFile(tab.getAbsolutePath());
+                            logger.warn("Tab file selected, new report file generation turned on");
+                            forceRegenerationBox.setSelected(true);
                         }
                     }
                     //update spectrum file
                     if (singleSpectrumFile.getText() != null && !"".equals(singleSpectrumFile.getText().trim())) {
                         File spectrum = new File(singleSpectrumFile.getText());
                         if (spectrum.exists()) {
-                            fileBean.setSequenceFile(spectrum.getAbsolutePath());
+                            fileBean.setSpectrumFile(spectrum.getAbsolutePath());
                         }
                     }
                     ConverterData.getInstance().getDataFiles().add(fileBean);
@@ -1180,6 +1192,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         //store mztab files externally to fileBeans
                         for (File mzTabFile : mzTabFileTable.getFiles()) {
                             ConverterData.getInstance().getMztabFiles().add(mzTabFile.getAbsolutePath());
+                            logger.warn("Tab file selected, new report file generation turned on");
+                            forceRegenerationBox.setSelected(true);
                         }
 
                         //register a new form to deal with the mapping
@@ -1200,6 +1214,8 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             }
                             if (mzTabFile != null) {
                                 fileBean.setMzTabFile(mzTabFile.getAbsolutePath());
+                                logger.warn("Tab file selected, new report file generation turned on");
+                                forceRegenerationBox.setSelected(true);
                             }
                             ConverterData.getInstance().getDataFiles().add(fileBean);
                         }
