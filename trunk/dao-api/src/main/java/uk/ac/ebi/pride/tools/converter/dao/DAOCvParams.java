@@ -58,7 +58,11 @@ public enum DAOCvParams {
     SEARCH_SETTING_TOLERANCE_PLUS_VALUE("MS", "MS:1001412", "search tolerance plus value", "", "MS:1001411"),
     MASCOT_SIGNIFICANCE_THRESHOLD("MS", "MS:1001316", "Mascot:SigThreshold", "", "MS:1001302"),
     MASCOT_SIGNIFICANCE_THRESHOLD_TYPE("MS", "MS:1001758", "Mascot:SigThresholdType", "", "MS:1001302"),
-    PEPTIDE_P_VALUE("MS", "MS:1001870", "p-value for peptides", "", "MS:1001092");
+    PEPTIDE_P_VALUE("MS", "MS:1001870", "p-value for peptides", "", "MS:1001092"),
+    SEQUEST_DELTA_CN("MS", "MS:1001156", "Sequest:deltacn", "", "MS:1001153"),
+    SEQUEST_XCORR("MS", "MS:1001155", "Sequest:xcorr", "", "MS:1001153")
+
+    ;
 
     // TODO: Add all the different ions - wait for new MS version
 
