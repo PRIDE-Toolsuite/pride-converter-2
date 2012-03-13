@@ -30,6 +30,7 @@ public class PrideConverterCLIOptions {
         DEBUG("debug"),
         COMPRESS("compress"),
         INCLUDE_ONLY_IDENTIFIED_SPECTRA("reportOnlyIdentifiedSpectra"),
+        USE_HYBRID_SEARCH_DATABASE("useHybridSearchDatabase"),
         SPOT_IDENTIFIER("gel_spot_identifier"),
         SPOT_REGEX("gel_spot_regex"),
         GEL_IDENTIFIER("gel_identifier");
@@ -63,11 +64,11 @@ public class PrideConverterCLIOptions {
                 .hasArg()
                 .withDescription("full path and filename of source file. ")
                 .create(OPTIONS.SOURCE_FILE.getValue());
-        
+
         Option spectraFile = OptionBuilder.withArgName("file")
-        		.hasArg()
-        		.withDescription("overwrites the path to the spectrum file(s) with the set value. This can either specifiy a directory containing multiple MS data files referenced in the search result file or one MS data file directly depending on the file format.")
-        		.create(OPTIONS.SPECTRA_FILE.getValue());
+                .hasArg()
+                .withDescription("overwrites the path to the spectrum file(s) with the set value. This can either specifiy a directory containing multiple MS data files referenced in the search result file or one MS data file directly depending on the file format.")
+                .create(OPTIONS.SPECTRA_FILE.getValue());
 
         Option outputFile = OptionBuilder.withArgName("file")
                 .hasArg()
@@ -103,21 +104,26 @@ public class PrideConverterCLIOptions {
                 .withDescription("Indicates that only identified spectra should be reported in the generated PRIDE XML file.")
                 .create(OPTIONS.INCLUDE_ONLY_IDENTIFIED_SPECTRA.getValue());
 
+        Option useHybridSearchDb = OptionBuilder.withArgName("useHybridSearchDatabase")
+                .hasArgs()
+                .withDescription("Indicates if the search database contains a combination of valid and decoy protein sequences. Must be [TRUE|FALSE]. Defaults to TRUE.")
+                .create(OPTIONS.USE_HYBRID_SEARCH_DATABASE.getValue());
+
         Option gelIdentifier = OptionBuilder.withArgName("gel identifier")
-        		.hasArg()
-        		.withDescription("sets the gel identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.")
-        		.create(OPTIONS.GEL_IDENTIFIER.getValue());
-        
+                .hasArg()
+                .withDescription("sets the gel identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.")
+                .create(OPTIONS.GEL_IDENTIFIER.getValue());
+
         Option spotIdentifier = OptionBuilder.withArgName("spot identifier")
-				.hasArg()
-				.withDescription("sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.")
-				.create(OPTIONS.SPOT_IDENTIFIER.getValue());
-        
+                .hasArg()
+                .withDescription("sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.")
+                .create(OPTIONS.SPOT_IDENTIFIER.getValue());
+
         Option spotRegex = OptionBuilder.withArgName("regular expression")
-				.hasArg()
-				.withDescription("used to extract the gel spot identifier based on the sourcefile's name. The first matching group in the pattern is used as a spot identifier.")
-				.create(OPTIONS.SPOT_REGEX.getValue());
-        
+                .hasArg()
+                .withDescription("used to extract the gel spot identifier based on the sourcefile's name. The first matching group in the pattern is used as a spot identifier.")
+                .create(OPTIONS.SPOT_REGEX.getValue());
+
         Option property = OptionBuilder.withArgName("property=value")
                 .hasArgs(2)
                 .withValueSeparator()
@@ -142,6 +148,7 @@ public class PrideConverterCLIOptions {
         options.addOption(spotIdentifier);
         options.addOption(spotRegex);
         options.addOption(onlyIdentified);
+        options.addOption(useHybridSearchDb);
 
     }
 

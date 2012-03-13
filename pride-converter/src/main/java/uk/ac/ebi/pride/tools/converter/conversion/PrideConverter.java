@@ -10,6 +10,7 @@ import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAOFactory.DAO_FORMAT;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReader;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportWriter;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
@@ -68,10 +69,10 @@ public class PrideConverter {
             if (line.hasOption(PrideConverterCLIOptions.OPTIONS.MODE.getValue())) {
                 mode = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.MODE.getValue()).toLowerCase();
             }
-            
+
             // spectra file - optional
             if (line.hasOption(PrideConverterCLIOptions.OPTIONS.SPECTRA_FILE.getValue())) {
-            	spectraFile = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPECTRA_FILE.getValue());
+                spectraFile = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPECTRA_FILE.getValue());
             }
 
             // ---------------------------------------------------------------- help/version
@@ -143,6 +144,13 @@ public class PrideConverter {
             // report only identified spectra - optional
             boolean reportOnlyIdentified = line.hasOption(PrideConverterCLIOptions.OPTIONS.INCLUDE_ONLY_IDENTIFIED_SPECTRA.getValue());
 
+            // use hybrid search database  - optional
+            if (line.hasOption(PrideConverterCLIOptions.OPTIONS.USE_HYBRID_SEARCH_DATABASE.getValue())) {
+                boolean useHybridSearchDadatabase = Boolean.valueOf(line.getOptionValue(PrideConverterCLIOptions.OPTIONS.USE_HYBRID_SEARCH_DATABASE.getValue()));
+                ConverterData.getInstance().setUseHybridSearchDatabase(useHybridSearchDadatabase);
+            }
+
+
             // ---------------------------------------------------------------- setup conversion/prescan
 
             //setup DAO
@@ -154,9 +162,9 @@ public class PrideConverter {
             }
 
             DAO dao = DAOFactory.getInstance().getDAO(sourceFile, daoFormat);
-            
+
             if (spectraFile != null)
-            	dao.setExternalSpectrumFile(spectraFile);
+                dao.setExternalSpectrumFile(spectraFile);
 
             // run in prescan mode
             if ("prescan".equals(mode)) {

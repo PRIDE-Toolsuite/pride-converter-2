@@ -163,7 +163,7 @@ public class ReportWriter {
                 }
 
                 //try and fix weirdo accessions
-                AccessionResolver acr = new AccessionResolver(id.getAccession(), id.getAccessionVersion(), id.getDatabase());
+                AccessionResolver acr = new AccessionResolver(id.getAccession(), id.getAccessionVersion(), id.getDatabase(), ConverterData.getInstance().isUseHybridSearchDatabase());
                 //if we can parse a valid accession
                 if (acr.isValidAccession()) {
                     //if the curated accession is different than the submitted accession, make note of it
