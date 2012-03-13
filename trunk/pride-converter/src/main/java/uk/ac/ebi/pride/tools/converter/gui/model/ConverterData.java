@@ -26,6 +26,7 @@ public class ConverterData {
     public static final String PRIDE_XML = "-pride.xml";
     public static final String DEFAULT_OUTPUT_LOCATION = System.getProperty("java.io.tmpdir") + File.separator + "prideconverter";
 
+    private boolean useHybridSearchDatabase = true;
     private TreeSet<FileBean> dataFiles = new TreeSet<FileBean>();
     private List<String> mzTabFiles = new ArrayList<String>();
     private List<String> spectrumFiles = new ArrayList<String>();
@@ -178,12 +179,14 @@ public class ConverterData {
         customeReportFields.clear();
         mergedOutputFile = null;
         fastaFormat = null;
+        useHybridSearchDatabase = true;
     }
 
     public void clearPossibleStaleData() {
         //basically, the only possible stale data will be everything
         //except the dao format and the type, which will have been set
         //in the first screen
+        useHybridSearchDatabase = true;
         fastaFormat = null;
         dataFiles.clear();
         validationMessages.clear();
@@ -250,11 +253,20 @@ public class ConverterData {
         this.fastaFormat = fastaFormat;
     }
 
+    public boolean isUseHybridSearchDatabase() {
+        return useHybridSearchDatabase;
+    }
+
+    public void setUseHybridSearchDatabase(boolean useHybridSearchDatabase) {
+        this.useHybridSearchDatabase = useHybridSearchDatabase;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("ConverterData");
-        sb.append("{dataFiles=").append(dataFiles);
+        sb.append("{useHybridSearchDatabase=").append(useHybridSearchDatabase);
+        sb.append(", dataFiles=").append(dataFiles);
         sb.append(", mzTabFiles=").append(mzTabFiles);
         sb.append(", spectrumFiles=").append(spectrumFiles);
         sb.append(", options=").append(options);
