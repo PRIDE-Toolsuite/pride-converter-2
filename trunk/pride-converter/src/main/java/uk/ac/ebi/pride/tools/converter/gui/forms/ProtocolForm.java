@@ -149,45 +149,29 @@ public class ProtocolForm extends AbstractForm {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
         ResourceBundle bundle = ResourceBundle.getBundle("messages");
-        scrollPane1 = new JScrollPane();
-        list1 = new JList();
-        protocolTableScrollPane = new JScrollPane();
-        paramTable1 = new ParamTable();
         label4 = new JLabel();
         protocolName = new JTextField();
         label5 = new JLabel();
         loadButton = new JButton();
         saveButton = new JButton();
-        label1 = new JLabel();
         addStepButton = new JButton();
         removeStepButton = new JButton();
-        addTermButton = new AddTermButton();
+        scrollPane1 = new JScrollPane();
+        list1 = new JList();
         editButton = new JButton();
+        addTermButton = new AddTermButton();
+        label1 = new JLabel();
+        protocolTableScrollPane = new JScrollPane();
+        paramTable1 = new ParamTable();
 
         //======== this ========
 
-        //======== scrollPane1 ========
-        {
-
-            //---- list1 ----
-            list1.addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    list1ValueChanged();
-                }
-            });
-            scrollPane1.setViewportView(list1);
-        }
-
-        //======== protocolTableScrollPane ========
-        {
-            protocolTableScrollPane.setViewportView(paramTable1);
-        }
-
         //---- label4 ----
         label4.setText(bundle.getString("ProtocolForm.label4.text"));
+        label4.setToolTipText(bundle.getString("ProtocolForm.label4.toolTipText"));
 
         //---- protocolName ----
+        protocolName.setToolTipText(bundle.getString("ProtocolForm.protocolName.toolTipText"));
         protocolName.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -207,6 +191,7 @@ public class ProtocolForm extends AbstractForm {
 
         //---- loadButton ----
         loadButton.setText(bundle.getString("ProtocolForm.loadButton.text"));
+        loadButton.setToolTipText(bundle.getString("ProtocolForm.loadButton.toolTipText"));
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -216,6 +201,7 @@ public class ProtocolForm extends AbstractForm {
 
         //---- saveButton ----
         saveButton.setText(bundle.getString("ProtocolForm.saveButton.text"));
+        saveButton.setToolTipText(bundle.getString("ProtocolForm.saveButton.toolTipText"));
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -223,11 +209,9 @@ public class ProtocolForm extends AbstractForm {
             }
         });
 
-        //---- label1 ----
-        label1.setText(bundle.getString("ProtocolForm.label1.text"));
-
         //---- addStepButton ----
         addStepButton.setText(bundle.getString("ProtocolForm.addStepButton.text"));
+        addStepButton.setToolTipText(bundle.getString("ProtocolForm.addStepButton.toolTipText"));
         addStepButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -237,6 +221,7 @@ public class ProtocolForm extends AbstractForm {
 
         //---- removeStepButton ----
         removeStepButton.setText(bundle.getString("ProtocolForm.removeStepButton.text"));
+        removeStepButton.setToolTipText(bundle.getString("ProtocolForm.removeStepButton.toolTipText"));
         removeStepButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -244,9 +229,19 @@ public class ProtocolForm extends AbstractForm {
             }
         });
 
-        //---- addTermButton ----
-        addTermButton.setMargin(new Insets(1, 14, 2, 14));
-        addTermButton.setToolTipText(bundle.getString("ProtocolForm.addTermButton.toolTipText"));
+        //======== scrollPane1 ========
+        {
+
+            //---- list1 ----
+            list1.setToolTipText(bundle.getString("ProtocolForm.list1.toolTipText"));
+            list1.addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    list1ValueChanged();
+                }
+            });
+            scrollPane1.setViewportView(list1);
+        }
 
         //---- editButton ----
         editButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
@@ -259,6 +254,19 @@ public class ProtocolForm extends AbstractForm {
             }
         });
 
+        //---- addTermButton ----
+        addTermButton.setMargin(new Insets(1, 14, 2, 14));
+        addTermButton.setToolTipText(bundle.getString("ProtocolForm.addTermButton.toolTipText"));
+
+        //---- label1 ----
+        label1.setText(bundle.getString("ProtocolForm.label1.text"));
+        label1.setHorizontalAlignment(SwingConstants.CENTER);
+
+        //======== protocolTableScrollPane ========
+        {
+            protocolTableScrollPane.setViewportView(paramTable1);
+        }
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -267,31 +275,29 @@ public class ProtocolForm extends AbstractForm {
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup()
                                         .addGroup(layout.createSequentialGroup()
+                                                .addComponent(label4)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(protocolName, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(loadButton)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(saveButton))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                        .addComponent(scrollPane1, GroupLayout.Alignment.LEADING)
+                                                        .addComponent(removeStepButton, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                        .addComponent(addStepButton, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addGroup(layout.createParallelGroup()
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(label4)
+                                                                .addComponent(label1, GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(protocolName, GroupLayout.PREFERRED_SIZE, 187, GroupLayout.PREFERRED_SIZE)
+                                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(loadButton)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(saveButton))
-                                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                                .addComponent(label1)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 237, Short.MAX_VALUE)
-                                                                .addComponent(addStepButton)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(removeStepButton)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(editButton))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)))
+                                                                .addComponent(editButton))
+                                                        .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE))))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -299,6 +305,8 @@ public class ProtocolForm extends AbstractForm {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(editButton)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(loadButton)
@@ -306,17 +314,17 @@ public class ProtocolForm extends AbstractForm {
                                                         .addComponent(label4)
                                                         .addComponent(protocolName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(label5))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addGap(18, 18, 18)
                                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                         .addComponent(addStepButton)
-                                                        .addComponent(removeStepButton)
-                                                        .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label1)))
-                                        .addComponent(editButton))
+                                                        .addComponent(label1))))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+                                .addGroup(layout.createParallelGroup()
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(removeStepButton)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE))
+                                        .addComponent(protocolTableScrollPane, GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -324,20 +332,20 @@ public class ProtocolForm extends AbstractForm {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JScrollPane scrollPane1;
-    private JList list1;
-    private JScrollPane protocolTableScrollPane;
-    private ParamTable paramTable1;
     private JLabel label4;
     private JTextField protocolName;
     private JLabel label5;
     private JButton loadButton;
     private JButton saveButton;
-    private JLabel label1;
     private JButton addStepButton;
     private JButton removeStepButton;
-    private AddTermButton addTermButton;
+    private JScrollPane scrollPane1;
+    private JList list1;
     private JButton editButton;
+    private AddTermButton addTermButton;
+    private JLabel label1;
+    private JScrollPane protocolTableScrollPane;
+    private ParamTable paramTable1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

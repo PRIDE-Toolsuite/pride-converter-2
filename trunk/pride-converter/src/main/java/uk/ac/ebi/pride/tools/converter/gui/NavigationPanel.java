@@ -561,6 +561,8 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                 }
             }
         }
+        //make sure it's visible
+        validationStatus.setVisible(true);
         if (errorMessageCount > 0) {
             validationStatus.setIcon(new ImageIcon(getClass().getClassLoader().getResource("images/error.png")));
             validationStatus.repaint();

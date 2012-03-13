@@ -109,12 +109,16 @@ public class SoftwareProcessingForm extends AbstractForm {
 
         //---- label1 ----
         label1.setText(bundle.getString("SoftwareProcessingForm.label1.text"));
+        label1.setToolTipText(bundle.getString("SoftwareProcessingForm.label1.toolTipText"));
 
         //---- addTermButton ----
         addTermButton.setToolTipText(bundle.getString("SoftwareProcessingForm.addTermButton.toolTipText"));
 
         //======== scrollPane1 ========
         {
+
+            //---- processingTable ----
+            processingTable.setToolTipText(bundle.getString("SoftwareProcessingForm.processingTable.toolTipText"));
             scrollPane1.setViewportView(processingTable);
         }
 
@@ -124,14 +128,18 @@ public class SoftwareProcessingForm extends AbstractForm {
 
             //---- label2 ----
             label2.setText(bundle.getString("SoftwareProcessingForm.label2.text"));
+            label2.setToolTipText(bundle.getString("SoftwareProcessingForm.label2.toolTipText"));
 
             //---- label3 ----
             label3.setText(bundle.getString("SoftwareProcessingForm.label3.text"));
+            label3.setToolTipText(bundle.getString("SoftwareProcessingForm.label3.toolTipText"));
 
             //---- label4 ----
             label4.setText(bundle.getString("SoftwareProcessingForm.label4.text"));
+            label4.setToolTipText(bundle.getString("SoftwareProcessingForm.label4.toolTipText"));
 
             //---- softwareNameField ----
+            softwareNameField.setToolTipText(bundle.getString("SoftwareProcessingForm.softwareNameField.toolTipText"));
             softwareNameField.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
@@ -146,6 +154,7 @@ public class SoftwareProcessingForm extends AbstractForm {
             });
 
             //---- softwareVersionField ----
+            softwareVersionField.setToolTipText(bundle.getString("SoftwareProcessingForm.softwareVersionField.toolTipText"));
             softwareVersionField.addFocusListener(new FocusAdapter() {
                 @Override
                 public void focusLost(FocusEvent e) {
@@ -165,6 +174,7 @@ public class SoftwareProcessingForm extends AbstractForm {
                 //---- softwareCommentField ----
                 softwareCommentField.setLineWrap(true);
                 softwareCommentField.setWrapStyleWord(true);
+                softwareCommentField.setToolTipText(bundle.getString("SoftwareProcessingForm.softwareCommentField.toolTipText"));
                 scrollPane2.setViewportView(softwareCommentField);
             }
 
@@ -221,9 +231,13 @@ public class SoftwareProcessingForm extends AbstractForm {
 
         //---- label7 ----
         label7.setText(bundle.getString("SoftwareProcessingForm.label7.text"));
+        label7.setToolTipText(bundle.getString("SoftwareProcessingForm.label7.toolTipText"));
 
         //======== scrollPane3 ========
         {
+
+            //---- expAdditionalTable ----
+            expAdditionalTable.setToolTipText(bundle.getString("SoftwareProcessingForm.expAdditionalTable.toolTipText"));
             scrollPane3.setViewportView(expAdditionalTable);
         }
 
@@ -278,7 +292,7 @@ public class SoftwareProcessingForm extends AbstractForm {
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(7, 7, 7)
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, 152, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)

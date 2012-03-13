@@ -29,7 +29,7 @@
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :p:7:p, comp panel1:::p:152:p, space u:::p, par t {comp addTermButton::t:p::p, comp processingMethodEditButton:::p::p, comp label1:::p::p}, space :p:6:p, comp scrollPane1::::113:x, space u:::p, par t {comp addTermButton1:::p::p, comp label7:::p::p, comp expAdditionalEditButton:::p::p}, space :::p, comp scrollPane3::::114:x, space :::p}}</string> 
+        <string>par l {seq l {space :p:7:p, comp panel1:::p::p, space u:::p, par t {comp addTermButton::t:p::p, comp processingMethodEditButton:::p::p, comp label1:::p::p}, space :p:6:p, comp scrollPane1::::113:x, space u:::p, par t {comp addTermButton1:::p::p, comp label7:::p::p, comp expAdditionalEditButton:::p::p}, space :::p, comp scrollPane3::::114:x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -43,6 +43,13 @@
          <object class="com.jformdesigner.model.FormMessage"> 
           <null/> 
           <string>SoftwareProcessingForm.label1.text</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SoftwareProcessingForm.label1.toolTipText</string> 
          </object> 
         </void> 
         <void property="name"> 
@@ -77,6 +84,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SoftwareProcessingForm.processingTable.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>processingTable</string> 
           </void> 
@@ -117,6 +131,13 @@
             <string>SoftwareProcessingForm.label2.text</string> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SoftwareProcessingForm.label2.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>label2</string> 
           </void> 
@@ -130,6 +151,13 @@
            <object class="com.jformdesigner.model.FormMessage"> 
             <null/> 
             <string>SoftwareProcessingForm.label3.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SoftwareProcessingForm.label3.toolTipText</string> 
            </object> 
           </void> 
           <void property="name"> 
@@ -147,6 +175,13 @@
             <string>SoftwareProcessingForm.label4.text</string> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SoftwareProcessingForm.label4.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>label4</string> 
           </void> 
@@ -155,6 +190,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JTextField</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SoftwareProcessingForm.softwareNameField.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>softwareNameField</string> 
           </void> 
@@ -179,6 +221,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JTextField</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SoftwareProcessingForm.softwareVersionField.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>softwareVersionField</string> 
           </void> 
@@ -219,6 +268,13 @@
             <void method="setProperty"> 
              <string>wrapStyleWord</string> 
              <boolean>true</boolean> 
+            </void> 
+            <void method="setProperty"> 
+             <string>toolTipText</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>SoftwareProcessingForm.softwareCommentField.toolTipText</string> 
+             </object> 
             </void> 
             <void property="name"> 
              <string>softwareCommentField</string> 
@@ -277,6 +333,13 @@
           <string>SoftwareProcessingForm.label7.text</string> 
          </object> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SoftwareProcessingForm.label7.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>label7</string> 
         </void> 
@@ -294,6 +357,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SoftwareProcessingForm.expAdditionalTable.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>expAdditionalTable</string> 
           </void> 

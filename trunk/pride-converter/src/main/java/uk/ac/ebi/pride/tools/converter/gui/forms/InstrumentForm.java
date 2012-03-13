@@ -188,8 +188,10 @@ public class InstrumentForm extends AbstractForm {
 
         //---- label4 ----
         label4.setText(bundle.getString("InstrumentForm.label4.text"));
+        label4.setToolTipText(bundle.getString("InstrumentForm.label4.toolTipText"));
 
         //---- instrumentNameField ----
+        instrumentNameField.setToolTipText(bundle.getString("InstrumentForm.instrumentNameField.toolTipText"));
         instrumentNameField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -205,6 +207,7 @@ public class InstrumentForm extends AbstractForm {
 
         //---- loadButton ----
         loadButton.setText(bundle.getString("InstrumentForm.loadButton.text"));
+        loadButton.setToolTipText(bundle.getString("InstrumentForm.loadButton.toolTipText"));
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -214,6 +217,7 @@ public class InstrumentForm extends AbstractForm {
 
         //---- saveButton ----
         saveButton.setText(bundle.getString("InstrumentForm.saveButton.text"));
+        saveButton.setToolTipText(bundle.getString("InstrumentForm.saveButton.toolTipText"));
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -227,9 +231,13 @@ public class InstrumentForm extends AbstractForm {
 
         //---- label1 ----
         label1.setText(bundle.getString("InstrumentForm.label1.text"));
+        label1.setToolTipText(bundle.getString("InstrumentForm.label1.toolTipText"));
 
         //======== scrollPane1 ========
         {
+
+            //---- sourceTable ----
+            sourceTable.setToolTipText(bundle.getString("InstrumentForm.sourceTable.toolTipText"));
             scrollPane1.setViewportView(sourceTable);
         }
 
@@ -237,6 +245,7 @@ public class InstrumentForm extends AbstractForm {
         {
 
             //---- analyzerList ----
+            analyzerList.setToolTipText(bundle.getString("InstrumentForm.analyzerList.toolTipText"));
             analyzerList.addListSelectionListener(new ListSelectionListener() {
                 @Override
                 public void valueChanged(ListSelectionEvent e) {
@@ -248,14 +257,21 @@ public class InstrumentForm extends AbstractForm {
 
         //======== analyzerScrollPane ========
         {
+
+            //---- paramTable1 ----
+            paramTable1.setToolTipText(bundle.getString("InstrumentForm.paramTable1.toolTipText"));
             analyzerScrollPane.setViewportView(paramTable1);
         }
 
         //---- label2 ----
         label2.setText(bundle.getString("InstrumentForm.label2.text"));
+        label2.setToolTipText(bundle.getString("InstrumentForm.label2.toolTipText"));
 
         //======== scrollPane2 ========
         {
+
+            //---- detectorTable ----
+            detectorTable.setToolTipText(bundle.getString("InstrumentForm.detectorTable.toolTipText"));
             scrollPane2.setViewportView(detectorTable);
         }
 
@@ -291,6 +307,7 @@ public class InstrumentForm extends AbstractForm {
 
         //---- label3 ----
         label3.setText(bundle.getString("InstrumentForm.label3.text"));
+        label3.setToolTipText(bundle.getString("InstrumentForm.label3.toolTipText"));
 
         //---- sourceEditButton ----
         sourceEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
