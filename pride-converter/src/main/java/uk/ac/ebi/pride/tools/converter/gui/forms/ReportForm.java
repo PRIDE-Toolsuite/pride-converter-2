@@ -28,7 +28,6 @@ public class ReportForm extends AbstractForm {
 
     public ReportForm() {
         initComponents();
-        NavigationPanel.getInstance().hideValidationIcon();
     }
 
 
@@ -255,6 +254,7 @@ public class ReportForm extends AbstractForm {
 
     @Override
     public void start() {
+        NavigationPanel.getInstance().hideValidationIcon();
         refreshValidationReport();
     }
 

@@ -245,8 +245,10 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
         //---- label1 ----
         label1.setText("Sample Name");
+        label1.setToolTipText("Descriptive name of the analyzed sample");
 
         //---- sampleNameField ----
+        sampleNameField.setToolTipText("Descriptive name of the analyzed sample");
         sampleNameField.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
@@ -269,6 +271,10 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
         //---- label6 ----
         label6.setText("Description");
+        label6.setToolTipText("Free-form short description of the sample");
+
+        //---- sampleCommentField ----
+        sampleCommentField.setToolTipText("Free-form short description of the sample");
 
         //---- label3 ----
         label3.setText("Species");

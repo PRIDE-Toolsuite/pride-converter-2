@@ -287,9 +287,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     private void browseMzTabButtonActionPerformed() {
+        boolean oldState = forceRegenerationBox.isSelected();
         Collection<File> files = chooseFiles(false, false, new MzTabFileFilter());
         if (!files.isEmpty()) {
             singleMzTabFile.setText(files.iterator().next().getAbsolutePath());
+            forceRegenerationBox.setSelected(true);
+            forceRegenerationBox.setEnabled(false);
+        } else {
+            forceRegenerationBox.setSelected(oldState);
+            forceRegenerationBox.setEnabled(true);
         }
     }
 
@@ -351,6 +357,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         browseSpectrumFileButton = new JButton();
         multipleModeLabel = new JLabel();
         fastaFormatList = new JComboBox();
+        label1 = new JLabel();
         parserOptionPanel = new JPanel();
         tableScrollPane = new JScrollPane();
         parserOptionTable = new ParserOptionTable();
@@ -395,8 +402,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             //---- dataFileLabel ----
             dataFileLabel.setText(bundle.getString("SelecFilePanel.dataFileLabel.text"));
+            dataFileLabel.setToolTipText(bundle.getString("SelecFilePanel.dataFileLabel.toolTipText"));
 
             //---- singleSourceFile ----
+            singleSourceFile.setToolTipText(bundle.getString("SelecFilePanel.singleSourceFile.toolTipText"));
             singleSourceFile.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -421,6 +430,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             //---- label2 ----
             label2.setText(bundle.getString("SelecFilePanel.label2.text"));
+            label2.setToolTipText(bundle.getString("SelecFilePanel.label2.toolTipText"));
+
+            //---- singleFastaFile ----
+            singleFastaFile.setToolTipText(bundle.getString("SelecFilePanel.singleFastaFile.toolTipText"));
 
             //---- browseFastaFileButton ----
             browseFastaFileButton.setText(bundle.getString("SelecFilePanel.browseFastaFileButton.text"));
@@ -433,6 +446,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             //---- label3 ----
             label3.setText(bundle.getString("SelecFilePanel.label3.text"));
+            label3.setToolTipText(bundle.getString("SelecFilePanel.label3.toolTipText"));
+
+            //---- singleMzTabFile ----
+            singleMzTabFile.setToolTipText(bundle.getString("SelecFilePanel.singleMzTabFile.toolTipText"));
 
             //---- browseMzTabButton ----
             browseMzTabButton.setText(bundle.getString("SelecFilePanel.browseMzTabButton.text"));
@@ -445,6 +462,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             //---- label4 ----
             label4.setText(bundle.getString("SelecFilePanel.label4.text"));
+            label4.setToolTipText(bundle.getString("SelecFilePanel.label4.toolTipText"));
+
+            //---- singleSpectrumFile ----
+            singleSpectrumFile.setToolTipText(bundle.getString("SelecFilePanel.singleSpectrumFile.toolTipText"));
 
             //---- browseSpectrumFileButton ----
             browseSpectrumFileButton.setText(bundle.getString("SelecFilePanel.browseSpectrumFileButton.text"));
@@ -484,12 +505,17 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     "Match Uniprot AC",
                     "Match Uniprot ID"
             }));
+            fastaFormatList.setToolTipText(bundle.getString("SelecFilePanel.fastaFormatList.toolTipText"));
             fastaFormatList.addItemListener(new ItemListener() {
                 @Override
                 public void itemStateChanged(ItemEvent e) {
                     fastaFormatListItemStateChanged(e);
                 }
             });
+
+            //---- label1 ----
+            label1.setText(bundle.getString("SelecFilePanel.label1.text"));
+            label1.setForeground(Color.red);
 
             GroupLayout singleFilePanelLayout = new GroupLayout(singleFilePanel);
             singleFilePanel.setLayout(singleFilePanelLayout);
@@ -510,13 +536,16 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                                                     .addComponent(label3)
                                                                     .addGap(18, 18, 18)))
                                                     .addGroup(singleFilePanelLayout.createParallelGroup()
-                                                            .addComponent(singleSourceFile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
-                                                            .addComponent(singleMzTabFile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
-                                                            .addComponent(singleSpectrumFile, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                                                            .addComponent(singleMzTabFile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                                                            .addComponent(singleSpectrumFile, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
                                                             .addGroup(singleFilePanelLayout.createSequentialGroup()
-                                                                    .addComponent(singleFastaFile, GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                                                                    .addComponent(singleFastaFile, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
                                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                    .addComponent(fastaFormatList, 0, 118, Short.MAX_VALUE)))
+                                                                    .addComponent(fastaFormatList, 0, 118, Short.MAX_VALUE))
+                                                            .addGroup(singleFilePanelLayout.createSequentialGroup()
+                                                                    .addComponent(singleSourceFile, GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(label1, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)))
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                     .addGroup(singleFilePanelLayout.createParallelGroup()
                                                             .addComponent(browseDataFileButton)
@@ -528,13 +557,14 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             );
             singleFilePanelLayout.setVerticalGroup(
                     singleFilePanelLayout.createParallelGroup()
-                            .addGroup(GroupLayout.Alignment.TRAILING, singleFilePanelLayout.createSequentialGroup()
+                            .addGroup(singleFilePanelLayout.createSequentialGroup()
                                     .addComponent(multipleModeLabel)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                             .addComponent(singleSourceFile, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addComponent(browseDataFileButton)
-                                            .addComponent(dataFileLabel))
+                                            .addComponent(dataFileLabel)
+                                            .addComponent(label1))
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                             .addGroup(singleFilePanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -958,6 +988,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private JButton browseSpectrumFileButton;
     private JLabel multipleModeLabel;
     private JComboBox fastaFormatList;
+    private JLabel label1;
     private JPanel parserOptionPanel;
     private JScrollPane tableScrollPane;
     private ParserOptionTable parserOptionTable;
@@ -1111,9 +1142,14 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             browseSpectrumFileButton.setEnabled(false);
         }
 
-        //fire the table listener - this is required if users go back & forth without changing the
-        //table content
-        tableChanged(new TableModelEvent(dataFileTable.getModel()));
+        if (singleFileSelectionMode) {
+            //fire the validation listener based on if there is a file selected
+            validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
+        } else {
+            //fire the table listener - this is required if users go back & forth without changing the
+            //table content
+            tableChanged(new TableModelEvent(dataFileTable.getModel()));
+        }
 
     }
 
@@ -1128,7 +1164,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             //generate mztab files
             case MZTAB:
                 if (singleFileSelectionMode) {
-                    IOUtilities.generateMzTabFiles(getOptions(), Collections.singleton(new File(singleSourceFile.getText())));
+                    IOUtilities.generateMzTabFiles(getOptions(), Collections.singleton(new File(singleSourceFile.getText().trim())));
                 } else {
                     IOUtilities.generateMzTabFiles(getOptions(), dataFileTable.getFiles());
                 }
@@ -1159,6 +1195,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             fileBean.setMzTabFile(tab.getAbsolutePath());
                             logger.warn("Tab file selected, new report file generation turned on");
                             forceRegenerationBox.setSelected(true);
+                            forceRegenerationBox.setEnabled(false);
                         }
                     }
                     //update spectrum file

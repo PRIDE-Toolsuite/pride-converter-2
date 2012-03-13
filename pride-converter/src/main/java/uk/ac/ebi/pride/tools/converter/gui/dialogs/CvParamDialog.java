@@ -156,6 +156,9 @@ public class CvParamDialog extends AbstractDialog implements OLSInputable, KeyLi
                     @Override
                     protected Object doInBackground() throws Exception {
 
+                        //reset old OLS values
+                        olsResults.clear();
+
                         try {
                             //run in background
                             //perform OLS query
@@ -188,7 +191,10 @@ public class CvParamDialog extends AbstractDialog implements OLSInputable, KeyLi
 
                             return null;
                         } catch (Exception e) {
-                            return e;
+                            logger.error("OLS Error: " + e.getMessage(), e);
+                            olsResults.clear();
+                            olsResults.put("OLS ERROR", "OLS ERROR");
+                            return null;
                         }
 
                     }
@@ -260,7 +266,7 @@ public class CvParamDialog extends AbstractDialog implements OLSInputable, KeyLi
             String termName = query.getTermById(accessionField.getText(), cvField.getText());
             nameField.setSelectedItem(termName);
         } catch (Exception e1) {
-            e1.printStackTrace();
+            logger.error("OLS Error: " + e1.getMessage(), e1);
         }
     }
 

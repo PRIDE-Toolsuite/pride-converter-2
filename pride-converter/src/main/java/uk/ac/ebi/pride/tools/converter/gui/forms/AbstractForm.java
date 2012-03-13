@@ -36,6 +36,8 @@ public abstract class AbstractForm extends JPanel implements ConverterForm {
     protected boolean isLoaded = false;
     protected Set<String> suggestedCVs = new HashSet<String>();
 
+    protected Map<JComponent, Boolean> defaultValueMap = new HashMap<JComponent, Boolean>();
+
     @Override
     public void loadTemplate(String templateName) {
         throw new UnsupportedOperationException("No handler method available to load templates for " + getClass().getName());

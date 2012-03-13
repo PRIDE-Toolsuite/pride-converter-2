@@ -13,7 +13,7 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq l {space :::p, par l {seq l {comp scrollPane2::::718:x, space :::p}, seq {par t {comp label3::t:p::p, comp label2::t:p::p, comp label1:::p::p, comp label7:::p::p}, space :::p, par l {comp scrollPane1::::417:x, comp projectNameInput::t::417:x, comp experimentTitleInput::l::417:x, comp shortNameInput::t::417:x}, space :::p, par l {comp label4:::p::p, comp label5:::p::p, comp label6:::p::p}, space :p:175:p}, seq t {comp contactLabel:::p::p, space :::p, comp label8:::p:36:p, space ::507:x, comp addContactButton:::p::p, space :::p, comp contactEditButton:::p::p, space :::p}, seq t {comp scrollPane3::::718:x, space :::p}, seq t {comp label9:::p::p, space ::532:x, comp addreferenceButton:::p::p, space :::p, comp referenceEditButton:::p::p, space :::p}}}}</string> 
+        <string>par l {seq l {space :::p, par l {seq l {comp scrollPane2::::718:x, space :::p}, seq {par t {comp label3::t:p::p, comp label2::t:p::p, comp label1:::p::p, comp label7:::p::p}, space :::p, par l {comp scrollPane1::::417:x, comp projectNameInput::t::417:x, comp experimentTitleInput::l::417:x, comp shortNameInput::t::417:x}, space :::p, par l {comp label4:::p::p, comp label5:::p::p, comp label6:::p::p}, space :p:175:p}, seq t {comp contactLabel:::p::p, space :::p, comp label8:::p:36:p, space ::507:x, comp addContactButton:::p::p, space :::p, comp contactEditButton:::p::p, space :::p}, seq t {comp scrollPane3::::718:x, space :::p}, seq t {comp label9:::p::p, space ::540:x, comp addreferenceButton:::p::p, space :::p, comp referenceEditButton:::p::p, space :::p}}}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
@@ -26,6 +26,23 @@
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JTextField</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>e.g. Analysis of the yeast proteome using shotgun proteomics</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>foreground</string> 
+         <object class="java.awt.Color"> 
+          <int>153</int> 
+          <int>153</int> 
+          <int>153</int> 
+          <int>255</int> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Experiments are grouped based on proejct name. Generally, this is the publication&apos;s title.</string> 
+        </void> 
         <void property="name"> 
          <string>projectNameInput</string> 
         </void> 
@@ -45,11 +62,36 @@
           <boolean>true</boolean> 
          </object> 
         </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.FocusListener</string> 
+          <string>focusGained</string> 
+          <string>clearDefaultText</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
        </object> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JTextField</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>e.g. Control sample - Technical replicate #3</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>foreground</string> 
+         <object id="Color0" class="java.awt.Color"> 
+          <int>153</int> 
+          <int>153</int> 
+          <int>153</int> 
+          <int>255</int> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>The individual experiment&apos;s title</string> 
+        </void> 
         <void property="name"> 
          <string>experimentTitleInput</string> 
         </void> 
@@ -69,11 +111,31 @@
           <boolean>true</boolean> 
          </object> 
         </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.FocusListener</string> 
+          <string>focusGained</string> 
+          <string>clearDefaultText</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
        </object> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JTextField</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>e.g. SCer-CON-3 (internal identifier)</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>foreground</string> 
+         <object idref="Color0"/> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>An internal identifier referring to the experiment</string> 
+        </void> 
         <void property="name"> 
          <string>shortNameInput</string> 
         </void> 
@@ -93,6 +155,14 @@
           <boolean>true</boolean> 
          </object> 
         </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.FocusListener</string> 
+          <string>focusGained</string> 
+          <string>clearDefaultText</string> 
+          <boolean>true</boolean> 
+         </object> 
+        </void> 
        </object> 
       </void> 
       <void method="add"> 
@@ -101,6 +171,10 @@
         <void method="setProperty"> 
          <string>text</string> 
          <string>Project Name</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Experiments are grouped based on proejct name. Generally, this is the publication&apos;s title.</string> 
         </void> 
         <void property="name"> 
          <string>label1</string> 
@@ -114,6 +188,10 @@
          <string>text</string> 
          <string>Experiment Title</string> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>The individual experiment&apos;s title</string> 
+        </void> 
         <void property="name"> 
          <string>label2</string> 
         </void> 
@@ -125,6 +203,10 @@
         <void method="setProperty"> 
          <string>text</string> 
          <string>Short Label</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>An internal identifier referring to the experiment</string> 
         </void> 
         <void property="name"> 
          <string>label3</string> 
@@ -210,6 +292,10 @@
          <string>text</string> 
          <string>Description</string> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>A short description of the experiment in free-form text</string> 
+        </void> 
         <void property="name"> 
          <string>label7</string> 
         </void> 
@@ -227,6 +313,10 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JTextPane</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <string>A short description of the experiment in free-form text</string> 
+          </void> 
           <void property="name"> 
            <string>descriptionPane</string> 
           </void> 
@@ -256,6 +346,10 @@
             <object class="java.util.Vector"/> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <string>Contact details for the individuals associated to this experiment (e.g. publication author list)</string> 
+          </void> 
           <void property="name"> 
            <string>contactTable</string> 
           </void> 
@@ -275,6 +369,10 @@
         <void method="setProperty"> 
          <string>text</string> 
          <string>Contacts</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Contact details for the individuals associated to this experiment (e.g. publication author list)</string> 
         </void> 
         <void property="name"> 
          <string>contactLabel</string> 
@@ -363,6 +461,10 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <string>Publication details associated with this experiment [can be added after submission]</string> 
+          </void> 
           <void property="name"> 
            <string>referenceTable</string> 
           </void> 
@@ -375,7 +477,11 @@
         <string>javax.swing.JLabel</string> 
         <void method="setProperty"> 
          <string>text</string> 
-         <string>References</string> 
+         <string>Reference</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Publication details associated with this experiment [can be added after submission]</string> 
         </void> 
         <void property="name"> 
          <string>label9</string> 

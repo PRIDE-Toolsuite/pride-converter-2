@@ -25,61 +25,15 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space :::p, par l {seq {par l {seq l {comp label4:::p::p, space :::p, comp protocolName:::p:187:p, space :::p, comp label5:::p:12:p, space :::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq t {comp label1:::p::p, space ::237:x, comp addStepButton:::p::p, space :::p, comp removeStepButton:::p::p, space :::p, comp addTermButton:::p::p}}, space :::p, comp editButton:::p::p}, seq {comp scrollPane1:::p:85:p, space :::p, comp protocolTableScrollPane::::592:x}}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par l {seq l {comp label4:::p::p, space :::p, comp protocolName:::p:187:p, space :::p, comp label5:::p:12:p, space :::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq l {par t:::p {comp scrollPane1::l:::x:1, comp removeStepButton::l:::x:1, comp addStepButton::l::126:x:1}, space :::p, par l {seq {comp label1::::439:x, space :::p, comp addTermButton:::p::p, space :::p, comp editButton:::p::p}, comp protocolTableScrollPane::::551:x}}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq {space :::p, par t {seq {par b {comp loadButton::b:p::p, comp saveButton::b:p::p, comp label4::b:p::p, comp protocolName::b:p::p, comp label5::b:p::p}, space u:::p, par b {comp addStepButton::b:p::p, comp removeStepButton::b:p::p, comp addTermButton::b:p::p, comp label1::b:p::p}}, comp editButton::t:p::p}, space :::p, par t {comp protocolTableScrollPane::::300:x:1, comp scrollPane1::t::300:x:1}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par t {comp addTermButton::t:p::p, comp editButton::t:p::p, seq t {par b {comp loadButton::b:p::p, comp saveButton::b:p::p, comp label4::b:p::p, comp protocolName::b:p::p, comp label5::b:p::p}, space s:::p, par b {comp addStepButton::b:p::p, comp label1::b:p::p}}}, space :::p, par l {seq {comp removeStepButton:::p::p, space :::p, comp scrollPane1::::263:x}, comp protocolTableScrollPane::::294:x}, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
        <string>this</string> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JScrollPane</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>javax.swing.JScrollPane</class> 
-        </object> 
-        <void property="name"> 
-         <string>scrollPane1</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JList</string> 
-          <void property="name"> 
-           <string>list1</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>javax.swing.event.ListSelectionListener</string> 
-            <string>valueChanged</string> 
-            <string>list1ValueChanged</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JScrollPane</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>javax.swing.JScrollPane</class> 
-        </object> 
-        <void property="name"> 
-         <string>protocolTableScrollPane</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable</string> 
-          <void property="name"> 
-           <string>paramTable1</string> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
@@ -91,6 +45,13 @@
           <string>ProtocolForm.label4.text</string> 
          </object> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.label4.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>label4</string> 
         </void> 
@@ -99,6 +60,13 @@
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JTextField</string> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.protocolName.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>protocolName</string> 
         </void> 
@@ -149,6 +117,13 @@
           <string>ProtocolForm.loadButton.text</string> 
          </object> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.loadButton.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>loadButton</string> 
         </void> 
@@ -172,6 +147,13 @@
           <string>ProtocolForm.saveButton.text</string> 
          </object> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.saveButton.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>saveButton</string> 
         </void> 
@@ -187,27 +169,19 @@
       </void> 
       <void method="add"> 
        <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>ProtocolForm.label1.text</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>label1</string> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
         <string>javax.swing.JButton</string> 
         <void method="setProperty"> 
          <string>text</string> 
          <object class="com.jformdesigner.model.FormMessage"> 
           <null/> 
           <string>ProtocolForm.addStepButton.text</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.addStepButton.toolTipText</string> 
          </object> 
         </void> 
         <void property="name"> 
@@ -233,6 +207,13 @@
           <string>ProtocolForm.removeStepButton.text</string> 
          </object> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.removeStepButton.toolTipText</string> 
+         </object> 
+        </void> 
         <void property="name"> 
          <string>removeStepButton</string> 
         </void> 
@@ -247,26 +228,36 @@
        </object> 
       </void> 
       <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
-        <void method="setProperty"> 
-         <string>margin</string> 
-         <object class="java.awt.Insets"> 
-          <int>1</int> 
-          <int>14</int> 
-          <int>2</int> 
-          <int>14</int> 
-         </object> 
-        </void> 
-        <void method="setProperty"> 
-         <string>toolTipText</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>ProtocolForm.addTermButton.toolTipText</string> 
-         </object> 
-        </void> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JScrollPane</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>javax.swing.JScrollPane</class> 
+        </object> 
         <void property="name"> 
-         <string>addTermButton</string> 
+         <string>scrollPane1</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JList</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>ProtocolForm.list1.toolTipText</string> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>list1</string> 
+          </void> 
+          <void method="addEvent"> 
+           <object class="com.jformdesigner.model.FormEvent"> 
+            <string>javax.swing.event.ListSelectionListener</string> 
+            <string>valueChanged</string> 
+            <string>list1ValueChanged</string> 
+            <boolean>false</boolean> 
+           </object> 
+          </void> 
+         </object> 
         </void> 
        </object> 
       </void> 
@@ -305,6 +296,68 @@
           <string>actionPerformed</string> 
           <string>editButtonActionPerformed</string> 
           <boolean>true</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton</string> 
+        <void method="setProperty"> 
+         <string>margin</string> 
+         <object class="java.awt.Insets"> 
+          <int>1</int> 
+          <int>14</int> 
+          <int>2</int> 
+          <int>14</int> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.addTermButton.toolTipText</string> 
+         </object> 
+        </void> 
+        <void property="name"> 
+         <string>addTermButton</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JLabel</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>ProtocolForm.label1.text</string> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>horizontalAlignment</string> 
+         <int>0</int> 
+        </void> 
+        <void property="name"> 
+         <string>label1</string> 
+        </void> 
+       </object> 
+      </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormContainer"> 
+        <string>javax.swing.JScrollPane</string> 
+        <object class="com.jformdesigner.model.FormLayoutManager"> 
+         <class>javax.swing.JScrollPane</class> 
+        </object> 
+        <void property="name"> 
+         <string>protocolTableScrollPane</string> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable</string> 
+          <void property="name"> 
+           <string>paramTable1</string> 
+          </void> 
          </object> 
         </void> 
        </object> 

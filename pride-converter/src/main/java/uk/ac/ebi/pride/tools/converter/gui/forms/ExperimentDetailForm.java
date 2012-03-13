@@ -57,6 +57,10 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         contactTable.setColumnModel(contactTableModel.getTableColumnModel(contactTable));
         contactTable.setEnableRowValidation(true);
 
+        defaultValueMap.put(projectNameInput, true);
+        defaultValueMap.put(experimentTitleInput, true);
+        defaultValueMap.put(shortNameInput, true);
+
     }
 
     private void experimentDetailsRequiredFieldKeyTyped(KeyEvent e) {
@@ -122,6 +126,20 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
 
     }
 
+    private void clearDefaultText(FocusEvent e) {
+        if (isLoaded && !e.isTemporary() && e.getID() == FocusEvent.FOCUS_GAINED) {
+            if (defaultValueMap.get((JComponent) e.getSource())) {
+                //the source component has the default value
+                //clear it
+                JTextField source = (JTextField) e.getSource();
+                source.setText(null);
+                //set default colour
+                source.setForeground(null);
+                defaultValueMap.put((JComponent) e.getSource(), false);
+            }
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -152,6 +170,9 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         //======== this ========
 
         //---- projectNameInput ----
+        projectNameInput.setText("e.g. Analysis of the yeast proteome using shotgun proteomics");
+        projectNameInput.setForeground(new Color(153, 153, 153));
+        projectNameInput.setToolTipText("Experiments are grouped based on proejct name. Generally, this is the publication's title.");
         projectNameInput.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -160,12 +181,20 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         });
         projectNameInput.addFocusListener(new FocusAdapter() {
             @Override
+            public void focusGained(FocusEvent e) {
+                clearDefaultText(e);
+            }
+
+            @Override
             public void focusLost(FocusEvent e) {
                 experimentDetailsRequiredFieldFocusLost(e);
             }
         });
 
         //---- experimentTitleInput ----
+        experimentTitleInput.setText("e.g. Control sample - Technical replicate #3");
+        experimentTitleInput.setForeground(new Color(153, 153, 153));
+        experimentTitleInput.setToolTipText("The individual experiment's title");
         experimentTitleInput.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -174,12 +203,20 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         });
         experimentTitleInput.addFocusListener(new FocusAdapter() {
             @Override
+            public void focusGained(FocusEvent e) {
+                clearDefaultText(e);
+            }
+
+            @Override
             public void focusLost(FocusEvent e) {
                 experimentDetailsRequiredFieldFocusLost(e);
             }
         });
 
         //---- shortNameInput ----
+        shortNameInput.setText("e.g. SCer-CON-3 (internal identifier)");
+        shortNameInput.setForeground(new Color(153, 153, 153));
+        shortNameInput.setToolTipText("An internal identifier referring to the experiment");
         shortNameInput.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -188,6 +225,11 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         });
         shortNameInput.addFocusListener(new FocusAdapter() {
             @Override
+            public void focusGained(FocusEvent e) {
+                clearDefaultText(e);
+            }
+
+            @Override
             public void focusLost(FocusEvent e) {
                 experimentDetailsRequiredFieldFocusLost(e);
             }
@@ -195,12 +237,15 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
 
         //---- label1 ----
         label1.setText("Project Name");
+        label1.setToolTipText("Experiments are grouped based on proejct name. Generally, this is the publication's title.");
 
         //---- label2 ----
         label2.setText("Experiment Title");
+        label2.setToolTipText("The individual experiment's title");
 
         //---- label3 ----
         label3.setText("Short Label");
+        label3.setToolTipText("An internal identifier referring to the experiment");
 
         //---- label4 ----
         label4.setText("*");
@@ -219,9 +264,13 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
 
         //---- label7 ----
         label7.setText("Description");
+        label7.setToolTipText("A short description of the experiment in free-form text");
 
         //======== scrollPane1 ========
         {
+
+            //---- descriptionPane ----
+            descriptionPane.setToolTipText("A short description of the experiment in free-form text");
             scrollPane1.setViewportView(descriptionPane);
         }
 
@@ -230,11 +279,13 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
 
             //---- contactTable ----
             contactTable.setModel(new DefaultTableModel());
+            contactTable.setToolTipText("Contact details for the individuals associated to this experiment (e.g. publication author list)");
             scrollPane3.setViewportView(contactTable);
         }
 
         //---- contactLabel ----
         contactLabel.setText("Contacts");
+        contactLabel.setToolTipText("Contact details for the individuals associated to this experiment (e.g. publication author list)");
 
         //---- addContactButton ----
         addContactButton.setIcon(new ImageIcon(getClass().getResource("/images/add.png")));
@@ -262,11 +313,15 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
 
         //======== scrollPane2 ========
         {
+
+            //---- referenceTable ----
+            referenceTable.setToolTipText("Publication details associated with this experiment [can be added after submission]");
             scrollPane2.setViewportView(referenceTable);
         }
 
         //---- label9 ----
-        label9.setText("References");
+        label9.setText("Reference");
+        label9.setToolTipText("Publication details associated with this experiment [can be added after submission]");
 
         //---- contactEditButton ----
         contactEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
@@ -330,7 +385,7 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
                                                 .addContainerGap())
                                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(label9)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 532, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 540, Short.MAX_VALUE)
                                                 .addComponent(addreferenceButton)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(referenceEditButton)
@@ -425,11 +480,14 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
     public void clear() {
         isLoaded = false;
 
-        projectNameInput.setText(null);
-        experimentTitleInput.setText(null);
-        shortNameInput.setText(null);
-        descriptionPane.setText(null);
+        projectNameInput.setText("e.g. Analysis of the yeast proteome using shotgun proteomics");
+        projectNameInput.setForeground(new Color(153, 153, 153));
+        experimentTitleInput.setText("e.g. Control sample - Technical replicate #3");
+        experimentTitleInput.setForeground(new Color(153, 153, 153));
+        shortNameInput.setText("e.g. SCer-CON-3 (internal identifier)");
+        shortNameInput.setForeground(new Color(153, 153, 153));
 
+        descriptionPane.setText(null);
         referenceTable.removeAll();
         contactTable.removeAll();
 
@@ -474,15 +532,28 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
     @Override
     public void load(ReportReaderDAO dao) {
         if (!isLoaded) {
-            experimentTitleInput.setText(dao.getExperimentTitle());
-            shortNameInput.setText(dao.getExperimentShortLabel());
+            if (dao.getExperimentTitle() != null && !"".equals(dao.getExperimentTitle())) {
+                experimentTitleInput.setText(dao.getExperimentTitle());
+                experimentTitleInput.setForeground(null);
+                defaultValueMap.put(experimentTitleInput, false);
+            }
+            if (dao.getExperimentShortLabel() != null && !"".equals(dao.getExperimentShortLabel())) {
+                shortNameInput.setText(dao.getExperimentShortLabel());
+                shortNameInput.setForeground(null);
+                defaultValueMap.put(shortNameInput, false);
+            }
+
             referenceTable.addAll(dao.getReferences());
             contactTable.addAll(dao.getContacts());
 
             Param param = dao.getExperimentParams();
             for (CvParam cv : param.getCvParam()) {
                 if (DAOCvParams.PRIDE_PROJECT.getAccession().equals(cv.getAccession())) {
-                    projectNameInput.setText(cv.getValue());
+                    if (cv.getValue() != null && !"".equals(cv.getValue())) {
+                        projectNameInput.setText(cv.getValue());
+                        projectNameInput.setForeground(null);
+                        defaultValueMap.put(projectNameInput, false);
+                    }
                 }
                 if (DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession().equals(cv.getAccession())) {
                     descriptionPane.setText(cv.getValue());

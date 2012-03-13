@@ -34,11 +34,11 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleSourceFile::t::452:x, comp singleMzTabFile::t::452:x, comp singleSpectrumFile::l::452:x, seq l {comp singleFastaFile::::328:x, space :::p, comp fastaFormatList::::118:x}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :::p}, comp multipleModeLabel::t:p::p}}}</string> 
+          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::450:x, comp singleSpectrumFile::l::450:x, seq l {comp singleFastaFile::::326:x, space :::p, comp fastaFormatList::::118:x}, seq l {comp singleSourceFile::::429:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :::p}, comp multipleModeLabel::t:p::p}}}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq t {comp multipleModeLabel:::p::p, space :::x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string> 
+          <string>par l {seq {comp multipleModeLabel:::p::p, space :::x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -67,6 +67,13 @@
             <string>SelecFilePanel.dataFileLabel.text</string> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.dataFileLabel.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>dataFileLabel</string> 
           </void> 
@@ -75,6 +82,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JTextField</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.singleSourceFile.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>singleSourceFile</string> 
           </void> 
@@ -129,6 +143,13 @@
             <string>SelecFilePanel.label2.text</string> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.label2.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>label2</string> 
           </void> 
@@ -137,6 +158,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JTextField</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.singleFastaFile.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>singleFastaFile</string> 
           </void> 
@@ -175,6 +203,13 @@
             <string>SelecFilePanel.label3.text</string> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.label3.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>label3</string> 
           </void> 
@@ -183,6 +218,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JTextField</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.singleMzTabFile.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>singleMzTabFile</string> 
           </void> 
@@ -221,6 +263,13 @@
             <string>SelecFilePanel.label4.text</string> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.label4.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>label4</string> 
           </void> 
@@ -229,6 +278,13 @@
         <void method="add"> 
          <object class="com.jformdesigner.model.FormComponent"> 
           <string>javax.swing.JTextField</string> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.singleSpectrumFile.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>singleSpectrumFile</string> 
           </void> 
@@ -340,6 +396,13 @@
             </void> 
            </object> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.fastaFormatList.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>fastaFormatList</string> 
           </void> 
@@ -350,6 +413,30 @@
             <string>fastaFormatListItemStateChanged</string> 
             <boolean>true</boolean> 
            </object> 
+          </void> 
+         </object> 
+        </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JLabel</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.label1.text</string> 
+           </object> 
+          </void> 
+          <void method="setProperty"> 
+           <string>foreground</string> 
+           <object class="java.awt.Color"> 
+            <int>255</int> 
+            <int>0</int> 
+            <int>0</int> 
+            <int>255</int> 
+           </object> 
+          </void> 
+          <void property="name"> 
+           <string>label1</string> 
           </void> 
          </object> 
         </void> 
