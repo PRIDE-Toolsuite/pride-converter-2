@@ -3,7 +3,7 @@
     * [MascotDatDAO Mascot .dat]
     * [XTandemDAO X!Tandem]
     * [MzIdentMlDAO mzIdentML]
-    * [OmssaDAO OMSSA]
+    * [OmxDAO OMSSA]
     * [MzXmlDAO mzXML]
   * [QuantitativeMzTabFiles Quantitative data]
   * [GelBasedData Gel based data]
