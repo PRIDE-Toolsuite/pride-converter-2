@@ -680,26 +680,35 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
         // add the allow-identifications-only option
         DAOProperty<Boolean> allowIdentificationsOnly = new DAOProperty<Boolean>("allow_identifications_only", false);
         allowIdentificationsOnly.setDescription("Allows the conversion of mzIdentML files without spectra data. Can be set to \"True\" or \"False\". The default value is \"False\".");
+        allowIdentificationsOnly.setShortDescription("Allow the conversion without spectra data (not recommended).");
+        allowIdentificationsOnly.setAdvanced(true);
         supportedProperties.add(allowIdentificationsOnly);
 
         // add the use weighted score option
         DAOProperty<Boolean> useWeightedScoring = new DAOProperty<Boolean>("use_weighted_scoring", true);
         useWeightedScoring.setDescription("As protein scores are not directly reported in mzIdentML files two different methods can be used to calculate protein from peptide scores: Either a weighted approach (default) or just adding up the peptide scores.");
+        useWeightedScoring.setShortDescription("Use a weighted scoring approach to estimate protein scores.");
+        useWeightedScoring.setAdvanced(true);
         supportedProperties.add(useWeightedScoring);
 
         // add the report all spectrum identificationfalses
         DAOProperty<Boolean> reportAllSpectrumIdentifications = new DAOProperty<Boolean>("report_all_spectrum_identifications", false);
         reportAllSpectrumIdentifications.setDescription("By default only ranked one spectrum identifications are reported. If this option is set to true all spectrum identifications irrespective of their rank are reported.");
+        reportAllSpectrumIdentifications.setShortDescription("Report more than one identification per spectrum.");
+        reportAllSpectrumIdentifications.setAdvanced(true);
         supportedProperties.add(reportAllSpectrumIdentifications);
 
         // decoy accession precursor
         DAOProperty<String> decoyAccessionPrecuros = new DAOProperty<String>("decoy_accession_precursor", null);
         decoyAccessionPrecuros.setDescription("If set any identification with the specified precursor in its identification will be flagged as decoy identification.");
+        decoyAccessionPrecuros.setShortDescription("Protein accession prefix identifying decoy hits.");
         supportedProperties.add(decoyAccessionPrecuros);
 
         // used peptide score accession
         DAOProperty<String> peptideScoreAccession = new DAOProperty<String>("peptide_score_accession", null);
         peptideScoreAccession.setDescription("Specifies the accession of the peptide score to use to construct the protein scores. If this parameter is not set one of the available peptide scores will be randomly chosen.");
+        peptideScoreAccession.setShortDescription("Accession of the primary peptide score to be reported.");
+        peptideScoreAccession.setAdvanced(true);
         supportedProperties.add(peptideScoreAccession);
 
         return supportedProperties;
