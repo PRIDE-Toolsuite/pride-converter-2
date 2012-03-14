@@ -551,14 +551,17 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public String getExperimentTitle() throws InvalidFormatException {
-        // make sure the mascot file contains parameters
-        ms_searchparams params = mascotFile.params();
-
-        if (params == null)
-            throw new InvalidFormatException("Mascot file could not be parsed properly");
-
-        // return the file's search title
-        return params.getCOM();
+//        // make sure the mascot file contains parameters
+//        ms_searchparams params = mascotFile.params();
+//
+//        if (params == null)
+//            throw new InvalidFormatException("Mascot file could not be parsed properly");
+//
+//        // return the file's search title
+//        return params.getCOM();
+    	
+    	// these title's are generally not sensible
+    	return "";
     }
 
     @Override
