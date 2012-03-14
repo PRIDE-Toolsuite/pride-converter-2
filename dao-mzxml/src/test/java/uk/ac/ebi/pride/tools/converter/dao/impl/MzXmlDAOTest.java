@@ -44,7 +44,7 @@ public class MzXmlDAOTest extends TestCase {
 	}
 
 	public void testGetExperimentTitle() {
-		assertEquals("Unknown mzXML experiment.", dao.getExperimentTitle());
+		assertEquals("", dao.getExperimentTitle());
 	}
 
 	public void testGetSoftware() {
