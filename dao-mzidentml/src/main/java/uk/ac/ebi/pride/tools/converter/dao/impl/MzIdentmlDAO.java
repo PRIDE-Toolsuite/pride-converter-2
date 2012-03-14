@@ -1799,20 +1799,35 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
                         ionIndex.toString()));
 
                 // check if there are measures to add
+                boolean hasMz = false, hasIntensity = false, hasMassError = false;
+                
                 for (FragmentArray fragArr : iontype.getFragmentArray()) {
                     // m/z
-                    if (productIonMZMeasureRef.contains(fragArr.getMeasureRef()))
+                    if (productIonMZMeasureRef.contains(fragArr.getMeasureRef())) {
                         fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MZ.getParam(fragArr.getValues().get(index)));
+                        hasMz = true;
+                    }
                     // intensity
-                    if (productIonIntensityMeasureRef.contains(fragArr.getMeasureRef()))
+                    if (productIonIntensityMeasureRef.contains(fragArr.getMeasureRef())) {
                         fragmentIon.getCvParam().add(DAOCvParams.PRECURSOR_INTENSITY.getParam(fragArr.getValues().get(index)));
+                        hasIntensity = true;
+                    }
                     // error
-                    if (productIonMZErrorMeasureRef.contains(fragArr.getMeasureRef()))
+                    if (productIonMZErrorMeasureRef.contains(fragArr.getMeasureRef())) {
                         fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MASS_ERROR.getParam(fragArr.getValues().get(index)));
+                        hasMassError = true;
+                    }
                     // delta
                     if (productIonMZDeltaMeasureRef.contains(fragArr.getMeasureRef()))
                         fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_DELTA.getParam(fragArr.getValues().get(index)));
                 }
+                
+                if (!hasMz)
+                	continue;
+                if (!hasMassError)
+                	fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MASS_ERROR.getParam(0));
+                if (!hasIntensity)
+                	fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(0));
 
                 fragmentIons.add(fragmentIon);
             }
