@@ -32,6 +32,10 @@ public class DAOProperty<TYPE> {
      */
     private String description;
     /**
+     * A shorter description that can be used as a tooltip.
+     */
+    private String shortDescription;
+    /**
      * The unit used by this property. Null if not applicable
      */
     private String unit;
@@ -143,5 +147,13 @@ public class DAOProperty<TYPE> {
 
 	public void setAdvanced(boolean isAdvanced) {
 		this.isAdvanced = isAdvanced;
-	}    
+	}
+
+	public String getShortDescription() {
+		return shortDescription;
+	}
+
+	public void setShortDescription(String shortDescription) {
+		this.shortDescription = shortDescription;
+	}
 }
