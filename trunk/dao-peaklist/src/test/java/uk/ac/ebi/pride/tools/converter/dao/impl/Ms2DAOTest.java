@@ -34,7 +34,7 @@ public class Ms2DAOTest extends TestCase {
 	}
 
 	public void testGetExperimentTitle() {
-		assertEquals("Unknown title", dao.getExperimentTitle());
+		assertEquals("", dao.getExperimentTitle());
 	}
 
 	public void testGetExperimentParams() {
