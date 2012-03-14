@@ -178,6 +178,17 @@ public class ParserOptionTableModel extends AbstractTableModel {
         }
     }
 
+    public DAOProperty getDAOPropertyAtRow(int rowIndex) {
+
+        if (showAdvancedProperties) {
+            return allProperties.get(rowIndex);
+        } else {
+            return propertiesNoAdvanced.get(rowIndex);
+        }
+
+    }
+
+
     //replace "a_property_name" with "A Property Name"
     private String cleanup(String propertyName) {
 
@@ -222,4 +233,5 @@ public class ParserOptionTableModel extends AbstractTableModel {
     public void setValues(Map<String, Object> values) {
         this.values = values;
     }
+
 }
