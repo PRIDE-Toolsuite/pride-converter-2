@@ -1,0 +1,7 @@
+#summary Documentation of the OmxDAO in the PRIDE Converter 2
+
+= Introduction =
+
+The *Omx DAO* is being developed based on the [http://www3.interscience.wiley.com/journal/122524294/abstract OMSSA Parser by Barsnes et al]. More information about the OMSSA Parser can be found at http://omssa-parser.googlecode.com.
+
+The *Omx DAO* is currently still under development.
