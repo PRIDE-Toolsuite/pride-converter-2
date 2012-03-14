@@ -131,7 +131,7 @@ public class MzmlDAO extends AbstractPeakListDAO implements DAO {
 	@Override
     public String getExperimentTitle() {
         // not supported
-        return "Unknown mzML experiment";
+        return "";
     }
 
     @Override
