@@ -23,6 +23,8 @@ import uk.ac.ebi.pride.tools.converter.utils.memory.MemoryUsage;
 
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.*;
 import java.util.zip.GZIPOutputStream;
 
@@ -36,9 +38,36 @@ import java.util.zip.GZIPOutputStream;
  */
 public class PrideXmlWriter {
 
-
     private static final double MASS_DELTA_CUTOFF_VALUE = 1;
     private static final Logger logger = Logger.getLogger(PrideXmlWriter.class);
+
+    private static IntenArrayBinary EMPTY_INTEN_ARRAY;
+    private static MzArrayBinary EMPTY_MZ_ARRAY;
+
+    static {
+        // create the byte arrays
+        // allocate the memory for the bytes to store
+        ByteBuffer bytes = ByteBuffer.allocate(8);
+        bytes.order(ByteOrder.LITTLE_ENDIAN); // save everything in LITTLE ENDIAN format as it's the standard
+        bytes.putDouble(0, 0);
+        // convert the ByteBuffer to a byte[]
+        byte[] byteArray = new byte[8]; // allocate the memory for the byte[] array
+        bytes.get(byteArray);
+
+        // create the intensity array
+        Data arrayData = new Data();
+        arrayData.setEndian("little");
+        arrayData.setLength(byteArray.length);
+        arrayData.setPrecision("64");
+        arrayData.setValue(byteArray);
+
+        EMPTY_INTEN_ARRAY = new IntenArrayBinary();
+        EMPTY_INTEN_ARRAY.setData(arrayData);
+
+        EMPTY_MZ_ARRAY = new MzArrayBinary();
+        EMPTY_MZ_ARRAY.setData(arrayData);
+    }
+
 
     private ReportReader reader;
     private DAO dao;
@@ -162,7 +191,16 @@ public class PrideXmlWriter {
             Iterator<Spectrum> spectrumIter = dao.getSpectrumIterator(includeOnlyIdentifiedSpectra);
             int spectrumCount = 0;
             while (spectrumIter.hasNext()) {
-                prideJaxbMarshaller.marshall(spectrumIter.next(), out);
+                Spectrum spectrum = spectrumIter.next();
+                //if the spectrum has no intensity array, set one properly
+                if (spectrum.getIntenArrayBinary() == null || spectrum.getIntentArray() == null) {
+                    spectrum.setIntenArrayBinary(EMPTY_INTEN_ARRAY);
+                }
+                //if the spectrum has no mz array, set one properly
+                if (spectrum.getMzArrayBinary() == null || spectrum.getMzNumberArray() == null) {
+                    spectrum.setMzArrayBinary(EMPTY_MZ_ARRAY);
+                }
+                prideJaxbMarshaller.marshall(spectrum, out);
                 out.println();
                 spectrumCount++;
                 if (spectrumCount % 1000 == 0) {
@@ -754,5 +792,6 @@ public class PrideXmlWriter {
             e.printStackTrace();
         }
     }
+
 
 }
