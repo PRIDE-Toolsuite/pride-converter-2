@@ -165,7 +165,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      */
     public enum SupportedProperty {
     	EXPECT_THRESHOLD("expect_threshold"),
-    	USE_INTERNAL_SPECTA("use_internal_spectra");
+    	USE_INTERNAL_SPECTA("use_internal_spectra"),
+    	DECOY_PREFIX("decoy_prefix");
     	
     	private String name;
     	
@@ -237,6 +238,10 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      */
     private Double expectThreshold = 0.05;
     /**
+     * The protein accession decoy prefix to use
+     */
+    private String decoyPrefix = "DECOY_";
+    /**
      * The currently set user properties. This object
      * is only used to return the set properties. The
      * actual property values are stored in member
@@ -286,6 +291,11 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         useInternalSpectra.setAdvanced(true);
         supportedProperties.add(useInternalSpectra);
         
+        DAOProperty<String> decoyAccPrec = new DAOProperty<String>(SupportedProperty.DECOY_PREFIX.getName(), "DECOY_");
+        decoyAccPrec.setDescription("An accession prefix that identifies decoy hits. Every protein with an accession starting with this precursor will be flagged as decoy hit. Furthermore, any decoy hit generated using X!Tandem's inbuilt reverse function will be converted to using this prefix as well.");
+        decoyAccPrec.setShortDescription("Protein accession prefix to identify decoy hits.");
+        supportedProperties.add(decoyAccPrec);
+        
         return supportedProperties;
     }
     
@@ -296,6 +306,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         // set the actual supported values
         useInternalSpectra = Boolean.parseBoolean( properties.getProperty(SupportedProperty.USE_INTERNAL_SPECTA.getName(), "false") );
         expectThreshold = Double.parseDouble( properties.getProperty(SupportedProperty.EXPECT_THRESHOLD.getName(), "0.05") );
+        decoyPrefix = properties.getProperty(SupportedProperty.DECOY_PREFIX.getName(), "DECOY_");
         
         // reset the spectra dao
         spectraDAO = null;
@@ -1122,8 +1133,13 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
         // create the identification object
         Identification identification = new Identification();
-        // set the accession
-        identification.setAccession(proteinLabel);
+        String accession = proteinLabel;
+        // check if the proteinLabel contains the ":reversed" tag
+        if (decoyPrefix.length() > 0 && accession.endsWith(":reversed")) {
+        	accession = decoyPrefix + accession.substring(0, proteinLabel.length() - 9);
+        }	
+        // set the accession        
+        identification.setAccession(accession);
         // set the unique identifier
         identification.setUniqueIdentifier(proteinLabel);
 
@@ -1143,7 +1159,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         identification.setSearchEngine("X!Tandem");
 
         // add the peptides
-        List<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertedPeptides = convertPeptides(peptides, prescanMode);
+        boolean isDecoy = decoyPrefix.length() > 0 && identification.getAccession().startsWith(decoyPrefix);
+        List<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertedPeptides = convertPeptides(peptides, prescanMode, isDecoy);
         // if the protein has no peptides (threshold) return null
         if (convertedPeptides.size() < 1)
         	return null;
@@ -1154,6 +1171,9 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             Param additional = new Param();
 //            additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(protein.getExpectValue()));
 
+            if (decoyPrefix.length() > 0 && identification.getAccession().startsWith(decoyPrefix))
+            	additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
+            
             identification.setAdditional(additional);
         }
 
@@ -1168,7 +1188,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * @param prescanMode Indicates whether in prescan mode.
      * @return An ArrayList of PrideConverter peptides.
      */
-    private List<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertPeptides(Collection<Peptide> peptides, boolean prescanMode) {
+    private List<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertPeptides(Collection<Peptide> peptides, boolean prescanMode, boolean isDecoy) {
         // intialize the return variable
         ArrayList<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertedPeptides = new ArrayList<uk.ac.ebi.pride.tools.converter.report.model.Peptide>();
 
@@ -1208,6 +1228,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
                     additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(domain.getUpFlankSequence()));
                     additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(domain.getUpFlankSequence()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_DELTASCORE.getParam(domain.getDomainDeltaMh()));
+                    if (isDecoy)
+                    	additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
 
                     convertedPeptide.setAdditional(additional);
                 }
