@@ -352,22 +352,22 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
 
                                     //check to see if we're on the last form!
 
-//                                    if (selectedIndex == forms.size() - 1) {
-//                                        //we're at the last form
-//                                        nextButton.setText("Quit");
-//                                        for (ActionListener al : nextButton.getActionListeners()) {
-//                                            nextButton.removeActionListener(al);
-//                                        }
-//                                        nextButton.addActionListener(new ActionListener() {
-//                                            @Override
-//                                            public void actionPerformed(ActionEvent e) {
-//                                                quit();
-//                                            }
-//                                        });
-//                                        nextButton.setEnabled(true);
-//                                        nextButton.revalidate();
-//                                        nextButton.repaint();
-//                                    }
+                                    if (selectedIndex == forms.size() - 1) {
+                                        //we're at the last form
+                                        nextButton.setText("Finish");
+                                        for (ActionListener al : nextButton.getActionListeners()) {
+                                            nextButton.removeActionListener(al);
+                                        }
+                                        nextButton.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent e) {
+                                                quit();
+                                            }
+                                        });
+                                        nextButton.setEnabled(true);
+                                        nextButton.revalidate();
+                                        nextButton.repaint();
+                                    }
 
                                 } else {
                                     if (value instanceof GUIException) {
@@ -440,7 +440,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
 
             //if we were on the last form before but went back,
             //we now want to go forward again
-            if ("Quit".equals(nextButton.getText())) {
+            if ("Finish".equals(nextButton.getText())) {
                 nextButton.setText("Next");
                 for (ActionListener al : nextButton.getActionListeners()) {
                     nextButton.removeActionListener(al);
