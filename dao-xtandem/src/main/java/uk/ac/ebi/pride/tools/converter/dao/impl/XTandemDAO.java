@@ -1282,6 +1282,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     			// the peak list etc.
     			if (useInternalSpectra)
     				prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(fragmentIon.getIntensity()));
+    			else
+    				prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(0));
                 // m/z
     			double mz = fragmentIon.getMZ() + fragmentIon.getTheoreticalExperimentalMassError();
     			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MZ.getParam(mz));
