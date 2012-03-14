@@ -1,4 +1,4 @@
-#summary Documentation of the mzIdentMLDAO of the PRIDE Converter 2.
+#summary Documentation of the mzIdentMLDAO of PRIDE Converter 2.
 
 = Introduction =
 
