@@ -741,7 +741,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
         Map<String, String> attributes = unmarshaller.getElementAttributes(unmarshaller.getMzIdentMLId(), MzIdentML.class);
 
         // return the name
-        return (attributes.containsKey("name")) ? attributes.get("name") : "Unknown experiment (mzIdentML)";
+        return (attributes.containsKey("name")) ? attributes.get("name") : "";
     }
 
     @Override
