@@ -259,14 +259,17 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 		
 		DAOProperty<Double> peptideThreshold = new DAOProperty<Double>("peptide_threshold", 0.05, 0.0, 0.1);
 		peptideThreshold.setDescription("maximum p-value a peptide may have to still be reported in the PRIDE XML file.");
+		peptideThreshold.setShortDescription("Maximum p-value for peptide hits to be reported.");
 		properties.add(peptideThreshold);
 		
 		DAOProperty<String> searchEngine = new DAOProperty<String>("search_engine", "MSGF");
 		searchEngine.setDescription("MSGF files do not contain the search engine used to identify a protein. This parameter sets the given search engine. Default value is \"MSGF\"");
+		searchEngine.setShortDescription("Name of the original search engine used.");
 		properties.add(searchEngine);
 		
 		DAOProperty<Boolean> addCarbamidomethylation = new DAOProperty<Boolean>("add_carbamidomethylation", false);
 		addCarbamidomethylation.setDescription("MSGF files cannot report modifications. If this parameter is set to \"true\" a Carbamidomethylation is added to every C.");
+		addCarbamidomethylation.setShortDescription("Add carabamidomethylation as static modification.");
 		properties.add(addCarbamidomethylation);
 		
 		return properties;
