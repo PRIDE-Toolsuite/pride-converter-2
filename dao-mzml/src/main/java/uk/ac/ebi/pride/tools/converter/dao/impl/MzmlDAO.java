@@ -99,6 +99,8 @@ public class MzmlDAO extends AbstractPeakListDAO implements DAO {
         // add the allow-identifications-only option
         DAOProperty<Boolean> scanOnMultipleInstruments = new DAOProperty<Boolean>("scan_on_multiple_instruments", false);
         scanOnMultipleInstruments.setDescription("PRIDE XML can only report one instrument configuration. If this parameter is set to \"True\" the converter checks if all the instruments were actually used and if only one was used, reports this configuration in the report file.");
+        scanOnMultipleInstruments.setShortDescription("Check if all reported instrument configurations are used.");
+        scanOnMultipleInstruments.setAdvanced(true);
         supportedProperties.add(scanOnMultipleInstruments);
 
         return supportedProperties;
