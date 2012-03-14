@@ -217,6 +217,8 @@ A Collection of _Reference_ objects describing publications presenting this expe
 === getSearchDatabaseName (required) ===
 
 The names of the search database(s) used in the experiment. These will be written to the FASTA attributes and will be used in the FASTA section if there are multiple sequence files, the search database name will be a string-delimited concatenation of all the names. Idem for version.
+This should represent the same data as in the DatabaseMappings, with a simplified format as single String. (database names can be concatenated in cases where multiple DBs have been used)
+Also See getDatabaseMappings.
 
 === getSearchDatabaseVersion (required) ===
 
