@@ -246,66 +246,78 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
         // min_propability
         DAOProperty<Double> minProbability = new DAOProperty<Double>(SupportedProperties.MIN_PROPABILITY.getName(), (Double) SupportedProperties.MIN_PROPABILITY.getDefaultValue(), 0.0, 1.0);
         minProbability.setDescription("Specifies a cut-off point for protein scores, a cut-off for an Integrated error tolerant search and a threshold for calculating MudPIT scores. This value represents a probability threshold.");
+        minProbability.setShortDescription("Probability cut-off for protein or peptide scores depending on the search (PMF or MS2).");
         supportedProperties.add(minProbability);
 
         // use MudPIT scoring
         DAOProperty<Boolean> useMudpit = new DAOProperty<Boolean>(SupportedProperties.USE_MUDPIT_SCORING.getName(), (Boolean) SupportedProperties.USE_MUDPIT_SCORING.getDefaultValue());
         useMudpit.setDescription("Indicates whether MudPIT or normal scoring should be used.");
+        useMudpit.setShortDescription("Indicates whether MudPIT or normal scoring should be used.");
         supportedProperties.add(useMudpit);
 
         // only report significant peptides / PMF proteins
         DAOProperty<Boolean> onlySignificant = new DAOProperty<Boolean>(SupportedProperties.ONLY_SIGNIFICANT.getName(), (Boolean) SupportedProperties.ONLY_SIGNIFICANT.getDefaultValue());
         onlySignificant.setDescription("Indicates whether only significant peptides / (in PMF searches) proteins should be included in the generated PRIDE file.");
+        onlySignificant.setShortDescription("Only report significant identifications (peptides in MS2 and proteins in PMF searches).");
         supportedProperties.add(onlySignificant);
 
         // remove duplicates from same query (same sequence, same query)
         DAOProperty<Boolean> dupeSameQuery = new DAOProperty<Boolean>(SupportedProperties.DUPE_SAME_QUERY.getName(), (Boolean) SupportedProperties.DUPE_SAME_QUERY.getDefaultValue());
         dupeSameQuery.setDescription("Indicates whether duplicate peptides having the same sequence and coming from the same query (= spectrum) should be removed. These peptides may have different modifications reported.");
+        dupeSameQuery.setShortDescription("Remove duplicate identifications with the same sequence coming from the same spectrum.");
         dupeSameQuery.setAdvanced(true);
         supportedProperties.add(dupeSameQuery);
 
         // remove duplicates from different query (same sequence, different mods)
         DAOProperty<Boolean> dupeDiffQuery = new DAOProperty<Boolean>(SupportedProperties.DUPE_DIFF_QUERY.getName(), (Boolean) SupportedProperties.DUPE_DIFF_QUERY.getDefaultValue());
         dupeDiffQuery.setDescription("Indicates whether duplicate peptides having the same sequence (but maybe different modifications) coming from different queries (= spectra) should be removed.");
+        dupeDiffQuery.setShortDescription("Remove duplicate peptides with the same sequence but coming from different spectra.");
         dupeDiffQuery.setAdvanced(true);
         supportedProperties.add(dupeDiffQuery);
 
         // error tolerant searches
         DAOProperty<Boolean> errTolSearch = new DAOProperty<Boolean>(SupportedProperties.INCLUDE_ERR_TOL.getName(), (Boolean) SupportedProperties.INCLUDE_ERR_TOL.getDefaultValue());
         errTolSearch.setDescription("Indicates whether integrated error tolerant search results should be included in the PRIDE XML support. These results are not included in the protein scores by Mascot.");
+        errTolSearch.setShortDescription("Include error tolerant search results in PRIDE XML file (if present).");
         supportedProperties.add(errTolSearch);
 
         // decoy accession precursor
         DAOProperty<String> decoyAccPrec = new DAOProperty<String>(SupportedProperties.DECOY_PREFIX.getName(), (String) SupportedProperties.DECOY_PREFIX.getDefaultValue());
         decoyAccPrec.setDescription("An accession prefix that identifies decoy hits. Every protein with an accession starting with this precursor will be flagged as decoy hit. Furthermore, any decoy hit who's accession does not start with this prefix will be altered accordingly.");
+        decoyAccPrec.setShortDescription("Protein accession prefix to identify decoy hits.");
         supportedProperties.add(decoyAccPrec);
 
         // protein grouping (old version)
         DAOProperty<Boolean> proteinGrouping = new DAOProperty<Boolean>(SupportedProperties.ENABLE_GROUPING.getName(), (Boolean) SupportedProperties.ENABLE_GROUPING.getDefaultValue());
         proteinGrouping.setDescription("Indicates whether the grouping mode (Occam's Razor, see Mascot documentation) should be enabled. This is the default behaviour for Mascot. This mode is not equivalent to the protein clustering introduced in Mascot 2.3.");
+        proteinGrouping.setShortDescription("Enable Mascot protein grouping mode (Occam's Razor).");
         proteinGrouping.setAdvanced(true);
         supportedProperties.add(proteinGrouping);
 
         // ignore below ions score (0 default)
         DAOProperty<Double> ignoreIonsScore = new DAOProperty<Double>(SupportedProperties.IGNORE_BELOW_SCORE.getName(), (Double) SupportedProperties.IGNORE_BELOW_SCORE.getDefaultValue(), 0.0, 1.0);
         ignoreIonsScore.setDescription("Peptides with a lower expect ratio (of being false positives) will be ignored completely. Set to 1 to deactivate. Default value is " + SupportedProperties.IGNORE_BELOW_SCORE.getDefaultValue());
+        ignoreIonsScore.setShortDescription("Ignore peptides with a lower expect ratio from any further analysis.");
         supportedProperties.add(ignoreIonsScore);
 
         // compatibility mode
         DAOProperty<Boolean> compMode = new DAOProperty<Boolean>(SupportedProperties.COMPATIBILITY_MODE.getName(), (Boolean) SupportedProperties.COMPATIBILITY_MODE.getDefaultValue());
         compMode.setDescription("If set to true (default) the precuror charge will also be reported at the spectrum level using the best ranked peptide's charge state. This might lead to wrong precursor charges being reported. The correct charge state is always additionally reported at the peptide level.");
+        compMode.setShortDescription("Report precursor charges at the spectrum level for compatibility with older applications (can lead to wrong results).");
         compMode.setAdvanced(true);
         supportedProperties.add(compMode);
         
         // remove empty spectra
         DAOProperty<Boolean> removeEmptySpec = new DAOProperty<Boolean>(SupportedProperties.REMOVE_EMPTY_SPECTRA.getName(), (Boolean) SupportedProperties.REMOVE_EMPTY_SPECTRA.getDefaultValue());
         removeEmptySpec.setDescription("If set to true (default) spectra without any peaks are ignored and not reported in the PRIDE XML file.");
+        removeEmptySpec.setShortDescription("Do not report empty spectra in the PRIDE XML file.");
         removeEmptySpec.setAdvanced(true);
         supportedProperties.add(removeEmptySpec);
         
         // use homology threshold
         DAOProperty<Boolean> homologyThreshold = new DAOProperty<Boolean>(SupportedProperties.USE_HOMOLOGY_THREHOLD.getName(), (Boolean) SupportedProperties.USE_HOMOLOGY_THREHOLD.getDefaultValue());
         homologyThreshold.setDescription("If set to true (default is \"false\" the homology instead of the identity threshold will be used to identify significant identifications.");
+        homologyThreshold.setShortDescription("Use the homology threshold instead of the identity threshold.");
         supportedProperties.add(homologyThreshold);
     }
 
