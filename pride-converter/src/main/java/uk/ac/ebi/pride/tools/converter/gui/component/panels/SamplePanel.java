@@ -25,6 +25,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author User #3
@@ -38,7 +39,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private Map<String, String> cellCache;
     private Map<String, String> tissueCache;
     private ResourceBundle config;
-    private Set<String> subsamples = new HashSet<String>();
+    private TreeSet<String> subsamples = new TreeSet<String>();
     private boolean isMaster = false;
     private String sourceFile;
     private boolean isAllowMultipleValues = false;
@@ -456,10 +457,16 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     }
 
     public void setSampleParams(Param param) {
-        if (param != null) {
+        setSampleParams(param, false);
+    }
 
+    public void setSampleParams(Param param, boolean addMissingQuantParamsIfRequired) {
+
+        Set<String> observedAccession = new HashSet<String>();
+        if (param != null) {
             subsamples.clear();
             for (CvParam cv : param.getCvParam()) {
+                observedAccession.add(cv.getAccession());
                 paramTable1.add(cv);
                 if (QuantitationCvParams.isQuantificationReagent(cv.getAccession())) {
                     subsamples.add(cv.getName());
@@ -471,7 +478,25 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             for (UserParam up : param.getUserParam()) {
                 paramTable1.add(up);
             }
+        }
 
+        //check to see if we have subsamples and their associated description params
+        //if not, automatically add them - only do this for the master or the only panel in the sample form!
+        if (!subsamples.isEmpty() && addMissingQuantParamsIfRequired) {
+            //add the right number of params
+            int subSampleNb = subsamples.size();
+            //assume that the subsamples will have been labelled in order
+            List<String> subsampleList = new ArrayList<String>(subsamples);
+            //PRIDE:0000367 - Subsample 1 description
+            //..
+            //PRIDE:0000374 - Subsample 8 description
+            String baseParam = "PRIDE:0000";
+            int baseParamAc = 366;
+            for (int i = 1; i <= subSampleNb; i++) {
+                if (!observedAccession.contains(baseParam + (baseParamAc + i))) {
+                    paramTable1.add(new CvParam("PRIDE", baseParam + (baseParamAc + i), "Subsample " + i + " description", "Subsample labelled with " + subsampleList.get(i - 1)));
+                }
+            }
         }
 
         updateColumnWidths();
@@ -558,6 +583,8 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             }
         }
 
+        //update next button
+        fireValidationListener();
     }
 
     @Override

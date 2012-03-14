@@ -536,14 +536,14 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                                                                     .addComponent(label3)
                                                                     .addGap(18, 18, 18)))
                                                     .addGroup(singleFilePanelLayout.createParallelGroup()
-                                                            .addComponent(singleMzTabFile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
-                                                            .addComponent(singleSpectrumFile, GroupLayout.DEFAULT_SIZE, 450, Short.MAX_VALUE)
+                                                            .addComponent(singleMzTabFile, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
+                                                            .addComponent(singleSpectrumFile, GroupLayout.DEFAULT_SIZE, 452, Short.MAX_VALUE)
                                                             .addGroup(singleFilePanelLayout.createSequentialGroup()
-                                                                    .addComponent(singleFastaFile, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                                                    .addComponent(singleFastaFile, GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
                                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                    .addComponent(fastaFormatList, 0, 118, Short.MAX_VALUE))
+                                                                    .addComponent(fastaFormatList, 0, 119, Short.MAX_VALUE))
                                                             .addGroup(singleFilePanelLayout.createSequentialGroup()
-                                                                    .addComponent(singleSourceFile, GroupLayout.DEFAULT_SIZE, 429, Short.MAX_VALUE)
+                                                                    .addComponent(singleSourceFile, GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE)
                                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                     .addComponent(label1, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)))
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -708,11 +708,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
                     //======== scrollPane1 ========
                     {
+
+                        //---- dataFileTable ----
+                        dataFileTable.setToolTipText(bundle.getString("SelecFilePanel.dataFileTable.toolTipText"));
                         scrollPane1.setViewportView(dataFileTable);
                     }
 
                     //---- button1 ----
                     button1.setText(bundle.getString("SelecFilePanel.button1.text"));
+                    button1.setToolTipText(bundle.getString("SelecFilePanel.button1.toolTipText"));
                     button1.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -749,11 +753,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
                     //======== scrollPane3 ========
                     {
+
+                        //---- sequenceFileTable ----
+                        sequenceFileTable.setToolTipText(bundle.getString("SelecFilePanel.sequenceFileTable.toolTipText"));
                         scrollPane3.setViewportView(sequenceFileTable);
                     }
 
                     //---- button3 ----
                     button3.setText(bundle.getString("SelecFilePanel.button3.text"));
+                    button3.setToolTipText(bundle.getString("SelecFilePanel.button3.toolTipText"));
                     button3.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -840,11 +848,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
                     //======== scrollPane2 ========
                     {
+
+                        //---- mzTabFileTable ----
+                        mzTabFileTable.setToolTipText(bundle.getString("SelecFilePanel.mzTabFileTable.toolTipText"));
                         scrollPane2.setViewportView(mzTabFileTable);
                     }
 
                     //---- button2 ----
                     button2.setText(bundle.getString("SelecFilePanel.button2.text"));
+                    button2.setToolTipText(bundle.getString("SelecFilePanel.button2.toolTipText"));
                     button2.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -881,11 +893,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
                     //======== scrollPane4 ========
                     {
+
+                        //---- spectrumFileTable ----
+                        spectrumFileTable.setToolTipText(bundle.getString("SelecFilePanel.spectrumFileTable.toolTipText"));
                         scrollPane4.setViewportView(spectrumFileTable);
                     }
 
                     //---- button5 ----
                     button5.setText(bundle.getString("SelecFilePanel.button5.text"));
+                    button5.setToolTipText(bundle.getString("SelecFilePanel.button5.toolTipText"));
                     button5.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {

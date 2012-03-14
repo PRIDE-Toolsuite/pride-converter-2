@@ -34,7 +34,7 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::450:x, comp singleSpectrumFile::l::450:x, seq l {comp singleFastaFile::::326:x, space :::p, comp fastaFormatList::::118:x}, seq l {comp singleSourceFile::::429:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :::p}, comp multipleModeLabel::t:p::p}}}</string> 
+          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::452:x, comp singleSpectrumFile::l::452:x, seq l {comp singleFastaFile::::327:x, space :::p, comp fastaFormatList::::119:x}, seq l {comp singleSourceFile::::431:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :::p}, comp multipleModeLabel::t:p::p}}}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
@@ -778,6 +778,13 @@
             <void method="add"> 
              <object class="com.jformdesigner.model.FormComponent"> 
               <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>SelecFilePanel.dataFileTable.toolTipText</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>dataFileTable</string> 
               </void> 
@@ -793,6 +800,13 @@
              <object class="com.jformdesigner.model.FormMessage"> 
               <null/> 
               <string>SelecFilePanel.button1.text</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>toolTipText</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>SelecFilePanel.button1.toolTipText</string> 
              </object> 
             </void> 
             <void property="name"> 
@@ -849,6 +863,13 @@
             <void method="add"> 
              <object class="com.jformdesigner.model.FormComponent"> 
               <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>SelecFilePanel.sequenceFileTable.toolTipText</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>sequenceFileTable</string> 
               </void> 
@@ -864,6 +885,13 @@
              <object class="com.jformdesigner.model.FormMessage"> 
               <null/> 
               <string>SelecFilePanel.button3.text</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>toolTipText</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>SelecFilePanel.button3.toolTipText</string> 
              </object> 
             </void> 
             <void property="name"> 
@@ -1057,6 +1085,13 @@
             <void method="add"> 
              <object class="com.jformdesigner.model.FormComponent"> 
               <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>SelecFilePanel.mzTabFileTable.toolTipText</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>mzTabFileTable</string> 
               </void> 
@@ -1072,6 +1107,13 @@
              <object class="com.jformdesigner.model.FormMessage"> 
               <null/> 
               <string>SelecFilePanel.button2.text</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>toolTipText</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>SelecFilePanel.button2.toolTipText</string> 
              </object> 
             </void> 
             <void property="name"> 
@@ -1128,6 +1170,13 @@
             <void method="add"> 
              <object class="com.jformdesigner.model.FormComponent"> 
               <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
+              <void method="setProperty"> 
+               <string>toolTipText</string> 
+               <object class="com.jformdesigner.model.FormMessage"> 
+                <null/> 
+                <string>SelecFilePanel.spectrumFileTable.toolTipText</string> 
+               </object> 
+              </void> 
               <void property="name"> 
                <string>spectrumFileTable</string> 
               </void> 
@@ -1143,6 +1192,13 @@
              <object class="com.jformdesigner.model.FormMessage"> 
               <null/> 
               <string>SelecFilePanel.button5.text</string> 
+             </object> 
+            </void> 
+            <void method="setProperty"> 
+             <string>toolTipText</string> 
+             <object class="com.jformdesigner.model.FormMessage"> 
+              <null/> 
+              <string>SelecFilePanel.button5.toolTipText</string> 
              </object> 
             </void> 
             <void property="name"> 

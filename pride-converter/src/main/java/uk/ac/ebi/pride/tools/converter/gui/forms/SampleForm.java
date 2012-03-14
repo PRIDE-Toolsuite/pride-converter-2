@@ -328,7 +328,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
             }
             masterSamplePanel.setSampleName(dao.getSampleName());
             masterSamplePanel.setSampleComment(dao.getSampleComment());
-            masterSamplePanel.setSampleParams(dao.getSampleParams());
+            masterSamplePanel.setSampleParams(dao.getSampleParams(), true);
             isLoaded = true;
         }
         //fire validation listener on load
