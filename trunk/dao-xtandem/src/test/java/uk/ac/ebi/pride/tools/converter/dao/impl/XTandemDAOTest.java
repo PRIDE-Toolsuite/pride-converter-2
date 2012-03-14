@@ -58,7 +58,7 @@ public class XTandemDAOTest extends TestCase {
 	@Test
 	public void testGetExperimentTitle() {
 		try {
-			assertEquals("Unknown X!Tandem experiment", dao.getExperimentTitle());
+			assertEquals("", dao.getExperimentTitle());
 		}
 		catch (Exception e) {
 			fail(e.getMessage());
