@@ -295,7 +295,7 @@ public class MsgfDao extends AbstractDAOImpl implements DAO {
 	}
 
 	public String getExperimentTitle() throws InvalidFormatException {
-		return "Unknown MSGF based experiment";
+		return "";
 	}
 
 	public String getExperimentShortLabel() {
