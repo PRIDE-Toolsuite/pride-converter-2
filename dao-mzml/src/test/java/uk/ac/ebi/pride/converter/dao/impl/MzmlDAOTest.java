@@ -39,7 +39,7 @@ public class MzmlDAOTest extends TestCase {
 	}
 
 	public void testGetExperimentTitle() {
-		assertEquals("Unknown mzML experiment", dao.getExperimentTitle());
+		assertEquals("", dao.getExperimentTitle());
 	}
 
 	public void testGetExperimentShortLabel() {
