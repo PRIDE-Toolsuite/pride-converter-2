@@ -12,7 +12,9 @@ import org.junit.Test;
 
 import uk.ac.ebi.pride.jaxb.model.Precursor;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
+import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.report.model.CV;
+import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
@@ -165,7 +167,7 @@ public class XTandemDAOTest extends TestCase {
 		// get the identifier
 		SearchResultIdentifier identifier = dao.getSearchResultIdentifier();
 
-		assertEquals("eb4076c1e1eb847657b6d255c1d3b40f", identifier.getHash());
+		assertEquals("0a9488c8e0e31b3d442f134c92e731e2", identifier.getHash());
 		assertEquals(sourceFile.getAbsolutePath(),
 				identifier.getSourceFilePath());
 	}
@@ -265,6 +267,12 @@ public class XTandemDAOTest extends TestCase {
 			Peptide p = id.getPeptide().get(0);
 			
 			assertEquals(26, p.getFragmentIon().size());
+			
+			id = dao.getIdentificationByUID("ENSP00000381216:reversed");
+
+			assertNotNull(id);
+			assertEquals("DECOY_ENSP00000381216", id.getAccession());
+			assertEquals(1, id.getPeptide().size());
 		} catch (InvalidFormatException e) {
 			e.printStackTrace();
 			fail(e.getMessage());
@@ -287,7 +295,7 @@ public class XTandemDAOTest extends TestCase {
 			nIdCount++;
 		}
 
-		assertEquals(nullCount, 78);
+		assertEquals(77, nullCount);
 		assertEquals(1732, nIdCount);
 	}
 }
