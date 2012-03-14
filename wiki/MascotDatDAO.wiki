@@ -1,4 +1,4 @@
-#summary Documentation of the Mascot DAO from the PRIDE Converter 2
+#summary Documentation of the Mascot DAO from PRIDE Converter 2
 
 = Introduction =
 
