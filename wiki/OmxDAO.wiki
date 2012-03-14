@@ -1,4 +1,4 @@
-#summary Documentation of the OmxDAO in the PRIDE Converter 2
+#summary Documentation of the OmxDAO in PRIDE Converter 2
 
 = Introduction =
 
