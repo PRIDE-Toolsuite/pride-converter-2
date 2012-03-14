@@ -105,7 +105,7 @@ public class MzXmlDAO extends AbstractPeakListDAO {
 	}
 
 	public String getExperimentTitle() {
-		return "Unknown mzXML experiment.";
+		return "";
 	}
 
 	public String getExperimentShortLabel() {
