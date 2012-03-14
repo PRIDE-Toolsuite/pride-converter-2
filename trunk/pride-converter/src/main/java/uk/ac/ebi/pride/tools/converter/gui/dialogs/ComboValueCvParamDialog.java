@@ -35,6 +35,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
     private Map<String, String> olsResults = new TreeMap<String, String>(this);
     private Set<String> suggestedCvLabels = new HashSet<String>();
     private String queryString;
+    private Set<String> sortedValues = new TreeSet<String>();
 
     public ComboValueCvParamDialog(Frame owner, CvUpdatable paramTable, Set<String> suggestedCVs, Collection<String> comboBoxValues) {
         super(owner);
@@ -44,7 +45,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         nameField.getEditor().getEditorComponent().addKeyListener(this);
         initSuggestedCVs(suggestedCVs);
         if (comboBoxValues != null) {
-            TreeSet<String> sortedValues = new TreeSet<String>(comboBoxValues);
+            sortedValues = new TreeSet<String>(comboBoxValues);
             valueComboBox.setModel(new DefaultComboBoxModel(sortedValues.toArray()));
         }
     }
@@ -57,7 +58,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         nameField.getEditor().getEditorComponent().addKeyListener(this);
         initSuggestedCVs(suggestedCVs);
         if (comboBoxValues != null) {
-            TreeSet<String> sortedValues = new TreeSet<String>(comboBoxValues);
+            sortedValues = new TreeSet<String>(comboBoxValues);
             valueComboBox.setModel(new DefaultComboBoxModel(sortedValues.toArray()));
         }
     }
@@ -93,8 +94,15 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
     }
 
     private void okButtonActionPerformed(ActionEvent e) {
+
         if (!isEditing) {
-            callback.add(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueComboBox.getSelectedItem().toString()));
+            if (applyToAllSubsamplesCheckBox.isSelected()) {
+                for (String subsample : sortedValues) {
+                    callback.add(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, subsample));
+                }
+            } else {
+                callback.add(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueComboBox.getSelectedItem().toString()));
+            }
         } else {
             callback.update(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueComboBox.getSelectedItem().toString()));
         }
@@ -308,6 +316,20 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
     }
 
+    private void applyToAllSubsamplesCheckBoxItemStateChanged() {
+        if (applyToAllSubsamplesCheckBox.isSelected()) {
+            valueComboBox.setModel(new DefaultComboBoxModel(new String[]{"Apply to all"}));
+            valueComboBox.setSelectedIndex(0);
+            validateRequiredField(valueComboBox, null);
+            valueComboBox.setEnabled(false);
+        } else {
+            valueComboBox.setModel(new DefaultComboBoxModel(sortedValues.toArray()));
+            valueComboBox.setSelectedItem(null);
+            valueComboBox.setEnabled(true);
+        }
+        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -327,6 +349,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         okButton = new JButton();
         valueComboBox = new JComboBox();
         label10 = new JLabel();
+        applyToAllSubsamplesCheckBox = new JCheckBox();
 
         //======== this ========
         setResizable(false);
@@ -456,6 +479,18 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         label10.setText("*");
         label10.setForeground(Color.red);
 
+        //---- applyToAllSubsamplesCheckBox ----
+        applyToAllSubsamplesCheckBox.setText("Use for all labels");
+        applyToAllSubsamplesCheckBox.setFont(new Font("Dialog", Font.BOLD, 10));
+        applyToAllSubsamplesCheckBox.setMargin(new Insets(0, 2, 2, 2));
+        applyToAllSubsamplesCheckBox.setToolTipText("Use this annotation for all labelled subsamoples");
+        applyToAllSubsamplesCheckBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                applyToAllSubsamplesCheckBoxItemStateChanged();
+            }
+        });
+
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
@@ -470,7 +505,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(label9, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(olsButton, GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
+                                                .addComponent(olsButton, GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE))
                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                         .addComponent(label1, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
@@ -479,21 +514,23 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                                 .addGroup(contentPaneLayout.createParallelGroup()
                                                         .addGroup(GroupLayout.Alignment.TRAILING, contentPaneLayout.createSequentialGroup()
+                                                                .addComponent(applyToAllSubsamplesCheckBox)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
                                                                 .addComponent(okButton, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(cancelButton))
                                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                                        .addComponent(valueComboBox, GroupLayout.Alignment.LEADING, 0, 328, Short.MAX_VALUE)
-                                                                        .addComponent(nameField, GroupLayout.Alignment.LEADING, 0, 328, Short.MAX_VALUE)
-                                                                        .addComponent(accessionField, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE))
+                                                                        .addComponent(valueComboBox, GroupLayout.Alignment.LEADING, 0, 342, Short.MAX_VALUE)
+                                                                        .addComponent(nameField, GroupLayout.Alignment.LEADING, 0, 342, Short.MAX_VALUE)
+                                                                        .addComponent(accessionField, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE))
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                                         .addGroup(contentPaneLayout.createSequentialGroup()
                                                                                 .addComponent(iconLabel)
                                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                                 .addGroup(contentPaneLayout.createParallelGroup()
-                                                                                        .addComponent(label8, GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                                                                                        .addComponent(label8, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                                                                                         .addComponent(label7, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE)))
                                                                         .addComponent(label10, GroupLayout.PREFERRED_SIZE, 22, GroupLayout.PREFERRED_SIZE))))))
                                 .addContainerGap())
@@ -514,7 +551,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                         .addComponent(label7))
                                 .addGap(15, 15, 15)
                                 .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(nameField)
+                                        .addComponent(nameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                                 .addGroup(contentPaneLayout.createSequentialGroup()
                                                         .addGap(5, 5, 5)
@@ -526,10 +563,12 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                         .addComponent(label3)
                                         .addComponent(valueComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label10, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                                .addGap(16, 16, 16)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(cancelButton)
-                                        .addComponent(okButton))
+                                        .addComponent(applyToAllSubsamplesCheckBox)
+                                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                .addComponent(okButton)
+                                                .addComponent(cancelButton)))
                                 .addGap(12, 12, 12))
         );
         pack();
@@ -555,6 +594,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
     private JButton okButton;
     private JComboBox valueComboBox;
     private JLabel label10;
+    private JCheckBox applyToAllSubsamplesCheckBox;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override

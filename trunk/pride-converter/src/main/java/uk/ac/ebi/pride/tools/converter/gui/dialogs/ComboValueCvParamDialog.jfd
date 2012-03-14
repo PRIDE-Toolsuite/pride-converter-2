@@ -17,11 +17,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq {space :::p, par l {seq {comp label4:::p:80:p, space u:::p, comp cvField:::p:230:p, space :::p, comp label9:::p:10:p, space :::p, comp olsButton::::127:x}, seq l {par l {comp label1::l:p:80:p, comp label2::l:p:80:p, comp label3::l:p:80:p}, space u:::p, par l {seq t {comp okButton:::p:80:p, space :::p, comp cancelButton:::p::p}, seq l {par t {comp valueComboBox::l::328:x, comp nameField::l::328:x, comp accessionField::l::328:x}, space :::p, par t {seq {comp iconLabel:::p::p, space :::p, par l {comp label8::::22:x:1, comp label7::l:p:10:p:1}}, comp label10::t:p:22:p}}}}}, space :::p}}</string> 
+        <string>par l {seq {space :::p, par l {seq {comp label4:::p:80:p, space u:::p, comp cvField:::p:230:p, space :::p, comp label9:::p:10:p, space :::p, comp olsButton::::157:x}, seq l {par l {comp label1::l:p:80:p, comp label2::l:p:80:p, comp label3::l:p:80:p}, space u:::p, par l {seq t {comp applyToAllSubsamplesCheckBox:::p::p, space ::125:x, comp okButton:::p:80:p, space :::p, comp cancelButton:::p::p}, seq l {par t {comp valueComboBox::l::342:x, comp nameField::l::342:x, comp accessionField::l::342:x}, space :::p, par t {seq {comp iconLabel:::p::p, space :::p, par l {comp label8::::38:x:1, comp label7::l:p:10:p:1}}, comp label10::t:p:22:p}}}}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq l {space :p::p, par b {comp cvField::b:p::p, comp label9::b:p::p, comp label4::b:p::p, comp olsButton::b:p::p}, space :11:11:11, par b {comp accessionField::b:p::p, comp label1::b:p::p, comp label7::b:p::p}, space :p:15:p, par l {comp nameField:::::x:1, par l:l::p {seq {space :5:5:5, comp label2:::p::p}, comp iconLabel::l::24:x:1, comp label8::l:::x:1}}, space :p:16:p, par b {comp label3::b:p::p, comp valueComboBox::b:p::p, comp label10::b:p:24:p}, space :p:16:p, par l {comp cancelButton:::p::p, comp okButton::l:p::p}, space :p:12:p}}</string> 
+        <string>par l {seq l {space :p::p, par b {comp cvField::b:p::p, comp label9::b:p::p, comp label4::b:p::p, comp olsButton::b:p::p}, space :11:11:11, par b {comp accessionField::b:p::p, comp label1::b:p::p, comp label7::b:p::p}, space :p:15:p, par l {comp nameField:::p::p:1, par l:l::p {seq {space :5:5:5, comp label2:::p::p}, comp iconLabel::l::24:x:1, comp label8::l:::x:1}}, space :p:16:p, par b {comp label3::b:p::p, comp valueComboBox::b:p::p, comp label10::b:p:24:p}, space u:::p, par l {comp applyToAllSubsamplesCheckBox:::p::p, par t:l {comp okButton::t:p::p, comp cancelButton::t:p::p}}, space :p:12:p}}</string> 
        </void> 
       </object> 
       <void method="setProperty"> 
@@ -353,6 +353,47 @@
         </void> 
        </object> 
       </void> 
+      <void method="add"> 
+       <object class="com.jformdesigner.model.FormComponent"> 
+        <string>javax.swing.JCheckBox</string> 
+        <void method="setProperty"> 
+         <string>text</string> 
+         <string>Use for all labels</string> 
+        </void> 
+        <void method="setProperty"> 
+         <string>font</string> 
+         <object class="java.awt.Font"> 
+          <string>Dialog</string> 
+          <int>1</int> 
+          <int>10</int> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>margin</string> 
+         <object class="java.awt.Insets"> 
+          <int>0</int> 
+          <int>2</int> 
+          <int>2</int> 
+          <int>2</int> 
+         </object> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Use this annotation for all labelled subsamoples</string> 
+        </void> 
+        <void property="name"> 
+         <string>applyToAllSubsamplesCheckBox</string> 
+        </void> 
+        <void method="addEvent"> 
+         <object class="com.jformdesigner.model.FormEvent"> 
+          <string>java.awt.event.ItemListener</string> 
+          <string>itemStateChanged</string> 
+          <string>applyToAllSubsamplesCheckBoxItemStateChanged</string> 
+          <boolean>false</boolean> 
+         </object> 
+        </void> 
+       </object> 
+      </void> 
       <void property="name"> 
        <string>this</string> 
       </void> 
@@ -369,8 +410,8 @@
       <void method="setProperty"> 
        <string>size</string> 
        <object class="java.awt.Dimension"> 
-        <int>495</int> 
-        <int>210</int> 
+        <int>525</int> 
+        <int>215</int> 
        </object> 
       </void> 
      </object> 
