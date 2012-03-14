@@ -532,7 +532,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     	guessSpectraSourceType();
     	
         // not supported
-        return "Unknown X!Tandem experiment";
+        return "";
     }
 
     @Override
