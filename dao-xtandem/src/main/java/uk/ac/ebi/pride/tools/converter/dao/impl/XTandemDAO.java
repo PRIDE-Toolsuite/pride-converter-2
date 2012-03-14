@@ -277,10 +277,12 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         
         DAOProperty<Double> expectThreshold = new DAOProperty<Double>(SupportedProperty.EXPECT_THRESHOLD.getName(), 0.05, 0.0, 1.0);
         expectThreshold.setDescription("the maximum X!Tandem expect value allowed for peptide hits to be reported. The default value is 0.05");
+        expectThreshold.setShortDescription("Maximum X!Tandem expect value for peptide identifications.");
         supportedProperties.add(expectThreshold);
         
         DAOProperty<Boolean> useInternalSpectra = new DAOProperty<Boolean>(SupportedProperty.USE_INTERNAL_SPECTA.getName(), false);
         useInternalSpectra.setDescription("if this parameter is set to \"true\" the spectra stored in the X!Tandem file are used irrespective of whether an external peak list file is referenced. These spectra are highly preprocessed and do not properly represent the input spectra. This option should only be used if the original spectra are not available.");
+        useInternalSpectra.setShortDescription("Use highly preprocessed internal spectra instead of original spectra (not recommended).");
         useInternalSpectra.setAdvanced(true);
         supportedProperties.add(useInternalSpectra);
         
