@@ -45,6 +45,9 @@ public class PrideFilter {
             if (line.hasOption(PrideFilterCLIOptions.OPTIONS.OUTPUT_FILE.getValue())) {
                 outputFile = line.getOptionValue(PrideFilterCLIOptions.OPTIONS.OUTPUT_FILE.getValue());
             }
+            else {
+            	outputFile = inputFile + "-filtered.xml";
+            }
 
             // ---------------------------------------------------------------- help/version
             // help
