@@ -38,7 +38,7 @@ public class DtaDAOTest extends TestCase {
 
     @Test
     public void testGetExperimentTitle() {
-        assertEquals("Unknown title", dao.getExperimentTitle());
+        assertEquals("", dao.getExperimentTitle());
     }
 
     @Test

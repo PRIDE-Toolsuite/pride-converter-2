@@ -107,7 +107,7 @@ public class PklDAO extends AbstractPeakListDAO implements DAO {
     @Override
     public String getExperimentTitle() {
         // not supported
-        return "Unknown title";
+        return "";
     }
 
     @Override
