@@ -1225,8 +1225,10 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
                     additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(domain.getDomainExpect()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_HYPERSCORE.getParam(domain.getDomainHyperScore()));
                     additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(domain.getDomainMh()));
-                    additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(domain.getUpFlankSequence()));
-                    additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(domain.getUpFlankSequence()));
+                    if (domain.getUpFlankSequence() != null && !domain.getUpFlankSequence().contains("[") && !domain.getUpFlankSequence().contains("]"))
+                    	additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(domain.getUpFlankSequence()));
+                    if (domain.getDownFlankSequence() != null && !domain.getDownFlankSequence().contains("[") && !domain.getDownFlankSequence().contains("]"))
+                    	additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(domain.getDownFlankSequence()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_DELTASCORE.getParam(domain.getDomainDeltaMh()));
                     if (isDecoy)
                     	additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
