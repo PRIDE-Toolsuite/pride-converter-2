@@ -14,6 +14,7 @@ import uk.ac.ebi.pride.tools.converter.gui.component.panels.SamplePanel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.LoadSpecificReportDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
+import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.Description;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
@@ -26,7 +27,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.*;
 
 /**
@@ -105,28 +105,9 @@ public class SampleForm extends AbstractForm implements ActionListener {
         dialog.setVisible(true);
     }
 
-    private String getShortSourceFilePath(String filePath) {
-        //return foo/bar instead of bla/baz/foo/bar
-
-        int lastSep = filePath.lastIndexOf(File.separator);
-        int secondLastSep = -1;
-        if (lastSep < 0) {
-            return filePath;
-        } else {
-            String tmpFilePath = filePath.substring(0, lastSep);
-            secondLastSep = tmpFilePath.lastIndexOf(File.separator);
-        }
-        if (secondLastSep > 0) {
-            return filePath.substring(secondLastSep + 1);
-        } else {
-            return filePath;
-        }
-
-    }
-
     public void addPaneForSample(String sourceFile, ReportBean rb) {
 
-        String displayLabel = getShortSourceFilePath(sourceFile);
+        String displayLabel = IOUtilities.getShortSourceFilePath(sourceFile);
 
         //check to see if sourcefile is already loaded
         boolean matchFound = false;
@@ -324,7 +305,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
                 tabbedPane1.setTitleAt(0, "Master Record");
                 masterSamplePanel.setMasterPanel(true);
             } else {
-                tabbedPane1.setTitleAt(0, getShortSourceFilePath(ConverterData.getInstance().getMasterFile().getInputFile()));
+                tabbedPane1.setTitleAt(0, IOUtilities.getShortSourceFilePath(ConverterData.getInstance().getMasterFile().getInputFile()));
             }
             masterSamplePanel.setSampleName(dao.getSampleName());
             masterSamplePanel.setSampleComment(dao.getSampleComment());

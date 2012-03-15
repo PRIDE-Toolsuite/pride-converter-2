@@ -2,15 +2,20 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.ShortFilePathStringRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
+import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import java.io.File;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by IntelliJ IDEA.
@@ -85,32 +90,63 @@ public class MzTabReportForm extends AbstractForm {
             throw new IllegalStateException("File number mismatch: number of input files does not equal number of mztab files");
         }
 
+        String gelId = null;
+        String spotId = null;
+        Pattern spotPattern = null;
+        Properties options = ConverterData.getInstance().getOptions();
+        if (options.getProperty(IOUtilities.GEL_IDENTIFIER) != null && !"".equals(options.getProperty(IOUtilities.GEL_IDENTIFIER))) {
+            gelId = options.getProperty(IOUtilities.GEL_IDENTIFIER);
+        }
+        if (options.getProperty(IOUtilities.SPOT_IDENTIFIER) != null && !"".equals(options.getProperty(IOUtilities.SPOT_IDENTIFIER))) {
+            spotId = options.getProperty(IOUtilities.SPOT_IDENTIFIER);
+        }
+        if (options.getProperty(IOUtilities.SPOT_REGULAR_EXPRESSION) != null && !"".equals(options.getProperty(IOUtilities.SPOT_REGULAR_EXPRESSION))) {
+            String regex = options.getProperty(IOUtilities.SPOT_REGULAR_EXPRESSION);
+            spotPattern = Pattern.compile(regex);
+        }
+
         Vector<Vector<Object>> data = new Vector<Vector<Object>>();
         for (int i = 0; i < inputFiles.size(); i++) {
             Vector<Object> row = new Vector<Object>();
             row.add(inputFiles.get(i));
             row.add(mzTabFiles.get(i));
             data.add(row);
+            if (gelId != null) {
+                row.add(gelId);
+            }
+            if (spotId != null || spotPattern != null) {
+                if (spotPattern != null) {
+                    Matcher matcher = spotPattern.matcher(new File(inputFiles.get(i)).getName());
+                    if (matcher.matches()) {
+                        row.add(matcher.group(1));
+                    } else {
+                        row.add("");
+                    }
+                } else {
+                    row.add(spotId);
+                }
+            }
         }
+
         Vector<Object> headers = new Vector<Object>();
         headers.add("Input File");
         headers.add("MzTab File");
+        if (gelId != null) {
+            headers.add("Gel ID");
+        }
+        if (spotId != null || spotPattern != null) {
+            headers.add("SPOT ID");
+        }
 
         fileTable.setModel(new DefaultTableModel(data, headers) {
-            boolean[] columnEditable = new boolean[]{
-                    false, false
-            };
-
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return columnEditable[columnIndex];
+                return false;
             }
         });
-        {
-            TableColumnModel cm = fileTable.getColumnModel();
-            cm.getColumn(0).setResizable(false);
-            cm.getColumn(1).setResizable(false);
-        }
+        TableColumnModel cm = fileTable.getColumnModel();
+        cm.getColumn(0).setCellRenderer(new ShortFilePathStringRenderer());
+        cm.getColumn(1).setCellRenderer(new ShortFilePathStringRenderer());
 
     }
 

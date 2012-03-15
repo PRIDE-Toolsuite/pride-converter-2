@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, comp scrollPane1::::578:x, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1::::373:x, space :::p}}"
+			"$horizontalGroup": "par l {seq l {space :::p, par l {comp scrollPane1::l::578:x, seq l {comp scrollPane2::::433:x, space ::7:x, comp autogenerateButton:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, par l {comp scrollPane2:::p:45:p, comp autogenerateButton:::p::p}, space :::p, comp scrollPane1::::387:x, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -14,9 +14,27 @@ new FormModel {
 					name: "experimentDataTable"
 				} )
 			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane2"
+				"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				add( new FormComponent( "javax.swing.JTextArea" ) {
+					name: "textArea1"
+					"wrapStyleWord": true
+					"lineWrap": true
+					"text": "Please enter an experiment title and short label for each source file. The combination of experiment title and short label must be unique, and neither value can be null."
+					"background": sfield com.jformdesigner.model.FormObject NULL_VALUE
+					"editable": false
+					"border": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "autogenerateButton"
+				"text": "Auto-generate"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "autogenerateButtonActionPerformed", false ) )
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 590, 385 )
+			"size": new java.awt.Dimension( 590, 450 )
 		} )
 	}
 }

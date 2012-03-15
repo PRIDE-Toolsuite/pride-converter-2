@@ -361,7 +361,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                                         nextButton.addActionListener(new ActionListener() {
                                             @Override
                                             public void actionPerformed(ActionEvent e) {
-                                                quit();
+                                                quitNoPrompt();
                                             }
                                         });
                                         nextButton.setEnabled(true);
@@ -455,6 +455,8 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                 nextButton.revalidate();
                 nextButton.repaint();
             }
+        } else {
+            quitNoPrompt();
         }
     }
 
@@ -499,6 +501,19 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
             } else {
                 System.exit(0);
             }
+        }
+    }
+
+    /**
+     * quit the application
+     */
+    private void quitNoPrompt() {
+        if (exitToApplicationSelector) {
+            setVisible(false);
+            ConverterApplicationSelector.main(new String[]{});
+            dispose();
+        } else {
+            System.exit(0);
         }
     }
 

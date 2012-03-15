@@ -7,6 +7,7 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.ShortFilePathStringRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
@@ -169,30 +170,29 @@ public class MzTabFileMappingForm extends AbstractForm {
             row.add(fileBean.getInputFile());
             data.add(row);
         }
-        ;
 
         Vector<Object> headers = new Vector<Object>();
         headers.add("Input File");
         headers.add("MzTab File");
 
         mappingTable.setModel(new DefaultTableModel(data, headers) {
-            boolean[] columnEditable = new boolean[]{
-                    false, true
-            };
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return columnEditable[columnIndex];
+                //only mztab file will be editable
+                return columnIndex == 1;
             }
         });
-        {
-            TableColumn col = mappingTable.getColumnModel().getColumn(1);
-            col.setCellEditor(new MzTabComboBoxEditor(ConverterData.getInstance().getMztabFiles()));
-            // If the cell should appear like a combobox in its
-            // non-editing state, also set the combobox renderer
-            col.setCellRenderer(new MzTabComboBoxRenderer(ConverterData.getInstance().getMztabFiles()));
-        }
 
+        TableColumn col = mappingTable.getColumnModel().getColumn(1);
+        col.setCellEditor(new MzTabComboBoxEditor(ConverterData.getInstance().getMztabFiles()));
+        // If the cell should appear like a combobox in its
+        // non-editing state, also set the combobox renderer
+        col.setCellRenderer(new MzTabComboBoxRenderer(ConverterData.getInstance().getMztabFiles()));
+
+        //first column should render short file paths
+        col = mappingTable.getColumnModel().getColumn(0);
+        col.setCellRenderer(new ShortFilePathStringRenderer());
 
     }
 

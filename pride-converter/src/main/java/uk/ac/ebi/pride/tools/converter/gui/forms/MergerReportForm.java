@@ -6,6 +6,7 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.ShortFilePathStringRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
@@ -183,7 +184,7 @@ public class MergerReportForm extends AbstractForm {
             TableColumnModel cm = fileTable.getColumnModel();
             cm.getColumn(0).setResizable(false);
         }
-
+        fileTable.setDefaultRenderer(String.class, new ShortFilePathStringRenderer());
     }
 
     @Override

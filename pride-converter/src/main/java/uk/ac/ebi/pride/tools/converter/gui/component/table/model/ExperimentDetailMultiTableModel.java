@@ -152,24 +152,37 @@ public class ExperimentDetailMultiTableModel extends AbstractTableModel {
     }
 
     public boolean isValid() {
+
         boolean allValid = true;
 
         Set<String> observedValues = new HashSet<String>();
         //loop over all rows. it there are empty values or duplicate values, set flag to be highlighted
-        for (int i = 0; i < fileNames.size(); i++){
+        for (int i = 0; i < fileNames.size(); i++) {
             String expTitle = experimentTitles.get(i);
             String shortLabel = shortLabels.get(i);
+            boolean errorInRow = false;
 
             //check content
+
+            //missing title
             allValid = allValid && expTitle != null && !"".equals(expTitle.trim());
-            allValid = allValid && shortLabel != null && !"".equals(shortLabel.trim());
-            if (!observedValues.add(expTitle + shortLabel)) {
-                //duplicate information!
-                allValid = false;
-                errorDetectedInRow.set(i, true);
-            } else {
-                errorDetectedInRow.set(i, false);
+            if (expTitle == null || "".equals(expTitle.trim())) {
+                errorInRow = true;
             }
+
+            //missing short label
+            allValid = allValid && shortLabel != null && !"".equals(shortLabel.trim());
+            if (shortLabel == null || "".equals(shortLabel.trim())) {
+                errorInRow = true;
+            }
+
+            //duplicate information!
+            if (!observedValues.add(expTitle + shortLabel)) {
+                allValid = false;
+                errorInRow = true;
+            }
+
+            errorDetectedInRow.set(i, errorInRow);
         }
 
         return allValid;
