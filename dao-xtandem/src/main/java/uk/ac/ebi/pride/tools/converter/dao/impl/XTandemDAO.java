@@ -1119,7 +1119,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         ArrayList<Peptide> peptides = proteinHasPeptides.get(proteinLabel);
 
         if (peptides == null)
-            throw new InvalidFormatException("Protein '" + proteinLabel + "' does not contain any petpides.");
+            throw new InvalidFormatException("Protein '" + proteinLabel + "' does not contain any peptides.");
 
         // get the protein's id by using the first peptides id
         String proteinId = peptides.get(0).getDomains().get(0).getDomainID();
@@ -1250,7 +1250,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     
     /**
      * Returns a peptide's fragment ions as a List of
-     * report model FragmentIonS.
+     * report model FragmentIons.
      * @param peptide
      * @param domain
      * @return

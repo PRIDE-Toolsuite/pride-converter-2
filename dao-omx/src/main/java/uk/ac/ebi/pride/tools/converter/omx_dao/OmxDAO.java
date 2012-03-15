@@ -9,11 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import uk.ac.ebi.pride.jaxb.model.*;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
+import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.impl.AbstractDAOImpl;
 import uk.ac.ebi.pride.tools.converter.report.model.Contact;
@@ -23,8 +22,10 @@ import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.report.model.Protocol;
 import uk.ac.ebi.pride.tools.converter.report.model.Reference;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
+import uk.ac.ebi.pride.tools.converter.report.model.FragmentIon;
 import uk.ac.ebi.pride.tools.converter.report.model.Software;
 import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
@@ -89,6 +90,10 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
      * The current spectrum counter. -1 if not calculated.
      */
     private int spectrumCounter = -1;
+    /**
+     * The protein accession decoy prefix to use
+     */
+    private String decoyPrefix = "DECOY_";
 
     /**
      * Just a list of supported properties to keep thing's a little cleaner.
@@ -253,7 +258,8 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
         Param params = new Param();
 
         // date of search
-        //params.getCvParam().add(new CvParam("PRIDE", "PRIDE:0000219", "Date of search", ??)); // @TODO: date of search not found in OMSSA omx files?
+        // @TODO: date of search not found in OMSSA omx files? perhaps the data the omx file was created can be used?
+        //params.getCvParam().add(new CvParam("PRIDE", "PRIDE:0000219", "Date of search", ??));
 
         // set the peaks used
         params.getCvParam().add(new CvParam("PRIDE", "PRIDE:0000218", "Original MS data file format", "Unknown (OMSSA internal peaks used)"));
@@ -349,7 +355,6 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
         // intialize the PTM collection
         ArrayList<PTM> ptms = new ArrayList<PTM>();
         ArrayList<String> allLabels = new ArrayList<String>();
-
 
         // get the list of fixed modifications
         List<Integer> fixedModifications =
@@ -531,24 +536,218 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public Iterator<Identification> getIdentificationIterator(boolean prescanMode) {
+        return new OmssaIdentificationIterator(prescanMode);
+    }
 
-        /**
-         * From DAO interface:
-         *
-         * This method will return an iterator that will return individual
-         * identification objects. In prescanMode the complete Identification
-         * and Peptide objects should be returned <b>without<b> the peptide's
-         * fragment ion annotation. Peptide items have to contain all the PTMs.
-         * Additionally, all handlers (QuantitationHandler, FastaHandler,
-         * GelCoordinateHandler) have to be invoked (if they were set). <br> In
-         * scanMode (= !prescanMode) Peptide and Protein objects should
-         * <b>NOT</b> contain any additional parameters and peptidePTMs should
-         * <b>NOT</b> be included. Furthermore, the different handlers should
-         * also <b>NOT</b> be invoked. Peptide FragmentIon annotations are
-         * mandatory (if applicable) in scanMode. The identification iterator
-         * may return null for an identification
-         */
-        throw new UnsupportedOperationException("Not yet implemented.");
+    /**
+     * Iterator of all Identifications in the OMSSA OMX file.
+     *
+     * @author Harald Barsnes
+     */
+    private class OmssaIdentificationIterator implements Iterator<Identification>, Iterable<Identification> {
+
+        HashMap<String, LinkedList<String>> proteinMap = omssaOmxFile.getProteinToPeptideMap();
+        //ArrayList<MSSpectrum> msSpectrumList;
+        Iterator<String> proteinIterator;
+        private boolean prescanMode;
+
+        public OmssaIdentificationIterator(boolean prescanMode) {
+            this.prescanMode = prescanMode;
+
+            // sort them
+            //msSpectrumList = new ArrayList<String>(proteinMap.keySet());
+            //Collections.sort(proteinLabels); // @TODO: possible to sort??
+
+            // set the iterator
+            proteinIterator = proteinMap.keySet().iterator();
+        }
+
+        @Override
+        public Iterator<Identification> iterator() {
+            return this;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return proteinIterator.hasNext();
+        }
+
+        @Override
+        public Identification next() {
+            try {
+                return convertProteinToIdentification(proteinIterator.next(), prescanMode);
+            } catch (InvalidFormatException e) {
+                throw new ConverterException(e);
+            }
+        }
+
+        @Override
+        public void remove() {
+            // not supported
+        }
+    }
+
+    /**
+     * Converts the protein identified by the given proteinId into a
+     * PrideConverter Identification object.
+     *
+     * @param proteinId the protein id, i.e., the protein accession number.
+     * @param prescanMode Indicates whether in prescan mode.
+     * @return The created PRIDE Converter Identification object.
+     * @throws InvalidFormatException
+     */
+    private Identification convertProteinToIdentification(String proteinId, boolean prescanMode) throws InvalidFormatException {
+
+        // create the identification object
+        Identification identification = new Identification();
+
+        // check if the proteinLabel contains the ":reversed" tag
+        if (decoyPrefix.length() > 0 && proteinId.endsWith(":reversed")) { // @TODO: not sure if this is correct for omssa...
+            proteinId = decoyPrefix + proteinId.substring(0, proteinId.length() - 9);
+        }
+
+        // set the protein accession
+        identification.setAccession(proteinId);
+
+        // check if it's a decoy protein
+        boolean isDecoy = decoyPrefix.length() > 0 && identification.getAccession().startsWith(decoyPrefix); // @TODO: not sure if this is correct for omssa...
+
+        // set the unique identifier
+        identification.setUniqueIdentifier(proteinId); // @TODO: verify that this is ok!!
+
+        // set the database
+        identification.setDatabase(getSearchDatabaseName()); // @TODO: verify that this is correct!!
+        identification.setDatabaseVersion(getSearchDatabaseVersion()); // @TODO: verify that this is correct!!
+
+        // set the score and threshold
+        identification.setScore(0.0); // @TODO: implement me??
+        identification.setThreshold(0.0); // @TODO: implement me??
+
+        // set the search engine
+        identification.setSearchEngine("OMSSA");
+
+        // add the additional protein information (only in prescan mode)
+        if (prescanMode) {
+            Param additional = new Param();
+            // additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(protein.getExpectValue())); // @TODO: add any omssa specific cv terms??
+
+            if (decoyPrefix.length() > 0 && identification.getAccession().startsWith(decoyPrefix)) { // @TODO: again, not sure if this is needed??
+                additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
+            }
+
+            identification.setAdditional(additional);
+        }
+
+        // get the protein's peptides
+        HashMap<String, MSPepHit> peptideToPeptHitMap = omssaOmxFile.getPeptidesToPepHit(proteinId);
+
+        // if the protein has no peptides (threshold) return null
+        if (peptideToPeptHitMap.keySet().size() < 1) {
+            return null;
+        }
+
+        // iterate the peptides
+        Iterator<String> peptideIterator = peptideToPeptHitMap.keySet().iterator();
+
+        while (peptideIterator.hasNext()) {
+
+            String currentPeptideSequence = peptideIterator.next();
+            MSPepHit msPepHit = peptideToPeptHitMap.get(currentPeptideSequence);
+
+            LinkedList<MSSpectrum> spectrumMatches = omssaOmxFile.getPeptideToSpectrumMap().get(currentPeptideSequence);
+            Iterator<MSSpectrum> spectrumIterator = spectrumMatches.iterator();
+
+            while (spectrumIterator.hasNext()) {
+
+                MSSpectrum currentSpectrum = spectrumIterator.next();
+
+                if (!omssaOmxFile.getSpectrumToHitSetMap().get(currentSpectrum).MSHitSet_hits.MSHits.isEmpty()) {
+
+                    // find (and select) the MSHit with the lowest e-value
+                    List<MSHits> allMSHits = omssaOmxFile.getSpectrumToHitSetMap().get(currentSpectrum).MSHitSet_hits.MSHits;
+                    Iterator<MSHits> msHitIterator = allMSHits.iterator();
+                    Double lowestEValue = Double.MAX_VALUE;
+                    MSHits currentMSHit = null;
+
+                    while (msHitIterator.hasNext()) {
+
+                        MSHits tempMSHit = msHitIterator.next();
+
+                        if (tempMSHit.MSHits_evalue < lowestEValue) {
+                            lowestEValue = tempMSHit.MSHits_evalue;
+                            currentMSHit = tempMSHit;
+                        }
+                    }
+
+                    if (currentPeptideSequence.equalsIgnoreCase(currentMSHit.MSHits_pepstring)) {
+                        throw new IllegalStateException("Peptide sequences do not match! Please check the code!!");
+                    }
+
+                    Peptide convertedPeptide = new Peptide();
+
+                    // set the standard values
+                    convertedPeptide.setUniqueIdentifier(msPepHit.MSPepHit_accession); // @TODO: not sure if this can be used???
+                    convertedPeptide.setSequence(currentPeptideSequence);
+                    convertedPeptide.setStart(msPepHit.MSPepHit_start);
+                    convertedPeptide.setEnd(msPepHit.MSPepHit_stop);
+
+                    // set the spectrum reference
+                    //convertedPeptide.setSpectrumReference(???); // @TODO: not sure how to implement this...
+
+                    // check whether the peptide is unique (by checking whether it only fits one protein
+                    convertedPeptide.setIsSpecific(omssaOmxFile.getPeptideToProteinMap().size() > 1);
+
+                    if (prescanMode) {
+                        // add the PTMs
+                        convertedPeptide.getPTM().addAll(getPeptidePTMs(currentPeptideSequence, currentMSHit));
+
+                        // add the additional info
+                        Param additional = new Param();
+
+                        // add the omssa e and p values
+                        //additional.getCvParam().add(DAOCvParams.OMSSA_EXPECT.getParam(currentMSHit.MSHits_evalue)); // @TODO: OMSSA_EXPECT has to be added as a supported cv
+                        //additional.getCvParam().add(DAOCvParams.OMSSA_PVALUE.getParam(currentMSHit.MSHits_pvalue)); // @TODO: OMSSA_PVALUE has to be added as a supported cv
+
+                        // add the flanking residues
+                        String downstreamFlankingSequence = currentMSHit.MSHits_pepstart;
+                        String upstreamFlankingSequence = currentMSHit.MSHits_pepstop;
+
+                        if (upstreamFlankingSequence != null) {
+                            additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(currentMSHit.MSHits_pepstart));
+                        }
+                        if (downstreamFlankingSequence != null) {
+                            additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(currentMSHit.MSHits_pepstop));
+                        }
+
+                        // add the precursor charge
+                        String chargeString = "" + currentSpectrum.MSSpectrum_charge.MSSpectrum_charge_E.get(0); // @TODO: what about multiple charges??
+                        chargeString = chargeString.replaceFirst("\\+", "");
+                        additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(chargeString));
+
+                        // add the precursor mh
+                        additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(currentSpectrum.MSSpectrum_mz)); // @TODO: verify MH vs MZ!!
+
+                        if (isDecoy) {
+                            additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
+                        }
+
+                        convertedPeptide.setAdditional(additional);
+
+                    } else {
+                        // add the fragment ions
+                        List<FragmentIon> fragmentIons = getPeptideFragmentIons(currentMSHit);
+
+                        if (fragmentIons != null && fragmentIons.size() > 0) {
+                            convertedPeptide.getFragmentIon().addAll(fragmentIons);
+                        }
+                    }
+
+                    identification.getPeptide().add(convertedPeptide);
+                }
+            }
+        }
+
+        return identification;
     }
 
     private class OmssaSpectrumIterator implements Iterator<Spectrum> {
@@ -708,9 +907,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
         SpectrumDesc description = new SpectrumDesc();
 
         // set the ms level based on the type of search performed
-        int msLevel = 0;
-
-        msLevel = 2; // note: omssa seems to only support MS/MS (i.e., not MS^3)
+        int msLevel = 2; // note: omssa seems to only support MS/MS (i.e., not MS^3)
 
         // create the spectrumSettings/spectrumInstrument (mzRangeStop, mzRangeStart, msLevel)
         SpectrumSettings settings = new SpectrumSettings();
@@ -792,7 +989,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
 
         ArrayList<DatabaseMapping> allDatabaseMappings = new ArrayList<DatabaseMapping>(1);
         allDatabaseMappings.add(databaseMapping);
-        
+
         return allDatabaseMappings;
     }
 
@@ -802,5 +999,118 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
         // @TODO: implement me??
 
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Returns an ArrayList of PeptidePTMs for the given peptideSequence.
+     *
+     * @param peptideSequence The peptide to convert the modifications for.
+     * @return An ArrayList of PTMs
+     */
+    private ArrayList<PeptidePTM> getPeptidePTMs(String peptideSequence, MSHits msHit) {
+        // initialize the PTMs
+        ArrayList<PeptidePTM> ptms = new ArrayList<PeptidePTM>();
+
+        // process the fixed modifications
+        getFixedModifications(peptideSequence, ptms);
+
+        // process the variable modifications
+        getVariableModifications(msHit, ptms);
+
+        return ptms;
+    }
+
+    /**
+     * Adds the fixed modifications.
+     *
+     * @param peptideSequence
+     * @param ptms
+     */
+    private void getFixedModifications(String peptideSequence, ArrayList<PeptidePTM> ptms) {
+
+        // get the list of fixed modifications
+        List<Integer> fixedModifications =
+                msRequest.MSRequest_settings.MSSearchSettings.MSSearchSettings_fixed.MSMod;
+
+        // fixed modifications
+        if (fixedModifications.size() > 0) {
+
+            for (Integer fixedModification : fixedModifications) {
+                Vector<String> modifiedResidues = omssaModificationDetails.get(fixedModification).getModResidues();
+
+                for (String modifiedResidue : modifiedResidues) {
+
+                    int index = peptideSequence.indexOf(modifiedResidue);
+
+                    while (index != -1) {
+
+                        PeptidePTM ptm = new PeptidePTM();
+
+                        ptm.setSearchEnginePTMLabel(omssaModificationDetails.get(fixedModification).getModName());
+                        ptm.setFixedModification(true);
+
+                        // modification positions are set relative to the protein sequence
+                        ptm.setModLocation(index);
+                        // set the mass always as monoisotopic mass
+                        ptm.getModMonoDelta().add(omssaModificationDetails.get(fixedModification).getModMonoMass().toString());
+                        ptms.add(ptm);
+
+                        index = peptideSequence.indexOf(modifiedResidue, index + 1);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Adds the variable modifications.
+     *
+     * @param msHit
+     * @param ptms
+     */
+    private void getVariableModifications(MSHits msHit, ArrayList<PeptidePTM> ptms) {
+
+        // variable modifications
+        Iterator<MSModHit> modsIterator = msHit.MSHits_mods.MSModHit.iterator();
+
+        while (modsIterator.hasNext()) {
+
+            MSModHit currentMSModHit = modsIterator.next();
+
+            int modType = currentMSModHit.MSModHit_modtype.MSMod;
+            int modSite = currentMSModHit.MSModHit_site;
+
+            PeptidePTM ptm = new PeptidePTM();
+
+            ptm.setSearchEnginePTMLabel(omssaModificationDetails.get(modType).getModName());
+            ptm.setFixedModification(false);
+
+            // modification positions are set relative to the protein sequence
+            ptm.setModLocation(modSite + 1);
+            // set the mass always as monoisotopic mass
+            ptm.getModMonoDelta().add(omssaModificationDetails.get(modType).getModMonoMass().toString());
+            ptms.add(ptm);
+        }
+    }
+
+    /**
+     * Returns a peptide's fragment ions as a List of report model FragmentIons.
+     *
+     * @param currentMSHit
+     * @return
+     */
+    private List<FragmentIon> getPeptideFragmentIons(MSHits currentMSHit) {
+
+        List<FragmentIon> prideIons = new ArrayList<FragmentIon>();
+
+        // get the list of fragment ions for the current peptide identification
+        List<MSMZHit> currentFragmentIons = currentMSHit.MSHits_mzhits.MSMZHit;
+
+        // iterate the fragment ions, detect the type and create CV params for each of them
+        for (MSMZHit currentFragmentIon : currentFragmentIons) {
+            // @TODO: implement me!!
+        }
+
+        return prideIons;
     }
 }
