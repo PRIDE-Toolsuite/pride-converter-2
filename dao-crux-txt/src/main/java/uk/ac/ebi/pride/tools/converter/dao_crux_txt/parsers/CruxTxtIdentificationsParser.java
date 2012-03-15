@@ -1,7 +1,6 @@
 package uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers;
 
 import org.apache.log4j.Logger;
-import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxPeptide;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxProtein;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
@@ -23,6 +22,11 @@ public class CruxTxtIdentificationsParser {
     private static final Logger logger = Logger.getLogger(CruxTxtIdentificationsParser.class);
 
     /**
+     * Reader
+     */
+    private static BufferedReader br;
+
+    /**
      * Parses just the header
      * @param targetFile
      * @return A map containing the header keys and their positions (column number)
@@ -34,7 +38,7 @@ public class CruxTxtIdentificationsParser {
             throw new ConverterException("Input target file was not set.");
 
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(targetFile)));
             String line;
             Map<String, Integer> header = null;
 
@@ -42,6 +46,8 @@ public class CruxTxtIdentificationsParser {
             if ((line = readLine(br)) != null) {
                 header = parseHeader(line);
             }
+
+            br.close();
 
             return header;
 
@@ -53,19 +59,6 @@ public class CruxTxtIdentificationsParser {
             throw new ConverterException("Failed to read from input file.", e);
         }
     }
-
-
-
-    /**
-     * Parses the whole file.
-     * @param identificationsFile
-     * @return A Map of proteins to peptides (1 to n) obtained from the file
-     * @throws ConverterException
-     */
-    public static CruxIdentificationsParserResult parse(File identificationsFile) throws ConverterException {
-        CruxIdentificationsParserResult res =  parse(identificationsFile, "");
-        return res;
-    }
     
     /**
      * Parses the whole file.
@@ -73,24 +66,24 @@ public class CruxTxtIdentificationsParser {
      * @return A Map of proteins to peptides (1 to n) obtained from the file
      * @throws ConverterException
      */
-    public static CruxIdentificationsParserResult parse(File identificationsFile, String prefix) throws ConverterException {
+    public static CruxIdentificationsParserResult parse(File identificationsFile) throws ConverterException {
         if (identificationsFile == null)
             throw new ConverterException("Input identifications file was not set.");
 
         CruxIdentificationsParserResult res = new CruxIdentificationsParserResult();
         res.proteins = new LinkedHashMap<String, CruxProtein>();
         res.identifiedSpecIds = new LinkedList<Integer>();
+        res.identifiedSpecIds = new LinkedList<Integer>();
         res.peptideCount = 0;
 
         try {
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(identificationsFile)));
+            br = new BufferedReader(new InputStreamReader(new FileInputStream(identificationsFile)));
             String line;
-            Map<String, Integer> header = null;
 
             // read the header (will throw exception if not found)
             if ( (line = readLine(br)) != null ) {
-                header = parseHeader(line);
+                res.header = parseHeader(line);
             }
 
             // read the identifications
@@ -98,30 +91,33 @@ public class CruxTxtIdentificationsParser {
                 String[] fields = line.split("\t");
 
                 // check the number of columns
-                if ( fields.length !=  header.size() ) throw new ConverterException("Identification line doesn't match header columns");
-
-                // process the peptide, it has to be associated with each protein
-                CruxPeptide peptide = createCruxPeptide(fields, header);
+                if ( fields.length !=  res.header.size() ) throw new ConverterException("Identification line doesn't match header columns");
 
                 // we may have several proteins in the protein_id field, comma separated
-                String[] proteinIds = fields[header.get("protein id")].split(",");
+                String[] proteinIds = fields[res.header.get("protein id")].split(",");
 
-                // for each protein accession (key), create an entry and add the peptide to the peptide list (value)
+                // for each protein accession (key), create an entry and add the peptide string to the peptide list (value)
                 for (String accession: proteinIds) {
-                    accession = prefix + accession;
                     // if the protein doesn't exist add it for the first time
                     if (!res.proteins.containsKey(accession))
                         res.proteins.put(accession, new CruxProtein(accession));
 
-                    // finally associate the peptide
-                    res.proteins.get(accession).addPeptide(peptide);
+                    // finally associate the peptide string
+                    res.proteins.get(accession).addPeptide(line);
 
+                }
+
+                // Add the identified spectra if not done already
+                int scan = Integer.parseInt(fields[res.header.get("scan")]);
+                if ( !( (res.identifiedSpecIds.size() > 0) && (res.identifiedSpecIds.get(res.identifiedSpecIds.size() - 1) == scan) ) ) {
+                    res.identifiedSpecIds.add(scan);
                 }
 
                 res.peptideCount++;
 
             }
 
+            br.close();
             return res;
 
         } catch (FileNotFoundException e) {
@@ -168,36 +164,6 @@ public class CruxTxtIdentificationsParser {
         return header;
     }
 
-    /**
-     * Creates a new CruxPeptide object from the passed
-     * fields and header.
-     * @param fields The fields of the line representing the peptide.
-     * @param header A Map mapping a given column name to its 0-based index.
-     * @return The CruxPeptide object representing the line.
-     */
-    private static CruxPeptide createCruxPeptide(String[] fields,
-                                                 Map<String, Integer> header) {
-        // we may have several proteins in the protein_id field, comma separated
-        String[] proteinIds = fields[header.get("protein id")].split(",");
-        String[] flankingAA = fields[header.get("flanking aa")].split(",");
 
-        CruxPeptide peptide = new CruxPeptide(
-                Integer.parseInt(fields[header.get("scan")]),
-                Integer.parseInt(fields[header.get("charge")]),
-                Double.parseDouble(fields[header.get("spectrum precursor m/z")]),
-                Double.parseDouble(fields[header.get("spectrum neutral mass")]),
-                Double.parseDouble(fields[header.get("peptide mass")]),
-                Double.parseDouble(fields[header.get("delta_cn")]),
-                Double.parseDouble(fields[header.get("xcorr score")]),
-                Integer.parseInt(fields[header.get("xcorr rank")]),
-                Integer.parseInt(fields[header.get("matches/spectrum")]),
-                fields[header.get("sequence")],
-                fields[header.get("cleavage type")],
-                proteinIds,
-                flankingAA
-        );
-
-        return peptide;
-    }
 
 }

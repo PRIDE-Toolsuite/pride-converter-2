@@ -340,4 +340,37 @@ public class CruxPeptide {
     public String getNextAA(String proteinId) {
         return ""+this.flankingAA.get(proteinId).charAt(1);
     }
+
+    /**
+     * Creates a new CruxPeptide object from the passed
+     * fields and header.
+     * @param fields The fields of the line representing the peptide.
+     * @param header A Map mapping a given column name to its 0-based index.
+     * @return The CruxPeptide object representing the line.
+     */
+    public static CruxPeptide createCruxPeptide(String[] fields,
+                                                 Map<String, Integer> header) {
+        // we may have several proteins in the protein_id field, comma separated
+        String[] proteinIds = fields[header.get("protein id")].split(",");
+        String[] flankingAA = fields[header.get("flanking aa")].split(",");
+
+        CruxPeptide peptide = new CruxPeptide(
+                Integer.parseInt(fields[header.get("scan")]),
+                Integer.parseInt(fields[header.get("charge")]),
+                Double.parseDouble(fields[header.get("spectrum precursor m/z")]),
+                Double.parseDouble(fields[header.get("spectrum neutral mass")]),
+                Double.parseDouble(fields[header.get("peptide mass")]),
+                Double.parseDouble(fields[header.get("delta_cn")]),
+                Double.parseDouble(fields[header.get("xcorr score")]),
+                Integer.parseInt(fields[header.get("xcorr rank")]),
+                Integer.parseInt(fields[header.get("matches/spectrum")]),
+                fields[header.get("sequence")],
+                fields[header.get("cleavage type")],
+                proteinIds,
+                flankingAA
+        );
+
+        return peptide;
+    }
+
 }

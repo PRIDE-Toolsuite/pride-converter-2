@@ -13,4 +13,5 @@ public class CruxIdentificationsParserResult {
     public List<Integer> identifiedSpecIds;
     public Map<String, CruxProtein> proteins;
     public int peptideCount;
+    public Map<String, Integer> header;
 }

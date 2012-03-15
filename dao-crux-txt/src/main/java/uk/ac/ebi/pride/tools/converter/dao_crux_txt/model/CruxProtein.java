@@ -10,14 +10,14 @@ import java.util.List;
  */
 public class CruxProtein {
 	private final String accession;
-	private List<CruxPeptide> peptides;
+	private List<String> peptides;
 	
 	public CruxProtein(String accession) {
 		this.accession = accession;
-		this.peptides = new ArrayList<CruxPeptide>();
+		this.peptides = new ArrayList<String>();
 	}
 	
-	public void addPeptide(CruxPeptide peptide) {
+	public void addPeptide(String peptide) {
 		peptides.add(peptide);
 	}
 	
@@ -29,7 +29,7 @@ public class CruxProtein {
 		return accession;
 	}
 	
-	public List<CruxPeptide> getPeptides() {
-		return new ArrayList<CruxPeptide>(peptides);
+	public List<String> getPeptides() {
+		return new ArrayList<String>(peptides);
 	}
 }
