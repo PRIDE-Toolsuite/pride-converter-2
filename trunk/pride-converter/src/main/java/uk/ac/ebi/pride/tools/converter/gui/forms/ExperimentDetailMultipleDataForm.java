@@ -8,6 +8,7 @@ import psidev.psi.tools.validator.Context;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ExperimentDetailMultiTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ExperimentDetailMultiTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
@@ -15,10 +16,13 @@ import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
 import uk.ac.ebi.pride.tools.converter.gui.validator.rules.DuplicateInfoRule;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
+import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -30,6 +34,28 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
 
     public ExperimentDetailMultipleDataForm() {
         initComponents();
+
+    }
+
+    private void autogenerateButtonActionPerformed() {
+        //auto generate experiment short label and title
+        String projectName = null;
+        for (CvParam cv : ConverterData.getInstance().getMasterDAO().getExperimentParams().getCvParam()) {
+            if (DAOCvParams.PRIDE_PROJECT.getAccession().equals(cv.getAccession())) {
+                if (cv.getValue() != null && !"".equals(cv.getValue())) {
+                    projectName = cv.getValue();
+                    break;
+                }
+            }
+        }
+        //project name should never be null as it is required in the previous form
+        for (int i = 0; i < experimentDataTable.getModel().getRowCount(); i++) {
+            String expTitle = projectName + " - Experiment " + (i + 1);
+            String shortLabel = "Exp " + (i + 1);
+            experimentDataTable.setValueAt(expTitle, i, 1);
+            experimentDataTable.setValueAt(shortLabel, i, 2);
+        }
+
     }
 
     private void initComponents() {
@@ -37,6 +63,9 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
         // Generated using JFormDesigner non-commercial license
         scrollPane1 = new JScrollPane();
         experimentDataTable = new ExperimentDetailMultiTable();
+        scrollPane2 = new JScrollPane();
+        textArea1 = new JTextArea();
+        autogenerateButton = new JButton();
 
         //======== this ========
 
@@ -45,20 +74,52 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
             scrollPane1.setViewportView(experimentDataTable);
         }
 
+        //======== scrollPane2 ========
+        {
+            scrollPane2.setBorder(null);
+
+            //---- textArea1 ----
+            textArea1.setWrapStyleWord(true);
+            textArea1.setLineWrap(true);
+            textArea1.setText("Please enter an experiment title and short label for each source file. The combination of experiment title and short label must be unique, and neither value can be null.");
+            textArea1.setBackground(null);
+            textArea1.setEditable(false);
+            textArea1.setBorder(null);
+            scrollPane2.setViewportView(textArea1);
+        }
+
+        //---- autogenerateButton ----
+        autogenerateButton.setText("Auto-generate");
+        autogenerateButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                autogenerateButtonActionPerformed();
+            }
+        });
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 578, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                                                .addComponent(autogenerateButton)))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(scrollPane2, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(autogenerateButton))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -68,6 +129,9 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
     // Generated using JFormDesigner non-commercial license
     private JScrollPane scrollPane1;
     private ExperimentDetailMultiTable experimentDataTable;
+    private JScrollPane scrollPane2;
+    private JTextArea textArea1;
+    private JButton autogenerateButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

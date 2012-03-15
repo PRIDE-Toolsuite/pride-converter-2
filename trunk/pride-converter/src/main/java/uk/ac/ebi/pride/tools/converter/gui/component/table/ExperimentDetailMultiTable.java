@@ -32,7 +32,11 @@ public class ExperimentDetailMultiTable extends JTable {
     public TableCellRenderer getCellRenderer(int row, int column) {
         Object value = getValueAt(row, column);
         if (value != null) {
-            return getDefaultRenderer(String.class);
+            if (column == 0) {
+                return new ShortFilePathStringRenderer();
+            } else {
+                return getDefaultRenderer(String.class);
+            }
         }
         return super.getCellRenderer(row, column);
     }

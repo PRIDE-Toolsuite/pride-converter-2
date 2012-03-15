@@ -504,6 +504,7 @@ public class InstrumentForm extends AbstractForm {
             p.getCvParam().addAll(pt.getCvParamList());
             instrument.getAnalyzerList().getAnalyzer().add(p);
         }
+        instrument.getAnalyzerList().setCount(analyzerTables.size());
         Param sourceParam = new Param();
         sourceParam.getCvParam().addAll(sourceTable.getCvParamList());
         instrument.setSource(sourceParam);

@@ -77,12 +77,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             singleFastaFile.setEnabled(false);
             browseFastaFileButton.setEnabled(false);
-            fastaFormatList.setEditable(false);
+            fastaFormatList.setEnabled(false);
             singleMzTabFile.setEnabled(false);
             browseMzTabButton.setEnabled(false);
             singleSpectrumFile.setEnabled(false);
             browseSpectrumFileButton.setEnabled(false);
-
             forceRegenerationBox.setEnabled(false);
         }
 
@@ -1041,7 +1040,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     private Properties getOptions() {
-        ParserOptionTableModel model = (ParserOptionTableModel) parserOptionTable.getModel();
+        ParserOptionTableModel model = (ParserOptionTableModel) allOptionTable.getModel();
         Properties props = model.getProperties();
         logger.debug("Parsed options from panel: " + props);
         return props;

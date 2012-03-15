@@ -17,6 +17,10 @@ import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 import uk.ac.ebi.pride.tools.merger.io.PrideXmlMerger;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -34,6 +38,26 @@ public class IOUtilities {
     public static final String SPOT_IDENTIFIER = "Spot Identifier";
     public static final String SPOT_REGULAR_EXPRESSION = "Spot Regular Expression";
     public static final String COMPRESS = "Compress output file";
+
+    public static String getShortSourceFilePath(String filePath) {
+        //return foo/bar instead of bla/baz/foo/bar
+
+        int lastSep = filePath.lastIndexOf(File.separator);
+        int secondLastSep = -1;
+        if (lastSep < 0) {
+            return filePath;
+        } else {
+            String tmpFilePath = filePath.substring(0, lastSep);
+            secondLastSep = tmpFilePath.lastIndexOf(File.separator);
+        }
+        if (secondLastSep > 0) {
+            return filePath.substring(secondLastSep + 1);
+        } else {
+            return filePath;
+        }
+
+    }
+
 
     public static String getFileNameWithoutExtension(File file) {
         String retval = null;
@@ -105,8 +129,35 @@ public class IOUtilities {
 
         NavigationPanel.getInstance().setWorkingMessage("Creating mzTab files.");
 
-        File outputDir = new File(ConverterData.getInstance().getLastSelectedDirectory());
+        //store all options to converterdata
         ConverterData.getInstance().setOptions(options);
+
+        //keep local copy of options for processing
+        Properties localOptions = new Properties();
+        for (Map.Entry entry : options.entrySet()) {
+            localOptions.put(entry.getKey(), entry.getValue());
+        }
+
+        // check if a gel or spot identifier is present
+        String gelId = null, spotId = null;
+        Pattern spotPattern = null;
+
+        if (options.getProperty(GEL_IDENTIFIER) != null && !"".equals(options.getProperty(GEL_IDENTIFIER))) {
+            gelId = options.getProperty(GEL_IDENTIFIER);
+            //do not pass non-dao option
+            localOptions.remove(GEL_IDENTIFIER);
+        }
+        if (options.getProperty(SPOT_IDENTIFIER) != null && !"".equals(options.getProperty(SPOT_IDENTIFIER))) {
+            spotId = options.getProperty(SPOT_IDENTIFIER);
+            //do not pass non-dao option
+            localOptions.remove(SPOT_IDENTIFIER);
+        }
+        if (options.getProperty(SPOT_REGULAR_EXPRESSION) != null && !"".equals(options.getProperty(SPOT_REGULAR_EXPRESSION))) {
+            String regex = options.getProperty(SPOT_REGULAR_EXPRESSION);
+            spotPattern = Pattern.compile(regex);
+            //do not pass non-dao option
+            localOptions.remove(SPOT_REGULAR_EXPRESSION);
+        }
 
         for (File file : inputFiles) {
             final String absolutePath = file.getAbsolutePath();
@@ -119,27 +170,7 @@ public class IOUtilities {
 
                 DAO dao = DAOFactory.getInstance().getDAO(absolutePath, ConverterData.getInstance().getDaoFormat());
 
-                // check if a gel or spot identifier is present
-                String gelId = null, spotId = null;
-                Pattern spotPattern = null;
-
-                if (options.getProperty(GEL_IDENTIFIER) != null && !"".equals(options.getProperty(GEL_IDENTIFIER))) {
-                    gelId = options.getProperty(GEL_IDENTIFIER);
-                    //do not pass non-dao option
-                    options.remove(GEL_IDENTIFIER);
-                }
-                if (options.getProperty(SPOT_IDENTIFIER) != null && !"".equals(options.getProperty(SPOT_IDENTIFIER))) {
-                    spotId = options.getProperty(SPOT_IDENTIFIER);
-                    //do not pass non-dao option
-                    options.remove(SPOT_IDENTIFIER);
-                }
-                if (options.getProperty(SPOT_REGULAR_EXPRESSION) != null && !"".equals(options.getProperty(SPOT_REGULAR_EXPRESSION))) {
-                    String regex = options.getProperty(SPOT_REGULAR_EXPRESSION);
-                    spotPattern = Pattern.compile(regex);
-                    //do not pass non-dao option
-                    options.remove(SPOT_REGULAR_EXPRESSION);
-                }
-                dao.setConfiguration(options);
+                dao.setConfiguration(localOptions);
 
                 // write the mztab file
                 MzTabWriter writer;
@@ -149,9 +180,9 @@ public class IOUtilities {
                 else
                     writer = new MzTabWriter(dao, gelId, spotId);
 
-                String tabFile = file.getName() + ConverterData.MZTAB;
+                String tabFile = file.getAbsolutePath() + ConverterData.MZTAB;
 
-                writer.writeMzTabFile(new File(outputDir, tabFile));
+                writer.writeMzTabFile(new File(tabFile));
 
                 //update converterdata
                 fileBean.setMzTabFile(tabFile);
@@ -172,7 +203,6 @@ public class IOUtilities {
     public static void generateReportFiles(Properties options, Collection<FileBean> dataFiles, boolean forceRegeneration, boolean automaticallyMapPreferredPTMs) throws GUIException {
 
         ConverterData.getInstance().setOptions(options);
-        int i = 0;
 
         for (FileBean fileBean : dataFiles) {
 
@@ -196,17 +226,12 @@ public class IOUtilities {
                 fileBean.setReportFile(reportFile);
                 //update datafiles collection
                 ConverterData.getInstance().getDataFiles().add(fileBean);
-                if (i == 0) {
-                    ConverterData.getInstance().setMasterFile(fileBean);
-                    ConverterData.getInstance().setMasterDAO(new ReportReaderDAO(new File(reportFile)));
-                }
                 // Read PTMs
                 ReportReaderDAO reportReaderDAO = new ReportReaderDAO(new File(reportFile));
                 ConverterData.getInstance().getPTMs().addAll(reportReaderDAO.getPTMs());
                 // Read DB Mappings
                 ConverterData.getInstance().getDatabaseMappings().addAll(reportReaderDAO.getDatabaseMappings());
                 //increment file count
-                i++;
 
             } catch (ConverterException e) {
                 logger.fatal("Error in generating Report Files for input file " + fileBean.getInputFile() + ", error is " + e.getMessage(), e);
@@ -223,8 +248,65 @@ public class IOUtilities {
                 gex.setComponent(IOUtilities.class.getName());
                 throw gex;
             }
+
         }
 
+        try {
+            //if we have multiple files, we need to create a "master" file
+            if (ConverterData.getInstance().getDataFiles().size() > 1) {
+                File reportFile = createMasterReportFile(ConverterData.getInstance().getDataFiles().iterator().next().getReportFile());
+                FileBean masterFileBean = new FileBean("MASTER_FILE");
+                masterFileBean.setReportFile(reportFile.getAbsolutePath());
+                ConverterData.getInstance().setMasterFile(masterFileBean);
+                ReportReaderDAO dao = new ReportReaderDAO(reportFile);
+                //it is important to set this to a bogus value here because the
+                //individual annotations use the actual path of the source file
+                //as a unique identifier and we do not want customizations that
+                //should go to a unique file be corrupted to the master file
+                dao.getSourceFile().setPathToFile("MASTER FILE");
+                dao.getSourceFile().setNameOfFile("MASTER FILE");
+                ConverterData.getInstance().setMasterDAO(dao);
+            }
+        } catch (IOException e) {
+            logger.fatal("Error creating master file for editing, error is " + e.getMessage(), e);
+            GUIException gex = new GUIException(e);
+            gex.setShortMessage("Error creating master file for editing!");
+            gex.setDetailedMessage(null);
+            gex.setComponent(IOUtilities.class.getName());
+            throw gex;
+        }
+
+    }
+
+    /**
+     * This method will make a copy of a report file for temporary usage. This report file will be a temp
+     * file that is deleted on exit
+     *
+     * @param reportFilePath - the path of the report file to copy
+     * @return a File handle on the temporary report file
+     */
+    private static File createMasterReportFile(String reportFilePath) throws IOException {
+
+        File reportFile = new File(reportFilePath);
+        File masterFile = File.createTempFile("master_report.", ".xml", reportFile.getParentFile());
+        masterFile.deleteOnExit();
+
+        FileChannel source = null;
+        FileChannel destination = null;
+        try {
+            source = new FileInputStream(reportFile).getChannel();
+            destination = new FileOutputStream(masterFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+        }
+
+        return masterFile;
     }
 
     private static void generateReportFile(FileBean fileBean, Properties options, boolean automaticallyMapPreferredPTMs) throws InvalidFormatException {

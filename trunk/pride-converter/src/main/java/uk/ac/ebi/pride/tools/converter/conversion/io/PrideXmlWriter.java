@@ -49,7 +49,6 @@ public class PrideXmlWriter {
         // allocate the memory for the bytes to store
         ByteBuffer bytes = ByteBuffer.allocate(8);
         bytes.order(ByteOrder.LITTLE_ENDIAN); // save everything in LITTLE ENDIAN format as it's the standard
-        bytes.putDouble(0, 0);
         // convert the ByteBuffer to a byte[]
         byte[] byteArray = new byte[8]; // allocate the memory for the byte[] array
         bytes.get(byteArray);
@@ -161,7 +160,7 @@ public class PrideXmlWriter {
             //experiment
             out.println("<ExperimentCollection version=\"2.1\">");
             out.println("<Experiment>");
-            if (meta.getExperimentAccession() != null && !"".equals(meta.getExperimentAccession())) {
+            if (meta.getExperimentAccession() != null && !"".equals(meta.getExperimentAccession().trim())) {
                 out.println("<ExperimentAccession>" + meta.getExperimentAccession() + "</ExperimentAccession>");
             }
             out.println("<Title>" + meta.getTitle() + "</Title>");
