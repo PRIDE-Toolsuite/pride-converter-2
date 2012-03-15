@@ -556,7 +556,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
 
             // sort them
             //msSpectrumList = new ArrayList<String>(proteinMap.keySet());
-            //Collections.sort(proteinLabels); // @TODO: possible to sort??
+            //Collections.sort(proteinLabels); // @TODO: possible to sort?? is sorting required??
 
             // set the iterator
             proteinIterator = proteinMap.keySet().iterator();
@@ -724,8 +724,8 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
                         chargeString = chargeString.replaceFirst("\\+", "");
                         additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(chargeString));
 
-                        // add the precursor mh
-                        additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(currentSpectrum.MSSpectrum_mz)); // @TODO: verify MH vs MZ!!
+                        // add the precursor mz
+                        additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(currentSpectrum.MSSpectrum_mz)); // @TODO: MH or MZ?
 
                         if (isDecoy) {
                             additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
@@ -956,13 +956,11 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
         if ((Boolean) getCurrentProperty(SupportedProperties.COMPATIBILITY_MODE)) {
 
             // if the peptide was identified
-            if (omssaOmxFile.getSpectrumToHitSetMap().get(omssaSpectrum).MSHitSet_hits.MSHits.isEmpty()) {
+            if (omssaOmxFile.getSpectrumToHitSetMap().get(omssaSpectrum).MSHitSet_hits.MSHits.isEmpty()
+                    && !omssaSpectrum.MSSpectrum_charge.MSSpectrum_charge_E.isEmpty()) {
 
-                // @TODO: OMSSA question: possible with more than one charge per spectrum??
-                // @TODO: annotate the charge on the peptide level instead??
-                String chargeString = "" + omssaSpectrum.MSSpectrum_charge.MSSpectrum_charge_E.get(0);
-                chargeString = chargeString.replaceFirst("\\+", "");
-
+                // note: annotates the first charge only, the rest are added at the peptide level
+                String chargeString = omssaSpectrum.MSSpectrum_charge.MSSpectrum_charge_E.get(0).toString();
                 ionSelection.getCvParam().add(jCvParam("MS", "MS:1000041", "charge state", chargeString));
             }
         }
@@ -998,7 +996,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
 
         // @TODO: implement me??
 
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     /**
