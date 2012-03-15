@@ -215,6 +215,8 @@ public class CruxTxtParamsParser {
                 }
             }
 
+            br.close();
+
             return result;
 
         } catch (FileNotFoundException e) {
