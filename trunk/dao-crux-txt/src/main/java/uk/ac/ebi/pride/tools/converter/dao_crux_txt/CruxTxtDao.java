@@ -6,12 +6,17 @@ import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.filters.DeltaCnFilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.filters.FilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.filters.XcorrRankFilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.filters.XcorrScoreFilterCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxPeptide;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxProtein;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxIdentificationsParserResult;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxParametersParserResult;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxTxtIdentificationsParser;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxTxtParamsParser;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.properties.ScoreCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.properties.SupportedProperty;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
@@ -64,6 +69,17 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
      */
     private Map<String, Integer> header;
 
+    /**
+     * Target file index
+     */
+    private ArrayList<String> targetFileIndex;
+
+    /**
+     * Decoy file index 
+     */
+    private ArrayList<String> decoyFileIndex;
+
+    
 	/**
 	 * The proteins found in the Crux-txt target file
 	 */
@@ -106,15 +122,15 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 	 */
 	private int peptideCount = 0;
 
-    /**
-	 * The spectra ids in the peak list format
-	 */
-	private List<String> specIds; // todo: use this properly
+//    /**
+//	 * The spectra ids in the peak list format
+//	 */
+//	private List<String> specIds; // todo: use this properly
 
     /**
 	 * List of spectra ids that were identified
 	 */
-	private List<Integer> identifiedSpecIds = new ArrayList<Integer>();  // todo: use this properly
+	private List<Integer> identifiedSpecIds;
 
     /**
 	 * The search engine reported for the proteins
@@ -132,6 +148,26 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     private CruxParametersParserResult params;
 
     /**
+     * Threshold property value: allows ignoring all identifications under/over the value (depending on scoreCriteria)
+     */
+    private String threshold;
+
+    /**
+     * get highest scored item property: allows retrieving just the highest ranked identification based on scoreCriteria
+     */
+    private boolean getHighest;
+
+    /**
+     * Score criteria item property: allows ordering and further filtering of identifications
+     */
+    private String scoreCriteria;
+
+    /**
+     * Filter object built from properties
+     */
+    private FilterCriteria filter;
+
+    /**
      * Main constructor. Will parse three files:
      *  - Crux txt target identifications file
      *  - Crux txt decoy identifications file
@@ -147,12 +183,19 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
 		// parse the Crux files
         CruxTxtIdentificationsParser parser = new CruxTxtIdentificationsParser();
+        // parse target file
         CruxIdentificationsParserResult resTarget = parser.parse(targetFile);
         header = resTarget.header;
         proteins = resTarget.proteins;
         identifiedSpecIds = resTarget.identifiedSpecIds;
         peptideCount = resTarget.peptideCount;
-        proteinsDecoy = parser.parse(decoyFile).proteins;
+        targetFileIndex = resTarget.fileIndex;
+        // parse decoy file
+        CruxIdentificationsParserResult resDecoy = parser.parse(decoyFile);
+        proteinsDecoy = resDecoy.proteins;
+        peptideCount = peptideCount + resDecoy.peptideCount;
+        decoyFileIndex = resDecoy.fileIndex;
+        // parse parameter file
         params = CruxTxtParamsParser.parse(propertiesFile);
 	}
 
@@ -170,6 +213,23 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         DAOProperty<String> decoyPrefix = new DAOProperty<String>(SupportedProperty.DECOY_PREFIX.getName(), null);
         decoyPrefix.setDescription("Allows adding a prefix to decoy file identifications.");
         supportedProperties.add(decoyPrefix);
+        
+        // Threshold
+        DAOProperty<String> threshold = new DAOProperty<String>(SupportedProperty.THRESHOLD.getName(), null);
+        threshold.setDescription("Allows filtering identifications. Default value is 1.0 so all identifications pass the cut.");
+        supportedProperties.add(threshold);
+
+        // Score criteria
+        DAOProperty<String> scoreCriteria = new DAOProperty<String>(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.XCORR_RANK.getName());
+        scoreCriteria.setDescription("Defines the criteria for ordering and filtering identifications.");
+        supportedProperties.add(scoreCriteria);
+
+        // Get just highest ranked item
+        DAOProperty<String> getMaxScoreItem = new DAOProperty<String>(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "true");
+        getMaxScoreItem.setDescription("Defines if this DAO retrieves just the highest ranked identification for each " +
+                "scan, based on the defined score_criteria. If there are several identifications with the same score, " +
+                "all of them will be returned. True by default");
+        supportedProperties.add(getMaxScoreItem);
 
         return supportedProperties;
     }
@@ -184,7 +244,26 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         // set member properties here using properties object
         spectraFile = new File(props.getProperty(SupportedProperty.SPECTRUM_FILE.getName()));
         decoyPrefix = props.getProperty(SupportedProperty.DECOY_PREFIX.getName());
-        
+        threshold = props.getProperty(SupportedProperty.THRESHOLD.getName());
+        if (props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()) == null) { // todo: I couldn't make defaults to work
+            getHighest = true;
+        } else {
+            getHighest = Boolean.parseBoolean(props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()));
+        }
+        scoreCriteria = props.getProperty(SupportedProperty.SCORE_CRITERIA.getName());
+
+        // Create the filter object from the properties
+        if (ScoreCriteria.XCORR_RANK.getName().equals(scoreCriteria)) {
+            filter = new XcorrRankFilterCriteria();
+            filter.setThreshold(Integer.parseInt(threshold));
+        } else if (ScoreCriteria.XCORR_SCORE.getName().equals(scoreCriteria)) {
+            filter = new XcorrScoreFilterCriteria();
+            filter.setThreshold(Double.parseDouble(threshold));
+        } else if (ScoreCriteria.DELTA_CN.getName().equals(scoreCriteria)) {
+            filter = new DeltaCnFilterCriteria();
+            filter.setThreshold(Double.parseDouble(threshold));
+        }
+
     }
 
     /**
@@ -363,8 +442,6 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		return "Unknown";
 	}
 
-
-
     /**
      *
      * @return
@@ -491,9 +568,6 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
                 throw new InvalidFormatException("Protein with UID=" + identificationUID + " does not exist");
             return convertIdentification(protein, "d_", decoyPrefix, false);
         }
-		
-
-		
 
 	}
 
@@ -559,49 +633,99 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		identification.setSearchEngine(searchEngine);
 
 		// process the peptides
-		for (String cruxPeptideString : protein.getPeptides()) {
-            String[] fields = cruxPeptideString.split("\t");
-
-            // process the peptide
-            CruxPeptide cruxPeptide = CruxPeptide.createCruxPeptide(fields, this.header);
-			
-            Peptide peptide = new Peptide();
-
-			peptide.setSequence(cruxPeptide.getSequence());
-			peptide.setSpectrumReference(cruxPeptide.getScan());
-			peptide.setUniqueIdentifier(uidPrefix + cruxPeptide.getScan() + "_" + cruxPeptide.getXcorrRank());
-			peptide.setStart(0);
-			peptide.setEnd(0);
-
-            if (prescanMode) {
-                // add the additional info
-                Param additional = new Param();
-
-                if (!"*".equals(cruxPeptide.getPrevAA(protein.getAccession())))
-                    additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(cruxPeptide.getPrevAA(protein.getAccession())));
-                if (!"*".equals(cruxPeptide.getNextAA(protein.getAccession())))
-                    additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(cruxPeptide.getNextAA(protein.getAccession())));
-
-                additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(cruxPeptide.getCharge()));
-                additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(cruxPeptide.getSpecPrecursorMZ()));
-                additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(cruxPeptide.getSpecNeutralMass()));
-                additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(cruxPeptide.getXcorrRank()));
-                additional.getCvParam().add(DAOCvParams.SEQUEST_DELTA_CN.getParam(cruxPeptide.getDeltaCn()));
-                additional.getCvParam().add(DAOCvParams.SEQUEST_XCORR.getParam(cruxPeptide.getXcorrScore()));
-
-                peptide.setAdditional(additional);
-
-                // add the modifications
-                peptide.getPTM().addAll(cruxPeptide.getPTMs(params));
-
+		for (Integer cruxPeptideStringIndex : protein.getPeptides()) {
+            String[] fields;
+            List<String> wholeScan;
+            ArrayList<String> currentIndex;
+            if ("t_".equals(uidPrefix)) { // target protein
+                currentIndex = this.targetFileIndex;
+            } else { // decoy protein
+                currentIndex = this.decoyFileIndex;
             }
 
-			identification.getPeptide().add(peptide);
+            fields = currentIndex.get(cruxPeptideStringIndex).split("\t");  // split the columns
+            
+            if (getHighest) {
+                // now we get the highest score in the scan. we need this to apply the GET_HIGHEST_SCORE_ITEM PROPERTY 
+                wholeScan = getWholeScan(currentIndex, cruxPeptideStringIndex); // get the whole scan lines
+                Object newThreshold = this.filter.getHighestScore(header, wholeScan);
+                this.filter.setThreshold(newThreshold);
+            }
+            
+            // Check if the entry pass the filter. Otherwise, go for the next line
+            // - check also if we get just the highest on per scan
+            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
+                // process the peptide
+                CruxPeptide cruxPeptide = CruxPeptide.createCruxPeptide(fields, this.header);
+
+                Peptide peptide = new Peptide();
+
+                peptide.setSequence(cruxPeptide.getSequence());
+                peptide.setSpectrumReference(cruxPeptide.getScan());
+                peptide.setUniqueIdentifier(uidPrefix + cruxPeptide.getScan() + "_" + cruxPeptide.getXcorrRank());
+                peptide.setStart(0);
+                peptide.setEnd(0);
+
+                if (prescanMode) {
+                    // add the additional info
+                    Param additional = new Param();
+
+                    if (!"*".equals(cruxPeptide.getPrevAA(protein.getAccession())))
+                        additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(cruxPeptide.getPrevAA(protein.getAccession())));
+                    if (!"*".equals(cruxPeptide.getNextAA(protein.getAccession())))
+                        additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(cruxPeptide.getNextAA(protein.getAccession())));
+
+                    additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(cruxPeptide.getCharge()));
+                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(cruxPeptide.getSpecPrecursorMZ()));
+                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(cruxPeptide.getSpecNeutralMass()));
+                    additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(cruxPeptide.getXcorrRank()));
+                    additional.getCvParam().add(DAOCvParams.SEQUEST_DELTA_CN.getParam(cruxPeptide.getDeltaCn()));
+                    additional.getCvParam().add(DAOCvParams.SEQUEST_XCORR.getParam(cruxPeptide.getXcorrScore()));
+
+                    peptide.setAdditional(additional);
+
+                    // add the modifications
+                    peptide.getPTM().addAll(cruxPeptide.getPTMs(params));
+
+                }
+
+                identification.getPeptide().add(peptide);
+            }
 		}
 		
 		return identification;
 
 	}
+
+    /**
+     * Assumption: There are 5 entries for each scan
+     * @param fileIndex
+     * @param i
+     * @return
+     */
+    private List<String> getWholeScan(ArrayList<String> fileIndex, Integer i) {
+        List<String> res = null;
+        String[] elem = fileIndex.get(i).split("\t");
+        int elemScan = Integer.parseInt(elem[header.get("scan")]);
+        int elemRank = Integer.parseInt(elem[header.get("xcorr rank")]);
+        int firstElemPos = i-elemRank+1;
+        int lastElemPos = i;
+        int lastElemRank = elemRank;
+        // now we are going to move the index to the end of the scan
+        boolean found = false;
+        while (i<fileIndex.size() && !found) {
+            String[] nextElem = fileIndex.get(lastElemPos+1).split("\t");
+            int nextElemScan = Integer.parseInt(nextElem[header.get("scan")]);
+            found = (elemScan != nextElemScan);
+            lastElemPos++;
+        }
+        if (found) {
+            res = fileIndex.subList(firstElemPos, lastElemPos);     
+        }
+        return res;
+    }
+
+    
 
     /**
      *
@@ -636,8 +760,6 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 			// not supported			
 		}
 	}
-
-
 
     /**
      * Returns the spectraDAO to be used for the
@@ -675,7 +797,6 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
         return spectraDAO;
     }
-
 
     /**
      * Guesses the type of spectra file used

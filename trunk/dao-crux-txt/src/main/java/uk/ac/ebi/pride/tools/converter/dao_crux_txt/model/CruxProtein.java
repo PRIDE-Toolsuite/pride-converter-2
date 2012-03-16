@@ -10,14 +10,17 @@ import java.util.List;
  */
 public class CruxProtein {
 	private final String accession;
-	private List<String> peptides;
+    /**
+     * The list of peptides references the position in the file index (line number inside the file starting in 0)
+     */
+	private List<Integer> peptides;
 	
 	public CruxProtein(String accession) {
 		this.accession = accession;
-		this.peptides = new ArrayList<String>();
+		this.peptides = new ArrayList<Integer>();
 	}
 	
-	public void addPeptide(String peptide) {
+	public void addPeptide(Integer peptide) {
 		peptides.add(peptide);
 	}
 	
@@ -29,7 +32,7 @@ public class CruxProtein {
 		return accession;
 	}
 	
-	public List<String> getPeptides() {
-		return new ArrayList<String>(peptides);
+	public List<Integer> getPeptides() {
+		return new ArrayList<Integer>(peptides);
 	}
 }
