@@ -5,10 +5,7 @@ import uk.ac.ebi.pride.tools.converter.dao_crux_txt.model.CruxProtein;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Parses Crux TXT file.
@@ -73,7 +70,7 @@ public class CruxTxtIdentificationsParser {
         CruxIdentificationsParserResult res = new CruxIdentificationsParserResult();
         res.proteins = new LinkedHashMap<String, CruxProtein>();
         res.identifiedSpecIds = new LinkedList<Integer>();
-        res.identifiedSpecIds = new LinkedList<Integer>();
+        res.fileIndex = new ArrayList<String>();
         res.peptideCount = 0;
 
         try {
@@ -102,8 +99,9 @@ public class CruxTxtIdentificationsParser {
                     if (!res.proteins.containsKey(accession))
                         res.proteins.put(accession, new CruxProtein(accession));
 
-                    // finally associate the peptide string
-                    res.proteins.get(accession).addPeptide(line);
+                    // finally associate the peptide string index
+                    res.fileIndex.add(res.peptideCount, line); // add the line to the index
+                    res.proteins.get(accession).addPeptide(res.peptideCount); // reference the line from the protein
 
                 }
 
