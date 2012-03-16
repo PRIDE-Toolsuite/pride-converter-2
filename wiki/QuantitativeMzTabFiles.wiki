@@ -23,7 +23,7 @@ PRIDE Converter expects several fields to be present in a mzTab file to be able 
 
   * *[UNIT_ID]-quantification_method*: A cvParam describing the used quantification methods. The used parameter should be child term of PRIDE:0000307.
 {{{
-MTD   [UNIT_ID]-quantification-method   [PRIDE,PRIDE:0000313,iTRAQ,]
+MTD   [UNIT_ID]-quantification_method   [PRIDE,PRIDE:0000313,iTRAQ,]
 }}}
   * *[UNIT_ID]-protein-quantification_unit*: A cvParam describing what unit the reported numbers are in. The used parameter should be a child term of PRIDE:0000392.
 {{{
@@ -38,9 +38,13 @@ MTD   [UNIT_ID]-peptide-quantification_unit   [PRIDE,PRIDE:0000395,Ratio,]
 
 Quantification values are generally associated with subsamples. Any parameter describing the subsamples properties (such as species, tissue, cell_type, disease) is evaluated by PRIDE Converter and written into the PRIDE XML file but is not mandatory.
 
+It is recommended to add human readable descriptions to every subsample.
+
   * *[UNIT_ID]-[SUB_ID]-quantitation_reagent*: The only mandatory field at the subsample level. The cvParam is expected to be a child term of PRIDE:0000324.
 {{{
-MTD   [UNIT_ID]-sub[1]-quantitation_reagent   [PRIDE, PRIDE:0000264, iTRAQ reagent 113,]
+MTD   [UNIT_ID]-sub[1]-quantitation_reagent   [PRIDE, PRIDE:0000264, iTRAQ reagent 
+113,]
+MTD   [UNIT_ID]-sub[1]-description            Subsample labelled with iTRAQ 113. Control sample.
 MTD   [UNIT_ID]-sub[2]-quantitation_reagent   [PRIDE, PRIDE:0000114, iTRAQ reagent 114,]
 }}}
 
