@@ -175,10 +175,11 @@ public class IOUtilities {
                 // write the mztab file
                 MzTabWriter writer;
 
+                // TODO: replace the "0" with the number set by the user (number of reagents)
                 if (spotPattern != null)
-                    writer = new MzTabWriter(dao, gelId, spotPattern);
+                    writer = new MzTabWriter(dao, 0, gelId, spotPattern);
                 else
-                    writer = new MzTabWriter(dao, gelId, spotId);
+                    writer = new MzTabWriter(dao, 0, gelId, spotId);
 
                 String tabFile = file.getAbsolutePath() + ConverterData.MZTAB;
 

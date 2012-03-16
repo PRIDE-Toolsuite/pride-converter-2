@@ -249,6 +249,7 @@ public class PrideConverter {
 
                 // check if a gel or spot identifier is present
                 String gelId = null, spotId = null;
+                int subsampleFields = 0;
                 Pattern spotPattern = null;
 
                 if (line.hasOption(PrideConverterCLIOptions.OPTIONS.GEL_IDENTIFIER.getValue())) {
@@ -261,14 +262,17 @@ public class PrideConverter {
                     String regex = line.getOptionValue(PrideConverterCLIOptions.OPTIONS.SPOT_REGEX.getValue());
                     spotPattern = Pattern.compile(regex);
                 }
+                if (line.hasOption(PrideConverterCLIOptions.OPTIONS.GENERATE_QUANT_FIELDS.getValue())) {
+                	subsampleFields = Integer.parseInt(line.getOptionValue(PrideConverterCLIOptions.OPTIONS.GENERATE_QUANT_FIELDS.getValue()));
+                }
 
                 // write the mztab file
                 MzTabWriter writer;
 
                 if (spotPattern != null)
-                    writer = new MzTabWriter(dao, gelId, spotPattern);
+                    writer = new MzTabWriter(dao, subsampleFields, gelId, spotPattern);
                 else
-                    writer = new MzTabWriter(dao, gelId, spotId);
+                    writer = new MzTabWriter(dao, subsampleFields, gelId, spotId);
 
                 // write the file
                 File outfile = null;

@@ -17,6 +17,7 @@ import uk.ac.ebi.pride.mztab_java.MzTabParsingException;
 import uk.ac.ebi.pride.mztab_java.model.Param;
 import uk.ac.ebi.pride.mztab_java.model.ParamList;
 import uk.ac.ebi.pride.mztab_java.model.Protein;
+import uk.ac.ebi.pride.mztab_java.model.Subsample;
 import uk.ac.ebi.pride.mztab_java.model.Unit;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
@@ -79,20 +80,26 @@ public class MzTabWriter {
      * protein entries.
      */
     private String spotId;
+    /**
+     * The number of subsamples to automaticall generate
+     * (empty) annotations for.
+     */
+    private int subsamples = 0;
 
     public MzTabWriter(DAO dao) throws InvalidFormatException {
-    	this(dao, (String) null, (String) null);
+    	this(dao, 0, (String) null, (String) null);
     }
     
     /**
      * @param dao
      */
-    public MzTabWriter(DAO dao, String gelIdentifier, String spotIdentifier) throws InvalidFormatException {
+    public MzTabWriter(DAO dao, int subsamplesToGenerate, String gelIdentifier, String spotIdentifier) throws InvalidFormatException {
         // create the mztab file object
         mztabFile = new MzTabFile();
         // set the dao
         this.dao = dao;
         
+        this.subsamples = subsamplesToGenerate;
         this.gelIdentifier = gelIdentifier;
         this.spotId = spotIdentifier;
 
@@ -105,11 +112,12 @@ public class MzTabWriter {
      * sourcefile's name (not path) using the respective
      * regex.
      * @param dao The DAO to use to retrieve the data.
+     * @param subsamplesToGenerate The number of subsamples empty quantitative fields should be generated for. If set to 0 no quantitative fields will be added.
      * @param gelId The gel identifier to be used for all proteins generated.
      * @param spotRegex The regex to be used on the filename to retrieve the spot identifier.
      * @throws InvalidFormatException
      */
-    public MzTabWriter(DAO dao, String gelId, Pattern spotRegex) throws InvalidFormatException {
+    public MzTabWriter(DAO dao, int subsamplesToGenerate, String gelId, Pattern spotRegex) throws InvalidFormatException {
         // get the spot identifier
     	File sourcefile = new File (dao.getSourceFile().getPathToFile());
     	
@@ -130,6 +138,7 @@ public class MzTabWriter {
         
         this.gelIdentifier = gelId;
         this.spotId = matcher.group(1);
+        this.subsamples = subsamplesToGenerate;
 
         processData();
     }
@@ -153,6 +162,21 @@ public class MzTabWriter {
 	        if (dao.getExperimentTitle() != null && dao.getExperimentTitle().length() > 0)
 	            unit.setTitle(dao.getExperimentTitle());
 	
+	        // add quantitative fields if subsamples are defined
+	        if (subsamples > 0) {
+	        	unit.setQuantificationMethod(new Param("PRIDE", "PRIDE:0000391", "Quantification parameter", "TODO: Replace with quantification method parameter (Children of PRIDE:0000307)"));
+	        	unit.setPeptideQuantificationUnit(new Param("PRIDE", "PRIDE:0000391", "Quantification parameter", "TODO: Replace with peptide quantification unit parameter (Children of PRIDE:0000392)"));
+	        	unit.setProteinQuantificationUnit(new Param("PRIDE", "PRIDE:0000391", "Quantification parameter", "TODO: Replace with protein quantification unit parameter (Children of PRIDE:0000392)"));
+	        	
+	        	for (int subsampleIndex = 1; subsampleIndex <= subsamples; subsampleIndex++) {
+	        		Subsample subsample = new Subsample(unit.getUnitId(), subsampleIndex);
+	        		subsample.setDescription("TODO: Set the description for this subsamples.");
+	        		subsample.setQuantificationReagent(new Param("PRIDE", "PRIDE:0000391", "Quantification parameter", "TODO: Replace with parameter for the used quantification reagent (Children of PRIDE:0000324)"));
+	        		
+	        		unit.setSubsample(subsample);
+	        	}
+	        }
+	        
 	        // add the used DAO options
 	        Properties properties = dao.getConfiguration();
 	        List<Param> customParams = new ArrayList<Param>();
@@ -237,6 +261,11 @@ public class MzTabWriter {
 	            // set the modifications
 	            protein.setModifications(null);
 	            
+	            // set potential (empty) quant fields
+	            for (int subsampleIndex = 1; subsampleIndex <= subsamples; subsampleIndex++) {
+	            	protein.setAbundance(subsampleIndex, null, null, null);
+	            }
+	            
 	            // set the optional columns
 	            try {
 		            if (gelIdentifier != null && gelIdentifier.length() > 0) {
@@ -293,6 +322,10 @@ public class MzTabWriter {
 
             // convert the modifications
             peptide.setModification(null);
+            
+            // add the quantitation fields
+            for (int subsampleIndex = 1; subsampleIndex <= subsamples; subsampleIndex++)
+            	peptide.setAbundance(subsampleIndex, null, null, null);
 
             // add the peptide
             mztabFile.addPeptide(peptide);
