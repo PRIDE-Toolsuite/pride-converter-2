@@ -33,7 +33,8 @@ public class PrideConverterCLIOptions {
         USE_HYBRID_SEARCH_DATABASE("useHybridSearchDatabase"),
         SPOT_IDENTIFIER("gel_spot_identifier"),
         SPOT_REGEX("gel_spot_regex"),
-        GEL_IDENTIFIER("gel_identifier");
+        GEL_IDENTIFIER("gel_identifier"),
+        GENERATE_QUANT_FIELDS("generate_quant_fields");
 
         private String value;
 
@@ -124,6 +125,11 @@ public class PrideConverterCLIOptions {
                 .withDescription("used to extract the gel spot identifier based on the sourcefile's name. The first matching group in the pattern is used as a spot identifier.")
                 .create(OPTIONS.SPOT_REGEX.getValue());
 
+        Option generateQuantFields = OptionBuilder.withArgName("nr. of reagents")
+        		.hasArg()
+        		.withDescription("adds (empty) quantitative fields to the generated mzTab file for the number of specified reagents.")
+        		.create(OPTIONS.GENERATE_QUANT_FIELDS.getValue());
+        
         Option property = OptionBuilder.withArgName("property=value")
                 .hasArgs(2)
                 .withValueSeparator()
@@ -147,6 +153,7 @@ public class PrideConverterCLIOptions {
         options.addOption(gelIdentifier);
         options.addOption(spotIdentifier);
         options.addOption(spotRegex);
+        options.addOption(generateQuantFields);
         options.addOption(onlyIdentified);
         options.addOption(useHybridSearchDb);
 
