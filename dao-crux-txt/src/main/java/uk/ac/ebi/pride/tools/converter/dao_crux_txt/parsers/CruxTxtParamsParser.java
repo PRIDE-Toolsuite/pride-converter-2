@@ -209,6 +209,9 @@ public class CruxTxtParamsParser {
                         continue;
                     }
 
+                    // check if its
+
+
                     // Then is a "regular" parameter - todo: differentiate here more parameter types (cvParams, etc)
                     result.properties.setProperty(parameter[0],parameter[1]);
 
