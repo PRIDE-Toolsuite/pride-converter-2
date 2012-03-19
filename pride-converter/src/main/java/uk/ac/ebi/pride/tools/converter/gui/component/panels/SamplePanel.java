@@ -21,6 +21,7 @@ import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateUtilities;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -464,6 +465,8 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
         Set<String> observedAccession = new HashSet<String>();
         if (param != null) {
+            //clear old values
+            paramTable1.removeAll();
             subsamples.clear();
             for (CvParam cv : param.getCvParam()) {
                 observedAccession.add(cv.getAccession());
@@ -614,10 +617,17 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         return false;
     }
 
-    public void setMasterPanel(boolean isMaster) {
+    public void setMasterPanel(boolean isMaster, TableModelListener masterListener) {
         this.isMaster = isMaster;
         masterInformationLabel.setVisible(isMaster);
         masterInformationLabel.repaint();
+        //if this is the master panel
+        //any changes need to be reflected to the report beans
+        if (isMaster) {
+            paramTable1.getModel().addTableModelListener(masterListener);
+        } else {
+            paramTable1.getModel().removeTableModelListener(masterListener);
+        }
     }
 
     public String getSourceFile() {
@@ -628,12 +638,8 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         this.sourceFile = sourceFile;
     }
 
-    public static void main(String[] args) {
-        JFrame f = new JFrame();
-        SamplePanel s = new SamplePanel();
-        f.add(s);
-        f.pack();
-        f.setVisible(true);
+    public ReportObject getParamAtIndex(int modelIndex) {
+        return ((ParamTableModel) paramTable1.getModel()).get(modelIndex);
     }
 
     //don't want to have keyboard input for combobox
@@ -658,6 +664,5 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             e.consume();
         }
     }
-
 
 }

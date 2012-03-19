@@ -18,6 +18,7 @@ new FormModel {
 						name: "scrollPane1"
 						add( new FormComponent( "javax.swing.JList" ) {
 							name: "sourceFileList"
+							"toolTipText": "Select one or more files to add custom annotations to."
 							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "sourceFileListMouseClicked", true ) )
 						} )
 					} )

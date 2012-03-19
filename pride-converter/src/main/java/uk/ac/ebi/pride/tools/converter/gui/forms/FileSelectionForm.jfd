@@ -344,6 +344,13 @@
            <string>horizontalAlignment</string> 
            <int>2</int> 
           </void> 
+          <void method="setProperty"> 
+           <string>toolTipText</string> 
+           <object class="com.jformdesigner.model.FormMessage"> 
+            <null/> 
+            <string>SelecFilePanel.multipleModeLabel.toolTipText</string> 
+           </object> 
+          </void> 
           <void property="name"> 
            <string>multipleModeLabel</string> 
           </void> 
@@ -1253,6 +1260,13 @@
         <void method="setProperty"> 
          <string>horizontalAlignment</string> 
          <int>4</int> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <object class="com.jformdesigner.model.FormMessage"> 
+          <null/> 
+          <string>SelecFilePanel.singleModeLabel.toolTipText</string> 
+         </object> 
         </void> 
         <void property="name"> 
          <string>singleModeLabel</string> 

@@ -219,6 +219,10 @@
          <string>text</string> 
          <string>Load</string> 
         </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Load previously stored contact information</string> 
+        </void> 
         <void property="name"> 
          <string>loadButton</string> 
         </void> 
@@ -242,6 +246,10 @@
         <void method="setProperty"> 
          <string>enabled</string> 
          <boolean>false</boolean> 
+        </void> 
+        <void method="setProperty"> 
+         <string>toolTipText</string> 
+         <string>Save contact information for future use</string> 
         </void> 
         <void property="name"> 
          <string>saveButton</string> 

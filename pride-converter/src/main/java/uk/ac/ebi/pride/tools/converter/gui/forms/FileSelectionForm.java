@@ -480,6 +480,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             multipleModeLabel.setForeground(new Color(51, 51, 255));
             multipleModeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
             multipleModeLabel.setHorizontalAlignment(SwingConstants.LEFT);
+            multipleModeLabel.setToolTipText(bundle.getString("SelecFilePanel.multipleModeLabel.toolTipText"));
             multipleModeLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -938,6 +939,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             singleModeLabel.setForeground(new Color(51, 51, 255));
             singleModeLabel.setFont(new Font("Dialog", Font.PLAIN, 12));
             singleModeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+            singleModeLabel.setToolTipText(bundle.getString("SelecFilePanel.singleModeLabel.toolTipText"));
             singleModeLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {

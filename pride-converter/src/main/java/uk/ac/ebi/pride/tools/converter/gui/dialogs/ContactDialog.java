@@ -207,6 +207,7 @@ public class ContactDialog extends AbstractDialog {
 
         //---- loadButton ----
         loadButton.setText("Load");
+        loadButton.setToolTipText("Load previously stored contact information");
         loadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -217,6 +218,7 @@ public class ContactDialog extends AbstractDialog {
         //---- saveButton ----
         saveButton.setText("Save");
         saveButton.setEnabled(false);
+        saveButton.setToolTipText("Save contact information for future use");
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

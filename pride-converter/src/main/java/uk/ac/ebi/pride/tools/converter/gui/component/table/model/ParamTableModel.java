@@ -1,6 +1,8 @@
 package uk.ac.ebi.pride.tools.converter.gui.component.table.model;
 
 import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
+import uk.ac.ebi.pride.tools.converter.gui.model.ProtectedCvParam;
+import uk.ac.ebi.pride.tools.converter.gui.model.ProtectedUserParam;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
@@ -64,7 +66,7 @@ public class ParamTableModel extends BaseTableModel<ReportObject> {
     }
 
     private Object[] getRowObjectArray(UserParam userParam) {
-        boolean protectedParam = isUserParamProtected(userParam);
+        boolean protectedParam = isUserParamProtected(userParam) || userParam instanceof ProtectedUserParam;
         return new Object[]{"", "", "", userParam.getName(), userParam.getValue(), protectedParam, userParam};
     }
 
@@ -73,7 +75,7 @@ public class ParamTableModel extends BaseTableModel<ReportObject> {
     }
 
     private Object[] getRowObjectArray(CvParam cvParam) {
-        boolean protectedParam = isCvParamProtected(cvParam);
+        boolean protectedParam = isCvParamProtected(cvParam) || cvParam instanceof ProtectedCvParam;
         return new Object[]{"", cvParam.getCvLabel(), cvParam.getAccession(), cvParam.getName(), cvParam.getValue(), protectedParam, cvParam};
     }
 
@@ -117,6 +119,9 @@ public class ParamTableModel extends BaseTableModel<ReportObject> {
     @Override
     public boolean isRowProtected(int rowNumber) {
         Object obj = getValueAt(rowNumber, dataColumnIndex);
+        if (obj instanceof ProtectedCvParam || obj instanceof ProtectedCvParam) {
+            return true;
+        }
         if (obj instanceof UserParam) {
             return isUserParamProtected((UserParam) obj);
         }

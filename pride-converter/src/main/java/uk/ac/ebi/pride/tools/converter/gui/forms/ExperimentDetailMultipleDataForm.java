@@ -38,24 +38,32 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
     }
 
     private void autogenerateButtonActionPerformed() {
-        //auto generate experiment short label and title
-        String projectName = null;
-        for (CvParam cv : ConverterData.getInstance().getMasterDAO().getExperimentParams().getCvParam()) {
-            if (DAOCvParams.PRIDE_PROJECT.getAccession().equals(cv.getAccession())) {
-                if (cv.getValue() != null && !"".equals(cv.getValue())) {
-                    projectName = cv.getValue();
-                    break;
+
+        StringBuilder msg = new StringBuilder()
+                .append("You should only use the auto-generation function\n")
+                .append("if you are going to merge the files afterwards.\n")
+                .append("Otherwise, please provide meaningful annotations\n")
+                .append("for these values. Continue with auto-generation?");
+        int confirm = JOptionPane.showConfirmDialog(this, msg.toString(), "Warning!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+        if (confirm == JOptionPane.YES_OPTION) {
+            //auto generate experiment short label and title
+            String projectName = null;
+            for (CvParam cv : ConverterData.getInstance().getMasterDAO().getExperimentParams().getCvParam()) {
+                if (DAOCvParams.PRIDE_PROJECT.getAccession().equals(cv.getAccession())) {
+                    if (cv.getValue() != null && !"".equals(cv.getValue())) {
+                        projectName = cv.getValue();
+                        break;
+                    }
                 }
             }
+            //project name should never be null as it is required in the previous form
+            for (int i = 0; i < experimentDataTable.getModel().getRowCount(); i++) {
+                String expTitle = projectName + " - Experiment " + (i + 1);
+                String shortLabel = "Exp " + (i + 1);
+                experimentDataTable.setValueAt(expTitle, i, 1);
+                experimentDataTable.setValueAt(shortLabel, i, 2);
+            }
         }
-        //project name should never be null as it is required in the previous form
-        for (int i = 0; i < experimentDataTable.getModel().getRowCount(); i++) {
-            String expTitle = projectName + " - Experiment " + (i + 1);
-            String shortLabel = "Exp " + (i + 1);
-            experimentDataTable.setValueAt(expTitle, i, 1);
-            experimentDataTable.setValueAt(shortLabel, i, 2);
-        }
-
     }
 
     private void initComponents() {
@@ -81,7 +89,7 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
             //---- textArea1 ----
             textArea1.setWrapStyleWord(true);
             textArea1.setLineWrap(true);
-            textArea1.setText("Please enter an experiment title and short label for each source file. The combination of experiment title and short label must be unique, and neither value can be null.");
+            textArea1.setText("Please enter an experiment title and short label for each source file. The combination of experiment title and short label must be unique, and neither value can be empty.");
             textArea1.setBackground(null);
             textArea1.setEditable(false);
             textArea1.setBorder(null);
@@ -187,6 +195,12 @@ public class ExperimentDetailMultipleDataForm extends AbstractForm implements Ta
             ExperimentDetailMultiTableModel model = new ExperimentDetailMultiTableModel(new ArrayList<String>(ConverterData.getInstance().getInputFiles()), dao.getExperimentTitle(), dao.getExperimentShortLabel());
             model.addTableModelListener(this);
             experimentDataTable.setModel(model);
+            //resize table
+            int width = experimentDataTable.getWidth();
+            experimentDataTable.getColumnModel().getColumn(0).setWidth((int) Math.floor(width * 0.33));
+            experimentDataTable.getColumnModel().getColumn(1).setWidth((int) Math.floor(width * 0.66));
+            experimentDataTable.revalidate();
+            experimentDataTable.repaint();
             isLoaded = true;
         }
         //fire validation listener on load
