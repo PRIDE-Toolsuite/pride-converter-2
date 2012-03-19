@@ -21,7 +21,7 @@ new FormModel {
 					name: "textArea1"
 					"wrapStyleWord": true
 					"lineWrap": true
-					"text": "Please enter an experiment title and short label for each source file. The combination of experiment title and short label must be unique, and neither value can be null."
+					"text": "Please enter an experiment title and short label for each source file. The combination of experiment title and short label must be unique, and neither value can be empty."
 					"background": sfield com.jformdesigner.model.FormObject NULL_VALUE
 					"editable": false
 					"border": sfield com.jformdesigner.model.FormObject NULL_VALUE

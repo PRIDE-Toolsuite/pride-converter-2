@@ -566,9 +566,15 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         //to deal with this data
         if (ConverterData.getInstance().getInputFiles().size() > 1 && !doneOnce) {
             experimentTitleInput.setText("will be set in next form");
+            experimentTitleInput.setForeground(null);
+            experimentTitleInput.setBackground(Color.white);
             experimentTitleInput.setEditable(false);
+            defaultValueMap.put(experimentTitleInput, false);
             shortNameInput.setText("will be set in next form");
             shortNameInput.setEditable(false);
+            shortNameInput.setForeground(null);
+            shortNameInput.setBackground(Color.white);
+            defaultValueMap.put(shortNameInput, false);
             NavigationPanel.getInstance().registerFormAfter(new ExperimentDetailMultipleDataForm(), this);
             doneOnce = true;
         }

@@ -267,6 +267,12 @@ public class IOUtilities {
                 dao.getSourceFile().setPathToFile("MASTER FILE");
                 dao.getSourceFile().setNameOfFile("MASTER FILE");
                 ConverterData.getInstance().setMasterDAO(dao);
+            } else {
+                //otherwise the only file is the master file
+                FileBean masterFile = ConverterData.getInstance().getDataFiles().iterator().next();
+                ConverterData.getInstance().setMasterFile(masterFile);
+                ReportReaderDAO dao = new ReportReaderDAO(new File(masterFile.getReportFile()));
+                ConverterData.getInstance().setMasterDAO(dao);
             }
         } catch (IOException e) {
             logger.fatal("Error creating master file for editing, error is " + e.getMessage(), e);

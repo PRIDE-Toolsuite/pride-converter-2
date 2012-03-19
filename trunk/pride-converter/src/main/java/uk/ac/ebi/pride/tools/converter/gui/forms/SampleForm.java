@@ -13,18 +13,20 @@ import uk.ac.ebi.pride.tools.converter.gui.component.ButtonTabComponent;
 import uk.ac.ebi.pride.tools.converter.gui.component.panels.SamplePanel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.LoadSpecificReportDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.ProtectedCvParam;
+import uk.ac.ebi.pride.tools.converter.gui.model.ProtectedUserParam;
 import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
-import uk.ac.ebi.pride.tools.converter.report.model.Description;
-import uk.ac.ebi.pride.tools.converter.report.model.Param;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
-import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -33,7 +35,9 @@ import java.util.*;
  * @author Melih Birim
  * @author rcote
  */
-public class SampleForm extends AbstractForm implements ActionListener {
+public class SampleForm extends AbstractForm implements ActionListener, TableModelListener {
+
+    private static final String paramSeparator = "@%%@";
 
     public SampleForm() {
         initComponents();
@@ -113,7 +117,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
         boolean matchFound = false;
         //start at 1 as the first tab will always be the master file
         for (int i = 1; i < tabbedPane1.getTabCount(); i++) {
-            if (tabbedPane1.getTitleAt(i).equals(sourceFile)) {
+            if (tabbedPane1.getTitleAt(i).equals(IOUtilities.getShortSourceFilePath(sourceFile))) {
                 //sanity check!
                 SamplePanel samplePane = (SamplePanel) tabbedPane1.getComponentAt(i);
                 if (samplePane.getSourceFile().equals(sourceFile)) {
@@ -128,25 +132,30 @@ public class SampleForm extends AbstractForm implements ActionListener {
             SamplePanel samplePanel = new SamplePanel();
             //for later tracking
             samplePanel.setSourceFile(sourceFile);
-            try {
-                //if there's already a bean with custom information, use that
-                if (rb != null && rb.getSampleDescription() != null) {
-                    samplePanel.setSampleName(rb.getSampleName());
-                    samplePanel.setSampleComment(rb.getSampleDescription().getComment());
-                    Param p = new Param();
-                    p.getCvParam().addAll(rb.getSampleDescription().getCvParam());
-                    p.getUserParam().addAll(rb.getSampleDescription().getUserParam());
-                    samplePanel.setSampleParams(p);
 
-                } else {
-                    //otherwise use the dao information
-                    DAO dao = ConverterData.getInstance().getMasterDAO();
-                    samplePanel.setSampleName(dao.getSampleName());
-                    samplePanel.setSampleComment(dao.getSampleComment());
-                    samplePanel.setSampleParams(dao.getSampleParams());
+            //if there's already a bean with custom information, use that
+            if (rb != null && rb.getSampleDescription() != null) {
+                samplePanel.setSampleName(rb.getSampleName());
+                samplePanel.setSampleComment(rb.getSampleDescription().getComment());
+                Param p = new Param();
+                p.getCvParam().addAll(rb.getSampleDescription().getCvParam());
+                p.getUserParam().addAll(rb.getSampleDescription().getUserParam());
+                samplePanel.setSampleParams(p);
+
+            } else {
+                //otherwise use the dao information
+                DAO dao = ConverterData.getInstance().getMasterDAO();
+                samplePanel.setSampleName(dao.getSampleName());
+                samplePanel.setSampleComment(dao.getSampleComment());
+                //add params from master dao but make sure they are protected
+                Param p = new Param();
+                for (CvParam cv : masterSamplePanel.getSampleDescription().getCvParam()) {
+                    p.getCvParam().add(new ProtectedCvParam(cv));
                 }
-            } catch (InvalidFormatException e) {
-                logger.warn("Error reading dao information: " + e.getMessage(), e);
+                for (UserParam up : masterSamplePanel.getSampleDescription().getUserParam()) {
+                    p.getUserParam().add(new ProtectedUserParam(up));
+                }
+                samplePanel.setSampleParams(p);
             }
 
             samplePanel.addValidationListener(validationListerner);
@@ -303,7 +312,7 @@ public class SampleForm extends AbstractForm implements ActionListener {
 
             if (ConverterData.getInstance().getDataFiles().size() > 1) {
                 tabbedPane1.setTitleAt(0, "Master Record");
-                masterSamplePanel.setMasterPanel(true);
+                masterSamplePanel.setMasterPanel(true, this);
             } else {
                 tabbedPane1.setTitleAt(0, IOUtilities.getShortSourceFilePath(ConverterData.getInstance().getMasterFile().getInputFile()));
             }
@@ -346,6 +355,202 @@ public class SampleForm extends AbstractForm implements ActionListener {
     @Override
     public void finish() {
         /* no op */
+    }
+
+    //**************************************** TableModelListener interface
+
+    private Set<String> paramModelEventTracker = new HashSet<String>();
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+
+        //update all report beans for open tabs!
+
+        //first, save all open tabs!
+        for (int i = 1; i < tabbedPane1.getTabCount(); i++) {
+
+            SamplePanel panel = (SamplePanel) tabbedPane1.getComponentAt(i);
+            //store description in memory for now, it will be validated later
+            Description sample = panel.getSampleDescription();
+            ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(panel.getSourceFile());
+            if (rb != null) {
+                rb.setSampleName(panel.getSampleName());
+                rb.setSampleDescription(sample);
+            } else {
+                throw new IllegalStateException("Could not find report bean for file: " + panel.getSourceFile());
+            }
+
+        }
+
+        //second process table event
+        switch (e.getType()) {
+
+            case TableModelEvent.INSERT:
+
+                for (int i = e.getFirstRow(); i <= e.getLastRow(); i++) {
+                    ReportObject obj = masterSamplePanel.getParamAtIndex(i);
+
+                    //store param in set so that we can later on track inserts/deletes
+                    String valueToAdd;
+                    if (obj instanceof CvParam) {
+                        CvParam cv = (CvParam) obj;
+                        valueToAdd = cv.getCvLabel() + paramSeparator + cv.getAccession();
+                    } else {
+                        UserParam up = (UserParam) obj;
+                        valueToAdd = up.getName();
+                    }
+                    paramModelEventTracker.add(valueToAdd);
+
+                    for (ReportBean rb : ConverterData.getInstance().getCustomeReportFields().values()) {
+                        Description sample = rb.getSampleDescription();
+                        if (sample == null) {
+                            sample = new Description();
+                        }
+                        //make sure we're not adding params several times
+                        Set<CvParam> allCvParams = new HashSet<CvParam>(sample.getCvParam());
+                        Set<UserParam> allUserParams = new HashSet<UserParam>(sample.getUserParam());
+                        if (obj instanceof CvParam) {
+                            allCvParams.add((CvParam) obj);
+                        } else {
+                            allUserParams.add((UserParam) obj);
+                        }
+                        sample.getCvParam().clear();
+                        sample.getCvParam().addAll(allCvParams);
+                        sample.getUserParam().clear();
+                        sample.getUserParam().addAll(allUserParams);
+                    }
+                }
+
+                break;
+
+            case TableModelEvent.UPDATE:
+
+                for (int i = e.getFirstRow(); i <= e.getLastRow(); i++) {
+                    ReportObject obj = masterSamplePanel.getParamAtIndex(i);
+
+                    for (ReportBean rb : ConverterData.getInstance().getCustomeReportFields().values()) {
+                        Description sample = rb.getSampleDescription();
+                        if (sample == null) {
+                            sample = new Description();
+                        }
+                        if (obj instanceof CvParam) {
+
+                            CvParam updatedParam = (CvParam) obj;
+                            //check to see if we have the identical param and, if so, update it
+                            for (Iterator<CvParam> iterator = sample.getCvParam().iterator(); iterator.hasNext(); ) {
+                                CvParam cv = iterator.next();
+                                if (cv.getAccession().equals(updatedParam.getAccession())
+                                        && cv.getCvLabel().equals(updatedParam.getCvLabel())) {
+                                    cv.setName(updatedParam.getName());
+                                    cv.setValue(updatedParam.getValue());
+                                }
+                            }
+
+                        } else {
+                            UserParam updatedParam = (UserParam) obj;
+                            //check to see if we have the identical param and, if so, update it
+                            for (Iterator<UserParam> iterator = sample.getUserParam().iterator(); iterator.hasNext(); ) {
+                                UserParam user = iterator.next();
+                                if (user.getName().equals(updatedParam.getName())) {
+                                    user.setName(updatedParam.getValue());
+                                }
+                            }
+                        }
+
+                    }
+                }
+
+                break;
+
+            case TableModelEvent.DELETE:
+
+                //the table model event will tell you which rows have been deleted, but
+                //by then you can't access the data back from the model because, duh, it's been deleted.
+                //so we compare the content of the table with the map that we keep
+                //to find which param has been deleted
+                //and then propagate that deletion across all report beans
+                ReportObject obj = findMissingParam();
+
+                for (ReportBean rb : ConverterData.getInstance().getCustomeReportFields().values()) {
+                    Description sample = rb.getSampleDescription();
+                    if (sample == null) {
+                        sample = new Description();
+                    }
+                    if (obj instanceof CvParam) {
+
+                        CvParam deletedParam = (CvParam) obj;
+                        //check to see if we have the identical param and, if so, remove it
+                        for (Iterator<CvParam> iterator = sample.getCvParam().iterator(); iterator.hasNext(); ) {
+                            CvParam cv = iterator.next();
+                            if (cv.getAccession().equals(deletedParam.getAccession()) && cv.getCvLabel().equals(deletedParam.getCvLabel())) {
+                                iterator.remove();
+                            }
+                        }
+
+                    } else {
+                        //check to see if we have the identical param and, if so, remove it
+                        UserParam deletedParam = (UserParam) obj;
+                        for (Iterator<UserParam> iterator = sample.getUserParam().iterator(); iterator.hasNext(); ) {
+                            if (iterator.next().getName().equals(deletedParam.getName())) {
+                                iterator.remove();
+                            }
+                        }
+                    }
+
+                }
+
+                break;
+
+        }
+
+        //third, update all open tabs
+        for (int i = 1; i < tabbedPane1.getTabCount(); i++) {
+
+            SamplePanel panel = (SamplePanel) tabbedPane1.getComponentAt(i);
+            //store description in memory for now, it will be validated later
+            ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(panel.getSourceFile());
+            if (rb != null) {
+                panel.setSampleParams(rb.getSampleDescription());
+            }
+
+        }
+
+    }
+
+    private ReportObject findMissingParam() {
+
+        //loop over all current cv params and build set
+        Param currentParams = masterSamplePanel.getSampleParams();
+        Set<String> currentParamSet = new HashSet<String>();
+        for (CvParam cv : currentParams.getCvParam()) {
+            currentParamSet.add(cv.getCvLabel() + paramSeparator + cv.getAccession());
+        }
+        for (UserParam up : currentParams.getUserParam()) {
+            currentParamSet.add(up.getName());
+        }
+        //set set operations to calculate difference
+        paramModelEventTracker.removeAll(currentParamSet);
+        //delete operations should only remove one row at a time, so if there is more than
+        //one element, complain vigorously.
+        if (paramModelEventTracker.size() == 1) {
+            //get deleted param
+            String deletedParamStr = paramModelEventTracker.iterator().next();
+            //update collection for later use
+            paramModelEventTracker.clear();
+            paramModelEventTracker.addAll(currentParamSet);
+            //create valid return value
+            int ndx = deletedParamStr.indexOf(paramSeparator);
+            if (ndx > -1) {
+                String cv = deletedParamStr.substring(0, ndx);
+                String ac = deletedParamStr.substring(ndx + paramSeparator.length());
+                return new CvParam(cv, ac, null, null);
+            } else {
+                return new UserParam(deletedParamStr, null);
+            }
+        } else {
+            throw new IllegalStateException("Error determining deleted param!");
+        }
+
     }
 
 }

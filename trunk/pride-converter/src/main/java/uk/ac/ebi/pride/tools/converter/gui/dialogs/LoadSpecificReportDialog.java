@@ -7,6 +7,7 @@ package uk.ac.ebi.pride.tools.converter.gui.dialogs;
 import uk.ac.ebi.pride.tools.converter.gui.forms.SampleForm;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
+import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -42,6 +43,7 @@ public class LoadSpecificReportDialog extends JDialog {
         TreeSet<String> files = new TreeSet<String>();
         files.addAll(ConverterData.getInstance().getInputFiles());
         sourceFileList.setListData(files.toArray());
+        sourceFileList.setCellRenderer(new ReportDialogListCellRenderer());
     }
 
     private void sourceFileListMouseClicked(MouseEvent e) {
@@ -52,9 +54,10 @@ public class LoadSpecificReportDialog extends JDialog {
 
     private void okButtonActionPerformed() {
         if (sourceFileList.getSelectedIndex() > -1) {
-            String fileName = sourceFileList.getSelectedValue().toString();
-            ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fileName);
-            callback.addPaneForSample(fileName, rb);
+            for (Object fileName : sourceFileList.getSelectedValues()) {
+                ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fileName.toString());
+                callback.addPaneForSample(fileName.toString(), rb);
+            }
             setVisible(false);
         }
     }
@@ -91,6 +94,7 @@ public class LoadSpecificReportDialog extends JDialog {
                 {
 
                     //---- sourceFileList ----
+                    sourceFileList.setToolTipText("Select one or more files to add custom annotations to.");
                     sourceFileList.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -168,4 +172,19 @@ public class LoadSpecificReportDialog extends JDialog {
     private JButton okButton;
     private JButton cancelButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+
+    private class ReportDialogListCellRenderer extends DefaultListCellRenderer {
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(value);
+            //if there is already a report bean for this list item
+            if (rb != null && rb.getSampleDescription() != null) {
+                label.setFont(label.getFont().deriveFont(Font.BOLD));
+            }
+            label.setText(IOUtilities.getShortSourceFilePath(value.toString()));
+            return label;
+        }
+    }
 }
