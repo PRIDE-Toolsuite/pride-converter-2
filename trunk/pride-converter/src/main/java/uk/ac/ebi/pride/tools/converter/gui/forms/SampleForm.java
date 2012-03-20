@@ -409,10 +409,11 @@ public class SampleForm extends AbstractForm implements ActionListener, TableMod
                         //make sure we're not adding params several times
                         Set<CvParam> allCvParams = new HashSet<CvParam>(sample.getCvParam());
                         Set<UserParam> allUserParams = new HashSet<UserParam>(sample.getUserParam());
+                        //ensure that cascaded param changes keep protected status!!!
                         if (obj instanceof CvParam) {
-                            allCvParams.add((CvParam) obj);
+                            allCvParams.add(new ProtectedCvParam((CvParam) obj));
                         } else {
-                            allUserParams.add((UserParam) obj);
+                            allUserParams.add(new ProtectedUserParam((UserParam) obj));
                         }
                         sample.getCvParam().clear();
                         sample.getCvParam().addAll(allCvParams);

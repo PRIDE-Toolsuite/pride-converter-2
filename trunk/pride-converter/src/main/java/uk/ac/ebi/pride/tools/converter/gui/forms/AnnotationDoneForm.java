@@ -19,6 +19,7 @@ import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -198,6 +199,11 @@ public class AnnotationDoneForm extends AbstractForm {
                     throw new ConverterException("Could not overwrite master report file");
                 }
             }
+
+            //at this point, the report file has been modified and the xxindex offsets in the report reader
+            //are no longer valid, so we need to update the master dao otherwise we get XML errors in back/forth navigation
+            ReportReaderDAO dao = new ReportReaderDAO(new File(ConverterData.getInstance().getMasterFile().getReportFile()));
+            ConverterData.getInstance().setMasterDAO(dao);
 
             //copy metadata over to other report files, if any
             //only need to copy metadata if we have several input files at once
