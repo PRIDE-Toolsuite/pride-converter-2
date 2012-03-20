@@ -175,7 +175,7 @@ public class FileExportForm extends AbstractForm {
                     }
 
                     //write xml
-                    PrideXmlWriter out = new PrideXmlWriter(prideFile, reader, dao, filterPanel1.isGzipped());
+                    PrideXmlWriter out = new PrideXmlWriter(prideFile, reader, dao, filterPanel1.isGzipped(), filterPanel1.isSubmitToIntact());
                     out.setIncludeOnlyIdentifiedSpectra(filterPanel1.isIncludeOnlyIdentifiedSpectra());
 
                     logger.warn("Writing PRIDE XML to " + out.getOutputFilePath());
