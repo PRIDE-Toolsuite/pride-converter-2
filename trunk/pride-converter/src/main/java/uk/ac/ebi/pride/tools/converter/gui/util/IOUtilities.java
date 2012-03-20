@@ -38,6 +38,7 @@ public class IOUtilities {
     public static final String SPOT_IDENTIFIER = "Spot Identifier";
     public static final String SPOT_REGULAR_EXPRESSION = "Spot Regular Expression";
     public static final String COMPRESS = "Compress output file";
+    public static final String GENERATE_QUANT_FIELDS = "Generate Quantitation Fields";
 
     public static String getShortSourceFilePath(String filePath) {
         //return foo/bar instead of bla/baz/foo/bar
@@ -142,6 +143,9 @@ public class IOUtilities {
         String gelId = null, spotId = null;
         Pattern spotPattern = null;
 
+        //check to see if we're creating quant reagents
+        int quantFieldsToGenerate = 0;
+
         if (options.getProperty(GEL_IDENTIFIER) != null && !"".equals(options.getProperty(GEL_IDENTIFIER))) {
             gelId = options.getProperty(GEL_IDENTIFIER);
             //do not pass non-dao option
@@ -157,6 +161,17 @@ public class IOUtilities {
             spotPattern = Pattern.compile(regex);
             //do not pass non-dao option
             localOptions.remove(SPOT_REGULAR_EXPRESSION);
+        }
+        if (options.getProperty(GENERATE_QUANT_FIELDS) != null && !"".equals(options.getProperty(GENERATE_QUANT_FIELDS))) {
+            String quantStr = options.getProperty(GENERATE_QUANT_FIELDS);
+            try {
+                quantFieldsToGenerate = Integer.parseInt(quantStr);
+            } catch (NumberFormatException e) {
+                logger.error("invalid number passed to generate quantitation fields, ignoring!");
+                quantFieldsToGenerate = 0;
+            }
+            //do not pass non-dao option
+            localOptions.remove(GENERATE_QUANT_FIELDS);
         }
 
         for (File file : inputFiles) {
@@ -175,11 +190,10 @@ public class IOUtilities {
                 // write the mztab file
                 MzTabWriter writer;
 
-                // TODO: replace the "0" with the number set by the user (number of reagents)
                 if (spotPattern != null)
-                    writer = new MzTabWriter(dao, 0, gelId, spotPattern);
+                    writer = new MzTabWriter(dao, quantFieldsToGenerate, gelId, spotPattern);
                 else
-                    writer = new MzTabWriter(dao, 0, gelId, spotId);
+                    writer = new MzTabWriter(dao, quantFieldsToGenerate, gelId, spotId);
 
                 String tabFile = file.getAbsolutePath() + ConverterData.MZTAB;
 

@@ -628,11 +628,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
                     //---- forceRegenerationBox ----
                     forceRegenerationBox.setText(bundle.getString("SelecFilePanel.forceRegenerationBox.text"));
+                    forceRegenerationBox.setHorizontalAlignment(SwingConstants.LEFT);
                     gridOptionPanel.add(forceRegenerationBox);
 
                     //---- useHybridSearchDatabase ----
                     useHybridSearchDatabase.setText(bundle.getString("SelecFilePanel.useHybridSearchDatabase.text"));
                     useHybridSearchDatabase.setSelected(true);
+                    useHybridSearchDatabase.setHorizontalAlignment(SwingConstants.LEFT);
                     useHybridSearchDatabase.addChangeListener(new ChangeListener() {
                         @Override
                         public void stateChanged(ChangeEvent e) {
@@ -654,7 +656,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         advancedOptionPanelLayout.createParallelGroup()
                                 .addGroup(advancedOptionPanelLayout.createSequentialGroup()
                                         .addComponent(gridOptionPanel, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-                                        .addContainerGap(12, Short.MAX_VALUE))
+                                        .addContainerGap(13, Short.MAX_VALUE))
                 );
             }
 
@@ -684,13 +686,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                             .addGroup(parserOptionPanelLayout.createSequentialGroup()
                                     .addComponent(showHideLabel)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tableScrollPane, GroupLayout.PREFERRED_SIZE, 226, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tableScrollPane, GroupLayout.DEFAULT_SIZE, 225, Short.MAX_VALUE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addGroup(parserOptionPanelLayout.createParallelGroup()
-                                            .addGroup(parserOptionPanelLayout.createSequentialGroup()
-                                                    .addComponent(parserOptionHelpButton)
-                                                    .addGap(62, 62, 62))
-                                            .addComponent(advancedOptionPanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                            .addComponent(parserOptionHelpButton)
+                                            .addComponent(advancedOptionPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
             );
         }
         add(parserOptionPanel, BorderLayout.CENTER);
@@ -1410,12 +1410,16 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
             props.add(gelIdentifier);
 
             DAOProperty<String> spotIdentifier = new DAOProperty<String>(IOUtilities.SPOT_IDENTIFIER, null);
-            gelIdentifier.setDescription("Sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.");
+            spotIdentifier.setDescription("Sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.");
             props.add(spotIdentifier);
 
             DAOProperty<String> spotRegex = new DAOProperty<String>(IOUtilities.SPOT_REGULAR_EXPRESSION, null);
-            gelIdentifier.setDescription("Used to extract the gel spot identifier based on the sourcefile's name. The first matching group in the pattern is used as a spot identifier.");
+            spotRegex.setDescription("Used to extract the gel spot identifier based on the sourcefile's name. The first matching group in the pattern is used as a spot identifier.");
             props.add(spotRegex);
+
+            DAOProperty<String> generateQuantFields = new DAOProperty<String>(IOUtilities.GENERATE_QUANT_FIELDS, "0");
+            generateQuantFields.setDescription("Adds (empty) quantitative fields to the generated mzTab file for the number of specified reagents.");
+            props.add(generateQuantFields);
         }
 
         //if we're merging XML, add those properties at the start of the list

@@ -8,7 +8,6 @@ import java.awt.*;
  * User: rcote
  * Date: 13/12/11
  * Time: 15:49
- * To change this template use File | Settings | File Templates.
  */
 public class ParserOptionCellEditor extends DefaultCellEditor {
 

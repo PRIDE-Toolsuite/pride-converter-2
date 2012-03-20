@@ -467,7 +467,7 @@
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq l {comp showHideLabel:::p::p, space :::p, comp tableScrollPane:::p:226:p, space :::p, par l {seq l {comp parserOptionHelpButton:::p::p, space :62:62:62}, comp advancedOptionPanel::l:::x}}}</string> 
+          <string>par l {seq l {comp showHideLabel:::p::p, space :::p, comp tableScrollPane::::225:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -565,7 +565,7 @@
            </void> 
            <void method="setProperty"> 
             <string>$verticalGroup</string> 
-            <string>par l {seq l {comp gridOptionPanel:::p:75:p, space ::12:x}}</string> 
+            <string>par l {seq l {comp gridOptionPanel:::p:75:p, space ::13:x}}</string> 
            </void> 
           </object> 
           <void method="setProperty"> 
@@ -598,6 +598,10 @@
                 <string>SelecFilePanel.forceRegenerationBox.text</string> 
                </object> 
               </void> 
+              <void method="setProperty"> 
+               <string>horizontalAlignment</string> 
+               <int>2</int> 
+              </void> 
               <void property="name"> 
                <string>forceRegenerationBox</string> 
               </void> 
@@ -616,6 +620,10 @@
               <void method="setProperty"> 
                <string>selected</string> 
                <boolean>true</boolean> 
+              </void> 
+              <void method="setProperty"> 
+               <string>horizontalAlignment</string> 
+               <int>2</int> 
               </void> 
               <void property="name"> 
                <string>useHybridSearchDatabase</string> 
