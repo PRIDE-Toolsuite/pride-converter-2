@@ -3,7 +3,6 @@ package uk.ac.ebi.pride.tools.converter.dao_crux_txt;
 import junit.framework.TestCase;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxIdentificationsParserResult;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.parsers.CruxTxtIdentificationsParser;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.File;
 import java.util.Map;
@@ -14,9 +13,8 @@ import java.util.Map;
  */
 public class CruxTxtIdentificationParserTest extends TestCase {
 
-    private String targetFilePath = "src/test/resources/search.target-short.txt";
-    private String decoyFilePath = "src/test/resources/search.decoy-short.txt";
-    private String wrongFilePath = "src/test/resources/search.target-short-wrong.txt";
+    private String targetFilePath = "src/test/resources/crux-output/search.target.txt";
+    private String decoyFilePath = "src/test/resources/crux-output/search.decoy.txt";
     private Map<String, Integer> header;
     private CruxIdentificationsParserResult parserResults;
 
@@ -46,28 +44,19 @@ public class CruxTxtIdentificationParserTest extends TestCase {
     public void testParse() throws Exception {
         parserResults = CruxTxtIdentificationsParser.parse(new File(targetFilePath));
 
-        assertEquals(parserResults.proteins.size(), 39);
+        assertEquals(parserResults.proteins.size(), 14880);
 
-        assertEquals(parserResults.peptideCount, 10);
+        assertEquals(parserResults.peptideCount, 25010);
 
     }
 
     public void testParseDecoy() throws Exception {
         parserResults = CruxTxtIdentificationsParser.parse(new File(decoyFilePath));
 
-        assertEquals(parserResults.proteins.size(), 19);
+        assertEquals(parserResults.proteins.size(), 19980);
 
-        assertEquals(parserResults.peptideCount, 10);
+        assertEquals(parserResults.peptideCount, 25005);
 
-    }
-
-    public void testParseWrong() throws Exception {
-         try {
-             parserResults = CruxTxtIdentificationsParser.parse(new File(wrongFilePath));
-             throw new Exception(); // if test OK, we should never get this point
-         } catch (Exception e) {
-             assertTrue(e.getClass() == ConverterException.class);
-         }
     }
 
 }

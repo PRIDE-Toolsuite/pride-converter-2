@@ -18,7 +18,7 @@ public class CruxPeptideTest extends TestCase {
 
     CruxPeptide cruxPeptide;
     CruxParametersParserResult params;
-    private String paramsFilePath = "src/test/resources/search.params.txt";
+    private String paramsFilePath = "src/test/resources/crux-output/search.params.txt";
 
     public void setUp() throws Exception {
         cruxPeptide = new CruxPeptide(

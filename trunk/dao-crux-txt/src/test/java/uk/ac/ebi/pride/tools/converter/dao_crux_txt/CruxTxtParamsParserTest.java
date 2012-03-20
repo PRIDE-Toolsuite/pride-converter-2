@@ -13,7 +13,7 @@ import java.io.File;
  */
 public class CruxTxtParamsParserTest extends TestCase {
 
-    private String paramsFilePath = "src/test/resources/search.params.txt";
+    private String paramsFilePath = "src/test/resources/crux-output/search.params.txt";
     CruxParametersParserResult parserResult;
     
     public void setUp() throws Exception {
