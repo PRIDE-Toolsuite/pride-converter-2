@@ -120,7 +120,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     /**
 	 * Peptides found in the Crux-txt file.
 	 */
-	private int peptideCount = 0;
+//	private int peptideCount = 0;
 
 //    /**
 //	 * The spectra ids in the peak list format
@@ -188,12 +188,12 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         header = resTarget.header;
         proteins = resTarget.proteins;
         identifiedSpecIds = resTarget.identifiedSpecIds;
-        peptideCount = resTarget.peptideCount;
+//        peptideCount = resTarget.peptideCount;
         targetFileIndex = resTarget.fileIndex;
         // parse decoy file
         CruxIdentificationsParserResult resDecoy = parser.parse(decoyFile);
         proteinsDecoy = resDecoy.proteins;
-        peptideCount = peptideCount + resDecoy.peptideCount;
+//        peptideCount = peptideCount + resDecoy.peptideCount;
         decoyFileIndex = resDecoy.fileIndex;
         // parse parameter file
         params = CruxTxtParamsParser.parse(propertiesFile);
@@ -404,8 +404,12 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
      *
      * @return
      */
-	public Param getProcessingMethod() {
-		return null;
+	public Param getProcessingMethod() {    // todo: check this with JG
+        Param param = new Param();
+        DAOCvParams cvParam = DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE;
+        cvParam.setValue(this.properties.getProperty("precursor-window") + " " + this.properties.getProperty("precursor-window-type"));
+        param.getCvParam().add(cvParam.getParam());
+		return param;
 	}
 
     /**
@@ -830,7 +834,6 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         if (spectraFileType == null)
             throw new InvalidFormatException("Unsupported spectra file type used (" + filename + ")");
     }
-
 
 
 }

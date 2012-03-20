@@ -76,6 +76,12 @@ public class CruxTxtParamsParser {
     private static Pattern nterminalFixedPTMPattern = Pattern.compile(nterminalFixedPTMRegex);
 
     /**
+     * fragment-mass
+     */
+    private static final String fragmentMassRegex = "fragment-mass=[average|mono]";
+    private static Pattern fragmentMassPattern = Pattern.compile(fragmentMassRegex);
+
+    /**
      * The main parsing method
      * @param file
      * @return Returns a Parameters data structure build up from the file
@@ -209,9 +215,17 @@ public class CruxTxtParamsParser {
                         continue;
                     }
 
-                    // check if its
 
 
+                    // check if its fragment-mass=average|mono (average not supported) - todo: check this with JG
+                    m = fragmentMassPattern.matcher(line);
+                    if (m.find()) {
+                        // check it is not average
+                        if ("average".equals(parameter[1])) {
+                            throw new ConverterException("fragment-mass=average not supported");
+                        }
+                    }
+                    
                     // Then is a "regular" parameter - todo: differentiate here more parameter types (cvParams, etc)
                     result.properties.setProperty(parameter[0],parameter[1]);
 
