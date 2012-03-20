@@ -34,7 +34,8 @@ public class PrideConverterCLIOptions {
         SPOT_IDENTIFIER("gel_spot_identifier"),
         SPOT_REGEX("gel_spot_regex"),
         GEL_IDENTIFIER("gel_identifier"),
-        GENERATE_QUANT_FIELDS("generate_quant_fields");
+        GENERATE_QUANT_FIELDS("generate_quant_fields"),
+        SUBMIT_TO_INTACT("submit_to_intact");
 
         private String value;
 
@@ -55,6 +56,7 @@ public class PrideConverterCLIOptions {
         Option version = new Option(OPTIONS.VERSION.getValue(), "print the version information and exit");
         Option debug = new Option(OPTIONS.DEBUG.getValue(), "print debugging information");
         Option compress = new Option(OPTIONS.COMPRESS.getValue(), "turn on gzip compression for output file");
+        Option submitToIntact = new Option(OPTIONS.SUBMIT_TO_INTACT.getValue(), "Indicates that the generated XML file contains interaction data that should be submitted to IntAct");
 
         Option reportFile = OptionBuilder.withArgName("file")
                 .hasArg()
@@ -126,10 +128,10 @@ public class PrideConverterCLIOptions {
                 .create(OPTIONS.SPOT_REGEX.getValue());
 
         Option generateQuantFields = OptionBuilder.withArgName("nr. of reagents")
-        		.hasArg()
-        		.withDescription("adds (empty) quantitative fields to the generated mzTab file for the number of specified reagents.")
-        		.create(OPTIONS.GENERATE_QUANT_FIELDS.getValue());
-        
+                .hasArg()
+                .withDescription("adds (empty) quantitative fields to the generated mzTab file for the number of specified reagents.")
+                .create(OPTIONS.GENERATE_QUANT_FIELDS.getValue());
+
         Option property = OptionBuilder.withArgName("property=value")
                 .hasArgs(2)
                 .withValueSeparator()
@@ -156,6 +158,7 @@ public class PrideConverterCLIOptions {
         options.addOption(generateQuantFields);
         options.addOption(onlyIdentified);
         options.addOption(useHybridSearchDb);
+        options.addOption(submitToIntact);
 
     }
 

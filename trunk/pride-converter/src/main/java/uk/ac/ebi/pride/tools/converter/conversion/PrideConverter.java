@@ -225,7 +225,7 @@ public class PrideConverter {
                 //update DAO configuration based on report
                 dao.setConfiguration(reader.getConfigurationOptions().asProperties());
                 //write xml
-                PrideXmlWriter out = new PrideXmlWriter(outputFile, reader, dao, line.hasOption("compress"));
+                PrideXmlWriter out = new PrideXmlWriter(outputFile, reader, dao, line.hasOption(PrideConverterCLIOptions.OPTIONS.COMPRESS.getValue()), line.hasOption(PrideConverterCLIOptions.OPTIONS.SUBMIT_TO_INTACT.getValue()));
                 out.setIncludeOnlyIdentifiedSpectra(reportOnlyIdentified);
 
                 if (debug) {
@@ -263,7 +263,7 @@ public class PrideConverter {
                     spotPattern = Pattern.compile(regex);
                 }
                 if (line.hasOption(PrideConverterCLIOptions.OPTIONS.GENERATE_QUANT_FIELDS.getValue())) {
-                	subsampleFields = Integer.parseInt(line.getOptionValue(PrideConverterCLIOptions.OPTIONS.GENERATE_QUANT_FIELDS.getValue()));
+                    subsampleFields = Integer.parseInt(line.getOptionValue(PrideConverterCLIOptions.OPTIONS.GENERATE_QUANT_FIELDS.getValue()));
                 }
 
                 // write the mztab file

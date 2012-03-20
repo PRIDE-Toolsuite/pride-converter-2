@@ -194,6 +194,13 @@ public class MzTabFileMappingForm extends AbstractForm {
         col = mappingTable.getColumnModel().getColumn(0);
         col.setCellRenderer(new ShortFilePathStringRenderer());
 
+        //resize table
+        int width = mappingTable.getWidth();
+        mappingTable.getColumnModel().getColumn(0).setWidth((int) Math.floor(width * 0.33));
+        mappingTable.getColumnModel().getColumn(1).setWidth((int) Math.floor(width * 0.66));
+        mappingTable.revalidate();
+        mappingTable.repaint();
+
     }
 
     @Override
