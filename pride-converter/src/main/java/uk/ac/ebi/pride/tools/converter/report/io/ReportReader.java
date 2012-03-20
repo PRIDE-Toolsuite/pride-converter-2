@@ -293,7 +293,11 @@ public class ReportReader {
         @SuppressWarnings("unchecked")
         public T next() {
             String xml = xmlStrIterator.next();
-            return (T) unmarshaller.unmarshal(xml, cls);
+            if (xml != null) {
+                return (T) unmarshaller.unmarshal(xml, cls);
+            } else {
+                return null;
+            }
         }
 
         public void remove() {

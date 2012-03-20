@@ -25,7 +25,7 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq l {space :::p, par l {seq l {comp label4:::p::p, space :::p, comp protocolName:::p:187:p, space :::p, comp label5:::p:12:p, space :::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq l {par t:::p {comp scrollPane1::l:::x:1, comp removeStepButton::l:::x:1, comp addStepButton::l::126:x:1}, space :::p, par l {seq {comp label1::::439:x, space :::p, comp addTermButton:::p::p, space :::p, comp editButton:::p::p}, comp protocolTableScrollPane::::551:x}}}, space :::p}}</string> 
+        <string>par l {seq l {space :::p, par l {seq l {comp label4:::p::p, space :::p, comp protocolName:::p:187:p, space :::p, comp label5:::p:12:p, space :::p, comp loadButton:::p::p, space :::p, comp saveButton:::p::p}, seq l {par t:::p {comp removeStepButton::l:p:130:p:1, comp addStepButton::l:p:130:p:1, comp scrollPane1::l:p:130:p:1}, space :::p, par l {seq {comp label1::::435:x, space :::p, comp addTermButton:::p::p, space :::p, comp editButton:::p::p}, comp protocolTableScrollPane::::547:x}}}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
