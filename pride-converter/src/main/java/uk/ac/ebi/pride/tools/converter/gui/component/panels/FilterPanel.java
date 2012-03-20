@@ -158,6 +158,7 @@ public class FilterPanel extends JPanel {
         gzipCheckBox = new JCheckBox();
         includeOnlyIdentifiedSpectraBox = new JCheckBox();
         removeWorkfilesBox = new JCheckBox();
+        intactSubmissionBox = new JCheckBox();
         panel2 = new JPanel();
         removeEmptySpectraBox = new JCheckBox();
         labelDecoyHitsBox = new JCheckBox();
@@ -209,6 +210,9 @@ public class FilterPanel extends JPanel {
             removeWorkfilesBox.setText("Remove temporary work files");
             removeWorkfilesBox.setSelected(true);
 
+            //---- intactSubmissionBox ----
+            intactSubmissionBox.setText("Data contains interactions that should go in IntAct");
+
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
@@ -217,12 +221,13 @@ public class FilterPanel extends JPanel {
                                     .addContainerGap()
                                     .addGroup(panel1Layout.createParallelGroup()
                                             .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                    .addComponent(pathField, GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                                                    .addComponent(pathField, GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                     .addComponent(selectPathButton))
                                             .addComponent(gzipCheckBox)
                                             .addComponent(includeOnlyIdentifiedSpectraBox)
-                                            .addComponent(removeWorkfilesBox))
+                                            .addComponent(removeWorkfilesBox)
+                                            .addComponent(intactSubmissionBox))
                                     .addContainerGap())
             );
             panel1Layout.setVerticalGroup(
@@ -237,7 +242,9 @@ public class FilterPanel extends JPanel {
                                     .addComponent(includeOnlyIdentifiedSpectraBox)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(removeWorkfilesBox)
-                                    .addContainerGap(10, Short.MAX_VALUE))
+                                    .addGap(4, 4, 4)
+                                    .addComponent(intactSubmissionBox)
+                                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
         }
 
@@ -357,33 +364,33 @@ public class FilterPanel extends JPanel {
                             .addGroup(panel2Layout.createSequentialGroup()
                                     .addContainerGap()
                                     .addGroup(panel2Layout.createParallelGroup()
-                                            .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(removeEmptySpectraBox)
-                                                    .addGroup(panel2Layout.createSequentialGroup()
-                                                            .addComponent(labelDecoyHitsBox)
-                                                            .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                            .addComponent(decoyPatternField, GroupLayout.PREFERRED_SIZE, 104, GroupLayout.PREFERRED_SIZE))
-                                                    .addGroup(panel2Layout.createSequentialGroup()
-                                                            .addComponent(filterScoreBox)
-                                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(scoreFilterTextField))
-                                                    .addGroup(panel2Layout.createSequentialGroup()
-                                                            .addComponent(filterIdentsWIthNbPepBox)
-                                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(nbPeptideFilterTextField, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
-                                                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                            .addComponent(label1)))
+                                            .addComponent(removeEmptySpectraBox)
+                                            .addGroup(panel2Layout.createSequentialGroup()
+                                                    .addComponent(filterScoreBox)
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(scoreFilterTextField, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
                                             .addComponent(blacklistCheckbox)
                                             .addComponent(whitelistCheckbox)
                                             .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
                                                     .addGap(20, 20, 20)
                                                     .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(whitelistTextfield, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
-                                                            .addComponent(blacklistTextfield, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
+                                                            .addComponent(whitelistTextfield, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+                                                            .addComponent(blacklistTextfield, GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE))
                                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                     .addGroup(panel2Layout.createParallelGroup()
                                                             .addComponent(whitelistButton, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(blacklistButton, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE))))
+                                                            .addComponent(blacklistButton, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)))
+                                            .addGroup(panel2Layout.createSequentialGroup()
+                                                    .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                                                            .addGroup(GroupLayout.Alignment.LEADING, panel2Layout.createSequentialGroup()
+                                                                    .addComponent(filterIdentsWIthNbPepBox)
+                                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                    .addComponent(nbPeptideFilterTextField))
+                                                            .addComponent(labelDecoyHitsBox, GroupLayout.Alignment.LEADING))
+                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(panel2Layout.createParallelGroup()
+                                                            .addComponent(label1)
+                                                            .addComponent(decoyPatternField, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE))))
                                     .addContainerGap())
             );
             panel2Layout.setVerticalGroup(
@@ -416,7 +423,7 @@ public class FilterPanel extends JPanel {
                                     .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                             .addComponent(whitelistTextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addComponent(whitelistButton))
-                                    .addContainerGap(36, Short.MAX_VALUE))
+                                    .addContainerGap(46, Short.MAX_VALUE))
             );
         }
 
@@ -427,15 +434,15 @@ public class FilterPanel extends JPanel {
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))
+                                        .addComponent(panel2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, 176, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(panel2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addContainerGap())
@@ -451,6 +458,7 @@ public class FilterPanel extends JPanel {
     private JCheckBox gzipCheckBox;
     private JCheckBox includeOnlyIdentifiedSpectraBox;
     private JCheckBox removeWorkfilesBox;
+    private JCheckBox intactSubmissionBox;
     private JPanel panel2;
     private JCheckBox removeEmptySpectraBox;
     private JCheckBox labelDecoyHitsBox;
@@ -475,6 +483,10 @@ public class FilterPanel extends JPanel {
 
     public boolean isGzipped() {
         return gzipCheckBox.isSelected();
+    }
+
+    public boolean isSubmitToIntact() {
+        return intactSubmissionBox.isSelected();
     }
 
     public boolean isIncludeOnlyIdentifiedSpectra() {
@@ -576,6 +588,7 @@ public class FilterPanel extends JPanel {
         blacklistTextfield.setText(null);
         whitelistCheckbox.setSelected(false);
         whitelistTextfield.setText(null);
+        intactSubmissionBox.setSelected(false);
     }
 
     public boolean isRemoveWorkfiles() {

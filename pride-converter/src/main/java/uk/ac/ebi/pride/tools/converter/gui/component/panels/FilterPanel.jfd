@@ -13,11 +13,11 @@
        <class>org.jdesktop.layout.GroupLayout</class> 
        <void method="setProperty"> 
         <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp panel1::l:::x, comp panel2::l::459:x}, space :::p}}</string> 
+        <string>par l {seq t {space :::p, par t {comp panel2::l:::x, comp panel1::l:::x}, space :::p}}</string> 
        </void> 
        <void method="setProperty"> 
         <string>$verticalGroup</string> 
-        <string>par l {seq t {space :::p, comp panel1:::p::p, space :::p, comp panel2:::::x, space :::p}}</string> 
+        <string>par l {seq l {space :::p, comp panel1:::p:176:p, space :::p, comp panel2:::::x, space :::p}}</string> 
        </void> 
       </object> 
       <void property="name"> 
@@ -30,11 +30,11 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq {space :::p, par l {seq t {comp pathField::::351:x, space :::p, comp selectPathButton:::p::p}, comp gzipCheckBox::l:p::p, comp includeOnlyIdentifiedSpectraBox::l:p::p, comp removeWorkfilesBox::l:p::p}, space :::p}}</string> 
+          <string>par l {seq {space :::p, par l {seq t {comp pathField::::350:x, space :::p, comp selectPathButton:::p::p}, comp gzipCheckBox::l:p::p, comp includeOnlyIdentifiedSpectraBox::l:p::p, comp removeWorkfilesBox::l:p::p, comp intactSubmissionBox::l:p::p}, space :::p}}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq l {par b {comp pathField::b:p:25:p, comp selectPathButton::b:p::p}, space u:::p, comp gzipCheckBox:::p::p, space :::p, comp includeOnlyIdentifiedSpectraBox:::p::p, space :::p, comp removeWorkfilesBox:::p::p, space ::10:x}}</string> 
+          <string>par l {seq l {par b {comp pathField::b:p:25:p, comp selectPathButton::b:p::p}, space u:::p, comp gzipCheckBox:::p::p, space :::p, comp includeOnlyIdentifiedSpectraBox:::p::p, space :::p, comp removeWorkfilesBox:::p::p, space :p:4:p, comp intactSubmissionBox:::p::p, space :::x}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -130,6 +130,18 @@
           </void> 
          </object> 
         </void> 
+        <void method="add"> 
+         <object class="com.jformdesigner.model.FormComponent"> 
+          <string>javax.swing.JCheckBox</string> 
+          <void method="setProperty"> 
+           <string>text</string> 
+           <string>Data contains interactions that should go in IntAct</string> 
+          </void> 
+          <void property="name"> 
+           <string>intactSubmissionBox</string> 
+          </void> 
+         </object> 
+        </void> 
        </object> 
       </void> 
       <void method="add"> 
@@ -139,11 +151,11 @@
          <class>org.jdesktop.layout.GroupLayout</class> 
          <void method="setProperty"> 
           <string>$horizontalGroup</string> 
-          <string>par l {seq l {space :::p, par l {par l:::p {comp removeEmptySpectraBox::l:p::p, seq l {comp labelDecoyHitsBox:::p::p, space u:::p, comp decoyPatternField:::p:104:p}, seq l:::1 {comp filterScoreBox:::p::p:1, space :::p, comp scoreFilterTextField:::::x}, seq l {comp filterIdentsWIthNbPepBox:::p::p:1, space :::p, comp nbPeptideFilterTextField:::p:79:p, space :::p, comp label1:::p::p}}, comp blacklistCheckbox::l:p::p, comp whitelistCheckbox::l:p::p, seq t {space :20:20:p, par t {comp whitelistTextfield::l::288:x, comp blacklistTextfield::t::288:x}, space :::p, par l {comp whitelistButton:::p:123:p, comp blacklistButton::l:p:123:p}}}, space :::p}}</string> 
+          <string>par l {seq l {space :::p, par l {comp removeEmptySpectraBox::l:p::p, seq l:::1 {comp filterScoreBox:::p::p:1, space :::p, comp scoreFilterTextField::::104:x}, comp blacklistCheckbox::l:p::p, comp whitelistCheckbox::l:p::p, seq t {space :20:20:p, par t {comp whitelistTextfield::l::287:x, comp blacklistTextfield::t::287:x}, space :::p, par l {comp whitelistButton:::p:123:p, comp blacklistButton::l:p:123:p}}, seq l {par t:::p {seq l:::1 {comp filterIdentsWIthNbPepBox:::p::p:1, space :::p, comp nbPeptideFilterTextField:::::x}, comp labelDecoyHitsBox::l:p::p}, space :::p, par l {comp label1:::p::p, comp decoyPatternField::l::114:x}}}, space :::p}}</string> 
          </void> 
          <void method="setProperty"> 
           <string>$verticalGroup</string> 
-          <string>par l {seq l {space :p:15:p, comp removeEmptySpectraBox:::p::p, space s:::p, par b {comp labelDecoyHitsBox::b:p::p, comp decoyPatternField::b:p::p}, space s:::p, par b {comp filterIdentsWIthNbPepBox::b:p::p, comp nbPeptideFilterTextField::b:p::p, comp label1::b:p::p}, space s:::p, par b {comp filterScoreBox::b:p::p, comp scoreFilterTextField::b:p::p}, space s:::p, comp blacklistCheckbox:::p::p, space :::p, par b {comp blacklistTextfield::b:p::p, comp blacklistButton::b:p::p}, space u:::p, comp whitelistCheckbox:::p::p, space :::p, par b {comp whitelistTextfield::b:p::p, comp whitelistButton::b:p::p}, space ::36:x}}</string> 
+          <string>par l {seq l {space :p:15:p, comp removeEmptySpectraBox:::p::p, space s:::p, par b {comp labelDecoyHitsBox::b:p::p, comp decoyPatternField::b:p::p}, space s:::p, par b {comp filterIdentsWIthNbPepBox::b:p::p, comp nbPeptideFilterTextField::b:p::p, comp label1::b:p::p}, space s:::p, par b {comp filterScoreBox::b:p::p, comp scoreFilterTextField::b:p::p}, space s:::p, comp blacklistCheckbox:::p::p, space :::p, par b {comp blacklistTextfield::b:p::p, comp blacklistButton::b:p::p}, space u:::p, comp whitelistCheckbox:::p::p, space :::p, par b {comp whitelistTextfield::b:p::p, comp whitelistButton::b:p::p}, space ::46:x}}</string> 
          </void> 
         </object> 
         <void method="setProperty"> 
@@ -415,7 +427,7 @@
        <string>size</string> 
        <object class="java.awt.Dimension"> 
         <int>470</int> 
-        <int>535</int> 
+        <int>565</int> 
        </object> 
       </void> 
      </object> 

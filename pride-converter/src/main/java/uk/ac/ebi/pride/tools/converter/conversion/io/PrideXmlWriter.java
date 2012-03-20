@@ -78,6 +78,7 @@ public class PrideXmlWriter {
     private HashMap<String, PTM> ptmCache;
     private boolean gzipCompress = false;
     private HashMap<String, DatabaseMapping> databaseMappingCache;
+    private boolean submitToIntact = false;
 
     /**
      * Main constructor. Requires an outputfile path as well as a valid ReportReader and DAO
@@ -87,12 +88,13 @@ public class PrideXmlWriter {
      * @param reader         - a report reader object that will parse data from an existing report file
      * @param dao            - a fully-instanciated dao object that will extract data from source files
      */
-    public PrideXmlWriter(String outputFilePath, ReportReader reader, DAO dao, boolean gzipCompress) {
+    public PrideXmlWriter(String outputFilePath, ReportReader reader, DAO dao, boolean gzipCompress, boolean submitToIntact) {
 
         this.outputFilePath = outputFilePath;
         this.reader = reader;
         this.dao = dao;
         this.gzipCompress = gzipCompress;
+        this.submitToIntact = submitToIntact;
         meta = reader.getMetadata();
         prideJaxbMarshaller = PrideXmlMarshallerFactory.getInstance().initializeMarshaller();
         reportJaxbMarshaller = ReportMarshallerFactory.getInstance().initializeMarshaller();
@@ -244,8 +246,12 @@ public class PrideXmlWriter {
                 }
             }
 
-            //close experiment
+            //check to see if we need to submit this experiment to intact
+            if (submitToIntact) {
+                meta.getExperimentAdditional().getCvParam().add(new uk.ac.ebi.pride.tools.converter.report.model.CvParam(DAOCvParams.SUBMIT_TO_INTACT.getCv(), DAOCvParams.SUBMIT_TO_INTACT.getAccession(), DAOCvParams.SUBMIT_TO_INTACT.getName(), null));
+            }
             marshallReportObject(out, meta.getExperimentAdditional());
+            //close experiment
             out.println("</Experiment>");
 
             //close experimentcollection
@@ -785,7 +791,7 @@ public class PrideXmlWriter {
         try {
             DAO mascot = DAOFactory.getInstance().getDAO("/home/rcote/dev/cvs/pride-converter/src/test/resources/F001240.dat", DAOFactory.DAO_FORMAT.MASCOT);
             ReportReader reader = new ReportReader(new File("/home/rcote/dev/cvs/pride-converter/src/test/resources/F001240.dat-report.xml"));
-            PrideXmlWriter out = new PrideXmlWriter("/home/rcote/dev/cvs/pride-converter/out.xml.gz", reader, mascot, false);
+            PrideXmlWriter out = new PrideXmlWriter("/home/rcote/dev/cvs/pride-converter/out.xml.gz", reader, mascot, false, false);
             out.writeXml();
         } catch (InvalidFormatException e) {
             e.printStackTrace();
