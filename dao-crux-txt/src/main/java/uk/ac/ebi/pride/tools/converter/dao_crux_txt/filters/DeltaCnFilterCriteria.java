@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Entries with deltaCn values lower than threshold will pass the filter.
  * @author Jose A. Dianes
  * @version $Id$
  */
@@ -13,7 +14,7 @@ public class DeltaCnFilterCriteria extends FilterCriteria {
     public boolean passFilter(Map<String, Integer> header, String[] values) {
         double threshold = (Double)(this.getThreshold());
         double delta = Double.parseDouble(values[header.get("delta_cn")]);
-        return (delta <= threshold);  // todo: decide if descending or ascending
+        return (delta <= threshold);
     }
 
     @Override

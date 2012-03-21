@@ -96,7 +96,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 	private File spectraFile;
 
     /**
-     *
+     * The spectra file type
      */
     private SpectraType spectraFileType;
 
@@ -115,17 +115,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 	 * DAO used to parse the corresponding peak list
 	 * file.
 	 */
-	private AbstractPeakListDAO peakListDao;   // todo: use this properly
-
-    /**
-	 * Peptides found in the Crux-txt file.
-	 */
-//	private int peptideCount = 0;
-
-//    /**
-//	 * The spectra ids in the peak list format
-//	 */
-//	private List<String> specIds; // todo: use this properly
+	private AbstractPeakListDAO peakListDao;
 
     /**
 	 * List of spectra ids that were identified
@@ -135,7 +125,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     /**
 	 * The search engine reported for the proteins
 	 */
-	private String searchEngine = "Crux"; // todo: check this
+	private String searchEngine = "Crux";
 
     /**
      * Contains all the properties of this DAO (get/setConfiguration)
@@ -188,12 +178,10 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         header = resTarget.header;
         proteins = resTarget.proteins;
         identifiedSpecIds = resTarget.identifiedSpecIds;
-//        peptideCount = resTarget.peptideCount;
         targetFileIndex = resTarget.fileIndex;
         // parse decoy file
         CruxIdentificationsParserResult resDecoy = parser.parse(decoyFile);
         proteinsDecoy = resDecoy.proteins;
-//        peptideCount = peptideCount + resDecoy.peptideCount;
         decoyFileIndex = resDecoy.fileIndex;
         // parse parameter file
         params = CruxTxtParamsParser.parse(propertiesFile);
@@ -404,7 +392,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
      *
      * @return
      */
-	public Param getProcessingMethod() {    // todo: check this with JG
+	public Param getProcessingMethod() {
         Param param = new Param();
         DAOCvParams cvParam = DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE;
         cvParam.setValue(this.properties.getProperty("precursor-window") + " " + this.properties.getProperty("precursor-window-type"));
