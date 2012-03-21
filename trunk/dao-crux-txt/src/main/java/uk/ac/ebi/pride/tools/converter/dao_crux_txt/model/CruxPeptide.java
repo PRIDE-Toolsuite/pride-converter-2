@@ -185,7 +185,6 @@ public class CruxPeptide {
 		return true;
 	}
 
-                               /* todo - REPORT ALSO FIXED!! they are not in the sequence, we have to look for them in the list of PTMs in the DAO */
     /**
      * Returns a list of peptide PTMs associated with this Crux peptide. It includes variable and fixed PTMs (including
      * terminal modifications). It makes use of the parameter parsing result where it can find information about the 

@@ -36,7 +36,7 @@ public class CruxTxtParamsParser {
      * General expressions
      */
     private static final String doubleRegex = "-?\\d+\\.\\d+";
-    private static final String aminoacidRegex = "[A-Z]"; // todo: check if any letter from A to Z identifies an aminoacid
+    private static final String aminoacidRegex = "[A-Z]";
     private static final String terminalModification = doubleRegex+":(-1|\\d+)";
     
     /**
@@ -217,7 +217,7 @@ public class CruxTxtParamsParser {
 
 
 
-                    // check if its fragment-mass=average|mono (average not supported) - todo: check this with JG
+                    // check if its fragment-mass=average|mono (average not supported)
                     m = fragmentMassPattern.matcher(line);
                     if (m.find()) {
                         // check it is not average
@@ -226,7 +226,7 @@ public class CruxTxtParamsParser {
                         }
                     }
                     
-                    // Then is a "regular" parameter - todo: differentiate here more parameter types (cvParams, etc)
+                    // Then is a "regular" parameter
                     result.properties.setProperty(parameter[0],parameter[1]);
 
                 }

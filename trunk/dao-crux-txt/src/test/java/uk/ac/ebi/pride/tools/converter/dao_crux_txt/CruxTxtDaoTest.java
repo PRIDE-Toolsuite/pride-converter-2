@@ -19,12 +19,14 @@ import java.util.Properties;
 public class CruxTxtDaoTest extends TestCase {
 
 
-    private String spectraFilePath = "src/test/resources/spectra.ms2";
+    private static String spectraFilePath = "src/test/resources/spectra.ms2";
+    private static int spectraInFile = 5001;
     private static String resultDirectory = "src/test/resources/crux-output";
 
-    private String decoyPrefix = "DECOY_";
-    private String scoreCriteria = ScoreCriteria.XCORR_RANK.getName();
-    private String threshold = "5";
+    private static String decoyPrefix = "DECOY_";
+    private static String scoreCriteria = ScoreCriteria.XCORR_RANK.getName();
+    private static String threshold = "5";
+
 
     private static CruxTxtDao cruxTxtDao = new CruxTxtDao(new File(resultDirectory));
 
@@ -72,8 +74,13 @@ public class CruxTxtDaoTest extends TestCase {
         while (specAllIt.hasNext()) {
             Spectrum newSpectrum = specAllIt.next();
             count++;
-//            System.out.println("Obtained spectrum: " + newSpectrum.getId());
+            System.out.println("Obtained spectrum: " + newSpectrum.getId());
         }
+
+        assertEquals(spectraCountAll,count);
+
+        assertEquals(spectraCountAll,spectraInFile);
+
     }
 
 }
