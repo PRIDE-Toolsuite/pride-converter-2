@@ -1,0 +1,19 @@
+<instrument>
+    <instrumentName>LTQ Orbitrap</instrumentName>
+    <source>
+        <cvParam cvLabel="MS" accession="MS:1000073" name="electrospray ionization" value=""/>
+        <cvParam cvLabel="MS" accession="MS:1000037" name="polarity" value="positive"/>
+    </source>
+    <analyzerList count="2">
+        <analyzer>
+            <cvParam cvLabel="MS" accession="MS:1000083" name="radial ejection linear ion trap" value=""/>
+        </analyzer>
+        <analyzer>
+            <cvParam cvLabel="MS" accession="MS:1000484" name="orbitrap" value=""/>
+        </analyzer>
+    </analyzerList>
+    <detector>
+        <cvParam cvLabel="MS" accession="MS:1000624" name="inductive detector" value=""/>
+    </detector>
+    <additional/>
+</instrument>
