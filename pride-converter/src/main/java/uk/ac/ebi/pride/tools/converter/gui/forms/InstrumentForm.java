@@ -8,11 +8,14 @@ import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
+import uk.ac.ebi.pride.tools.converter.gui.component.combobox.CvComboBoxModel;
+import uk.ac.ebi.pride.tools.converter.gui.component.combobox.IgnoreKeySelectionManager;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParamTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.LoadTemplateDialog;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateType;
+import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.InstrumentDescription;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
@@ -25,9 +28,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Collection;
-import java.util.ResourceBundle;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * @author Melih Birim
@@ -39,6 +40,7 @@ public class InstrumentForm extends AbstractForm {
     private Vector<ParamTable> analyzerTables = new Vector<ParamTable>();
 
     private static final String ANALYZER_PREFIX = "";
+    private Map<String, String> fragmentationCache = new HashMap<String, String>();
 
     public InstrumentForm() {
         initComponents();
@@ -51,6 +53,13 @@ public class InstrumentForm extends AbstractForm {
         updateTermButtonCvList(addTermButton, "instrument.suggested.cv");
         removeAnalyzerButton.setEnabled(false);
         saveButton.setEnabled(false);
+
+        fragmentationMethodComboBox.setKeySelectionManager(new IgnoreKeySelectionManager());
+        fragmentationMethodComboBox.addKeyListener(new IgnoreKeySelectionManager());
+        fragmentationCache = TemplateUtilities.initMapCache("/templates/fragmentation.txt");
+        fragmentationCache.remove(TemplateUtilities.PLEASE_SELECT);
+        fragmentationCache.remove(TemplateUtilities.SELECT_OTHER);
+        fragmentationMethodComboBox.setModel(new CvComboBoxModel("MS", false, fragmentationCache.values().toArray()));
 
     }
 
@@ -155,6 +164,10 @@ public class InstrumentForm extends AbstractForm {
         }
     }
 
+    private void fragmentationMethodComboBoxItemStateChanged(ItemEvent e) {
+        // TODO add your code here
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -183,6 +196,8 @@ public class InstrumentForm extends AbstractForm {
         sourceEditButton = new JButton();
         analyzerEditButton = new JButton();
         detectorEditButton = new JButton();
+        label6 = new JLabel();
+        fragmentationMethodComboBox = new JComboBox();
 
         //======== this ========
 
@@ -289,6 +304,7 @@ public class InstrumentForm extends AbstractForm {
 
         //---- removeAnalyzerButton ----
         removeAnalyzerButton.setText(bundle.getString("InstrumentForm.removeAnalyzerButton.text"));
+        removeAnalyzerButton.setFont(new Font("Dialog", Font.BOLD, 10));
         removeAnalyzerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -298,6 +314,7 @@ public class InstrumentForm extends AbstractForm {
 
         //---- addAnalyzerButton ----
         addAnalyzerButton.setText(bundle.getString("InstrumentForm.addAnalyzerButton.text"));
+        addAnalyzerButton.setFont(new Font("Dialog", Font.BOLD, 10));
         addAnalyzerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -342,16 +359,27 @@ public class InstrumentForm extends AbstractForm {
             }
         });
 
+        //---- label6 ----
+        label6.setText(bundle.getString("InstrumentForm.label6.text_2"));
+
+        //---- fragmentationMethodComboBox ----
+        fragmentationMethodComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                fragmentationMethodComboBoxItemStateChanged(e);
+            }
+        });
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 623, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(scrollPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 703, Short.MAX_VALUE)
+                                        .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 703, Short.MAX_VALUE)
+                                        .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                         .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                                                 .addComponent(label4)
@@ -363,32 +391,35 @@ public class InstrumentForm extends AbstractForm {
                                                                 .addComponent(loadButton)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(saveButton))
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(label1)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 468, Short.MAX_VALUE)
-                                                                .addComponent(addSourceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(label2)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
-                                                                .addComponent(addAnalyzerButton)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(removeAnalyzerButton)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                                                        .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(label3)
-                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 455, Short.MAX_VALUE)
-                                                                .addComponent(addDetectorButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(label1, GroupLayout.Alignment.LEADING)
+                                                        .addComponent(label2, GroupLayout.Alignment.LEADING))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                        .addGroup(layout.createParallelGroup()
-                                                                .addComponent(sourceEditButton)
-                                                                .addComponent(analyzerEditButton))
-                                                        .addComponent(detectorEditButton)))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(scrollPane3, GroupLayout.PREFERRED_SIZE, 86, GroupLayout.PREFERRED_SIZE)
-                                                .addGap(4, 4, 4)
-                                                .addComponent(analyzerScrollPane, GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(addSourceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(sourceEditButton))
+                                                        .addGroup(layout.createSequentialGroup()
+                                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(analyzerEditButton))))
+                                        .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup()
+                                                        .addComponent(removeAnalyzerButton, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(addAnalyzerButton, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(scrollPane3, GroupLayout.PREFERRED_SIZE, 135, GroupLayout.PREFERRED_SIZE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(analyzerScrollPane, GroupLayout.DEFAULT_SIZE, 562, Short.MAX_VALUE))
+                                        .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(label6)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(fragmentationMethodComboBox, 0, 528, Short.MAX_VALUE))
+                                        .addGroup(GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(label3)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 535, Short.MAX_VALUE)
+                                                .addComponent(addDetectorButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(detectorEditButton)))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -396,7 +427,6 @@ public class InstrumentForm extends AbstractForm {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(sourceEditButton)
                                         .addGroup(layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -406,31 +436,39 @@ public class InstrumentForm extends AbstractForm {
                                                                 .addComponent(instrumentNameField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                                 .addComponent(label5)
                                                                 .addComponent(label4)))
-                                                .addGap(8, 8, 8)
-                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(addSourceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                        .addComponent(label1))))
+                                                .addGap(18, 18, 18)
+                                                .addComponent(label1))
+                                        .addComponent(sourceEditButton)
+                                        .addComponent(addSourceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                                .addComponent(addAnalyzerButton)
-                                                .addComponent(removeAnalyzerButton))
-                                        .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(analyzerEditButton)
-                                        .addComponent(label2))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 140, GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(label6)
+                                        .addComponent(fragmentationMethodComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup()
-                                        .addComponent(analyzerScrollPane, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
-                                        .addComponent(scrollPane3, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(addDetectorButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label3)
-                                        .addComponent(detectorEditButton))
+                                        .addComponent(label2)
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(analyzerEditButton)))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(addAnalyzerButton)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(removeAnalyzerButton)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(scrollPane3, 0, 0, Short.MAX_VALUE))
+                                        .addComponent(analyzerScrollPane, 0, 140, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(label3)
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                                .addComponent(addDetectorButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(detectorEditButton)))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -462,6 +500,8 @@ public class InstrumentForm extends AbstractForm {
     private JButton sourceEditButton;
     private JButton analyzerEditButton;
     private JButton detectorEditButton;
+    private JLabel label6;
+    private JComboBox fragmentationMethodComboBox;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

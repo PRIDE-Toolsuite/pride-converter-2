@@ -312,20 +312,7 @@ public class IOUtilities {
         File masterFile = File.createTempFile("master_report.", ".xml", reportFile.getParentFile());
         masterFile.deleteOnExit();
 
-        FileChannel source = null;
-        FileChannel destination = null;
-        try {
-            source = new FileInputStream(reportFile).getChannel();
-            destination = new FileOutputStream(masterFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-        }
+        copyFile(reportFile, masterFile);
 
         return masterFile;
     }
@@ -397,5 +384,26 @@ public class IOUtilities {
             throw gex;
         }
 
+    }
+
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+        try {
+            source = new FileInputStream(sourceFile).getChannel();
+            destination = new FileOutputStream(destFile).getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            if (source != null) {
+                source.close();
+            }
+            if (destination != null) {
+                destination.close();
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui.util.template;
 
 import org.apache.log4j.Logger;
+import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.gui.util.PreferenceManager;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshallerFactory;
@@ -10,6 +11,7 @@ import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -53,8 +55,9 @@ public class TemplateUtilities {
         return retval;
     }
 
-    public static void initTemplateFolders() {
+    public static void initTemplates() {
 
+        //make directories if they don't already exist
         File templateDir = getUserTemplateDir();
         for (TemplateType type : TemplateType.values()) {
             File subdir = new File(templateDir, type.getTemplatePath());
@@ -63,6 +66,39 @@ public class TemplateUtilities {
                     throw new ConverterException("Could not create template directory: " + subdir.getAbsolutePath());
                 }
             }
+        }
+
+        //copy default templates if not already there
+        boolean loadDefaultTempaltes = new Boolean(PreferenceManager.getInstance().getProperty(PreferenceManager.PREFERENCE.LOAD_DEFAULT_TEMPLATES));
+        if (loadDefaultTempaltes) {
+
+            for (TemplateType type : TemplateType.values()) {
+
+                try {
+                    URL url = TemplateUtilities.class.getResource("/templates/" + type.getTemplatePath());
+                    if (url != null) {
+                        File file = new File(url.toURI());
+                        File[] templates = file.listFiles();
+                        if (templates != null) {
+                            File subdir = new File(templateDir, type.getTemplatePath());
+                            for (File templateFile : templates) {
+                                File newTemplate = new File(subdir, templateFile.getName());
+                                System.out.println("Init default template: " + newTemplate.getName());
+                                IOUtilities.copyFile(templateFile, newTemplate);
+                            }
+                        }
+                    }
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            //store preferences so that the default templates don't get written every time the conveter starts
+            PreferenceManager.getInstance().setProperty(PreferenceManager.PREFERENCE.LOAD_DEFAULT_TEMPLATES, "false");
         }
 
     }

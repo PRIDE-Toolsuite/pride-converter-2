@@ -21,7 +21,8 @@ public class PreferenceManager {
     private Properties preferences = new Properties();
 
     public enum PREFERENCE {
-        IGNORE_MULTIPLE_FILE_EDITING("ignore.multiple.file.editing");
+        IGNORE_MULTIPLE_FILE_EDITING("ignore.multiple.file.editing"),
+        LOAD_DEFAULT_TEMPLATES("load.default.templates");
 
         String propName;
 
@@ -43,6 +44,8 @@ public class PreferenceManager {
             File userprefs = getPreferenceFile();
             if (!userprefs.exists()) {
                 //if the pref file doesn't exist, write a skeleton one
+                //also if file doesn't exist, set load default templates to true to initialize them
+                preferences.put(PREFERENCE.LOAD_DEFAULT_TEMPLATES.getPropName(), "true");
                 writePreferencesToFile();
             } else {
                 try {

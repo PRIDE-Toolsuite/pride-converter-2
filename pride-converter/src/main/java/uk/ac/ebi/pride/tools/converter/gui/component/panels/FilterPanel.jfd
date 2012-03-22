@@ -1,438 +1,444 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
- <object class="com.jformdesigner.model.FormModel"> 
-  <void property="contentType"> 
-   <string>form/swing</string> 
-  </void> 
-  <void property="root"> 
-   <object class="com.jformdesigner.model.FormRoot"> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormContainer"> 
-      <string>javax.swing.JPanel</string> 
-      <object class="com.jformdesigner.model.FormLayoutManager"> 
-       <class>org.jdesktop.layout.GroupLayout</class> 
-       <void method="setProperty"> 
-        <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp panel2::l:::x, comp panel1::l:::x}, space :::p}}</string> 
-       </void> 
-       <void method="setProperty"> 
-        <string>$verticalGroup</string> 
-        <string>par l {seq l {space :::p, comp panel1:::p:176:p, space :::p, comp panel2:::::x, space :::p}}</string> 
-       </void> 
-      </object> 
-      <void property="name"> 
-       <string>this</string> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JPanel</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>org.jdesktop.layout.GroupLayout</class> 
-         <void method="setProperty"> 
-          <string>$horizontalGroup</string> 
-          <string>par l {seq {space :::p, par l {seq t {comp pathField::::350:x, space :::p, comp selectPathButton:::p::p}, comp gzipCheckBox::l:p::p, comp includeOnlyIdentifiedSpectraBox::l:p::p, comp removeWorkfilesBox::l:p::p, comp intactSubmissionBox::l:p::p}, space :::p}}</string> 
-         </void> 
-         <void method="setProperty"> 
-          <string>$verticalGroup</string> 
-          <string>par l {seq l {par b {comp pathField::b:p:25:p, comp selectPathButton::b:p::p}, space u:::p, comp gzipCheckBox:::p::p, space :::p, comp includeOnlyIdentifiedSpectraBox:::p::p, space :::p, comp removeWorkfilesBox:::p::p, space :p:4:p, comp intactSubmissionBox:::p::p, space :::x}}</string> 
-         </void> 
-        </object> 
-        <void method="setProperty"> 
-         <string>border</string> 
-         <object class="javax.swing.border.TitledBorder"> 
-          <string>Select Output Location</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>panel1</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Path goes here</string> 
-          </void> 
-          <void property="name"> 
-           <string>pathField</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Select</string> 
-          </void> 
-          <void property="name"> 
-           <string>selectPathButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>selectPathButtonActionPerformed</string> 
-            <boolean>true</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Compress output files (gzip)</string> 
-          </void> 
-          <void method="setProperty"> 
-           <string>selected</string> 
-           <boolean>true</boolean> 
-          </void> 
-          <void property="name"> 
-           <string>gzipCheckBox</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Include only identified spectra</string> 
-          </void> 
-          <void property="name"> 
-           <string>includeOnlyIdentifiedSpectraBox</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>enableFiltering</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Remove temporary work files</string> 
-          </void> 
-          <void method="setProperty"> 
-           <string>selected</string> 
-           <boolean>true</boolean> 
-          </void> 
-          <void property="name"> 
-           <string>removeWorkfilesBox</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Data contains interactions that should go in IntAct</string> 
-          </void> 
-          <void property="name"> 
-           <string>intactSubmissionBox</string> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JPanel</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>org.jdesktop.layout.GroupLayout</class> 
-         <void method="setProperty"> 
-          <string>$horizontalGroup</string> 
-          <string>par l {seq l {space :::p, par l {comp removeEmptySpectraBox::l:p::p, seq l:::1 {comp filterScoreBox:::p::p:1, space :::p, comp scoreFilterTextField::::104:x}, comp blacklistCheckbox::l:p::p, comp whitelistCheckbox::l:p::p, seq t {space :20:20:p, par t {comp whitelistTextfield::l::287:x, comp blacklistTextfield::t::287:x}, space :::p, par l {comp whitelistButton:::p:123:p, comp blacklistButton::l:p:123:p}}, seq l {par t:::p {seq l:::1 {comp filterIdentsWIthNbPepBox:::p::p:1, space :::p, comp nbPeptideFilterTextField:::::x}, comp labelDecoyHitsBox::l:p::p}, space :::p, par l {comp label1:::p::p, comp decoyPatternField::l::114:x}}}, space :::p}}</string> 
-         </void> 
-         <void method="setProperty"> 
-          <string>$verticalGroup</string> 
-          <string>par l {seq l {space :p:15:p, comp removeEmptySpectraBox:::p::p, space s:::p, par b {comp labelDecoyHitsBox::b:p::p, comp decoyPatternField::b:p::p}, space s:::p, par b {comp filterIdentsWIthNbPepBox::b:p::p, comp nbPeptideFilterTextField::b:p::p, comp label1::b:p::p}, space s:::p, par b {comp filterScoreBox::b:p::p, comp scoreFilterTextField::b:p::p}, space s:::p, comp blacklistCheckbox:::p::p, space :::p, par b {comp blacklistTextfield::b:p::p, comp blacklistButton::b:p::p}, space u:::p, comp whitelistCheckbox:::p::p, space :::p, par b {comp whitelistTextfield::b:p::p, comp whitelistButton::b:p::p}, space ::46:x}}</string> 
-         </void> 
-        </object> 
-        <void method="setProperty"> 
-         <string>border</string> 
-         <object class="javax.swing.border.TitledBorder"> 
-          <string>Optional Filters</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>panel2</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Remove empty spectra</string> 
-          </void> 
-          <void property="name"> 
-           <string>removeEmptySpectraBox</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>enableFiltering</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Label decoy hits that match this pattern:</string> 
-          </void> 
-          <void property="name"> 
-           <string>labelDecoyHitsBox</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>enableFiltering</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Remove identification with less than</string> 
-          </void> 
-          <void property="name"> 
-           <string>filterIdentsWIthNbPepBox</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>enableFiltering</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void property="name"> 
-           <string>nbPeptideFilterTextField</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.FocusListener</string> 
-            <string>focusLost</string> 
-            <string>nbPeptideFilterTextFieldFocusLost</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>peptides</string> 
-          </void> 
-          <void property="name"> 
-           <string>label1</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Remove identification with score less than</string> 
-          </void> 
-          <void property="name"> 
-           <string>filterScoreBox</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>enableFiltering</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void property="name"> 
-           <string>scoreFilterTextField</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.FocusListener</string> 
-            <string>focusLost</string> 
-            <string>scoreFilterTextFieldFocusLost</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void property="name"> 
-           <string>decoyPatternField</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.FocusListener</string> 
-            <string>focusLost</string> 
-            <string>decoyPatternFieldFocusLost</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Remove selected identifications</string> 
-          </void> 
-          <void property="name"> 
-           <string>blacklistCheckbox</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>blacklistCheckboxActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JCheckBox</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Keep only selected identifications</string> 
-          </void> 
-          <void property="name"> 
-           <string>whitelistCheckbox</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>whitelistCheckboxActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void method="setProperty"> 
-           <string>editable</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void property="name"> 
-           <string>blacklistTextfield</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Select File</string> 
-          </void> 
-          <void property="name"> 
-           <string>blacklistButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>blacklistButtonActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void method="setProperty"> 
-           <string>editable</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void property="name"> 
-           <string>whitelistTextfield</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <string>Select File</string> 
-          </void> 
-          <void property="name"> 
-           <string>whitelistButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>whitelistButtonActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>0</int> 
-        <int>0</int> 
-       </object> 
-      </void> 
-      <void method="setProperty"> 
-       <string>size</string> 
-       <object class="java.awt.Dimension"> 
-        <int>470</int> 
-        <int>565</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-   </object> 
-  </void> 
- </object> 
-</java> 
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.7.0_03" class="java.beans.XMLDecoder">
+ <object class="com.jformdesigner.model.FormModel">
+  <void property="contentType">
+   <string>form/swing</string>
+  </void>
+  <void property="root">
+   <object class="com.jformdesigner.model.FormRoot">
+    <void method="add">
+     <object class="com.jformdesigner.model.FormContainer">
+      <string>javax.swing.JPanel</string>
+      <object class="com.jformdesigner.model.FormLayoutManager">
+       <class>org.jdesktop.layout.GroupLayout</class>
+       <void method="setProperty">
+        <string>$horizontalGroup</string>
+        <string>par l {seq t {space :::p, par t {comp panel2::l::458:x, comp panel1::l:::x}, space :::p}}</string>
+       </void>
+       <void method="setProperty">
+        <string>$verticalGroup</string>
+        <string>par l {seq l {space :::p, comp panel1:::p::p, space :::p, comp panel2:::::x, space :::p}}</string>
+       </void>
+      </object>
+      <void property="name">
+       <string>this</string>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JPanel</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>org.jdesktop.layout.GroupLayout</class>
+         <void method="setProperty">
+          <string>$horizontalGroup</string>
+          <string>par l {seq {space :::p, par l {seq t {comp pathField::::352:x, space :::p, comp selectPathButton:::p::p}, comp gzipCheckBox::l:p::p, comp includeOnlyIdentifiedSpectraBox::l:p::p, comp removeWorkfilesBox::l:p::p, comp intactSubmissionBox::l:p::p}, space :::p}}</string>
+         </void>
+         <void method="setProperty">
+          <string>$verticalGroup</string>
+          <string>par l {seq l {par b {comp pathField::b:p:25:p, comp selectPathButton::b:p::p}, space u:::p, comp gzipCheckBox:::p::p, space :::p, comp includeOnlyIdentifiedSpectraBox:::p::p, space :::p, comp removeWorkfilesBox:::p::p, space :::p, comp intactSubmissionBox:::p::p, space ::15:x}}</string>
+         </void>
+        </object>
+        <void method="setProperty">
+         <string>border</string>
+         <object class="javax.swing.border.TitledBorder">
+          <string>Select Output Location</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>panel1</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Path goes here</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Select the directory where the PRIDE XML files should be
+written to. This defaults to the directory where the search
+engine result files are located. Existing PRIDE XML files
+will be overwritten, if present.</string>
+          </void>
+          <void property="name">
+           <string>pathField</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Select</string>
+          </void>
+          <void property="name">
+           <string>selectPathButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>selectPathButtonActionPerformed</string>
+            <boolean>true</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Compress output files (gzip)</string>
+          </void>
+          <void method="setProperty">
+           <string>selected</string>
+           <boolean>true</boolean>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>If selected, the resulting PRIDE XML files will be
+automatically compressed to save disk space.</string>
+          </void>
+          <void property="name">
+           <string>gzipCheckBox</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Include only identified spectra</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>All unidentified spectra will not be included in the 
+generated PRIDE XML file.
+This option is NOT recommended!</string>
+          </void>
+          <void property="name">
+           <string>includeOnlyIdentifiedSpectraBox</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>enableFiltering</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Remove temporary work files</string>
+          </void>
+          <void method="setProperty">
+           <string>selected</string>
+           <boolean>true</boolean>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>All temporary files generated by the conversion process
+will be deleted when PRIDE Converter exits.</string>
+          </void>
+          <void property="name">
+           <string>removeWorkfilesBox</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Experiment contains interactions data</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Select this option if your data set contains interaction 
+data and you would like to be contacted by a curator for
+inclusion into IntAct.</string>
+          </void>
+          <void property="name">
+           <string>intactSubmissionBox</string>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JPanel</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>org.jdesktop.layout.GroupLayout</class>
+         <void method="setProperty">
+          <string>$horizontalGroup</string>
+          <string>par l {seq {space :::p, par l {seq {comp removeEmptySpectraBox:::p::p, space :p:255:p}, seq l {par l {seq l {space ::1:p, comp filterIdentsWIthNbPepBox:::p::p:1, space :::p, comp nbPeptideFilterTextField::::21:x, space :::p, comp label1:::p::p, space ::62:x}, comp blacklistCheckbox::l:p::p, comp whitelistCheckbox::l:p::p, seq t {space :20:20:p, par t {comp whitelistTextfield::l::293:x, comp blacklistTextfield::t::293:x}, space :::p, par l {comp whitelistButton:::p:123:p, comp blacklistButton::l:p:123:p}}}, space :::p}}}}</string>
+         </void>
+         <void method="setProperty">
+          <string>$verticalGroup</string>
+          <string>par l {seq l {space :p:15:p, comp removeEmptySpectraBox:::p::p, space s:::p, par b {comp filterIdentsWIthNbPepBox::b:p::p, comp nbPeptideFilterTextField::b:p::p, comp label1::b:p::p}, space s:::p, comp blacklistCheckbox:::p::p, space :::p, par b {comp blacklistTextfield::b:p::p, comp blacklistButton::b:p::p}, space u:::p, comp whitelistCheckbox:::p::p, space :::p, par b {comp whitelistTextfield::b:p::p, comp whitelistButton::b:p::p}, space ::17:x}}</string>
+         </void>
+        </object>
+        <void method="setProperty">
+         <string>border</string>
+         <object class="javax.swing.border.TitledBorder">
+          <string>Optional Filters</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>panel2</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Remove empty spectra</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Remove spectra that contain no peaks</string>
+          </void>
+          <void property="name">
+           <string>removeEmptySpectraBox</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>enableFiltering</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Remove identification with less than</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Remove identifications that contain less than 
+the supplied number of peptides.</string>
+          </void>
+          <void property="name">
+           <string>filterIdentsWIthNbPepBox</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>enableFiltering</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Remove identifications that contain less than 
+the supplied number of peptides.</string>
+          </void>
+          <void property="name">
+           <string>nbPeptideFilterTextField</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.FocusListener</string>
+            <string>focusLost</string>
+            <string>nbPeptideFilterTextFieldFocusLost</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>peptides</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Remove identifications that contain less than 
+the supplied number of peptides.</string>
+          </void>
+          <void property="name">
+           <string>label1</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Remove selected identifications</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Use list of contaminants to be removed from the result set.
+Select a file that contains one protein accession per line.</string>
+          </void>
+          <void property="name">
+           <string>blacklistCheckbox</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>blacklistCheckboxActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JCheckBox</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Use protein inference results</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Use protein inference result to report only the 
+supplied proteins instead of all possible combinations.
+Select a file that contains one protein accession per line.</string>
+          </void>
+          <void property="name">
+           <string>whitelistCheckbox</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>whitelistCheckboxActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>editable</string>
+           <boolean>false</boolean>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Use list of contaminants to be removed from the result set.
+Select a file that contains one protein accession per line.</string>
+          </void>
+          <void property="name">
+           <string>blacklistTextfield</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Select File</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Select contaminant list</string>
+          </void>
+          <void property="name">
+           <string>blacklistButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>blacklistButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>editable</string>
+           <boolean>false</boolean>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Use protein inference result to report only the 
+supplied proteins instead of all possible combinations.
+Select a file that contains one protein accession per line.</string>
+          </void>
+          <void property="name">
+           <string>whitelistTextfield</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <string>Select File</string>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <string>Select protein inference result file</string>
+          </void>
+          <void property="name">
+           <string>whitelistButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>whitelistButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>0</int>
+        <int>0</int>
+       </object>
+      </void>
+      <void method="setProperty">
+       <string>size</string>
+       <object class="java.awt.Dimension">
+        <int>470</int>
+        <int>460</int>
+       </object>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

@@ -1,1330 +1,1330 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<java version="1.6.0_26" class="java.beans.XMLDecoder"> 
- <object class="com.jformdesigner.model.FormModel"> 
-  <void method="setProperty"> 
-   <string>i18n.bundleName</string> 
-   <string>messages</string> 
-  </void> 
-  <void method="setProperty"> 
-   <string>i18n.keyPrefix</string> 
-   <string>SelecFilePanel</string> 
-  </void> 
-  <void method="setProperty"> 
-   <string>i18n.autoExternalize</string> 
-   <boolean>true</boolean> 
-  </void> 
-  <void property="contentType"> 
-   <string>form/swing</string> 
-  </void> 
-  <void property="root"> 
-   <object class="com.jformdesigner.model.FormRoot"> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormContainer"> 
-      <string>uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm</string> 
-      <object class="com.jformdesigner.model.FormLayoutManager"> 
-       <class>java.awt.BorderLayout</class> 
-      </object> 
-      <void property="name"> 
-       <string>this</string> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JPanel</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>org.jdesktop.layout.GroupLayout</class> 
-         <void method="setProperty"> 
-          <string>$horizontalGroup</string> 
-          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::452:x, comp singleSpectrumFile::l::452:x, seq l {comp singleFastaFile::::327:x, space :::p, comp fastaFormatList::::119:x}, seq l {comp singleSourceFile::::431:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :::p}, comp multipleModeLabel::t:p::p}}}</string> 
-         </void> 
-         <void method="setProperty"> 
-          <string>$verticalGroup</string> 
-          <string>par l {seq {comp multipleModeLabel:::p::p, space :::x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string> 
-         </void> 
-        </object> 
-        <void method="setProperty"> 
-         <string>border</string> 
-         <object class="javax.swing.border.TitledBorder"> 
-          <string>i18nKey=SelecFilePanel.singleFilePanel.border</string> 
-         </object> 
-        </void> 
-        <void method="setProperty"> 
-         <string>minimumSize</string> 
-         <object class="java.awt.Dimension"> 
-          <int>555</int> 
-          <int>301</int> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>singleFilePanel</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.dataFileLabel.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.dataFileLabel.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>dataFileLabel</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.singleSourceFile.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>singleSourceFile</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>singleSourceFileActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.FocusListener</string> 
-            <string>focusLost</string> 
-            <string>singleSourceFileFocusLost</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.browseDataFileButton.text</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>browseDataFileButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>browseDataFileButtonActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.label2.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.label2.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>label2</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.singleFastaFile.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>singleFastaFile</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.browseFastaFileButton.text</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>browseFastaFileButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>browseFastaFileButtonActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.label3.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.label3.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>label3</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.singleMzTabFile.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>singleMzTabFile</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.browseMzTabButton.text</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>browseMzTabButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>browseMzTabButtonActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.label4.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.label4.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>label4</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JTextField</string> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.singleSpectrumFile.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>singleSpectrumFile</string> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.browseSpectrumFileButton.text</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>browseSpectrumFileButton</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ActionListener</string> 
-            <string>actionPerformed</string> 
-            <string>browseSpectrumFileButtonActionPerformed</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.multipleModeLabel.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>foreground</string> 
-           <object id="Color0" class="java.awt.Color"> 
-            <int>51</int> 
-            <int>51</int> 
-            <int>255</int> 
-            <int>255</int> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>font</string> 
-           <object class="java.awt.Font"> 
-            <string>Dialog</string> 
-            <int>0</int> 
-            <int>12</int> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>horizontalAlignment</string> 
-           <int>2</int> 
-          </void> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.multipleModeLabel.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>multipleModeLabel</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.MouseListener</string> 
-            <string>mouseEntered</string> 
-            <string>showHandCursor</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.MouseListener</string> 
-            <string>mouseExited</string> 
-            <string>showDefaultCursor</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.MouseListener</string> 
-            <string>mouseClicked</string> 
-            <string>showAdvancedFileSelection</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JComboBox</string> 
-          <void method="setProperty"> 
-           <string>model</string> 
-           <object class="javax.swing.DefaultComboBoxModel"> 
-            <void property="selectedItem"> 
-             <string>Match Full ID Line</string> 
-            </void> 
-            <void method="addElement"> 
-             <string>Match Full ID Line</string> 
-            </void> 
-            <void method="addElement"> 
-             <string>Match First Word</string> 
-            </void> 
-            <void method="addElement"> 
-             <string>Match Uniprot AC</string> 
-            </void> 
-            <void method="addElement"> 
-             <string>Match Uniprot ID</string> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>toolTipText</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.fastaFormatList.toolTipText</string> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>fastaFormatList</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.ItemListener</string> 
-            <string>itemStateChanged</string> 
-            <string>fastaFormatListItemStateChanged</string> 
-            <boolean>true</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.label1.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>foreground</string> 
-           <object class="java.awt.Color"> 
-            <int>255</int> 
-            <int>0</int> 
-            <int>0</int> 
-            <int>255</int> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>label1</string> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-       <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-        <class>java.lang.String</class> 
-        <void method="setProperty"> 
-         <string>value</string> 
-         <string>North</string> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JPanel</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>org.jdesktop.layout.GroupLayout</class> 
-         <void method="setProperty"> 
-          <string>$horizontalGroup</string> 
-          <string>par l {seq t {par t {comp tableScrollPane::l::659:x, seq t {space ::477:x, comp showHideLabel:::p::p}, seq t {space :::p, comp advancedOptionPanel:::p::p, space :::p, comp parserOptionHelpButton:::p:149:p}}, space :::p}}</string> 
-         </void> 
-         <void method="setProperty"> 
-          <string>$verticalGroup</string> 
-          <string>par l {seq l {comp showHideLabel:::p::p, space :::p, comp tableScrollPane::::225:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string> 
-         </void> 
-        </object> 
-        <void method="setProperty"> 
-         <string>border</string> 
-         <object class="javax.swing.border.TitledBorder"> 
-          <string>i18nKey=SelecFilePanel.parserOptionPanel.border</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>parserOptionPanel</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JScrollPane</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>javax.swing.JScrollPane</class> 
-          </object> 
-          <void property="name"> 
-           <string>tableScrollPane</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable</string> 
-            <void property="name"> 
-             <string>parserOptionTable</string> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JLabel</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.showHideLabel.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>font</string> 
-           <object class="java.awt.Font"> 
-            <string>Dialog</string> 
-            <int>0</int> 
-            <int>12</int> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>foreground</string> 
-           <object class="java.awt.Color"> 
-            <int>51</int> 
-            <int>51</int> 
-            <int>255</int> 
-            <int>255</int> 
-           </object> 
-          </void> 
-          <void property="name"> 
-           <string>showHideLabel</string> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.MouseListener</string> 
-            <string>mouseClicked</string> 
-            <string>showHideLabelMouseClicked</string> 
-            <boolean>true</boolean> 
-           </object> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.MouseListener</string> 
-            <string>mouseEntered</string> 
-            <string>showHandCursor</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-          <void method="addEvent"> 
-           <object class="com.jformdesigner.model.FormEvent"> 
-            <string>java.awt.event.MouseListener</string> 
-            <string>mouseExited</string> 
-            <string>showDefaultCursor</string> 
-            <boolean>false</boolean> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq l {comp gridOptionPanel::::497:x, space :::p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq l {comp gridOptionPanel:::p:75:p, space ::13:x}}</string> 
-           </void> 
-          </object> 
-          <void method="setProperty"> 
-           <string>border</string> 
-           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
-          </void> 
-          <void property="name"> 
-           <string>advancedOptionPanel</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JPanel</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>java.awt.GridLayout</class> 
-             <void method="setProperty"> 
-              <string>rows</string> 
-              <int>2</int> 
-             </void> 
-            </object> 
-            <void property="name"> 
-             <string>gridOptionPanel</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JCheckBox</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.forceRegenerationBox.text</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>horizontalAlignment</string> 
-               <int>2</int> 
-              </void> 
-              <void property="name"> 
-               <string>forceRegenerationBox</string> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JCheckBox</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.useHybridSearchDatabase.text</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>selected</string> 
-               <boolean>true</boolean> 
-              </void> 
-              <void method="setProperty"> 
-               <string>horizontalAlignment</string> 
-               <int>2</int> 
-              </void> 
-              <void property="name"> 
-               <string>useHybridSearchDatabase</string> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>javax.swing.event.ChangeListener</string> 
-                <string>stateChanged</string> 
-                <string>useHybridSearchDatabaseStateChanged</string> 
-                <boolean>false</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormComponent"> 
-          <string>javax.swing.JButton</string> 
-          <void method="setProperty"> 
-           <string>text</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.parserOptionHelpButton.text</string> 
-           </object> 
-          </void> 
-          <void method="setProperty"> 
-           <string>enabled</string> 
-           <boolean>false</boolean> 
-          </void> 
-          <void property="name"> 
-           <string>parserOptionHelpButton</string> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-       <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-        <class>java.lang.String</class> 
-        <void method="setProperty"> 
-         <string>value</string> 
-         <string>Center</string> 
-        </void> 
-       </object> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>230</int> 
-        <int>20</int> 
-       </object> 
-      </void> 
-      <void method="setProperty"> 
-       <string>size</string> 
-       <object class="java.awt.Dimension"> 
-        <int>675</int> 
-        <int>520</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>javax.swing.ButtonGroup</string> 
-      <void property="name"> 
-       <string>buttonGroup1</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>105</int> 
-        <int>80</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormNonVisual"> 
-      <string>javax.swing.ButtonGroup</string> 
-      <void property="name"> 
-       <string>buttonGroup2</string> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>105</int> 
-        <int>130</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-    <void method="add"> 
-     <object class="com.jformdesigner.model.FormContainer"> 
-      <string>javax.swing.JPanel</string> 
-      <object class="com.jformdesigner.model.FormLayoutManager"> 
-       <class>org.jdesktop.layout.GroupLayout</class> 
-       <void method="setProperty"> 
-        <string>$horizontalGroup</string> 
-        <string>par l {seq t {space :::p, par t {comp fileTabbedPane::t::663:x, comp singleModeLabel::t:p::p}, space :::p}}</string> 
-       </void> 
-       <void method="setProperty"> 
-        <string>$verticalGroup</string> 
-        <string>par l {seq t {space :::x, comp singleModeLabel:::p::p, space :::p, comp fileTabbedPane:::p:216:p, space :::p}}</string> 
-       </void> 
-      </object> 
-      <void method="setProperty"> 
-       <string>border</string> 
-       <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/> 
-      </void> 
-      <void method="setProperty"> 
-       <string>foreground</string> 
-       <object class="java.awt.Color"> 
-        <int>255</int> 
-        <int>0</int> 
-        <int>51</int> 
-        <int>255</int> 
-       </object> 
-      </void> 
-      <void property="name"> 
-       <string>advancedFileSelectionPanel</string> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormContainer"> 
-        <string>javax.swing.JTabbedPane</string> 
-        <object class="com.jformdesigner.model.FormLayoutManager"> 
-         <class>javax.swing.JTabbedPane</class> 
-        </object> 
-        <void property="name"> 
-         <string>fileTabbedPane</string> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {comp button1::t:p:100:p, comp scrollPane1::t::646:x}, space :::p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq l {space :::p, comp scrollPane1::::146:x, space :::p, comp button1:::p::p, space :::p}}</string> 
-           </void> 
-          </object> 
-          <void property="name"> 
-           <string>panel3</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JScrollPane</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>javax.swing.JScrollPane</class> 
-            </object> 
-            <void property="name"> 
-             <string>scrollPane1</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.dataFileTable.toolTipText</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>dataFileTable</string> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button1.text</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>toolTipText</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button1.toolTipText</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>button1</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>loadDataFiles</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.panel3.tab.title</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq {space :::p, par l {comp button3::t:p:100:p, comp scrollPane3::l::646:x, comp panel6::l::646:x}, space :::p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq t {space :::p, comp panel6:::p::p, space :::p, comp scrollPane3::::82:x, space :::p, comp button3:::p::p, space :::p}}</string> 
-           </void> 
-          </object> 
-          <void property="name"> 
-           <string>panel4</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JScrollPane</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>javax.swing.JScrollPane</class> 
-            </object> 
-            <void property="name"> 
-             <string>scrollPane3</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.sequenceFileTable.toolTipText</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>sequenceFileTable</string> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button3.text</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>toolTipText</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button3.toolTipText</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>button3</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>loadSequenceFiles</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JPanel</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>java.awt.FlowLayout</class> 
-            </object> 
-            <void method="setProperty"> 
-             <string>border</string> 
-             <object class="javax.swing.border.TitledBorder"> 
-              <string>i18nKey=SelecFilePanel.panel6.border</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>panel6</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JRadioButton</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.fullIdButton.text</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>buttonGroup2</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>selected</string> 
-               <boolean>true</boolean> 
-              </void> 
-              <void property="name"> 
-               <string>fullIdButton</string> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>fullIdButtonActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JRadioButton</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.firstWordButton.text</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>buttonGroup2</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>firstWordButton</string> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>firstWordButtonActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JRadioButton</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.uniprotIdButton.text</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>buttonGroup2</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>uniprotIdButton</string> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>uniprotIdButtonActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>javax.swing.JRadioButton</string> 
-              <void method="setProperty"> 
-               <string>text</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.uniprotAcButton.text</string> 
-               </object> 
-              </void> 
-              <void method="setProperty"> 
-               <string>$buttonGroup</string> 
-               <object class="com.jformdesigner.model.FormReference"> 
-                <string>buttonGroup2</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>uniprotAcButton</string> 
-              </void> 
-              <void method="addEvent"> 
-               <object class="com.jformdesigner.model.FormEvent"> 
-                <string>java.awt.event.ActionListener</string> 
-                <string>actionPerformed</string> 
-                <string>uniprotAcButtonActionPerformed</string> 
-                <boolean>true</boolean> 
-               </object> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.panel4.tab.title</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq t {space :::p, par t {comp scrollPane2::l::646:x, comp button2::t:p:100:p}, space :::p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq t {space :::p, comp scrollPane2::::146:x, space :::p, comp button2:::p::p, space :::p}}</string> 
-           </void> 
-          </object> 
-          <void property="name"> 
-           <string>panel5</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JScrollPane</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>javax.swing.JScrollPane</class> 
-            </object> 
-            <void property="name"> 
-             <string>scrollPane2</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.mzTabFileTable.toolTipText</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>mzTabFileTable</string> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button2.text</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>toolTipText</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button2.toolTipText</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>button2</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>loadTabFiles</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.panel5.tab.title</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-        <void method="add"> 
-         <object class="com.jformdesigner.model.FormContainer"> 
-          <string>javax.swing.JPanel</string> 
-          <object class="com.jformdesigner.model.FormLayoutManager"> 
-           <class>org.jdesktop.layout.GroupLayout</class> 
-           <void method="setProperty"> 
-            <string>$horizontalGroup</string> 
-            <string>par l {seq {space :::p, par l {comp button5::t:p:100:p, comp scrollPane4::l::646:x}, space :::p}}</string> 
-           </void> 
-           <void method="setProperty"> 
-            <string>$verticalGroup</string> 
-            <string>par l {seq t {space :::p, comp scrollPane4::::146:x, space :::p, comp button5:::p::p, space :::p}}</string> 
-           </void> 
-          </object> 
-          <void property="name"> 
-           <string>panel1</string> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormContainer"> 
-            <string>javax.swing.JScrollPane</string> 
-            <object class="com.jformdesigner.model.FormLayoutManager"> 
-             <class>javax.swing.JScrollPane</class> 
-            </object> 
-            <void property="name"> 
-             <string>scrollPane4</string> 
-            </void> 
-            <void method="add"> 
-             <object class="com.jformdesigner.model.FormComponent"> 
-              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string> 
-              <void method="setProperty"> 
-               <string>toolTipText</string> 
-               <object class="com.jformdesigner.model.FormMessage"> 
-                <null/> 
-                <string>SelecFilePanel.spectrumFileTable.toolTipText</string> 
-               </object> 
-              </void> 
-              <void property="name"> 
-               <string>spectrumFileTable</string> 
-              </void> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-          <void method="add"> 
-           <object class="com.jformdesigner.model.FormComponent"> 
-            <string>javax.swing.JButton</string> 
-            <void method="setProperty"> 
-             <string>text</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button5.text</string> 
-             </object> 
-            </void> 
-            <void method="setProperty"> 
-             <string>toolTipText</string> 
-             <object class="com.jformdesigner.model.FormMessage"> 
-              <null/> 
-              <string>SelecFilePanel.button5.toolTipText</string> 
-             </object> 
-            </void> 
-            <void property="name"> 
-             <string>button5</string> 
-            </void> 
-            <void method="addEvent"> 
-             <object class="com.jformdesigner.model.FormEvent"> 
-              <string>java.awt.event.ActionListener</string> 
-              <string>actionPerformed</string> 
-              <string>loadSpectrumFiles</string> 
-              <boolean>true</boolean> 
-             </object> 
-            </void> 
-           </object> 
-          </void> 
-         </object> 
-         <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-          <null/> 
-          <void method="setProperty"> 
-           <string>title</string> 
-           <object class="com.jformdesigner.model.FormMessage"> 
-            <null/> 
-            <string>SelecFilePanel.panel1.tab.title</string> 
-           </object> 
-          </void> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-      <void method="add"> 
-       <object class="com.jformdesigner.model.FormComponent"> 
-        <string>javax.swing.JLabel</string> 
-        <void method="setProperty"> 
-         <string>text</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>SelecFilePanel.singleModeLabel.text</string> 
-         </object> 
-        </void> 
-        <void method="setProperty"> 
-         <string>foreground</string> 
-         <object idref="Color0"/> 
-        </void> 
-        <void method="setProperty"> 
-         <string>font</string> 
-         <object class="java.awt.Font"> 
-          <string>Dialog</string> 
-          <int>0</int> 
-          <int>12</int> 
-         </object> 
-        </void> 
-        <void method="setProperty"> 
-         <string>horizontalAlignment</string> 
-         <int>4</int> 
-        </void> 
-        <void method="setProperty"> 
-         <string>toolTipText</string> 
-         <object class="com.jformdesigner.model.FormMessage"> 
-          <null/> 
-          <string>SelecFilePanel.singleModeLabel.toolTipText</string> 
-         </object> 
-        </void> 
-        <void property="name"> 
-         <string>singleModeLabel</string> 
-        </void> 
-        <void method="addEvent"> 
-         <object class="com.jformdesigner.model.FormEvent"> 
-          <string>java.awt.event.MouseListener</string> 
-          <string>mouseEntered</string> 
-          <string>showHandCursor</string> 
-          <boolean>false</boolean> 
-         </object> 
-        </void> 
-        <void method="addEvent"> 
-         <object class="com.jformdesigner.model.FormEvent"> 
-          <string>java.awt.event.MouseListener</string> 
-          <string>mouseClicked</string> 
-          <string>showSimpleFileSelection</string> 
-          <boolean>false</boolean> 
-         </object> 
-        </void> 
-        <void method="addEvent"> 
-         <object class="com.jformdesigner.model.FormEvent"> 
-          <string>java.awt.event.MouseListener</string> 
-          <string>mouseExited</string> 
-          <string>showDefaultCursor</string> 
-          <boolean>false</boolean> 
-         </object> 
-        </void> 
-       </object> 
-      </void> 
-     </object> 
-     <object class="com.jformdesigner.model.FormLayoutConstraints"> 
-      <null/> 
-      <void method="setProperty"> 
-       <string>location</string> 
-       <object class="java.awt.Point"> 
-        <int>235</int> 
-        <int>550</int> 
-       </object> 
-      </void> 
-      <void method="setProperty"> 
-       <string>size</string> 
-       <object class="java.awt.Dimension"> 
-        <int>675</int> 
-        <int>245</int> 
-       </object> 
-      </void> 
-     </object> 
-    </void> 
-   </object> 
-  </void> 
- </object> 
-</java> 
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="1.7.0_03" class="java.beans.XMLDecoder">
+ <object class="com.jformdesigner.model.FormModel">
+  <void method="setProperty">
+   <string>i18n.bundleName</string>
+   <string>messages</string>
+  </void>
+  <void method="setProperty">
+   <string>i18n.keyPrefix</string>
+   <string>SelecFilePanel</string>
+  </void>
+  <void method="setProperty">
+   <string>i18n.autoExternalize</string>
+   <boolean>true</boolean>
+  </void>
+  <void property="contentType">
+   <string>form/swing</string>
+  </void>
+  <void property="root">
+   <object class="com.jformdesigner.model.FormRoot">
+    <void method="add">
+     <object class="com.jformdesigner.model.FormContainer">
+      <string>uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm</string>
+      <object class="com.jformdesigner.model.FormLayoutManager">
+       <class>java.awt.BorderLayout</class>
+      </object>
+      <void property="name">
+       <string>this</string>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JPanel</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>org.jdesktop.layout.GroupLayout</class>
+         <void method="setProperty">
+          <string>$horizontalGroup</string>
+          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::460:x, comp singleSpectrumFile::l::460:x, seq l {comp singleFastaFile::::331:x, space :::p, comp fastaFormatList::::123:x}, seq l {comp singleSourceFile::::439:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :::p}, comp multipleModeLabel::t:p::p}}}</string>
+         </void>
+         <void method="setProperty">
+          <string>$verticalGroup</string>
+          <string>par l {seq {comp multipleModeLabel:::p::p, space :::x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string>
+         </void>
+        </object>
+        <void method="setProperty">
+         <string>border</string>
+         <object class="javax.swing.border.TitledBorder">
+          <string>i18nKey=SelecFilePanel.singleFilePanel.border</string>
+         </object>
+        </void>
+        <void method="setProperty">
+         <string>minimumSize</string>
+         <object class="java.awt.Dimension">
+          <int>555</int>
+          <int>301</int>
+         </object>
+        </void>
+        <void property="name">
+         <string>singleFilePanel</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.dataFileLabel.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.dataFileLabel.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>dataFileLabel</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.singleSourceFile.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>singleSourceFile</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>singleSourceFileActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.FocusListener</string>
+            <string>focusLost</string>
+            <string>singleSourceFileFocusLost</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.browseDataFileButton.text</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>browseDataFileButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>browseDataFileButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label2.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label2.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>label2</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.singleFastaFile.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>singleFastaFile</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.browseFastaFileButton.text</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>browseFastaFileButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>browseFastaFileButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label3.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label3.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>label3</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.singleMzTabFile.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>singleMzTabFile</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.browseMzTabButton.text</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>browseMzTabButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>browseMzTabButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label4.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label4.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>label4</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JTextField</string>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.singleSpectrumFile.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>singleSpectrumFile</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.browseSpectrumFileButton.text</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>browseSpectrumFileButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>browseSpectrumFileButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.multipleModeLabel.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>foreground</string>
+           <object class="java.awt.Color" id="Color0">
+            <int>51</int>
+            <int>51</int>
+            <int>255</int>
+            <int>255</int>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>font</string>
+           <object class="java.awt.Font">
+            <string>Dialog</string>
+            <int>0</int>
+            <int>12</int>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>horizontalAlignment</string>
+           <int>2</int>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.multipleModeLabel.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>multipleModeLabel</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.MouseListener</string>
+            <string>mouseEntered</string>
+            <string>showHandCursor</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.MouseListener</string>
+            <string>mouseExited</string>
+            <string>showDefaultCursor</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.MouseListener</string>
+            <string>mouseClicked</string>
+            <string>showAdvancedFileSelection</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JComboBox</string>
+          <void method="setProperty">
+           <string>model</string>
+           <object class="javax.swing.DefaultComboBoxModel">
+            <void property="selectedItem">
+             <string>Match Full ID Line</string>
+            </void>
+            <void method="addElement">
+             <string>Match Full ID Line</string>
+            </void>
+            <void method="addElement">
+             <string>Match First Word</string>
+            </void>
+            <void method="addElement">
+             <string>Match Uniprot AC</string>
+            </void>
+            <void method="addElement">
+             <string>Match Uniprot ID</string>
+            </void>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.fastaFormatList.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>fastaFormatList</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ItemListener</string>
+            <string>itemStateChanged</string>
+            <string>fastaFormatListItemStateChanged</string>
+            <boolean>true</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label1.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>foreground</string>
+           <object class="java.awt.Color">
+            <int>255</int>
+            <int>0</int>
+            <int>0</int>
+            <int>255</int>
+           </object>
+          </void>
+          <void property="name">
+           <string>label1</string>
+          </void>
+         </object>
+        </void>
+       </object>
+       <object class="com.jformdesigner.model.FormLayoutConstraints">
+        <class>java.lang.String</class>
+        <void method="setProperty">
+         <string>value</string>
+         <string>North</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JPanel</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>org.jdesktop.layout.GroupLayout</class>
+         <void method="setProperty">
+          <string>$horizontalGroup</string>
+          <string>par l {seq t {par t {seq t {space :::p, comp tableScrollPane::::653:x}, seq t {space :p:1:p, par t {comp showHideLabel::t:p::p, seq t {comp advancedOptionPanel:::p::p, space :::p, comp parserOptionHelpButton:::p:149:p}}}}, space :::p}}</string>
+         </void>
+         <void method="setProperty">
+          <string>$verticalGroup</string>
+          <string>par l {seq l {comp showHideLabel:::p::p, space :::p, comp tableScrollPane::::235:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string>
+         </void>
+        </object>
+        <void method="setProperty">
+         <string>border</string>
+         <object class="javax.swing.border.TitledBorder">
+          <string>i18nKey=SelecFilePanel.parserOptionPanel.border</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>parserOptionPanel</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JScrollPane</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>javax.swing.JScrollPane</class>
+          </object>
+          <void property="name">
+           <string>tableScrollPane</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable</string>
+            <void property="name">
+             <string>parserOptionTable</string>
+            </void>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.showHideLabel.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>font</string>
+           <object class="java.awt.Font">
+            <string>Dialog</string>
+            <int>0</int>
+            <int>12</int>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>foreground</string>
+           <object class="java.awt.Color">
+            <int>51</int>
+            <int>51</int>
+            <int>255</int>
+            <int>255</int>
+           </object>
+          </void>
+          <void property="name">
+           <string>showHideLabel</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.MouseListener</string>
+            <string>mouseClicked</string>
+            <string>showHideLabelMouseClicked</string>
+            <boolean>true</boolean>
+           </object>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.MouseListener</string>
+            <string>mouseEntered</string>
+            <string>showHandCursor</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.MouseListener</string>
+            <string>mouseExited</string>
+            <string>showDefaultCursor</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq l {comp gridOptionPanel::::497:x, space :::p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq l {comp gridOptionPanel:::p:75:p, space ::13:x}}</string>
+           </void>
+          </object>
+          <void method="setProperty">
+           <string>border</string>
+           <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/>
+          </void>
+          <void property="name">
+           <string>advancedOptionPanel</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JPanel</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>java.awt.GridLayout</class>
+             <void method="setProperty">
+              <string>rows</string>
+              <int>2</int>
+             </void>
+            </object>
+            <void property="name">
+             <string>gridOptionPanel</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JCheckBox</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.forceRegenerationBox.text</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>horizontalAlignment</string>
+               <int>2</int>
+              </void>
+              <void property="name">
+               <string>forceRegenerationBox</string>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JCheckBox</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.useHybridSearchDatabase.text</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>selected</string>
+               <boolean>true</boolean>
+              </void>
+              <void method="setProperty">
+               <string>horizontalAlignment</string>
+               <int>2</int>
+              </void>
+              <void property="name">
+               <string>useHybridSearchDatabase</string>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>javax.swing.event.ChangeListener</string>
+                <string>stateChanged</string>
+                <string>useHybridSearchDatabaseStateChanged</string>
+                <boolean>false</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.parserOptionHelpButton.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>enabled</string>
+           <boolean>false</boolean>
+          </void>
+          <void property="name">
+           <string>parserOptionHelpButton</string>
+          </void>
+         </object>
+        </void>
+       </object>
+       <object class="com.jformdesigner.model.FormLayoutConstraints">
+        <class>java.lang.String</class>
+        <void method="setProperty">
+         <string>value</string>
+         <string>Center</string>
+        </void>
+       </object>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>230</int>
+        <int>20</int>
+       </object>
+      </void>
+      <void method="setProperty">
+       <string>size</string>
+       <object class="java.awt.Dimension">
+        <int>675</int>
+        <int>520</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>javax.swing.ButtonGroup</string>
+      <void property="name">
+       <string>buttonGroup1</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>105</int>
+        <int>80</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormNonVisual">
+      <string>javax.swing.ButtonGroup</string>
+      <void property="name">
+       <string>buttonGroup2</string>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>105</int>
+        <int>130</int>
+       </object>
+      </void>
+     </object>
+    </void>
+    <void method="add">
+     <object class="com.jformdesigner.model.FormContainer">
+      <string>javax.swing.JPanel</string>
+      <object class="com.jformdesigner.model.FormLayoutManager">
+       <class>org.jdesktop.layout.GroupLayout</class>
+       <void method="setProperty">
+        <string>$horizontalGroup</string>
+        <string>par l {seq t {space :::p, par t {comp fileTabbedPane::t::663:x, comp singleModeLabel::t:p::p}, space :::p}}</string>
+       </void>
+       <void method="setProperty">
+        <string>$verticalGroup</string>
+        <string>par l {seq t {space :::x, comp singleModeLabel:::p::p, space :::p, comp fileTabbedPane:::p:216:p, space :::p}}</string>
+       </void>
+      </object>
+      <void method="setProperty">
+       <string>border</string>
+       <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/>
+      </void>
+      <void method="setProperty">
+       <string>foreground</string>
+       <object class="java.awt.Color">
+        <int>255</int>
+        <int>0</int>
+        <int>51</int>
+        <int>255</int>
+       </object>
+      </void>
+      <void property="name">
+       <string>advancedFileSelectionPanel</string>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormContainer">
+        <string>javax.swing.JTabbedPane</string>
+        <object class="com.jformdesigner.model.FormLayoutManager">
+         <class>javax.swing.JTabbedPane</class>
+        </object>
+        <void property="name">
+         <string>fileTabbedPane</string>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq t {space :::p, par t {comp button1::t:p:100:p, comp scrollPane1::t::646:x}, space :::p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq l {space :::p, comp scrollPane1::::146:x, space :::p, comp button1:::p::p, space :::p}}</string>
+           </void>
+          </object>
+          <void property="name">
+           <string>panel3</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JScrollPane</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>javax.swing.JScrollPane</class>
+            </object>
+            <void property="name">
+             <string>scrollPane1</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.dataFileTable.toolTipText</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>dataFileTable</string>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button1.text</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>toolTipText</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button1.toolTipText</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>button1</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>loadDataFiles</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.panel3.tab.title</string>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq {space :::p, par l {comp button3::t:p:100:p, comp scrollPane3::l::646:x, comp panel6::l::646:x}, space :::p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq t {space :::p, comp panel6:::p::p, space :::p, comp scrollPane3::::85:x, space :::p, comp button3:::p::p, space :::p}}</string>
+           </void>
+          </object>
+          <void property="name">
+           <string>panel4</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JScrollPane</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>javax.swing.JScrollPane</class>
+            </object>
+            <void property="name">
+             <string>scrollPane3</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.sequenceFileTable.toolTipText</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>sequenceFileTable</string>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button3.text</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>toolTipText</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button3.toolTipText</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>button3</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>loadSequenceFiles</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JPanel</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>java.awt.FlowLayout</class>
+            </object>
+            <void method="setProperty">
+             <string>border</string>
+             <object class="javax.swing.border.TitledBorder">
+              <string>i18nKey=SelecFilePanel.panel6.border</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>panel6</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JRadioButton</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.fullIdButton.text</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>$buttonGroup</string>
+               <object class="com.jformdesigner.model.FormReference">
+                <string>buttonGroup2</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>selected</string>
+               <boolean>true</boolean>
+              </void>
+              <void property="name">
+               <string>fullIdButton</string>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>fullIdButtonActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JRadioButton</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.firstWordButton.text</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>$buttonGroup</string>
+               <object class="com.jformdesigner.model.FormReference">
+                <string>buttonGroup2</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>firstWordButton</string>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>firstWordButtonActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JRadioButton</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.uniprotIdButton.text</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>$buttonGroup</string>
+               <object class="com.jformdesigner.model.FormReference">
+                <string>buttonGroup2</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>uniprotIdButton</string>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>uniprotIdButtonActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>javax.swing.JRadioButton</string>
+              <void method="setProperty">
+               <string>text</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.uniprotAcButton.text</string>
+               </object>
+              </void>
+              <void method="setProperty">
+               <string>$buttonGroup</string>
+               <object class="com.jformdesigner.model.FormReference">
+                <string>buttonGroup2</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>uniprotAcButton</string>
+              </void>
+              <void method="addEvent">
+               <object class="com.jformdesigner.model.FormEvent">
+                <string>java.awt.event.ActionListener</string>
+                <string>actionPerformed</string>
+                <string>uniprotAcButtonActionPerformed</string>
+                <boolean>true</boolean>
+               </object>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.panel4.tab.title</string>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq t {space :::p, par t {comp scrollPane2::l::646:x, comp button2::t:p:100:p}, space :::p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq t {space :::p, comp scrollPane2::::146:x, space :::p, comp button2:::p::p, space :::p}}</string>
+           </void>
+          </object>
+          <void property="name">
+           <string>panel5</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JScrollPane</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>javax.swing.JScrollPane</class>
+            </object>
+            <void property="name">
+             <string>scrollPane2</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.mzTabFileTable.toolTipText</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>mzTabFileTable</string>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button2.text</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>toolTipText</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button2.toolTipText</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>button2</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>loadTabFiles</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.panel5.tab.title</string>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormContainer">
+          <string>javax.swing.JPanel</string>
+          <object class="com.jformdesigner.model.FormLayoutManager">
+           <class>org.jdesktop.layout.GroupLayout</class>
+           <void method="setProperty">
+            <string>$horizontalGroup</string>
+            <string>par l {seq {space :::p, par l {comp button5::t:p:100:p, comp scrollPane4::l::646:x}, space :::p}}</string>
+           </void>
+           <void method="setProperty">
+            <string>$verticalGroup</string>
+            <string>par l {seq t {space :::p, comp scrollPane4::::146:x, space :::p, comp button5:::p::p, space :::p}}</string>
+           </void>
+          </object>
+          <void property="name">
+           <string>panel1</string>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormContainer">
+            <string>javax.swing.JScrollPane</string>
+            <object class="com.jformdesigner.model.FormLayoutManager">
+             <class>javax.swing.JScrollPane</class>
+            </object>
+            <void property="name">
+             <string>scrollPane4</string>
+            </void>
+            <void method="add">
+             <object class="com.jformdesigner.model.FormComponent">
+              <string>uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable</string>
+              <void method="setProperty">
+               <string>toolTipText</string>
+               <object class="com.jformdesigner.model.FormMessage">
+                <null/>
+                <string>SelecFilePanel.spectrumFileTable.toolTipText</string>
+               </object>
+              </void>
+              <void property="name">
+               <string>spectrumFileTable</string>
+              </void>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button5.text</string>
+             </object>
+            </void>
+            <void method="setProperty">
+             <string>toolTipText</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button5.toolTipText</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>button5</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>loadSpectrumFiles</string>
+              <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+         </object>
+         <object class="com.jformdesigner.model.FormLayoutConstraints">
+          <null/>
+          <void method="setProperty">
+           <string>title</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.panel1.tab.title</string>
+           </object>
+          </void>
+         </object>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="com.jformdesigner.model.FormComponent">
+        <string>javax.swing.JLabel</string>
+        <void method="setProperty">
+         <string>text</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>SelecFilePanel.singleModeLabel.text</string>
+         </object>
+        </void>
+        <void method="setProperty">
+         <string>foreground</string>
+         <object idref="Color0"/>
+        </void>
+        <void method="setProperty">
+         <string>font</string>
+         <object class="java.awt.Font">
+          <string>Dialog</string>
+          <int>0</int>
+          <int>12</int>
+         </object>
+        </void>
+        <void method="setProperty">
+         <string>horizontalAlignment</string>
+         <int>4</int>
+        </void>
+        <void method="setProperty">
+         <string>toolTipText</string>
+         <object class="com.jformdesigner.model.FormMessage">
+          <null/>
+          <string>SelecFilePanel.singleModeLabel.toolTipText</string>
+         </object>
+        </void>
+        <void property="name">
+         <string>singleModeLabel</string>
+        </void>
+        <void method="addEvent">
+         <object class="com.jformdesigner.model.FormEvent">
+          <string>java.awt.event.MouseListener</string>
+          <string>mouseEntered</string>
+          <string>showHandCursor</string>
+          <boolean>false</boolean>
+         </object>
+        </void>
+        <void method="addEvent">
+         <object class="com.jformdesigner.model.FormEvent">
+          <string>java.awt.event.MouseListener</string>
+          <string>mouseClicked</string>
+          <string>showSimpleFileSelection</string>
+          <boolean>false</boolean>
+         </object>
+        </void>
+        <void method="addEvent">
+         <object class="com.jformdesigner.model.FormEvent">
+          <string>java.awt.event.MouseListener</string>
+          <string>mouseExited</string>
+          <string>showDefaultCursor</string>
+          <boolean>false</boolean>
+         </object>
+        </void>
+       </object>
+      </void>
+     </object>
+     <object class="com.jformdesigner.model.FormLayoutConstraints">
+      <null/>
+      <void method="setProperty">
+       <string>location</string>
+       <object class="java.awt.Point">
+        <int>235</int>
+        <int>550</int>
+       </object>
+      </void>
+      <void method="setProperty">
+       <string>size</string>
+       <object class="java.awt.Dimension">
+        <int>675</int>
+        <int>245</int>
+       </object>
+      </void>
+     </object>
+    </void>
+   </object>
+  </void>
+ </object>
+</java>

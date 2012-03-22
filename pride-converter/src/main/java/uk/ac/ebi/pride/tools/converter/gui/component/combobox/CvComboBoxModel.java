@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.tools.converter.gui.component.panels.model;
+package uk.ac.ebi.pride.tools.converter.gui.component.combobox;
 
 import javax.swing.*;
 
@@ -8,12 +8,12 @@ import javax.swing.*;
  * Date: 05/01/12
  * Time: 15:48
  */
-public class SampleCvComboBoxModel extends DefaultComboBoxModel {
+public class CvComboBoxModel extends DefaultComboBoxModel {
 
     private boolean allowMultipleValues = false;
     private String CV;
 
-    public SampleCvComboBoxModel(String cvLabel, boolean allowMultipleValues, Object items[]) {
+    public CvComboBoxModel(String cvLabel, boolean allowMultipleValues, Object items[]) {
         super(items);
         this.CV = cvLabel;
         this.allowMultipleValues = allowMultipleValues;
