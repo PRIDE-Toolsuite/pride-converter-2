@@ -731,20 +731,13 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
     	if (searchParams == null)
     		return null;
     	
-    	// report all measures in dalton
-    	double factor = "mmu".equals(searchParams.getITOLU()) ? 0.001 : 1;
-    	
     	// fragment tolerance
-    	Double fragmentTolerance = searchParams.getITOL() * factor;
-    	params.getCvParam().add(DAOCvParams.SEARCH_SETTING_FRAGMENT_MASS_TOLERANCE.getParam(fragmentTolerance));
+    	Double fragmentTolerance = searchParams.getITOL();
+    	params.getCvParam().add(DAOCvParams.SEARCH_SETTING_FRAGMENT_MASS_TOLERANCE.getParam(fragmentTolerance + " " + searchParams.getITOLU()));
     	
-    	// there are several units for the parent mass tolerance that can't be converted to Da
-    	Double parentTolerance = searchParams.getTOL();
-    	
-    	if ("mmu".equals(searchParams.getTOLU()))
-    		parentTolerance = parentTolerance * 0.001;
-    	
-    	params.getCvParam().add(DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE.getParam(parentTolerance));
+    	// parent tolerance
+    	Double parentTolerance = searchParams.getTOL();    	
+    	params.getCvParam().add(DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE.getParam(parentTolerance + " " + searchParams.getTOLU()));
     	
     	// missed cleavages
     	params.getCvParam().add(DAOCvParams.SEARCH_SETTING_MISSED_CLEAVAGES.getParam(searchParams.getPFA()));

@@ -254,7 +254,7 @@ public class MascotDAOTest extends TestCase {
      */
     @Test
     public void testGetProcessingMethod() {
-        assertEquals("Param{cvParam=[CvParam{cvLabel='PRIDE', accession='PRIDE:0000161', name='Fragment mass tolerance setting', value='0.5'}, CvParam{cvLabel='PRIDE', accession='PRIDE:0000078', name='Peptide mass tolerance setting', value='2.0'}, CvParam{cvLabel='PRIDE', accession='PRIDE:0000162', name='Allowed missed cleavages', value='1'}, CvParam{cvLabel='MS', accession='MS:1001316', name='Mascot:SigThreshold', value='0.05'}, CvParam{cvLabel='MS', accession='MS:1001758', name='Mascot:SigThresholdType', value='identity'}], userParam=null}", mascotDao.getProcessingMethod().toString());
+        assertEquals("Param{cvParam=[CvParam{cvLabel='PRIDE', accession='PRIDE:0000161', name='Fragment mass tolerance setting', value='0.5 Da'}, CvParam{cvLabel='PRIDE', accession='PRIDE:0000078', name='Peptide mass tolerance setting', value='2.0 Da'}, CvParam{cvLabel='PRIDE', accession='PRIDE:0000162', name='Allowed missed cleavages', value='1'}, CvParam{cvLabel='MS', accession='MS:1001316', name='Mascot:SigThreshold', value='0.05'}, CvParam{cvLabel='MS', accession='MS:1001758', name='Mascot:SigThresholdType', value='identity'}], userParam=null}", mascotDao.getProcessingMethod().toString());
     }
 
     /**
