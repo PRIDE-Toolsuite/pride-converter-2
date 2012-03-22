@@ -185,7 +185,7 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
      */
     private enum SupportedProperties {
         //                       NAME								DEFAULT		TYPE
-        MIN_PROPABILITY("min_propability", 0.05, MascotDAO.SupportedProperties.TYPE.DOUBLE),
+        MIN_PROPABILITY("min_probability", 0.05, MascotDAO.SupportedProperties.TYPE.DOUBLE),
         USE_MUDPIT_SCORING("use_mudpit_scoring", true, MascotDAO.SupportedProperties.TYPE.BOOLEAN),
         ONLY_SIGNIFICANT("only_significant", true, MascotDAO.SupportedProperties.TYPE.BOOLEAN),
         DUPE_SAME_QUERY("remove_duplicates_same_query", true, MascotDAO.SupportedProperties.TYPE.BOOLEAN),
