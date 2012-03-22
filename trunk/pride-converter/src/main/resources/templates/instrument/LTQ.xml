@@ -1,0 +1,16 @@
+<instrument>
+    <instrumentName>LTQ</instrumentName>
+    <source>
+        <cvParam cvLabel="MS" accession="MS:1000073" name="electrospray ionization" value=""/>
+        <cvParam cvLabel="MS" accession="MS:1000398" name="nanoelectrospray" value=""/>
+    </source>
+    <analyzerList count="1">
+        <analyzer>
+            <cvParam cvLabel="MS" accession="MS:1000083" name="radial ejection linear ion trap" value=""/>
+        </analyzer>
+    </analyzerList>
+    <detector>
+        <cvParam cvLabel="MS" accession="MS:1000253" name="electron multiplier" value=""/>
+    </detector>
+    <additional/>
+</instrument>
