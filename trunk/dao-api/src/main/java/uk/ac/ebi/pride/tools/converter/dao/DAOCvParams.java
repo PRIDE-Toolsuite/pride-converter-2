@@ -60,7 +60,8 @@ public enum DAOCvParams {
     MASCOT_SIGNIFICANCE_THRESHOLD_TYPE("MS", "MS:1001758", "Mascot:SigThresholdType", "", "MS:1001302"),
     PEPTIDE_P_VALUE("MS", "MS:1001870", "p-value for peptides", "", "MS:1001092"),
     SEQUEST_DELTA_CN("MS", "MS:1001156", "Sequest:deltacn", "", "MS:1001153"),
-    SEQUEST_XCORR("MS", "MS:1001155", "Sequest:xcorr", "", "MS:1001153")
+    SEQUEST_XCORR("MS", "MS:1001155", "Sequest:xcorr", "", "MS:1001153"),
+    SUBMIT_TO_INTACT("PRIDE", "PRIDE:0000405", "Submit PRIDE Experiment to IntAct", "", "")
 
     ;
 
