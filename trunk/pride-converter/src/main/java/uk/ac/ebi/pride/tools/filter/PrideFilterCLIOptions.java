@@ -22,11 +22,9 @@ public class PrideFilterCLIOptions {
         SOURCE_FILE("inputfile"),
         WHITELIST_FILE("whitelistfile"),
         BLACKLIST_FILE("blacklistfile"),
-        MIN_SCORE("min_score"),
         MIN_PEPTIDE_NUMBER("min_peptide_nb"),
         ONLY_IDENTIFIED_SPECTRA("only_identified_spectra"),
-        REMOVE_EMPTY_SPECTRA("no_empty_spectra"),
-        LABEL_DECOY_HITS("label_decoy_hits");
+        REMOVE_EMPTY_SPECTRA("no_empty_spectra");
 
         private String value;
 
@@ -68,20 +66,10 @@ public class PrideFilterCLIOptions {
                 .withDescription("full path and filename of file containing the protein accessions to remove")
                 .create(OPTIONS.BLACKLIST_FILE.getValue());
 
-        Option minScore = OptionBuilder.withArgName("score")
-                .hasArg()
-                .withDescription("minimum identification score to retain identification [0..1]")
-                .create(OPTIONS.MIN_SCORE.getValue());
-
         Option minPeptideNb = OptionBuilder.withArgName("peptide_count")
                 .hasArg()
                 .withDescription("minimum number of peptides to retain identification")
                 .create(OPTIONS.MIN_PEPTIDE_NUMBER.getValue());
-
-        Option labelDecor = OptionBuilder.withArgName("decoy_pattern")
-                .hasArg()
-                .withDescription("label identifications as decoy hits if the identification accession matches the pattern")
-                .create(OPTIONS.LABEL_DECOY_HITS.getValue());
 
         Option identifiedSpectra = new Option(OPTIONS.ONLY_IDENTIFIED_SPECTRA.getValue(), "Only keep identified spectra");
         Option removeEmpty = new Option(OPTIONS.REMOVE_EMPTY_SPECTRA.getValue(), "Remove empty spectra");
@@ -94,9 +82,7 @@ public class PrideFilterCLIOptions {
         options.addOption(outputFile);
         options.addOption(whitelist);
         options.addOption(blacklist);
-        options.addOption(minScore);
         options.addOption(minPeptideNb);
-        options.addOption(labelDecor);
         options.addOption(identifiedSpectra);
         options.addOption(removeEmpty);
 

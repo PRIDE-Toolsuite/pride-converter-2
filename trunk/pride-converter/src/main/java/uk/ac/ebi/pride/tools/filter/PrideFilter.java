@@ -5,7 +5,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
 import uk.ac.ebi.pride.tools.filter.io.PrideXmlFilter;
-import uk.ac.ebi.pride.tools.filter.model.impl.*;
+import uk.ac.ebi.pride.tools.filter.model.impl.AccessionBlacklistFilter;
+import uk.ac.ebi.pride.tools.filter.model.impl.AccessionWhitelistFilter;
+import uk.ac.ebi.pride.tools.filter.model.impl.EmptySpectrumFilter;
+import uk.ac.ebi.pride.tools.filter.model.impl.MinimumPeptideCountFilter;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,9 +47,8 @@ public class PrideFilter {
             // outputfile  - optional
             if (line.hasOption(PrideFilterCLIOptions.OPTIONS.OUTPUT_FILE.getValue())) {
                 outputFile = line.getOptionValue(PrideFilterCLIOptions.OPTIONS.OUTPUT_FILE.getValue());
-            }
-            else {
-            	outputFile = inputFile + "-filtered.xml";
+            } else {
+                outputFile = inputFile + "-filtered.xml";
             }
 
             // ---------------------------------------------------------------- help/version
@@ -94,25 +96,12 @@ public class PrideFilter {
                 logger.info("Filtering out empty spectra");
                 filter.registerSpectrumFilter(new EmptySpectrumFilter());
             }
-            if (line.hasOption(PrideFilterCLIOptions.OPTIONS.LABEL_DECOY_HITS.getValue())) {
-                logger.info("Updating decoy identifications");
-                filter.registerIdentificationUpdatingFilter(new DecoyHitUpdatingFilter(line.getOptionValue(PrideFilterCLIOptions.OPTIONS.LABEL_DECOY_HITS.getValue())));
-            }
             if (line.hasOption(PrideFilterCLIOptions.OPTIONS.MIN_PEPTIDE_NUMBER.getValue())) {
                 logger.info("Filtering out identifications by number of peptide");
                 try {
                     filter.registerIdentificationFilter(new MinimumPeptideCountFilter(Integer.valueOf(line.getOptionValue(PrideFilterCLIOptions.OPTIONS.MIN_PEPTIDE_NUMBER.getValue()))));
                 } catch (NumberFormatException e) {
                     System.err.println("Invalid peptide number: " + line.getOptionValue(PrideFilterCLIOptions.OPTIONS.MIN_PEPTIDE_NUMBER.getValue()));
-                    System.exit(STATUS_BAD_ARG);
-                }
-            }
-            if (line.hasOption(PrideFilterCLIOptions.OPTIONS.MIN_SCORE.getValue())) {
-                logger.info("Filtering out identifications by score");
-                try {
-                    filter.registerIdentificationFilter(new MinimumIdentificationScoreFilter(Double.valueOf(line.getOptionValue(PrideFilterCLIOptions.OPTIONS.MIN_SCORE.getValue()))));
-                } catch (NumberFormatException e) {
-                    System.err.println("Invalid score: " + line.getOptionValue(PrideFilterCLIOptions.OPTIONS.MIN_SCORE.getValue()));
                     System.exit(STATUS_BAD_ARG);
                 }
             }

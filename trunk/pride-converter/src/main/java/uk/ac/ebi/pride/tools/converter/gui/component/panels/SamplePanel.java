@@ -8,9 +8,9 @@ import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.dao.handler.QuantitationCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
-import uk.ac.ebi.pride.tools.converter.gui.component.panels.model.SampleCvComboBoxModel;
+import uk.ac.ebi.pride.tools.converter.gui.component.combobox.CvComboBoxModel;
+import uk.ac.ebi.pride.tools.converter.gui.component.combobox.IgnoreKeySelectionManager;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
-import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParamTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ComboValueCvParamDialog;
@@ -22,7 +22,6 @@ import uk.ac.ebi.pride.tools.converter.report.model.*;
 
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
@@ -85,11 +84,11 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
     private void initCaches() {
         speciesCache = TemplateUtilities.initMapCache("/templates/species.txt");
-        speciesComboBox.setModel(new SampleCvComboBoxModel("NEWT", false, speciesCache.values().toArray()));
+        speciesComboBox.setModel(new CvComboBoxModel("NEWT", false, speciesCache.values().toArray()));
         cellCache = TemplateUtilities.initMapCache("/templates/cell.txt");
-        cellComboBox.setModel(new SampleCvComboBoxModel("CL", true, cellCache.values().toArray()));
+        cellComboBox.setModel(new CvComboBoxModel("CL", true, cellCache.values().toArray()));
         tissueCache = TemplateUtilities.initMapCache("/templates/tissue.txt");
-        tissueComboBox.setModel(new SampleCvComboBoxModel("BTO", true, tissueCache.values().toArray()));
+        tissueComboBox.setModel(new CvComboBoxModel("BTO", true, tissueCache.values().toArray()));
     }
 
     public void addValidationListener(ValidationListener validationListerner) {
@@ -155,7 +154,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
         //update boolean flag for future use when adding param
         //if we have subsamples, we are alowed to have multiple params that would normally be singletons
-        isAllowMultipleValues = ((SampleCvComboBoxModel) comboBox.getModel()).isAllowMultipleValues() || !subsamples.isEmpty();
+        isAllowMultipleValues = ((CvComboBoxModel) comboBox.getModel()).isAllowMultipleValues() || !subsamples.isEmpty();
 
         if (comboBox.getSelectedItem() != null && TemplateUtilities.SELECT_OTHER.equals(comboBox.getSelectedItem().toString())) {
 
@@ -171,7 +170,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
             //update table - create new cvparam
             CvParam cv = new CvParam();
-            cv.setCvLabel(((SampleCvComboBoxModel) comboBox.getModel()).getCV());
+            cv.setCvLabel(((CvComboBoxModel) comboBox.getModel()).getCV());
             String accession = null;
             for (Map.Entry<String, String> entry : cache.entrySet()) {
                 if (entry.getValue().equals(comboBox.getSelectedItem())) {
@@ -269,7 +268,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         label2.setForeground(Color.red);
 
         //---- label5 ----
-        label5.setText("Additional Information");
+        label5.setText("Sample Information");
 
         //---- label6 ----
         label6.setText("Description");
@@ -502,36 +501,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             }
         }
 
-        updateColumnWidths();
-
-    }
-
-    private void updateColumnWidths() {
-
-        //update table column widths
-        TableColumnModel model = paramTable1.getColumnModel();
-        //set the width of the rest of the columns
-        int total = model.getTotalColumnWidth();
-        //first and last row are fixed width
-        total = total - (BaseTableModel.SMALL_WIDTH * 2);
-        //the rest of the columns should be proportionally spaced as such
-        // 1 cv 5%
-        // 2 accession 15%
-        // 3 name 30%
-        // 4 value 30%
-        model.getColumn(1).setWidth((int) Math.floor(total * 0.10));
-        model.getColumn(1).setMinWidth((int) Math.floor(total * 0.10));
-        model.getColumn(1).setPreferredWidth((int) Math.floor(total * 0.10));
-        model.getColumn(2).setWidth((int) Math.floor(total * 0.20));
-        model.getColumn(2).setMinWidth((int) Math.floor(total * 0.20));
-        model.getColumn(2).setPreferredWidth((int) Math.floor(total * 0.20));
-        model.getColumn(3).setWidth((int) Math.floor(total * 0.35));
-        model.getColumn(3).setMinWidth((int) Math.floor(total * 0.35));
-        model.getColumn(3).setPreferredWidth((int) Math.floor(total * 0.35));
-        model.getColumn(4).setWidth((int) Math.floor(total * 0.35));
-        model.getColumn(4).setMinWidth((int) Math.floor(total * 0.35));
-        model.getColumn(4).setPreferredWidth((int) Math.floor(total * 0.35));
-        paramTable1.setColumnModel(model);
+        paramTable1.updateColumnWidths();
 
     }
 
@@ -640,29 +610,6 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
     public ReportObject getParamAtIndex(int modelIndex) {
         return ((ParamTableModel) paramTable1.getModel()).get(modelIndex);
-    }
-
-    //don't want to have keyboard input for combobox
-    private class IgnoreKeySelectionManager implements JComboBox.KeySelectionManager, KeyListener {
-        @Override
-        public int selectionForKey(char aKey, ComboBoxModel aModel) {
-            return -1;
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e) {
-            e.consume();
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-            e.consume();
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-            e.consume();
-        }
     }
 
 }

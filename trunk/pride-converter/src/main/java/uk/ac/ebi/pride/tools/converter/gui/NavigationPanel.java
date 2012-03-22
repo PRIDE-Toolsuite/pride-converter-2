@@ -117,7 +117,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         }
 
         //init templates
-        TemplateUtilities.initTemplateFolders();
+        TemplateUtilities.initTemplates();
         initValidation();
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -461,14 +461,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
     }
 
     /**
-     * Clear the current ConverterForm being displayed
-     */
-    private void clear() {
-        ConverterForm form = forms.get(selectedIndex);
-        form.clear();
-    }
-
-    /**
      * clear all forms following the form given as a parameter - this is useful in the case
      * where one form regenerates source files that will then invalidate any preexisting data
      * in all subsequent forms
@@ -646,7 +638,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         panel4 = new JPanel();
         nextButton = new JButton();
         backButton = new JButton();
-        clearButton = new JButton();
         quitButton = new JButton();
         validationStatus = new JLabel();
         helpButton = new JButton();
@@ -706,7 +697,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 325, GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
                                     .addContainerGap())
             );
         }
@@ -735,15 +726,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     back();
-                }
-            });
-
-            //---- clearButton ----
-            clearButton.setText("Clear");
-            clearButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    clear();
                 }
             });
 
@@ -782,10 +764,8 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
             panel4Layout.setHorizontalGroup(
                     panel4Layout.createParallelGroup()
                             .addGroup(GroupLayout.Alignment.TRAILING, panel4Layout.createSequentialGroup()
-                                    .addContainerGap(402, Short.MAX_VALUE)
+                                    .addContainerGap(479, Short.MAX_VALUE)
                                     .addComponent(quitButton)
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(clearButton)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(backButton)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
@@ -803,7 +783,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                                             .addGroup(panel4Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                                     .addComponent(nextButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                     .addComponent(backButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                    .addComponent(clearButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                     .addComponent(quitButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                     .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             );
@@ -872,7 +851,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
     private JPanel panel4;
     private JButton nextButton;
     private JButton backButton;
-    private JButton clearButton;
     private JButton quitButton;
     private JLabel validationStatus;
     private JButton helpButton;
