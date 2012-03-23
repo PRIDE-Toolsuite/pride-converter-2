@@ -261,6 +261,16 @@ public class DataTypeForm extends AbstractForm {
         }
     }
 
+    private void cruxButtonActionPerformed() {
+        daoFormat = DAOFactory.DAO_FORMAT.CRUX;
+        descriptionArea.setText("<br/><b>Crux</b><br/><br/>Crux is a software toolkit for tandem mass spectrometry analysis, with a focus on peptide identification. The Crux-txt file format records the matches between MS/MS spectra and a sequence database using lines of tab delimited fields." +
+                "<br/><br/>" +
+                "More information here: <a href=\"http://noble.gs.washington.edu/proj/crux/\">http://noble.gs.washington.edu/proj/crux/</a>");
+        descriptionArea.setCaretPosition(0);
+        warnIfSpectrumOnly();
+        validationListerner.fireValidationListener(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -275,6 +285,7 @@ public class DataTypeForm extends AbstractForm {
         msgfRadio = new JRadioButton();
         mzIdentMLRadio = new JRadioButton();
         xtandemRadio = new JRadioButton();
+        cruxButton = new JRadioButton();
         panel4 = new JPanel();
         mzMLRadio = new JRadioButton();
         mzdataButton = new JRadioButton();
@@ -363,6 +374,16 @@ public class DataTypeForm extends AbstractForm {
                 }
             });
             panel2.add(xtandemRadio);
+
+            //---- cruxButton ----
+            cruxButton.setText(bundle.getString("WelcomeScreen.cruxButton.text"));
+            cruxButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    cruxButtonActionPerformed();
+                }
+            });
+            panel2.add(cruxButton);
         }
 
         //======== panel4 ========
@@ -448,8 +469,8 @@ public class DataTypeForm extends AbstractForm {
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup()
+                                        .addComponent(panel4, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
                                         .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
-                                        .addComponent(panel4, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
                                         .addComponent(panel2, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
                                         .addComponent(label1))
                                 .addContainerGap())
@@ -462,9 +483,9 @@ public class DataTypeForm extends AbstractForm {
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel4, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(panel4, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
@@ -473,6 +494,7 @@ public class DataTypeForm extends AbstractForm {
         dataTypeGroup.add(msgfRadio);
         dataTypeGroup.add(mzIdentMLRadio);
         dataTypeGroup.add(xtandemRadio);
+        dataTypeGroup.add(cruxButton);
         dataTypeGroup.add(mzMLRadio);
         dataTypeGroup.add(mzdataButton);
         dataTypeGroup.add(mzxmlButton);
@@ -495,6 +517,7 @@ public class DataTypeForm extends AbstractForm {
     private JRadioButton msgfRadio;
     private JRadioButton mzIdentMLRadio;
     private JRadioButton xtandemRadio;
+    private JRadioButton cruxButton;
     private JPanel panel4;
     private JRadioButton mzMLRadio;
     private JRadioButton mzdataButton;
