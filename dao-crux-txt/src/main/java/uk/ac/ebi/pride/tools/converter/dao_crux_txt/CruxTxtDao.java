@@ -62,7 +62,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     /**
      * The input properties Crux-txt file.
      */
-    private final File propertiesFile;
+    private final File parametersFile;
 
     /**
      * File header
@@ -128,9 +128,9 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 	private String searchEngine = "Crux";
 
     /**
-     * Contains all the properties of this DAO (get/setConfiguration)
+     * Contains all the supportedProperties of this DAO (get/setConfiguration)
      */
-	private Properties properties;
+	private Properties supportedProperties;
 
     /**
      * Built up from the search parameter file
@@ -153,7 +153,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     private String scoreCriteria;
 
     /**
-     * Filter object built from properties
+     * Filter object built from supportedProperties
      */
     private FilterCriteria filter;
 
@@ -168,7 +168,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
      */
 	public CruxTxtDao(File resultFolder) {
 		this.targetFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.target.txt");
-		this.propertiesFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.params.txt");
+		this.parametersFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.params.txt");
         this.decoyFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.decoy.txt");
 
 		// parse the Crux files
@@ -184,7 +184,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         proteinsDecoy = resDecoy.proteins;
         decoyFileIndex = resDecoy.fileIndex;
         // parse parameter file
-        params = CruxTxtParamsParser.parse(propertiesFile);
+        params = CruxTxtParamsParser.parse(parametersFile);
 	}
 
     @SuppressWarnings("rawtypes")
@@ -223,13 +223,13 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     }
 
     /**
-     * Sets the properties associated to this DAO
-     * @param props The properties to be associated with the DAO
+     * Sets the supportedProperties associated to this DAO
+     * @param props The supportedProperties to be associated with the DAO
      */
     public void setConfiguration(Properties props) {
-        properties = props;
+        supportedProperties = props;
 
-        // set member properties here using properties object
+        // set member supportedProperties here using supportedProperties object
         spectraFile = new File(props.getProperty(SupportedProperty.SPECTRUM_FILE.getName()));
         decoyPrefix = props.getProperty(SupportedProperty.DECOY_PREFIX.getName());
         threshold = props.getProperty(SupportedProperty.THRESHOLD.getName());
@@ -240,7 +240,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         }
         scoreCriteria = props.getProperty(SupportedProperty.SCORE_CRITERIA.getName());
 
-        // Create the filter object from the properties
+        // Create the filter object from the supportedProperties
         if (ScoreCriteria.XCORR_RANK.getName().equals(scoreCriteria)) {
             filter = new XcorrRankFilterCriteria();
             filter.setThreshold(Integer.parseInt(threshold));
@@ -255,11 +255,11 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     }
 
     /**
-     * Gets the properties associated with this DAO
-     * @return The properties associated with the DAO
+     * Gets the supportedProperties associated with this DAO
+     * @return The supportedProperties associated with the DAO
      */
     public Properties getConfiguration() {
-        return properties;
+        return supportedProperties;
     }
 
     /**
@@ -395,7 +395,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 	public Param getProcessingMethod() {
         Param param = new Param();
         DAOCvParams cvParam = DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE;
-        cvParam.setValue(this.properties.getProperty("precursor-window") + " " + this.properties.getProperty("precursor-window-type"));
+        cvParam.setValue(this.params.properties.getProperty("precursor-window") + " " + this.params.properties.getProperty("precursor-window-type"));
         param.getCvParam().add(cvParam.getParam());
 		return param;
 	}
