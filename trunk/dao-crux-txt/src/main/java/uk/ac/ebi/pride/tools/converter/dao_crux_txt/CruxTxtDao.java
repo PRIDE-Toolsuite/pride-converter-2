@@ -192,10 +192,10 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
         List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
 
-        // Spectra file property
-        DAOProperty<String> spectrumFilePath = new DAOProperty<String>(SupportedProperty.SPECTRUM_FILE.getName(), null);
-        spectrumFilePath.setDescription("Allows to manually set the path to the spectrum source file. This should be mandatory since, in Crux, spectra files are not references within the identification or parameter files.");
-        supportedProperties.add(spectrumFilePath);
+//        // Spectra file property
+//        DAOProperty<String> spectrumFilePath = new DAOProperty<String>(SupportedProperty.SPECTRUM_FILE.getName(), null);
+//        spectrumFilePath.setDescription("Allows to manually set the path to the spectrum source file. This should be mandatory since, in Crux, spectra files are not references within the identification or parameter files.");
+//        supportedProperties.add(spectrumFilePath);
 
         // we need the one to prefix decoy identifications
         DAOProperty<String> decoyPrefix = new DAOProperty<String>(SupportedProperty.DECOY_PREFIX.getName(), null);
