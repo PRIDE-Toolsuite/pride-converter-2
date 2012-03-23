@@ -17,6 +17,7 @@ import java.util.Collection;
 public class CruxPeptideTest extends TestCase {
 
     CruxPeptide cruxPeptide;
+    CruxPeptide cruxPeptideWrong;
     CruxParametersParserResult params;
     private String paramsFilePath = "src/test/resources/crux-output/search.params.txt";
 
@@ -42,11 +43,13 @@ public class CruxPeptideTest extends TestCase {
     
     public void testGetPTMs() throws Exception {
         Collection<PeptidePTM> ptms = cruxPeptide.getPTMs(params);
+        assertEquals(ptms.size(), 4);
     }
 
     public void testGetAA() throws Exception {
         assertTrue(cruxPeptide.getPrevAA("sp|P35659|DEK_HUMAN(126)").equals("A"));
         assertTrue(cruxPeptide.getNextAA("sp|P35659|DEK_HUMAN(126)").equals("B"));
     }
+
 }
 		
