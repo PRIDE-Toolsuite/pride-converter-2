@@ -6,6 +6,7 @@ import uk.ac.ebi.pride.tools.converter.dao_crux_txt.properties.ScoreCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.properties.SupportedProperty;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
+import uk.ac.ebi.pride.tools.converter.report.model.Param;
 
 import java.io.File;
 import java.util.Collection;
@@ -74,13 +75,18 @@ public class CruxTxtDaoTest extends TestCase {
         while (specAllIt.hasNext()) {
             Spectrum newSpectrum = specAllIt.next();
             count++;
-            System.out.println("Obtained spectrum: " + newSpectrum.getId());
+//            System.out.println("Obtained spectrum: " + newSpectrum.getId());
         }
 
         assertEquals(spectraCountAll,count);
 
         assertEquals(spectraCountAll,spectraInFile);
 
+    }
+
+    public void testOtherAPIMethods() {
+        Param param = cruxTxtDao.getProcessingMethod();
+        assertNotNull(param);
     }
 
 }
