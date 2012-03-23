@@ -34,12 +34,12 @@ public class CruxTxtDaoTest extends TestCase {
     public void setUp() throws Exception {
         Properties props = new Properties();
         props.setProperty(SupportedProperty.DECOY_PREFIX.getName(), decoyPrefix);
-        props.setProperty(SupportedProperty.SPECTRUM_FILE.getName(), spectraFilePath);
         props.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), scoreCriteria);
         props.setProperty(SupportedProperty.THRESHOLD.getName(), threshold);
 //        props.setProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "false");
 
         cruxTxtDao.setConfiguration(props);
+        cruxTxtDao.setExternalSpectrumFile(spectraFilePath);
     }
 
     public void testIdentificationsIterator() throws Exception {
@@ -59,7 +59,11 @@ public class CruxTxtDaoTest extends TestCase {
 
         identification = cruxTxtDao.getIdentificationByUID("d_sw|A6NIX2|WTIP_HUMAN(622)");
         assertNotNull(identification);
+
+        identification = cruxTxtDao.getIdentificationByUID("t_sw|Q9H7Z6|MYST1_HUMAN(433)");
+        assertNotNull(identification);
     }
+
 
     public void testPTMs() throws Exception {
         Collection<PTM> ptms = cruxTxtDao.getPTMs();
