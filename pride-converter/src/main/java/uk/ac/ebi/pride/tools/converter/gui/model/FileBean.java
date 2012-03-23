@@ -5,6 +5,9 @@ package uk.ac.ebi.pride.tools.converter.gui.model;
  * User: rcote
  * Date: 27/01/12
  * Time: 13:50
+ * <p/>
+ * Data holder for file paths associated with a conversion. Note that it is assumed
+ * that all file paths are absolute (@see File#getAbsolutePath())
  */
 public class FileBean implements Comparable<FileBean> {
 
