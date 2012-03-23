@@ -13,10 +13,11 @@ import java.util.*;
 /**
  * Created by IntelliJ IDEA.
  *
- * @author melih
  * @author rcote
  *         Date: 06/06/2011
  *         Time: 11:08
+ *         <p/>
+ *         A data holder class for all data used by PRIDE Converter
  */
 public class ConverterData {
 
@@ -41,6 +42,11 @@ public class ConverterData {
     private Set<DatabaseMapping> databaseMappings = new HashSet<DatabaseMapping>();
     private ReportReaderDAO masterDAO;
     private Set<String> filesToDelete = new HashSet<String>();
+    /**
+     * A map that contains custom report beans for a given source file. This is used in the
+     * conversion of several files at once. The map is keyed on the absolute path of the
+     * source file
+     */
     private Map<String, ReportBean> customeReportFields = new TreeMap<String, ReportBean>();
 
     private String mergedOutputFile = null;
@@ -61,6 +67,15 @@ public class ConverterData {
     public FileBean getFileBeanByInputFileName(String filename) {
         for (FileBean fb : dataFiles) {
             if (fb.getInputFile().equals(filename)) {
+                return fb;
+            }
+        }
+        return null;
+    }
+
+    public FileBean getFileBeanByReportFileName(String filename) {
+        for (FileBean fb : dataFiles) {
+            if (fb.getReportFile() != null && fb.getReportFile().equals(filename)) {
                 return fb;
             }
         }

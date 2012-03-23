@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.tools.converter.report.io;
 
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.ReportBean;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
@@ -9,7 +10,9 @@ import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * User: rcote
@@ -23,6 +26,7 @@ public class ReportMetadataCopier {
 
     public static void copyMetadata(String masterFileName, List<String> reportFileNames) throws ConverterException, InvalidFormatException {
 
+        String outFileName;
         File masterFile = new File(masterFileName);
         if (masterFile.exists()) {
 
@@ -43,41 +47,30 @@ public class ReportMetadataCopier {
             }
 
             for (String reportFileName : reportFileNames) {
+
                 File reportFile = new File(reportFileName);
-                String outFileName;
                 if (reportFile.exists()) {
 
                     //copySingleMetadata will override certain param collections
                     //To avoid stale params from being written to the wrong file, always read the metadata fresh
                     Metadata masterMetadata = masterReader.getMetadata();
 
-                    //remove any annotations that should only be in the master file but not
-                    //not to any other file
-                    ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(masterReader.getSearchResultIdentifier().getSourceFilePath());
+                    //neet to update short label / experiment title
+                    //check to see if we have a custom bean and safely override the data!
+                    FileBean fb = ConverterData.getInstance().getFileBeanByReportFileName(reportFile.getAbsolutePath());
+                    ReportBean rb = ConverterData.getInstance().getCustomeReportFields().get(fb.getInputFile());
                     if (rb != null) {
-                        //remove custom params that will already have been written to master report file
-                        //but must not be written to the copied files
-                        Set<String> observedParams = new HashSet<String>();
+                        masterMetadata.setShortLabel(rb.getShortLabel());
+                        masterMetadata.setTitle(rb.getExperimentTitle());
+                        //if the sample description of the report bean is not null,
+                        //it will contain all of the params that must be written out
+                        //this cohesion is maintained by the SampleForm
                         if (rb.getSampleDescription() != null) {
-                            Description sample = rb.getSampleDescription();
-                            for (CvParam cv : sample.getCvParam()) {
-                                observedParams.add(cv.getAccession());
-                            }
-                            for (UserParam user : sample.getUserParam()) {
-                                observedParams.add(user.getName());
-                            }
-                        }
-                        for (Iterator<CvParam> i = masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getCvParam().iterator(); i.hasNext(); ) {
-                            CvParam cv = i.next();
-                            if (observedParams.contains(cv.getAccession())) {
-                                i.remove();
-                            }
-                        }
-                        for (Iterator<UserParam> i = masterMetadata.getMzDataDescription().getAdmin().getSampleDescription().getUserParam().iterator(); i.hasNext(); ) {
-                            UserParam user = i.next();
-                            if (observedParams.contains(user.getName())) {
-                                i.remove();
-                            }
+                            masterMetadata.getMzDataDescription().getAdmin().setSampleDescription(rb.getSampleDescription());
+                            masterMetadata.getMzDataDescription().getAdmin().setSampleName(rb.getSampleName());
+                        } else {
+                            //if there is no sample description,
+                            //use the params from the master report file
                         }
                     }
 
@@ -161,84 +154,6 @@ public class ReportMetadataCopier {
         return retval;
     }
 
-    /**
-     * merges three sets of params. Iterates over all of the params from the masterParam object (obtained from the
-     * masterDAO) and compares them to the customDescription object (created manually). If the customDescription
-     * does not contain a param from the master, it will be added. If it does already contain a param,
-     * that param will not be overwritten. Does the same with params coming from the DAO
-     * <p/>
-     * DOES NOT CHANGE THE ORIGINAL OBJECTS
-     * <p/>
-     * PACKAGE METHOD so that it can be used by ReportWriter
-     *
-     * @param masterParams
-     * @param daoParams
-     * @return
-     */
-    static Description mergeSampleParams(Description customDescription, Param masterParams, Param daoParams) {
-
-        Description retval = new Description();
-        retval.setComment(customDescription.getComment());
-        retval.getCvParam().addAll(customDescription.getCvParam());
-        retval.getUserParam().addAll(customDescription.getUserParam());
-
-        //check to see if we have a newt annotation. if we do, don't copy any annotation from the master/dao.
-        boolean hasNEWT = false;
-        for (CvParam cv : customDescription.getCvParam()) {
-            if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
-                hasNEWT = true;
-                break;
-            }
-        }
-
-        //copy dao params to description
-        for (CvParam cv : daoParams.getCvParam()) {
-            //add params if:
-            //label is not NEWT and accession not already present
-            // OR
-            // label is NEWT and not already contains NEWT accession
-            //
-            if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
-                if (!hasNEWT) {
-                    retval.getCvParam().add(cv);
-                }
-            } else {
-                if (!containsAccession(customDescription.getCvParam(), cv.getAccession())) {
-                    retval.getCvParam().add(cv);
-                }
-            }
-        }
-
-        //copy master params to description
-        for (CvParam cv : masterParams.getCvParam()) {
-            //add params if:
-            //label is not NEWT and accession not already present
-            // OR
-            // label is NEWT and not already contains NEWT accession
-            //
-            if (cv.getCvLabel().equalsIgnoreCase("NEWT")) {
-                if (!hasNEWT) {
-                    retval.getCvParam().add(cv);
-                }
-            } else {
-                if (!containsAccession(customDescription.getCvParam(), cv.getAccession())) {
-                    retval.getCvParam().add(cv);
-                }
-            }
-        }
-
-        for (UserParam up : daoParams.getUserParam()) {
-            if (!containsName(customDescription.getUserParam(), up.getName())) {
-                retval.getUserParam().add(up);
-            }
-        }
-        for (UserParam up : masterParams.getUserParam()) {
-            if (!containsName(customDescription.getUserParam(), up.getName())) {
-                retval.getUserParam().add(up);
-            }
-        }
-        return retval;
-    }
 
     private static boolean containsAccession(List<CvParam> cvParam, String accession) {
         for (CvParam cv : cvParam) {

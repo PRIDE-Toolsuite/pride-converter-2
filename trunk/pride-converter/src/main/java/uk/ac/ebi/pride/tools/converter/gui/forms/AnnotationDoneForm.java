@@ -207,7 +207,7 @@ public class AnnotationDoneForm extends AbstractForm {
 
             //copy metadata over to other report files, if any
             //only need to copy metadata if we have several input files at once
-            if (ConverterData.getInstance().getMasterFile() != null && ConverterData.getInstance().getDataFiles().size() > 1) {
+            if (ConverterData.getInstance().getDataFiles().size() > 1) {
                 String masterReportFileName = ConverterData.getInstance().getMasterFile().getReportFile();
                 List<String> destFileNames = new ArrayList<String>(ConverterData.getInstance().getReportFiles());
                 NavigationPanel.getInstance().setWorkingMessage("Updating metadata from master report file");

@@ -34,11 +34,11 @@
          <class>org.jdesktop.layout.GroupLayout</class>
          <void method="setProperty">
           <string>$horizontalGroup</string>
-          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::460:x, comp singleSpectrumFile::l::460:x, seq l {comp singleFastaFile::::331:x, space :::p, comp fastaFormatList::::123:x}, seq l {comp singleSourceFile::::439:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :::p}, comp multipleModeLabel::t:p::p}}}</string>
+          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::458:x, comp singleSpectrumFile::l::458:x, seq l {comp singleFastaFile::::330:x, space :::p, comp fastaFormatList::::122:x}, seq l {comp singleSourceFile::::437:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :p:6:p}, seq t {comp multipleModeLabel:::p::p, space :::p}}}}</string>
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq {comp multipleModeLabel:::p::p, space :::x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string>
+          <string>par l {seq t {space :::p, comp multipleModeLabel:::p::p, space :::x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string>
          </void>
         </object>
         <void method="setProperty">
@@ -467,7 +467,7 @@
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq l {comp showHideLabel:::p::p, space :::p, comp tableScrollPane::::235:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string>
+          <string>par l {seq l {comp showHideLabel:::p::p, space :::p, comp tableScrollPane::::236:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string>
          </void>
         </object>
         <void method="setProperty">

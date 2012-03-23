@@ -267,6 +267,7 @@ public class IOUtilities {
         }
 
         try {
+
             //if we have multiple files, we need to create a "master" file
             if (ConverterData.getInstance().getDataFiles().size() > 1) {
                 File reportFile = createMasterReportFile(ConverterData.getInstance().getDataFiles().iterator().next().getReportFile());
@@ -288,6 +289,7 @@ public class IOUtilities {
                 ReportReaderDAO dao = new ReportReaderDAO(new File(masterFile.getReportFile()));
                 ConverterData.getInstance().setMasterDAO(dao);
             }
+
         } catch (IOException e) {
             logger.fatal("Error creating master file for editing, error is " + e.getMessage(), e);
             GUIException gex = new GUIException(e);
