@@ -95,7 +95,7 @@ public class PrideConverterCLIOptions {
 
         Option engine = OptionBuilder.withArgName("engine")
                 .hasArg()
-                .withDescription("search engine. Must be one of the following values: [MASCOT, MGF, DTA, PKL, MS2, mzML, XTandem, mzIdentML, mzXML, mzData, MSGF]")
+                .withDescription("search engine. Must be one of the following values: [MASCOT, MGF, DTA, PKL, MS2, mzML, XTandem, mzIdentML, mzXML, mzData, MSGF, crux_txt]")
                 .create(OPTIONS.ENGINE.getValue());
 
         Option mode = OptionBuilder.withArgName("mode")

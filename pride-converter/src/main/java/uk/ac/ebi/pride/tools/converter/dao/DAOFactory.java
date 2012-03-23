@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.dao;
 
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
+import uk.ac.ebi.pride.tools.converter.dao_crux_txt.CruxTxtDao;
 import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
@@ -34,7 +35,8 @@ public class DAOFactory {
         MZML("mzml", "mzML", true, "help.ui.dao.mzml", false, false, false, new MzMLFileFilter()),
         MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, false, new MzXMLFileFilter()),
         MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, new MzDataFileFilter()),
-        MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter());
+        MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter()),
+        CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", false, true, false, new CruxFileFilter());
 
         private String commandLineName;
         private String niceName;
@@ -151,6 +153,9 @@ public class DAOFactory {
             case MSGF:
                 dao = new MsgfDao(new File(sourcePath));
                 break;
+            case CRUX:
+                dao = new CruxTxtDao(new File(sourcePath));
+                break;
             case PRIDE:
                 //todo
                 throw new UnsupportedOperationException("No DAO defined for " + format);
@@ -191,6 +196,8 @@ public class DAOFactory {
                 return MzDataDAO.getSupportedProperties();
             case MSGF:
                 return MsgfDao.getSupportedProperties();
+            case CRUX:
+                return CruxTxtDao.getSupportedProperties();
             case PRIDE:
                 //todo
                 return Collections.emptyList();
