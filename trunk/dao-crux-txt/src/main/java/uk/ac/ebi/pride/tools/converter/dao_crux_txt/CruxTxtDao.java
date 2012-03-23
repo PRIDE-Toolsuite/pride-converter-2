@@ -185,6 +185,8 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         decoyFileIndex = resDecoy.fileIndex;
         // parse parameter file
         params = CruxTxtParamsParser.parse(parametersFile);
+
+        setDefaultConfiguration();
 	}
 
     @SuppressWarnings("rawtypes")
@@ -250,10 +252,27 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         } else if (ScoreCriteria.DELTA_CN.getName().equals(scoreCriteria)) {
             filter = new DeltaCnFilterCriteria();
             filter.setThreshold(Double.parseDouble(threshold));
+        } else { // default case
+            filter = new XcorrRankFilterCriteria();
+            filter.setThreshold(5);
         }
 
     }
 
+    /**
+     * Set default configuration
+     */
+    private void setDefaultConfiguration() {
+        Properties properties = new Properties();
+        properties.setProperty(SupportedProperty.DECOY_PREFIX.getName(), "");
+        properties.setProperty(SupportedProperty.THRESHOLD.getName(), "5");
+        properties.setProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "true");
+        properties.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.XCORR_RANK.getName());
+        this.filter = new XcorrRankFilterCriteria();
+        this.filter.setThreshold(5);
+        this.setConfiguration(properties);
+    }
+    
     /**
      * Gets the supportedProperties associated with this DAO
      * @return The supportedProperties associated with the DAO
