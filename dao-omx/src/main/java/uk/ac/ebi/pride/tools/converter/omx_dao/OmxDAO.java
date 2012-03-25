@@ -60,7 +60,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
     private Properties properties = new Properties();
     /**
      * Maps the omssa modification ids (which are integers) to the modification
-     * details in the mods.xml and usermods.xml files
+     * details in the mods.xml and usermods.xml files.
      */
     HashMap<Integer, OmssaModification> omssaModificationDetails;
     /**
@@ -91,7 +91,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
      */
     private int spectrumCounter = -1;
     /**
-     * The protein accession decoy prefix to use
+     * The protein accession decoy prefix to use.
      */
     private String decoyPrefix = "DECOY_";
 
@@ -517,21 +517,23 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
     }
 
     @Override
-    public int getSpectrumReferenceForPeptideUID(String peptideUID) {
+    public int getSpectrumReferenceForPeptideUID(String peptideUID) throws InvalidFormatException {
+        
+        //@TODO: verify the implementation of this method!!
+        
+        // return the spectrum id (everything before the first ".")
+        int index = peptideUID.indexOf('.');
 
-        // @TODO: Harald: not sure what this method is supposed to do...?
+        if (index == -1) {
+            throw new InvalidFormatException("Invalid peptideUID '" + peptideUID + "'");
+        }
 
-        // From DAO interface: must return -1 if no spectrum ref found
-
-        throw new UnsupportedOperationException("Not yet implemented.");
+        return Integer.parseInt(peptideUID.substring(0, index));
     }
 
     @Override
-    public Identification getIdentificationByUID(String identificationUID) {
-
-        // @TODO: Harald: not sure what this method is supposed to do...?
-
-        throw new UnsupportedOperationException("Not yet implemented.");
+    public Identification getIdentificationByUID(String identificationUID) throws InvalidFormatException {
+        return convertProteinToIdentification(identificationUID, false);
     }
 
     @Override
@@ -720,7 +722,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
                         }
 
                         // add the precursor charge
-                        String chargeString = "" + currentSpectrum.MSSpectrum_charge.MSSpectrum_charge_E.get(0); // @TODO: what about multiple charges??
+                        String chargeString = "" + currentSpectrum.MSSpectrum_charge.MSSpectrum_charge_E.get(0); // @TODO: what about multiple charges?? // note: this the spectrum charge and not the peptide charge...
                         chargeString = chargeString.replaceFirst("\\+", "");
                         additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(chargeString));
 
@@ -735,7 +737,8 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
 
                     } else {
                         // add the fragment ions
-                        List<FragmentIon> fragmentIons = getPeptideFragmentIons(currentMSHit);
+                        List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> fragmentIons =
+                                getPeptideFragmentIons(currentMSHit, currentSpectrum);
 
                         if (fragmentIons != null && fragmentIons.size() > 0) {
                             convertedPeptide.getFragmentIon().addAll(fragmentIons);
@@ -915,7 +918,7 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
 
         instrument.setMsLevel(msLevel);
 
-        // @TODO: the mz range has to be implemented
+        // @TODO: the mz range should be implemented?
 
         // TODO: PRIDE - document how the spectrumSettings/spectrumInstrument should be used. Currently, I assume that the mzStart should be the beginning of the scan range, not the min mass in the spec.
         // TODO: DOC - rangeStart / Stop is either the set parameters, or if the parameters were not set the min and max of the spectrum masses
@@ -1097,18 +1100,191 @@ public class OmxDAO extends AbstractDAOImpl implements DAO {
      * @param currentMSHit
      * @return
      */
-    private List<FragmentIon> getPeptideFragmentIons(MSHits currentMSHit) {
+    private ArrayList<FragmentIon> getPeptideFragmentIons(MSHits currentMSHit, MSSpectrum currentSpectrum) {
 
-        List<FragmentIon> prideIons = new ArrayList<FragmentIon>();
+        ArrayList<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> prideIons =
+                new ArrayList<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon>();
 
         // get the list of fragment ions for the current peptide identification
         List<MSMZHit> currentFragmentIons = currentMSHit.MSHits_mzhits.MSMZHit;
 
+        double currentIntensityScale = currentSpectrum.MSSpectrum_iscale;
+
         // iterate the fragment ions, detect the type and create CV params for each of them
         for (MSMZHit currentFragmentIon : currentFragmentIons) {
-            // @TODO: implement me!!
+
+            // Now we have to map the reported fragment ion to its corresponding peak.
+            // Note that the values given in the OMSSA file are scaled.
+            int fragmentIonMzValueUnscaled = currentFragmentIon.MSMZHit_mz;
+            double fragmentIonIntensityScaled = -1;
+            double observedPeakMzValue = -1;
+            double fragmentIonMassError = -1;
+
+            List<Integer> mzValues = currentSpectrum.MSSpectrum_mz.MSSpectrum_mz_E;
+            List<Integer> intensityValues = currentSpectrum.MSSpectrum_abundance.MSSpectrum_abundance_E;
+
+            // Iterate the peaks and find the values within the fragment ion error range.
+            // If more than one match, use the most intense.
+            for (int j = 0; j < mzValues.size(); j++) {
+
+                // check if the fragment ion is within the mass error range
+                if (Math.abs(mzValues.get(j) - fragmentIonMzValueUnscaled) <= (ionCoverageErrorMargin * omssaResponseScale)) {
+
+                    // select this peak if it's the most intense peak within range
+                    if ((intensityValues.get(j).doubleValue() / currentIntensityScale) > fragmentIonIntensityScaled) {
+                        fragmentIonIntensityScaled = intensityValues.get(j).doubleValue() / currentIntensityScale;
+
+                        // calculate the fragmet ion mass
+                        fragmentIonMassError = (mzValues.get(j).doubleValue() - fragmentIonMzValueUnscaled) / omssaResponseScale; // @TODO: or the other way around?? The order decides the sign.
+                        observedPeakMzValue = mzValues.get(j).doubleValue() / omssaResponseScale;
+                    }
+                }
+            }
+
+            // check if any peaks in the spectrum matched the fragment ion
+            if (fragmentIonIntensityScaled == -1) {
+                System.out.println("Unable to map the fragment ion \'"
+                        + currentFragmentIon.MSMZHit_ion.MSIonType + " " + currentFragmentIon.MSMZHit_number + "\'!!");
+            } else {
+
+                // Now we have to map the reported fragment ion to its corresponding peak.
+                FragmentIon fragmentIon = new uk.ac.ebi.pride.tools.converter.report.model.FragmentIon();
+
+                // charge
+                fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_CHARGE.getParam(currentFragmentIon.MSMZHit_charge));
+
+                // intensity
+                fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(fragmentIonIntensityScaled));
+
+                // m/z
+                fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MZ.getParam(observedPeakMzValue));
+
+                // mass error
+                fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MASS_ERROR.getParam(fragmentIonMassError));
+
+
+                // ion type is [0-10], 0 is a-ion, 1 is b-ion etc
+                int msIonType = currentFragmentIon.MSMZHit_ion.MSIonType;
+                
+                // tag used for netutal loss and immonium ion type
+                String msIonNeutralLossOrImmoniumIonTag = "";
+
+                // get the omssa neutral loss type
+                int msIonNeutralLossType = currentFragmentIon.MSMZHit_moreion.MSIon.MSIon_neutralloss.MSIonNeutralLoss;
+
+                // -1 means no neutral loss reported
+                if (msIonNeutralLossType != -1) {
+                    msIonNeutralLossOrImmoniumIonTag += "_" + msIonNeutralLossType;
+                } else {
+                    // check for immonium ions
+                    if (currentFragmentIon.MSMZHit_moreion.MSIon.MSIon_immonium.MSImmonium.MSImmonium_parent != null) {
+                        msIonNeutralLossOrImmoniumIonTag += "_" + currentFragmentIon.MSMZHit_moreion.MSIon.MSIon_immonium.MSImmonium.MSImmonium_parent;
+                    }
+                }
+
+                // get the cv mapping
+                CvParam currentCvParam = getCvNameMapping("OMSSA" + "_" + msIonType + msIonNeutralLossOrImmoniumIonTag, currentFragmentIon.MSMZHit_number);
+
+                // add the mapping if found
+                if (currentCvParam != null) {
+                    fragmentIon.getCvParam().add(currentCvParam);
+                    prideIons.add(fragmentIon);
+                }
+            }
         }
 
         return prideIons;
+    }
+
+    /**
+     * Map the OMSSA fragment ions to the correct PRIDE CV param.
+     *
+     * @param key
+     * @param position
+     * @return
+     */
+    private CvParam getCvNameMapping(String key, int position) {
+
+        if (key.equalsIgnoreCase("OMSSA_0")) {
+            return new CvParam("PRIDE", "PRIDE:0000233", "a ion", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_0_0")) {
+            return new CvParam("PRIDE", "PRIDE:0000234", "a ion -H2O", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_0_1")) {
+            return new CvParam("PRIDE", "PRIDE:0000235", "a ion -NH3", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_1")) {
+            return new CvParam("PRIDE", "PRIDE:0000194", "b ion", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_1_0")) {
+            return new CvParam("PRIDE", "PRIDE:0000196", "b ion -H2O", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_1_1")) {
+            return new CvParam("PRIDE", "PRIDE:0000195", "b ion -NH3", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_2")) {
+            return new CvParam("PRIDE", "PRIDE:0000236", "c ion", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_2_0")) {
+            return new CvParam("PRIDE", "PRIDE:0000237", "c ion -H2O", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_2_1")) {
+            return new CvParam("PRIDE", "PRIDE:0000238", "c ion -NH3", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_3")) {
+            return new CvParam("PRIDE", "PRIDE:0000227", "x ion", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_3_0")) {
+            return new CvParam("PRIDE", "PRIDE:0000228", "x ion -H2O", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_3_1")) {
+            return new CvParam("PRIDE", "PRIDE:0000229", "x ion -NH3", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_4")) {
+            return new CvParam("PRIDE", "PRIDE:0000193", "y ion", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_4_0")) {
+            return new CvParam("PRIDE", "PRIDE:0000197", "y ion -H2O", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_4_1")) {
+            return new CvParam("PRIDE", "PRIDE:0000198", "y ion -NH3", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_5")) {
+            return new CvParam("PRIDE", "PRIDE:0000230", "z ion", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_5_0")) {
+            return new CvParam("PRIDE", "PRIDE:0000231", "z ion -H2O", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_5_1")) {
+            return new CvParam("PRIDE", "PRIDE:0000232", "z ion -NH3", "" + position);
+        } else if (key.equalsIgnoreCase("OMSSA_6")) {
+            return new CvParam("PRIDE", "PRIDE:0000263", "precursor ion", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_A")) {
+            return new CvParam("PRIDE", "PRIDE:0000240", "immonium A", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_C")) {
+            return new CvParam("PRIDE", "PRIDE:0000241", "immonium C", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_D")) {
+            return new CvParam("PRIDE", "PRIDE:0000242", "immonium D", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_E")) {
+            return new CvParam("PRIDE", "PRIDE:0000243", "immonium E", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_F")) {
+            return new CvParam("PRIDE", "PRIDE:0000244", "immonium F", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_G")) {
+            return new CvParam("PRIDE", "PRIDE:0000245", "immonium G", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_H")) {
+            return new CvParam("PRIDE", "PRIDE:0000246", "immonium H", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_I")) {
+            return new CvParam("PRIDE", "PRIDE:0000247", "immonium I", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_K")) {
+            return new CvParam("PRIDE", "PRIDE:0000248", "immonium K", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_L")) {
+            return new CvParam("PRIDE", "PRIDE:0000249", "immonium L", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_M")) {
+            return new CvParam("PRIDE", "PRIDE:0000250", "immonium M", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_N")) {
+            return new CvParam("PRIDE", "PRIDE:0000251", "immonium N", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_P")) {
+            return new CvParam("PRIDE", "PRIDE:0000252", "immonium P", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_Q")) {
+            return new CvParam("PRIDE", "PRIDE:0000253", "immonium Q", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_R")) {
+            return new CvParam("PRIDE", "PRIDE:0000254", "immonium R", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_S")) {
+            return new CvParam("PRIDE", "PRIDE:0000255", "immonium S", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_T")) {
+            return new CvParam("PRIDE", "PRIDE:0000256", "immonium T", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_V")) {
+            return new CvParam("PRIDE", "PRIDE:0000257", "immonium V", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_W")) {
+            return new CvParam("PRIDE", "PRIDE:0000258", "immonium W", null);
+        } else if (key.equalsIgnoreCase("OMSSA_8_Y")) {
+            return new CvParam("PRIDE", "PRIDE:0000259", "immonium Y", null);
+        } else {
+            return null; // unknown or unsupported ion type...
+        }
     }
 }
