@@ -1,8 +1,8 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls;
 
 import junit.framework.TestCase;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers.CruxIdentificationsParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers.CruxTxtIdentificationsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxIdentificationsParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtIdentificationsParser;
 
 import java.io.File;
 import java.util.Map;

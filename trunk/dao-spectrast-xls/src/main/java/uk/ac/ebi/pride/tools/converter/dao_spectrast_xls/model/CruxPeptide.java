@@ -1,6 +1,6 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.model;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model;
 
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers.CruxParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxParametersParserResult;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;

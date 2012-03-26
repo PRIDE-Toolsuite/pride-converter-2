@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.filters;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters;
 
 import java.util.List;
 import java.util.Map;

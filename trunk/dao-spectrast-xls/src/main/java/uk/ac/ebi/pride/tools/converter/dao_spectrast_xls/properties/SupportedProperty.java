@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.properties;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties;
 
 /**
  * @author Jose A. Dianes

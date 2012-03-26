@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls;
 
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
@@ -6,18 +6,18 @@ import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.filters.DeltaCnFilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.filters.FilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.filters.XcorrRankFilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.filters.XcorrScoreFilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.model.CruxPeptide;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.model.CruxProtein;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers.CruxIdentificationsParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers.CruxParametersParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers.CruxTxtIdentificationsParser;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers.CruxTxtParamsParser;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.properties.ScoreCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.properties.SupportedProperty;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.DeltaCnFilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.FilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.XcorrRankFilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.XcorrScoreFilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxPeptide;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxProtein;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxIdentificationsParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtIdentificationsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtParamsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.ScoreCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.SupportedProperty;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
@@ -47,7 +47,7 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
     /**
 	 * Logger used by this class
 	 */
-	private static final Logger logger = Logger.getLogger(uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.SpectraSTTxtDao.class);
+	private static final Logger logger = Logger.getLogger(uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.SpectraSTTxtDao.class);
 
     /**
 	 * The input target Crux-txt file.

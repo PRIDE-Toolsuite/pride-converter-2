@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers;
 
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;

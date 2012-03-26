@@ -1,9 +1,9 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls;
 
 import junit.framework.TestCase;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.properties.ScoreCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.properties.SupportedProperty;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.ScoreCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.SupportedProperty;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
