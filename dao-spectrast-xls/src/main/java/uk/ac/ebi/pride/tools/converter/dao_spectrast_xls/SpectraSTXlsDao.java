@@ -10,12 +10,12 @@ import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.DeltaCnFilterCr
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.FilterCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.XcorrRankFilterCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.XcorrScoreFilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxPeptide;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxProtein;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxIdentificationsParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxParametersParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtIdentificationsParser;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtParamsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTPeptide;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTProtein;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTIdentificationsParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTXlsIdentificationsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTXlsParamsParser;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.ScoreCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.SupportedProperty;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
@@ -31,7 +31,7 @@ import java.util.*;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
+public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 
     private enum SpectraType {
         /**
@@ -47,7 +47,7 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
     /**
 	 * Logger used by this class
 	 */
-	private static final Logger logger = Logger.getLogger(uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.SpectraSTTxtDao.class);
+	private static final Logger logger = Logger.getLogger(SpectraSTXlsDao.class);
 
     /**
 	 * The input target Crux-txt file.
@@ -83,12 +83,12 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
 	/**
 	 * The proteins found in the Crux-txt target file
 	 */
-	private Map<String, CruxProtein> proteins;
+	private Map<String, SpectraSTProtein> proteins;
 
     /**
      * The proteins found in the Crux-txt decoy file
      */
-    private Map<String, CruxProtein> proteinsDecoy;
+    private Map<String, SpectraSTProtein> proteinsDecoy;
 
 	/**
 	 * The spectra file
@@ -135,7 +135,7 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
     /**
      * Built up from the search parameter file
      */
-    private CruxParametersParserResult params;
+    private SpectraSTParametersParserResult params;
 
     /**
      * Threshold property value: allows ignoring all identifications under/over the value (depending on scoreCriteria)
@@ -166,25 +166,25 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
      *
      * @param resultFolder
      */
-	public SpectraSTTxtDao(File resultFolder) {
+	public SpectraSTXlsDao(File resultFolder) {
 		this.targetFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.target.txt");
 		this.parametersFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.params.txt");
         this.decoyFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.decoy.txt");
 
 		// parse the Crux files
-        CruxTxtIdentificationsParser parser = new CruxTxtIdentificationsParser();
+        SpectraSTXlsIdentificationsParser parser = new SpectraSTXlsIdentificationsParser();
         // parse target file
-        CruxIdentificationsParserResult resTarget = parser.parse(targetFile);
+        SpectraSTIdentificationsParserResult resTarget = parser.parse(targetFile);
         header = resTarget.header;
         proteins = resTarget.proteins;
         identifiedSpecIds = resTarget.identifiedSpecIds;
         targetFileIndex = resTarget.fileIndex;
         // parse decoy file
-        CruxIdentificationsParserResult resDecoy = parser.parse(decoyFile);
+        SpectraSTIdentificationsParserResult resDecoy = parser.parse(decoyFile);
         proteinsDecoy = resDecoy.proteins;
         decoyFileIndex = resDecoy.fileIndex;
         // parse parameter file
-        params = CruxTxtParamsParser.parse(parametersFile);
+        params = SpectraSTXlsParamsParser.parse(parametersFile);
 
         setDefaultConfiguration();
 	}
@@ -565,7 +565,7 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
      */
 	public Identification getIdentificationByUID(String identificationUID)
 			throws InvalidFormatException {
-        CruxProtein protein;
+        SpectraSTProtein protein;
         String[] items = identificationUID.split("_",2);
         if ("t".equals(items[0])) { // non decoy protein
 		    protein = proteins.get(items[1]);
@@ -626,11 +626,11 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
 	}
 
     /**
-     * Converts from our internal CruxProtein to the DAO representation
+     * Converts from our internal SpectraSTProtein to the DAO representation
      * @param protein
      * @return
      */
-	private Identification convertIdentification(CruxProtein protein, String uidPrefix, String publicPrefix, boolean prescanMode) {
+	private Identification convertIdentification(SpectraSTProtein protein, String uidPrefix, String publicPrefix, boolean prescanMode) {
 
 		Identification identification = new Identification();
 		
@@ -667,13 +667,13 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
             // - check also if we get just the highest on per scan
             if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
                 // process the peptide
-                CruxPeptide cruxPeptide = CruxPeptide.createCruxPeptide(fields, this.header);
+                SpectraSTPeptide spectraSTPeptide = SpectraSTPeptide.createCruxPeptide(fields, this.header);
 
                 Peptide peptide = new Peptide();
 
-                peptide.setSequence(cruxPeptide.getSequence());
-                peptide.setSpectrumReference(cruxPeptide.getScan());
-                peptide.setUniqueIdentifier(uidPrefix + cruxPeptide.getScan() + "_" + cruxPeptide.getXcorrRank());
+                peptide.setSequence(spectraSTPeptide.getSequence());
+                peptide.setSpectrumReference(spectraSTPeptide.getScan());
+                peptide.setUniqueIdentifier(uidPrefix + spectraSTPeptide.getScan() + "_" + spectraSTPeptide.getXcorrRank());
                 peptide.setStart(0);
                 peptide.setEnd(0);
 
@@ -681,22 +681,22 @@ public class SpectraSTTxtDao extends AbstractDAOImpl implements DAO {
                     // add the additional info
                     Param additional = new Param();
 
-                    if (!"*".equals(cruxPeptide.getPrevAA(protein.getAccession())))
-                        additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(cruxPeptide.getPrevAA(protein.getAccession())));
-                    if (!"*".equals(cruxPeptide.getNextAA(protein.getAccession())))
-                        additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(cruxPeptide.getNextAA(protein.getAccession())));
+                    if (!"*".equals(spectraSTPeptide.getPrevAA(protein.getAccession())))
+                        additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getPrevAA(protein.getAccession())));
+                    if (!"*".equals(spectraSTPeptide.getNextAA(protein.getAccession())))
+                        additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getNextAA(protein.getAccession())));
 
-                    additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(cruxPeptide.getCharge()));
-                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(cruxPeptide.getSpecPrecursorMZ()));
-                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(cruxPeptide.getSpecNeutralMass()));
-                    additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(cruxPeptide.getXcorrRank()));
-                    additional.getCvParam().add(DAOCvParams.SEQUEST_DELTA_CN.getParam(cruxPeptide.getDeltaCn()));
-                    additional.getCvParam().add(DAOCvParams.SEQUEST_XCORR.getParam(cruxPeptide.getXcorrScore()));
+                    additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(spectraSTPeptide.getCharge()));
+                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(spectraSTPeptide.getSpecPrecursorMZ()));
+                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(spectraSTPeptide.getSpecNeutralMass()));
+                    additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(spectraSTPeptide.getXcorrRank()));
+                    additional.getCvParam().add(DAOCvParams.SEQUEST_DELTA_CN.getParam(spectraSTPeptide.getDeltaCn()));
+                    additional.getCvParam().add(DAOCvParams.SEQUEST_XCORR.getParam(spectraSTPeptide.getXcorrScore()));
 
                     peptide.setAdditional(additional);
 
                     // add the modifications
-                    peptide.getPTM().addAll(cruxPeptide.getPTMs(params));
+                    peptide.getPTM().addAll(spectraSTPeptide.getPTMs(params));
 
                 }
 

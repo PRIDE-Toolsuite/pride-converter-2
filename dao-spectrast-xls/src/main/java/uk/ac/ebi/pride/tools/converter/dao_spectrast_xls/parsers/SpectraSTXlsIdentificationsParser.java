@@ -1,7 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers;
 
 import org.apache.log4j.Logger;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxProtein;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTProtein;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.*;
@@ -12,11 +12,11 @@ import java.util.*;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class CruxTxtIdentificationsParser {
+public class SpectraSTXlsIdentificationsParser {
     /**
      * Logger used by this class
      */
-    private static final Logger logger = Logger.getLogger(CruxTxtIdentificationsParser.class);
+    private static final Logger logger = Logger.getLogger(SpectraSTXlsIdentificationsParser.class);
 
     /**
      * Reader
@@ -63,12 +63,12 @@ public class CruxTxtIdentificationsParser {
      * @return A Map of proteins to peptides (1 to n) obtained from the file
      * @throws ConverterException
      */
-    public static CruxIdentificationsParserResult parse(File identificationsFile) throws ConverterException {
+    public static SpectraSTIdentificationsParserResult parse(File identificationsFile) throws ConverterException {
         if (identificationsFile == null)
             throw new ConverterException("Input identifications file was not set.");
 
-        CruxIdentificationsParserResult res = new CruxIdentificationsParserResult();
-        res.proteins = new LinkedHashMap<String, CruxProtein>();
+        SpectraSTIdentificationsParserResult res = new SpectraSTIdentificationsParserResult();
+        res.proteins = new LinkedHashMap<String, SpectraSTProtein>();
         res.identifiedSpecIds = new LinkedList<Integer>();
         res.fileIndex = new ArrayList<String>();
         res.peptideCount = 0;
@@ -97,7 +97,7 @@ public class CruxTxtIdentificationsParser {
                 for (String accession: proteinIds) {
                     // if the protein doesn't exist add it for the first time
                     if (!res.proteins.containsKey(accession))
-                        res.proteins.put(accession, new CruxProtein(accession));
+                        res.proteins.put(accession, new SpectraSTProtein(accession));
 
                     // finally associate the peptide string index
                     res.fileIndex.add(res.peptideCount, line); // add the line to the index

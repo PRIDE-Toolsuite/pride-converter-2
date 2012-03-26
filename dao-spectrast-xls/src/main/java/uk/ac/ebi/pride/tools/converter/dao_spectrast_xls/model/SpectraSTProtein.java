@@ -8,14 +8,14 @@ import java.util.List;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class CruxProtein {
+public class SpectraSTProtein {
 	private final String accession;
     /**
      * The list of peptides references the position in the file index (line number inside the file starting in 0)
      */
 	private List<Integer> peptides;
 	
-	public CruxProtein(String accession) {
+	public SpectraSTProtein(String accession) {
 		this.accession = accession;
 		this.peptides = new ArrayList<Integer>();
 	}
@@ -24,7 +24,7 @@ public class CruxProtein {
 		peptides.add(peptide);
 	}
 	
-	public void removePeptide(CruxPeptide peptide) {
+	public void removePeptide(SpectraSTPeptide peptide) {
 		peptides.remove(peptide);
 	}
 	

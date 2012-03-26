@@ -1,8 +1,8 @@
 package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls;
 
 import junit.framework.TestCase;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxIdentificationsParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtIdentificationsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTIdentificationsParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTXlsIdentificationsParser;
 
 import java.io.File;
 import java.util.Map;
@@ -11,15 +11,15 @@ import java.util.Map;
  * @author Jose A. Dianes
  * @version 1.0
  */
-public class SpectraSTTxtIdentificationParserTest extends TestCase {
+public class SpectraSTXlsIdentificationParserTest extends TestCase {
 
     private String targetFilePath = "src/test/resources/crux-output/search.target.txt";
     private String decoyFilePath = "src/test/resources/crux-output/search.decoy.txt";
     private Map<String, Integer> header;
-    private CruxIdentificationsParserResult parserResults;
+    private SpectraSTIdentificationsParserResult parserResults;
 
     public void testParseHeader() throws Exception {
-        header = CruxTxtIdentificationsParser.parseHeader(new File(targetFilePath));
+        header = SpectraSTXlsIdentificationsParser.parseHeader(new File(targetFilePath));
 
         assertEquals(header.size(), 13);
 
@@ -42,7 +42,7 @@ public class SpectraSTTxtIdentificationParserTest extends TestCase {
     }
 
     public void testParse() throws Exception {
-        parserResults = CruxTxtIdentificationsParser.parse(new File(targetFilePath));
+        parserResults = SpectraSTXlsIdentificationsParser.parse(new File(targetFilePath));
 
         assertEquals(parserResults.proteins.size(), 14880);
 
@@ -51,7 +51,7 @@ public class SpectraSTTxtIdentificationParserTest extends TestCase {
     }
 
     public void testParseDecoy() throws Exception {
-        parserResults = CruxTxtIdentificationsParser.parse(new File(decoyFilePath));
+        parserResults = SpectraSTXlsIdentificationsParser.parse(new File(decoyFilePath));
 
         assertEquals(parserResults.proteins.size(), 19980);
 
