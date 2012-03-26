@@ -818,12 +818,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         return new IdentifiedDAOSpectrumIterator();
     }
 
-    /**
-     * Iterator based on the spectra DAO's iterator that
-     * only returns identified spectra
-     *
-     * @author jg
-     */
     private class IdentifiedDAOSpectrumIterator implements Iterator<Spectrum>, Iterable<Spectrum> {
         /**
          * The identified spectra as array list
