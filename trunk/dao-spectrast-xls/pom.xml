@@ -3,12 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>uk.ac.ebi.pride.tools.converter</groupId>
-	<artifactId>dao-spectrast-txt</artifactId>
+	<artifactId>dao-spectrast-xls</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>SpectraST txt DAO</name>
-	<description>This DAO is used to convert SpectraST text output files into PRIDE XML files.</description>
+	<description>This DAO is used to convert SpectraST .xls text output files (tab-delimited) into PRIDE XML files.</description>
 	<url>http://maven.apache.org</url>
 
 	<properties>
