@@ -1,6 +1,6 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers;
 
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.model.CruxProtein;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxProtein;
 
 import java.util.ArrayList;
 import java.util.List;

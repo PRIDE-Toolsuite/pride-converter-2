@@ -1,7 +1,7 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.parsers;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers;
 
 import org.apache.log4j.Logger;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.model.CruxProtein;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxProtein;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.*;

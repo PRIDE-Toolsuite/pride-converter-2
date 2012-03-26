@@ -1,4 +1,4 @@
-package uk.ac.ebi.pride.tools.converter.dao_spectrast_txt.model;
+package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model;
 
 import java.util.ArrayList;
 import java.util.List;
