@@ -2,8 +2,8 @@ package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls;
 
 
 import junit.framework.TestCase;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxParametersParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtParamsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTXlsParamsParser;
 
 import java.io.File;
 
@@ -11,17 +11,17 @@ import java.io.File;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class SpectraSTTxtParamsParserTest extends TestCase {
+public class SpectraSTXlsParamsParserTest extends TestCase {
 
     private String paramsFilePath = "src/test/resources/crux-output/search.params.txt";
-    CruxParametersParserResult parserResult;
+    SpectraSTParametersParserResult parserResult;
     
     public void setUp() throws Exception {
 
     }
 
     public void testParse() throws Exception {
-        parserResult = CruxTxtParamsParser.parse(new File(paramsFilePath));
+        parserResult = SpectraSTXlsParamsParser.parse(new File(paramsFilePath));
 //        assertEquals(parserResult.properties.size(), 83);
         assertEquals(parserResult.properties.getProperty("comparison").compareTo("eq"), 0);
         assertFalse(parserResult.properties.getProperty("comparison").compareTo("wrong-value") == 0);

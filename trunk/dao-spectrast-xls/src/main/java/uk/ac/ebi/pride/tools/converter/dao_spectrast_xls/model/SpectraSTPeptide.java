@@ -1,6 +1,6 @@
 package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model;
 
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTParametersParserResult;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class CruxPeptide {
+public class SpectraSTPeptide {
     /**
      * General expressions
      */
@@ -33,9 +33,9 @@ public class CruxPeptide {
     private final String claveageType;
     private Map<String, String> flankingAA;
 
-	public CruxPeptide(int scan, int charge, double specPrecursorMZ, double specNeutralMass, 
-                       double peptideMass, double deltaCn, double xcorrScore, int xcorrRank,
-                       int matchesSpectrum, String sequence, String claveageType, String [] proteinIds, String [] flankingAA) {
+	public SpectraSTPeptide(int scan, int charge, double specPrecursorMZ, double specNeutralMass,
+                            double peptideMass, double deltaCn, double xcorrScore, int xcorrRank,
+                            int matchesSpectrum, String sequence, String claveageType, String[] proteinIds, String[] flankingAA) {
         if (proteinIds.length != flankingAA.length) throw new ConverterException("Not enough flanking AA for proteins");
         this.scan = scan;
         this.charge = charge;
@@ -146,7 +146,7 @@ public class CruxPeptide {
 		if (getClass() != obj.getClass())
 			return false;
 
-        CruxPeptide other = (CruxPeptide) obj;
+        SpectraSTPeptide other = (SpectraSTPeptide) obj;
 
         if (charge != other.scan)
             return false;
@@ -195,7 +195,7 @@ public class CruxPeptide {
      * 
      * @return A Collection of PeptidePTM associated with this Crux peptide.
      */
-    public Collection<PeptidePTM> getPTMs(CruxParametersParserResult params) {
+    public Collection<PeptidePTM> getPTMs(SpectraSTParametersParserResult params) {
         
         LinkedList<PeptidePTM> result = new LinkedList<PeptidePTM>();
         
@@ -341,19 +341,19 @@ public class CruxPeptide {
     }
 
     /**
-     * Creates a new CruxPeptide object from the passed
+     * Creates a new SpectraSTPeptide object from the passed
      * fields and header.
      * @param fields The fields of the line representing the peptide.
      * @param header A Map mapping a given column name to its 0-based index.
-     * @return The CruxPeptide object representing the line.
+     * @return The SpectraSTPeptide object representing the line.
      */
-    public static CruxPeptide createCruxPeptide(String[] fields,
+    public static SpectraSTPeptide createCruxPeptide(String[] fields,
                                                  Map<String, Integer> header) {
         // we may have several proteins in the protein_id field, comma separated
         String[] proteinIds = fields[header.get("protein id")].split(",");
         String[] flankingAA = fields[header.get("flanking aa")].split(",");
 
-        CruxPeptide peptide = new CruxPeptide(
+        SpectraSTPeptide peptide = new SpectraSTPeptide(
                 Integer.parseInt(fields[header.get("scan")]),
                 Integer.parseInt(fields[header.get("charge")]),
                 Double.parseDouble(fields[header.get("spectrum precursor m/z")]),

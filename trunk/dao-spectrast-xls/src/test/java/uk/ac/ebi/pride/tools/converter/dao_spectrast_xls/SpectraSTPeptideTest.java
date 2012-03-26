@@ -1,9 +1,9 @@
 package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls;
 
 import junit.framework.TestCase;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.CruxPeptide;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxParametersParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.CruxTxtParamsParser;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTPeptide;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTXlsParamsParser;
 import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
 
 import java.io.File;
@@ -16,13 +16,13 @@ import java.util.Collection;
  */
 public class SpectraSTPeptideTest extends TestCase {
 
-    CruxPeptide cruxPeptide;
-    CruxPeptide cruxPeptideWrong;
-    CruxParametersParserResult params;
+    SpectraSTPeptide spectraSTPeptide;
+    SpectraSTPeptide spectraSTPeptideWrong;
+    SpectraSTParametersParserResult params;
     private String paramsFilePath = "src/test/resources/crux-output/search.params.txt";
 
     public void setUp() throws Exception {
-        cruxPeptide = new CruxPeptide(
+        spectraSTPeptide = new SpectraSTPeptide(
                 1,                      // scan
                 2,                      // charge
                 679.4421,               // spectrum precursor m/z
@@ -38,17 +38,17 @@ public class SpectraSTPeptideTest extends TestCase {
                 "AB,CD,FG,HI,JK".split(",")
         );
 
-        params = CruxTxtParamsParser.parse(new File(paramsFilePath));
+        params = SpectraSTXlsParamsParser.parse(new File(paramsFilePath));
     }
     
     public void testGetPTMs() throws Exception {
-        Collection<PeptidePTM> ptms = cruxPeptide.getPTMs(params);
+        Collection<PeptidePTM> ptms = spectraSTPeptide.getPTMs(params);
         assertEquals(ptms.size(), 4);
     }
 
     public void testGetAA() throws Exception {
-        assertTrue(cruxPeptide.getPrevAA("sp|P35659|DEK_HUMAN(126)").equals("A"));
-        assertTrue(cruxPeptide.getNextAA("sp|P35659|DEK_HUMAN(126)").equals("B"));
+        assertTrue(spectraSTPeptide.getPrevAA("sp|P35659|DEK_HUMAN(126)").equals("A"));
+        assertTrue(spectraSTPeptide.getNextAA("sp|P35659|DEK_HUMAN(126)").equals("B"));
     }
 
 }

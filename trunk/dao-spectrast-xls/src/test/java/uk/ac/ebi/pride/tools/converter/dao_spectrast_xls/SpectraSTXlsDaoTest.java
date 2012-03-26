@@ -17,7 +17,7 @@ import java.util.Properties;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class SpectraSTTxtDaoTest extends TestCase {
+public class SpectraSTXlsDaoTest extends TestCase {
 
 
     private static String spectraFilePath = "src/test/resources/spectra.ms2";
@@ -29,7 +29,7 @@ public class SpectraSTTxtDaoTest extends TestCase {
     private static String threshold = "5";
 
 
-    private static SpectraSTTxtDao cruxTxtDao = new SpectraSTTxtDao(new File(resultDirectory));
+    private static SpectraSTXlsDao cruxXlsDao = new SpectraSTXlsDao(new File(resultDirectory));
 
     public void setUp() throws Exception {
         Properties props = new Properties();
@@ -38,12 +38,12 @@ public class SpectraSTTxtDaoTest extends TestCase {
         props.setProperty(SupportedProperty.THRESHOLD.getName(), threshold);
 //        props.setProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "false");
 
-        cruxTxtDao.setConfiguration(props);
-        cruxTxtDao.setExternalSpectrumFile(spectraFilePath);
+        cruxXlsDao.setConfiguration(props);
+        cruxXlsDao.setExternalSpectrumFile(spectraFilePath);
     }
 
     public void testIdentificationsIterator() throws Exception {
-        Iterator<Identification> identificationsIt = cruxTxtDao.getIdentificationIterator(false);
+        Iterator<Identification> identificationsIt = cruxXlsDao.getIdentificationIterator(false);
         int identificationsCount = 0;
         while (identificationsIt.hasNext()) {
             Identification newIdentification = identificationsIt.next();
@@ -54,27 +54,27 @@ public class SpectraSTTxtDaoTest extends TestCase {
     }
 
     public void testIdentificationByUID() throws Exception {
-        Identification identification = cruxTxtDao.getIdentificationByUID("t_sw|P35659|DEK_HUMAN(126)");
+        Identification identification = cruxXlsDao.getIdentificationByUID("t_sw|P35659|DEK_HUMAN(126)");
         assertNotNull(identification);
 
-        identification = cruxTxtDao.getIdentificationByUID("d_sw|A6NIX2|WTIP_HUMAN(622)");
+        identification = cruxXlsDao.getIdentificationByUID("d_sw|A6NIX2|WTIP_HUMAN(622)");
         assertNotNull(identification);
 
-        identification = cruxTxtDao.getIdentificationByUID("t_sw|Q9H7Z6|MYST1_HUMAN(433)");
+        identification = cruxXlsDao.getIdentificationByUID("t_sw|Q9H7Z6|MYST1_HUMAN(433)");
         assertNotNull(identification);
     }
 
 
     public void testPTMs() throws Exception {
-        Collection<PTM> ptms = cruxTxtDao.getPTMs();
+        Collection<PTM> ptms = cruxXlsDao.getPTMs();
 
         assertNotNull(ptms);
     }
 
     public void testSpectraIterator() throws Exception {
-        int spectraCountAll = cruxTxtDao.getSpectrumCount(false);
-        int spectraCountOnlyIdentified = cruxTxtDao.getSpectrumCount(true);
-        Iterator<Spectrum> specAllIt = cruxTxtDao.getSpectrumIterator(false);
+        int spectraCountAll = cruxXlsDao.getSpectrumCount(false);
+        int spectraCountOnlyIdentified = cruxXlsDao.getSpectrumCount(true);
+        Iterator<Spectrum> specAllIt = cruxXlsDao.getSpectrumIterator(false);
         int count = 0;
         while (specAllIt.hasNext()) {
             Spectrum newSpectrum = specAllIt.next();
@@ -89,7 +89,7 @@ public class SpectraSTTxtDaoTest extends TestCase {
     }
 
     public void testOtherAPIMethods() {
-        Param param = cruxTxtDao.getProcessingMethod();
+        Param param = cruxXlsDao.getProcessingMethod();
         assertNotNull(param);
     }
 

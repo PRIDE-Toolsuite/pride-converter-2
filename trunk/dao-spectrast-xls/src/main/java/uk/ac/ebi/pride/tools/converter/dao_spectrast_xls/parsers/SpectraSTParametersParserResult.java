@@ -10,7 +10,7 @@ import java.util.Properties;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class CruxParametersParserResult {
+public class SpectraSTParametersParserResult {
     public Properties properties;
     public Collection<PTM> ptms;
     public Map<String, PTM> aaToFixedPtm;

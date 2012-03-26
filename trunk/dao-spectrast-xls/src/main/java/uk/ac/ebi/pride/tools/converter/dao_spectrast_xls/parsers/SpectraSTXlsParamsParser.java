@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class CruxTxtParamsParser {
+public class SpectraSTXlsParamsParser {
 
     /**
      * General expressions
@@ -87,13 +87,13 @@ public class CruxTxtParamsParser {
      * @return Returns a Parameters data structure build up from the file
      * @throws ConverterException
      */
-    public static CruxParametersParserResult parse(File file) throws ConverterException {
+    public static SpectraSTParametersParserResult parse(File file) throws ConverterException {
 
         if (file == null)
             throw new ConverterException("Input properties file was not set.");
         try {
             BufferedReader br = new BufferedReader( new InputStreamReader( new FileInputStream( file ) ) );
-            CruxParametersParserResult result = new CruxParametersParserResult();
+            SpectraSTParametersParserResult result = new SpectraSTParametersParserResult();
             result.aaToPtm = new HashMap<String, PTM>();
             result.aaToFixedPtm = new HashMap<String, PTM>();
             result.ptms = new LinkedList<PTM>();   // Since we are not accessing this by index and we don't know the size 
