@@ -329,6 +329,9 @@ public class CruxPeptide {
         newPeptidePtm.setFixedModification(ptm.isFixedModification());
         newPeptidePtm.setResidues(ptm.getResidues());
         newPeptidePtm.setModLocation(location);
+        for (String monoDelta: ptm.getModMonoDelta()) {
+            newPeptidePtm.getModMonoDelta().add(monoDelta);
+        }
         return newPeptidePtm;
     }
     

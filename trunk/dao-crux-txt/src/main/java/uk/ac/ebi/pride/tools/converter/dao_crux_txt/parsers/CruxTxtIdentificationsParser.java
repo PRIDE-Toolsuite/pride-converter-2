@@ -19,6 +19,14 @@ public class CruxTxtIdentificationsParser {
     private static final Logger logger = Logger.getLogger(CruxTxtIdentificationsParser.class);
 
     /**
+     * headers as the appear in the file
+     */
+    private static final String PROTEIN_ID_HEADER = "protein id";
+    private static final String SCAN_HEADER = "scan";
+    private static final String CHARGE_HEADER = "charge";
+    private static final String SEQUENCE_HEADER = "sequence";
+
+    /**
      * Reader
      */
     private static BufferedReader br;
@@ -91,7 +99,7 @@ public class CruxTxtIdentificationsParser {
                 if ( fields.length !=  res.header.size() ) throw new ConverterException("Identification line doesn't match header columns");
 
                 // we may have several proteins in the protein_id field, comma separated
-                String[] proteinIds = fields[res.header.get("protein id")].split(",");
+                String[] proteinIds = fields[res.header.get(PROTEIN_ID_HEADER)].split(",");
 
                 // for each protein accession (key), create an entry and add the peptide string to the peptide list (value)
                 for (String accession: proteinIds) {
@@ -106,7 +114,7 @@ public class CruxTxtIdentificationsParser {
                 }
 
                 // Add the identified spectra if not done already
-                int scan = Integer.parseInt(fields[res.header.get("scan")]);
+                int scan = Integer.parseInt(fields[res.header.get(SCAN_HEADER)]);
                 if ( !( (res.identifiedSpecIds.size() > 0) && (res.identifiedSpecIds.get(res.identifiedSpecIds.size() - 1) == scan) ) ) {
                     res.identifiedSpecIds.add(scan);
                 }
@@ -156,7 +164,7 @@ public class CruxTxtIdentificationsParser {
             header.put(fields[i], i);
 
         // Check for "mandatory" column names
-        if ( !header.containsKey("scan") || !header.containsKey("charge") || !header.containsKey("sequence") )
+        if ( !header.containsKey(SCAN_HEADER) || !header.containsKey(CHARGE_HEADER) || !header.containsKey(SEQUENCE_HEADER) )
             throw new ConverterException("Header file not present or mandatory fields are missing");
 
         return header;
