@@ -5,6 +5,8 @@ import uk.ac.ebi.pride.tools.converter.report.model.Identification;
 import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A class containing some commonly used
@@ -13,6 +15,12 @@ import java.util.*;
  * @author jg
  */
 public class Utils {
+
+    /**
+     * Regular expressions
+     */
+    private static final String modRegex = "\\[-?\\d+\\[\\.\\d+\\]?\\]";
+
     /**
      * An ENUM containing all known peptide
      * score parameters.
@@ -178,5 +186,37 @@ public class Utils {
         }
 
         return identification;
+    }
+
+    /**
+     * Returns a map of modifications and their positions. It has to be true that the position of a modification at
+     * the end of the input is equals to the length of the peptide sequence with modifications not counting for this
+     * length. Modifications match the regular expression: \\[\\d+\\.\\d+\\]      (e.g. [19.9956])
+     * IMPORTANT: Modifications in the result are in the same order that in the sequence.
+     *
+     * @param sequence The peptide sequence containing peptides and modifications
+     * @return A Map of modifications and their positions. Mods include the preceding AA.
+     */
+    private Map<Integer, String> getModifications(String sequence) {
+        HashMap<Integer, String> res = new HashMap<Integer, String>();
+
+        // define a regular expression that matches modifications
+        Pattern regex = Pattern.compile(modRegex);
+
+        // get a matcher object
+        Matcher m = regex.matcher(sequence);
+
+        // start looking for modifications
+        int totalModsSize = 0; // accumulated total modifications size
+        int numMods = 1;
+        while( m.find() ) {
+            int pos = m.start() - 1; // include the preceding AA
+            String mod = sequence.substring(pos, m.end());
+            res.put( pos - totalModsSize + numMods, mod );
+            totalModsSize += mod.length();
+            numMods++;
+        }
+
+        return res;
     }
 }
