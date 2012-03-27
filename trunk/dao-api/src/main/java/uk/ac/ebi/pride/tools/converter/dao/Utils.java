@@ -19,7 +19,7 @@ public class Utils {
     /**
      * Regular expressions
      */
-    private static final String modRegex = "\\[-?\\d+\\[\\.\\d+\\]?\\]";
+    public static final String MOD_REGEX = "\\[-?\\d+\\[\\.\\d+\\]?\\]";
 
     /**
      * An ENUM containing all known peptide
@@ -201,7 +201,7 @@ public class Utils {
         HashMap<Integer, String> res = new HashMap<Integer, String>();
 
         // define a regular expression that matches modifications
-        Pattern regex = Pattern.compile(modRegex);
+        Pattern regex = Pattern.compile(MOD_REGEX);
 
         // get a matcher object
         Matcher m = regex.matcher(sequence);
