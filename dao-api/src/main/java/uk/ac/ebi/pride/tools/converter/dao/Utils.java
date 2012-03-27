@@ -197,7 +197,7 @@ public class Utils {
      * @param sequence The peptide sequence containing peptides and modifications
      * @return A Map of modifications and their positions. Mods include the preceding AA.
      */
-    public Map<Integer, String> getModifications(String sequence) {
+    public static Map<Integer, String> getModifications(String sequence) {
         HashMap<Integer, String> res = new HashMap<Integer, String>();
 
         // define a regular expression that matches modifications
