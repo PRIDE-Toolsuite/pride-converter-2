@@ -105,17 +105,10 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
      */
     private AbstractPeakListDAO spectraDAO;
 
-
     /**
      * The decoy identifications prefix
      */
     private String decoyPrefix = "";
-
-    /**
-	 * DAO used to parse the corresponding peak list
-	 * file.
-	 */
-	private AbstractPeakListDAO peakListDao;
 
     /**
 	 * List of spectra ids that were identified
@@ -746,7 +739,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 		private Iterator<Spectrum> specIterator;
 		
 		public OnlyIdentifiedSpectrumIterator() throws InvalidFormatException {
-			specIterator = peakListDao.getSpectrumIterator(false);
+			specIterator = spectraDAO.getSpectrumIterator(false);
 			Collections.sort(identifiedSpecIds);
 			specIdIterator = identifiedSpecIds.iterator();
 		}
