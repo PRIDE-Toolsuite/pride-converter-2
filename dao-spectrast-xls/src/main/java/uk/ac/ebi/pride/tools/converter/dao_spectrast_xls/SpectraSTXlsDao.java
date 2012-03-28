@@ -13,15 +13,15 @@ import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.XcorrScoreFilte
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTPeptide;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTProtein;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTIdentificationsParserResult;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTParametersParserResult;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTXlsIdentificationsParser;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTXlsParamsParser;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.ScoreCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties.SupportedProperty;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
+import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -55,16 +55,6 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 	private final File targetFile;
 
     /**
-     * The input decoy Crux-txt file.
-     */
-    private final File decoyFile;
-
-    /**
-     * The input properties Crux-txt file.
-     */
-    private final File parametersFile;
-
-    /**
      * File header
      */
     private Map<String, Integer> header;
@@ -73,12 +63,6 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      * Target file index
      */
     private ArrayList<String> targetFileIndex;
-
-    /**
-     * Decoy file index 
-     */
-    private ArrayList<String> decoyFileIndex;
-
     
 	/**
 	 * The proteins found in the Crux-txt target file
@@ -86,10 +70,10 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 	private Map<String, SpectraSTProtein> proteins;
 
     /**
-     * The proteins found in the Crux-txt decoy file
+     * All PTMs found in the target file peptide sequences
      */
-    private Map<String, SpectraSTProtein> proteinsDecoy;
-
+    private Collection<PTM> allPTMs;
+    
 	/**
 	 * The spectra file
 	 */
@@ -101,41 +85,35 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
     private SpectraType spectraFileType;
 
     /**
-     *
+     * The Map from identification titles to spectra IDs
+     */
+    private Map<String, Integer> titleToSpectraIdMap;
+    
+    /**
+     * DAO used to parse the corresponding peak list
+     * file.
      */
     private AbstractPeakListDAO spectraDAO;
-
-
-    /**
-     * The decoy identifications prefix
-     */
-    private String decoyPrefix = "";
-
-    /**
-	 * DAO used to parse the corresponding peak list
-	 * file.
-	 */
-	private AbstractPeakListDAO peakListDao;
 
     /**
 	 * List of spectra ids that were identified
 	 */
-	private List<Integer> identifiedSpecIds;
+	private List<String> identifiedSpecIds;
 
     /**
 	 * The search engine reported for the proteins
 	 */
-	private String searchEngine = "Crux";
+	private String searchEngine = "SpectraST";
 
     /**
      * Contains all the supportedProperties of this DAO (get/setConfiguration)
      */
 	private Properties supportedProperties;
 
-    /**
-     * Built up from the search parameter file
-     */
-    private SpectraSTParametersParserResult params;
+//    /**
+//     * Built up from the search parameter file
+//     */
+//    private SpectraSTParametersParserResult params;
 
     /**
      * Threshold property value: allows ignoring all identifications under/over the value (depending on scoreCriteria)
@@ -164,45 +142,30 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      *  - Crux parameters file
      *  And create the proper internal data structures
      *
-     * @param resultFolder
+     * @param resultFile
      */
-	public SpectraSTXlsDao(File resultFolder) {
-		this.targetFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.target.txt");
-		this.parametersFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.params.txt");
-        this.decoyFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.decoy.txt");
+	public SpectraSTXlsDao(File resultFile) {
+		this.targetFile = resultFile;
 
 		// parse the Crux files
         SpectraSTXlsIdentificationsParser parser = new SpectraSTXlsIdentificationsParser();
         // parse target file
-        SpectraSTIdentificationsParserResult resTarget = parser.parse(targetFile);
-        header = resTarget.header;
-        proteins = resTarget.proteins;
-        identifiedSpecIds = resTarget.identifiedSpecIds;
-        targetFileIndex = resTarget.fileIndex;
-        // parse decoy file
-        SpectraSTIdentificationsParserResult resDecoy = parser.parse(decoyFile);
-        proteinsDecoy = resDecoy.proteins;
-        decoyFileIndex = resDecoy.fileIndex;
-        // parse parameter file
-        params = SpectraSTXlsParamsParser.parse(parametersFile);
+        SpectraSTIdentificationsParserResult parsingResult = parser.parse(targetFile);
+        header = parsingResult.header;
+        proteins = parsingResult.proteins;
+        identifiedSpecIds = parsingResult.identifiedSpectraTitles;
+        targetFileIndex = parsingResult.fileIndex;
+        allPTMs = parsingResult.ptms.values();
 
         setDefaultConfiguration();
 	}
+
+
 
     @SuppressWarnings("rawtypes")
     public static Collection<DAOProperty> getSupportedProperties() {
 
         List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
-
-//        // Spectra file property
-//        DAOProperty<String> spectrumFilePath = new DAOProperty<String>(SupportedProperty.SPECTRUM_FILE.getName(), null);
-//        spectrumFilePath.setDescription("Allows to manually set the path to the spectrum source file. This should be mandatory since, in Crux, spectra files are not references within the identification or parameter files.");
-//        supportedProperties.add(spectrumFilePath);
-
-        // we need the one to prefix decoy identifications
-        DAOProperty<String> decoyPrefix = new DAOProperty<String>(SupportedProperty.DECOY_PREFIX.getName(), null);
-        decoyPrefix.setDescription("Allows adding a prefix to decoy file identifications.");
-        supportedProperties.add(decoyPrefix);
         
         // Threshold
         DAOProperty<String> threshold = new DAOProperty<String>(SupportedProperty.THRESHOLD.getName(), null);
@@ -213,13 +176,6 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         DAOProperty<String> scoreCriteria = new DAOProperty<String>(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.XCORR_RANK.getName());
         scoreCriteria.setDescription("Defines the criteria for ordering and filtering identifications.");
         supportedProperties.add(scoreCriteria);
-
-        // Get just highest ranked item
-        DAOProperty<String> getMaxScoreItem = new DAOProperty<String>(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "true");
-        getMaxScoreItem.setDescription("Defines if this DAO retrieves just the highest ranked identification for each " +
-                "scan, based on the defined score_criteria. If there are several identifications with the same score, " +
-                "all of them will be returned. True by default");
-        supportedProperties.add(getMaxScoreItem);
 
         return supportedProperties;
     }
@@ -232,14 +188,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         supportedProperties = props;
 
         // set member supportedProperties here using supportedProperties object
-//        spectraFile = new File(props.getProperty(SupportedProperty.SPECTRUM_FILE.getName()));
-        decoyPrefix = props.getProperty(SupportedProperty.DECOY_PREFIX.getName());
         threshold = props.getProperty(SupportedProperty.THRESHOLD.getName());
-        if (props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()) == null) { // todo: I couldn't make defaults to work
-            getHighest = true;
-        } else {
-            getHighest = Boolean.parseBoolean(props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()));
-        }
         scoreCriteria = props.getProperty(SupportedProperty.SCORE_CRITERIA.getName());
 
         // Create the filter object from the supportedProperties
@@ -283,7 +232,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 
     /**
      * Sets the spectra file associated with this set of files.
-     * @throws ConverterException if file does not exist.
+     * @throws ConverterException if file does not exist or not MGF format
      */
     public void setExternalSpectrumFile(String s) {
         spectraFile = new File(s);
@@ -293,6 +242,27 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         } catch (InvalidFormatException e) {
             throw new ConverterException("Spectra file type unknown");
         }
+        if (spectraFileType != SpectraType.MGF)
+            throw new ConverterException("Just MGF format supported for spectrum files");
+        
+        // Build the title index
+        try {
+            MgfFile mgfFile = new MgfFile(spectraFile);         // first get access to the MGF file itself
+            titleToSpectraIdMap = new HashMap<String, Integer>();
+            for (String spectraId: ((MgfDAO)getSpectraDao()).getSpectraIds()) { // for each spectra Id (its an integer for MgfDAO)
+                String title = mgfFile.getMs2Query(Integer.parseInt(spectraId)).getTitle();
+                if (title != null) { // Title might be absent    TODO: consider throwing exception here
+                    titleToSpectraIdMap.put(
+                        title,
+                        Integer.parseInt(spectraId));
+                }
+            }
+        } catch (JMzReaderException e) {
+            throw new ConverterException("Unable to access source MGF file");
+        } catch (InvalidFormatException e) {
+            throw new ConverterException("Invalid format exception in MGF file");
+        }
+
     }
 
     /**
@@ -300,14 +270,14 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      * @return
      * @throws InvalidFormatException
      */
-    public Collection<PTM> getPTMs() throws InvalidFormatException {
-        return params.ptms;
+    public Collection<PTM> getPTMs() throws InvalidFormatException { 
+        return allPTMs;
     }
 
 
     /**
      *
-     * @return
+     * @return Not defined
      * @throws InvalidFormatException
      */
 	public String getExperimentTitle() throws InvalidFormatException {
@@ -413,15 +383,16 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      */
 	public Param getProcessingMethod() {
         Param param = new Param();
-        DAOCvParams cvParam = DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE;
-        cvParam.setValue(this.params.properties.getProperty("precursor-window") + " " + this.params.properties.getProperty("precursor-window-type"));
-        param.getCvParam().add(cvParam.getParam());
+        // TODO: CHECK THIS
+//        DAOCvParams cvParam = DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE;
+//        cvParam.setValue(this.params.properties.getProperty("precursor-window") + " " + this.params.properties.getProperty("precursor-window-type"));
+//        param.getCvParam().add(cvParam.getParam());
 		return param;
 	}
 
     /**
      *
-     * @return
+     * @return null for this DAO
      */
 	public Protocol getProtocol() {
 		return null;
@@ -566,21 +537,11 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 	public Identification getIdentificationByUID(String identificationUID)
 			throws InvalidFormatException {
         SpectraSTProtein protein;
-        String[] items = identificationUID.split("_",2);
-        if ("t".equals(items[0])) { // non decoy protein
-		    protein = proteins.get(items[1]);
-            if (protein == null)
-                throw new InvalidFormatException("Protein with UID=" + identificationUID + " does not exist");
-            return convertIdentification(protein, "t_", "", false);
-        }
-        else { // decoy protein
-            protein = proteinsDecoy.get(items[1]);
-            if (protein == null)
-                throw new InvalidFormatException("Protein with UID=" + identificationUID + " does not exist");
-            return convertIdentification(protein, "d_", decoyPrefix, false);
-        }
-
-	}
+        protein = proteins.get(identificationUID);
+        if (protein == null)
+            throw new InvalidFormatException("Protein with UID=" + identificationUID + " does not exist");
+        return convertIdentification(protein, false);
+    }
 
     /**
      *
@@ -602,7 +563,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      */
 	private class CruxIdentificationIterator implements Iterator<Identification> {
 		private final Iterator<String> accessionIterator = proteins.keySet().iterator();
-        private final Iterator<String> accessionIteratorDecoy = proteinsDecoy.keySet().iterator();
+
         private boolean prescanMode;
 
         public CruxIdentificationIterator(boolean prescanMode) {
@@ -610,14 +571,11 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         }
 
 		public boolean hasNext() {
-			return accessionIterator.hasNext() || accessionIteratorDecoy.hasNext();
+			return accessionIterator.hasNext();
 		}
 
 		public Identification next() {
-            if (accessionIterator.hasNext())
-			    return convertIdentification(proteins.get(accessionIterator.next()), "t_", "", prescanMode);
-            else 
-                return convertIdentification(proteinsDecoy.get(accessionIteratorDecoy.next()), "d_", decoyPrefix, prescanMode);
+            return convertIdentification(proteins.get(accessionIterator.next()), prescanMode);
 		}
 
 		public void remove() {
@@ -630,16 +588,16 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      * @param protein
      * @return
      */
-	private Identification convertIdentification(SpectraSTProtein protein, String uidPrefix, String publicPrefix, boolean prescanMode) {
+	private Identification convertIdentification(SpectraSTProtein protein, boolean prescanMode) {
 
 		Identification identification = new Identification();
 		
-		identification.setAccession(publicPrefix + protein.getAccession());
+		identification.setAccession(protein.getAccession());
 		identification.setScore(0.0);
 		identification.setThreshold(0.0);
 		identification.setDatabase("Unknown database");
 		identification.setDatabaseVersion("Unknown");
-		identification.setUniqueIdentifier(uidPrefix + protein.getAccession());
+		identification.setUniqueIdentifier(protein.getAccession());
 		
 		identification.setSearchEngine(searchEngine);
 
@@ -647,61 +605,54 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 		for (Integer cruxPeptideStringIndex : protein.getPeptides()) {
             String[] fields;
             List<String> wholeScan;
-            ArrayList<String> currentIndex;
-            if ("t_".equals(uidPrefix)) { // target protein
-                currentIndex = this.targetFileIndex;
-            } else { // decoy protein
-                currentIndex = this.decoyFileIndex;
-            }
 
-            fields = currentIndex.get(cruxPeptideStringIndex).split("\t");  // split the columns
-            
-            if (getHighest) {
-                // now we get the highest score in the scan. we need this to apply the GET_HIGHEST_SCORE_ITEM PROPERTY 
-                wholeScan = getWholeScan(currentIndex, cruxPeptideStringIndex); // get the whole scan lines
-                Object newThreshold = this.filter.getHighestScore(header, wholeScan);
-                this.filter.setThreshold(newThreshold);
-            }
+            fields = this.targetFileIndex.get(cruxPeptideStringIndex).split("\t");  // split the columns
             
             // Check if the entry pass the filter. Otherwise, go for the next line
             // - check also if we get just the highest on per scan
-            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
+//            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
                 // process the peptide
-                SpectraSTPeptide spectraSTPeptide = SpectraSTPeptide.createCruxPeptide(fields, this.header);
+                SpectraSTPeptide spectraSTPeptide = SpectraSTXlsIdentificationsParser.createSpectraSTPeptide(fields, this.header);
 
                 Peptide peptide = new Peptide();
 
                 peptide.setSequence(spectraSTPeptide.getSequence());
-                peptide.setSpectrumReference(spectraSTPeptide.getScan());
-                peptide.setUniqueIdentifier(uidPrefix + spectraSTPeptide.getScan() + "_" + spectraSTPeptide.getXcorrRank());
-                peptide.setStart(0);
-                peptide.setEnd(0);
+                int peptideSpectraindex = spectraSTPeptide.getSpectraIndex(titleToSpectraIdMap);
+                if (peptideSpectraindex == -1)
+                    throw new ConverterException("Spectrum reference does not exist or is ambiguous for peptide " + peptide.getSequence());
+                else {
+                    peptide.setSpectrumReference(peptideSpectraindex);
+                    peptide.setUniqueIdentifier(peptideSpectraindex + "_" + spectraSTPeptide.getRank());
+                    peptide.setStart(0);
+                    peptide.setEnd(0);
 
-                if (prescanMode) {
-                    // add the additional info
-                    Param additional = new Param();
+                    if (prescanMode) {
+                        // add the additional info
+                        Param additional = new Param();
 
-                    if (!"*".equals(spectraSTPeptide.getPrevAA(protein.getAccession())))
-                        additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getPrevAA(protein.getAccession())));
-                    if (!"*".equals(spectraSTPeptide.getNextAA(protein.getAccession())))
-                        additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getNextAA(protein.getAccession())));
+    //                    if (!"*".equals(spectraSTPeptide.getPrevAA(protein.getAccession())))
+    //                        additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getPrevAA(protein.getAccession())));
+    //                    if (!"*".equals(spectraSTPeptide.getNextAA(protein.getAccession())))
+    //                        additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getNextAA(protein.getAccession())));
 
-                    additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(spectraSTPeptide.getCharge()));
-                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(spectraSTPeptide.getSpecPrecursorMZ()));
-                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(spectraSTPeptide.getSpecNeutralMass()));
-                    additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(spectraSTPeptide.getXcorrRank()));
-                    additional.getCvParam().add(DAOCvParams.SEQUEST_DELTA_CN.getParam(spectraSTPeptide.getDeltaCn()));
-                    additional.getCvParam().add(DAOCvParams.SEQUEST_XCORR.getParam(spectraSTPeptide.getXcorrScore()));
+                        additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(spectraSTPeptide.getCharge()));
+                        // TODO: CHECK ALL THESE AND ADD OUR OWN PARAMETERS!!!
+    //                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(spectraSTPeptide.getSpecPrecursorMZ()));
+    //                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(spectraSTPeptide.getSpecNeutralMass()));
+    //                    additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(spectraSTPeptide.getXcorrRank()));
+    //                    additional.getCvParam().add(DAOCvParams.SEQUEST_DELTA_CN.getParam(spectraSTPeptide.getDeltaCn()));
+    //                    additional.getCvParam().add(DAOCvParams.SEQUEST_XCORR.getParam(spectraSTPeptide.getXcorrScore()));
 
-                    peptide.setAdditional(additional);
+                        peptide.setAdditional(additional);
 
-                    // add the modifications
-                    peptide.getPTM().addAll(spectraSTPeptide.getPTMs(params));
+                        // add the modifications
+                        peptide.getPTM().addAll(spectraSTPeptide.getPTMs());
 
+                    }
+
+                    identification.getPeptide().add(peptide);
                 }
-
-                identification.getPeptide().add(peptide);
-            }
+//            }
 		}
 		
 		return identification;
@@ -746,9 +697,10 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 		private Iterator<Spectrum> specIterator;
 		
 		public OnlyIdentifiedSpectrumIterator() throws InvalidFormatException {
-			specIterator = peakListDao.getSpectrumIterator(false);
-			Collections.sort(identifiedSpecIds);
-			specIdIterator = identifiedSpecIds.iterator();
+			specIterator = spectraDAO.getSpectrumIterator(false);
+            List<Integer> identifiedSpecRefs = buildIdentifiedSpecIdsFromTitles(identifiedSpecIds);
+            Collections.sort(identifiedSpecRefs);
+			specIdIterator = identifiedSpecRefs.iterator();
 		}
 
 		public boolean hasNext() {
@@ -842,5 +794,35 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
             throw new InvalidFormatException("Unsupported spectra file type used (" + filename + ")");
     }
 
+    private List<Integer> buildIdentifiedSpecIdsFromTitles(List<String> identifiedSpectraTitles) {
+        List<Integer> res = new LinkedList<Integer>();
+        for (String title: identifiedSpectraTitles) {
+            int index = getSpectraIndex(title);
+            if (index != -1)
+                res.add(index);
+        }
+        return res;
+    }
+
+    /**
+     * Using the member map, it finds out the index. The title is used to find the appropriate key in
+     * the Map. It has to be prefix of just one key in the Map.
+     * @param title
+     * @return The index or -1 if not available or duplicated prefix
+     */
+    private int getSpectraIndex(String title) {
+        int index = -1;
+        int timesFound = 0;
+        for (Map.Entry<String, Integer> entry: titleToSpectraIdMap.entrySet()) {
+            if (entry.getKey().startsWith(title)) {
+                index = entry.getValue();
+                timesFound++;
+            }
+        }
+        if (timesFound!=1)
+            return -1;
+        else
+            return index;
+    }
 
 }
