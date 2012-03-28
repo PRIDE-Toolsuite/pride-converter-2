@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers;
 
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTProtein;
+import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public class SpectraSTIdentificationsParserResult {
     /**
      * Number of spectra references by the identifications (scans)
      */
-    public List<Integer> identifiedSpecIds;
+    public List<String> identifiedSpectraTitles;
     /**
      * Number of identified proteins
      */
@@ -31,5 +32,10 @@ public class SpectraSTIdentificationsParserResult {
      * Target file index
      */
     public ArrayList<String> fileIndex;
+
+    /**
+     * PTMs
+     */
+    public Map<String, PTM> ptms;
 
 }

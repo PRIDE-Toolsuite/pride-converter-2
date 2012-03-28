@@ -1,138 +1,208 @@
 package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model;
 
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTParametersParserResult;
+import uk.ac.ebi.pride.tools.converter.dao.Utils;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
- * Its pretty much a POJO representing a peptide
+ * Its pretty much a POJO representing a SpectraSTX peptide
+ * File headers are:
+ *  ### Query : the title of the query
+ *  Rk : the rank of the peptide identification
+ *  ID : the peptide sequence and the charge in the format <sequence>/<charge>
+ *  Dot : Dot gives the spectrum similarity (Dot product of query and library spectra)
+ *  Delta
+ *  DelRk : delta rank
+ *  DBias : dot bias
+ *  MzDiff : precursor mz diff (Observed – Theoretical m/z)
+ *  #Cand : hits num  (probably the number of candidates)
+ *  MeanDot : hits mean
+ *  SDDot : hits standard deviation
+ *  Fval
+ *  Status
+ *  Inst : instrument type (e.g. qtof=time-of-flight, it=ion-trap, ..., Unk=unknown)
+ *  Spec : spectrum type (e.g. con=consensus, ..., Unk=unknown)
+ *  #Pr : number of matched proteins
+ *  Proteins : the proteins matched. semicolon-separated (todo: check this) not stored within the peptide object
+ *  LibFileOffset
  * @author Jose A. Dianes
  * @version $Id$
  */
 public class SpectraSTPeptide {
+
+
     /**
-     * General expressions
+     * Members
      */
-    private static final String modRegex = "\\[-?\\d+\\.\\d+\\]";
-
-	private final int scan;
-    private final int charge;
-    private final double specPrecursorMZ;
-    private final double specNeutralMass;
-    private final double peptideMass;
-    private final double deltaCn;
-    private final double xcorrScore;
-    private final int xcorrRank;
-    private final int matchesSpectrum;
+    private final String queryName;
+    private final int rank;
     private final String sequence;
-    private final String claveageType;
-    private Map<String, String> flankingAA;
+    private final int charge;
+    private final double dot;
+    private final double delta;
+    private final int deltaRank;
+    private final double dotBias;
+    private final double precursorMzDiff;
+    private final int numCand;
+    private final double meanDot;
+    private final double sdDot;
+    private final double fval;
+    private final String status;
+    private final String inst;
+    private final String spectrumType;
+    private final int numProteins;
+    private final int libFileOffset;
 
-	public SpectraSTPeptide(int scan, int charge, double specPrecursorMZ, double specNeutralMass,
-                            double peptideMass, double deltaCn, double xcorrScore, int xcorrRank,
-                            int matchesSpectrum, String sequence, String claveageType, String[] proteinIds, String[] flankingAA) {
-        if (proteinIds.length != flankingAA.length) throw new ConverterException("Not enough flanking AA for proteins");
-        this.scan = scan;
-        this.charge = charge;
-        this.specPrecursorMZ = specPrecursorMZ;
-        this.specNeutralMass = specNeutralMass;
-        this.peptideMass = peptideMass;
-        this.deltaCn = deltaCn;
-        this.xcorrScore = xcorrScore;
-        this.xcorrRank = xcorrRank;
-        this.matchesSpectrum = matchesSpectrum;
+    public SpectraSTPeptide(String queryName, int rank, String sequence, int charge, double dot, double delta,
+                            int deltaRank, double dotBias, double precursorMzDiff, int numCand, double meanDot,
+                            double sdDot, double fval, String status, String inst, String spectrumType, int numProteins,
+                            int libFileOffset) {
+        this.queryName = queryName;
+        this.rank = rank;
         this.sequence = sequence;
-        this.claveageType = claveageType;
-        // Create a map with protein IDs and flanking AAs
-        this.flankingAA = new HashMap<String, String>();
-        int pos = 0;
-        for (String proteinId: proteinIds) {
-            this.flankingAA.put(proteinId, flankingAA[pos]) ;
-            pos++;
-        }
-	}
+        this.charge = charge;
+        this.dot = dot;
+        this.delta = delta;
+        this.deltaRank = deltaRank;
+        this.dotBias = dotBias;
+        this.precursorMzDiff = precursorMzDiff;
+        this.numCand = numCand;
+        this.meanDot = meanDot;
+        this.sdDot = sdDot;
+        this.fval = fval;
+        this.status = status;
+        this.inst = inst;
+        this.spectrumType = spectrumType;
+        this.numProteins = numProteins;
+        this.libFileOffset = libFileOffset;
 
-    public int getScan() {
-        return scan;
     }
 
-    public int getCharge() {
-        return charge;
+    public String getQueryName() {
+        return queryName;
     }
 
-    public double getSpecPrecursorMZ() {
-        return specPrecursorMZ;
-    }
-
-    public double getSpecNeutralMass() {
-        return specNeutralMass;
-    }
-
-    public double getPeptideMass() {
-        return peptideMass;
-    }
-
-    public double getDeltaCn() {
-        return deltaCn;
-    }
-
-    public double getXcorrScore() {
-        return xcorrScore;
-    }
-
-    public int getXcorrRank() {
-        return xcorrRank;
-    }
-
-    public int getMatchesSpectrum() {
-        return matchesSpectrum;
+    public int getRank() {
+        return rank;
     }
 
     public String getSequence() {
         return sequence;
     }
 
-    public String getClaveageType() {
-        return claveageType;
+    public int getCharge() {
+        return charge;
     }
+
+    public double getDot() {
+        return dot;
+    }
+
+    public double getDelta() {
+        return delta;
+    }
+
+    public int getDeltaRank() {
+        return deltaRank;
+    }
+
+    public double getDotBias() {
+        return dotBias;
+    }
+
+    public double getPrecursorMzDiff() {
+        return precursorMzDiff;
+    }
+
+    public int getNumCand() {
+        return numCand;
+    }
+
+    public double getMeanDot() {
+        return meanDot;
+    }
+
+    public double getSdDot() {
+        return sdDot;
+    }
+
+    public double getFval() {
+        return fval;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getInst() {
+        return inst;
+    }
+
+    public String getSpectrumType() {
+        return spectrumType;
+    }
+
+    public int getNumProteins() {
+        return numProteins;
+    }
+
+    public int getLibFileOffset() {
+        return libFileOffset;
+    }
+
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 
-        result = prime * result + scan;
+        result = prime * result + ((queryName == null) ? 0 : queryName.hashCode());
 
-        result = prime * result + charge;
-
-		long temp;
-		temp = Double.doubleToLongBits(specPrecursorMZ);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-
-		temp = Double.doubleToLongBits(specNeutralMass);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-
-        temp = Double.doubleToLongBits(peptideMass);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-
-        temp = Double.doubleToLongBits(deltaCn);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-
-        temp = Double.doubleToLongBits(xcorrScore);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-
-        result = prime * result + xcorrRank;
-
-        result = prime * result + matchesSpectrum;
+        result = prime * result + rank;
 
         result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
 
-		result = prime * result + ((claveageType == null) ? 0 : claveageType.hashCode());
+        result = prime * result + charge;
+
+        long temp;
+		temp = Double.doubleToLongBits(dot);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+
+        temp = Double.doubleToLongBits(delta);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+
+        result = prime * result + deltaRank;
+
+        temp = Double.doubleToLongBits(dotBias);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+
+        temp = Double.doubleToLongBits(precursorMzDiff);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+
+        result = prime * result + numCand;
+
+        temp = Double.doubleToLongBits(meanDot);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+
+        temp = Double.doubleToLongBits(sdDot);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+
+        temp = Double.doubleToLongBits(fval);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
+
+        result = prime * result + ((inst == null) ? 0 : inst.hashCode());
+
+        result = prime * result + ((spectrumType == null) ? 0 : spectrumType.hashCode());
+
+        result = prime * result + numProteins;
+
+        result = prime * result + libFileOffset;
 
         return result;
 	}
@@ -148,228 +218,109 @@ public class SpectraSTPeptide {
 
         SpectraSTPeptide other = (SpectraSTPeptide) obj;
 
-        if (charge != other.scan)
+        if (!queryName.equals(other.queryName))
+			return false;
+        else if (rank != other.rank)
             return false;
-        if (charge != other.charge)
+        else if (!sequence.equals(other.sequence))
             return false;
-		if (Double.doubleToLongBits(specPrecursorMZ) != Double
-				.doubleToLongBits(other.specPrecursorMZ))
-			return false;
-		if (Double.doubleToLongBits(specNeutralMass) != Double
-				.doubleToLongBits(other.specNeutralMass))
-			return false;
-		if (Double.doubleToLongBits(peptideMass) != Double
-				.doubleToLongBits(other.peptideMass))
-			return false;
-		if (Double.doubleToLongBits(deltaCn) != Double
-				.doubleToLongBits(other.deltaCn))
-			return false;
-		if (Double.doubleToLongBits(xcorrScore) != Double
-				.doubleToLongBits(other.xcorrScore))
-			return false;
-        if (xcorrRank != other.xcorrRank)
+        else if (charge != other.charge)
             return false;
-        if (matchesSpectrum != other.matchesSpectrum)
+        else if (Double.doubleToLongBits(dot) != Double.doubleToLongBits(other.dot))
+			return false;
+        else if (Double.doubleToLongBits(delta) != Double.doubleToLongBits(other.delta))
             return false;
-		if (sequence == null) {
-			if (other.sequence != null)
-				return false;
-		} else if (!sequence.equals(other.sequence))
-			return false;
-		if (claveageType == null) {
-			if (other.claveageType != null)
-				return false;
-		} else if (!claveageType.equals(other.claveageType))
-			return false;
+        else if (deltaRank != other.deltaRank)
+            return false;
+        else if (Double.doubleToLongBits(dotBias) != Double.doubleToLongBits(other.dotBias))
+            return false;
+        else if (Double.doubleToLongBits(precursorMzDiff) != Double.doubleToLongBits(other.precursorMzDiff))
+            return false;
+        else if (numCand != other.numCand)
+            return false;
+        else if (Double.doubleToLongBits(meanDot) != Double.doubleToLongBits(other.meanDot))
+            return false;
+        else if (Double.doubleToLongBits(sdDot) != Double.doubleToLongBits(other.sdDot))
+            return false;
+        else if (Double.doubleToLongBits(fval) != Double.doubleToLongBits(other.fval))
+            return false;
+        else if (!status.equals(other.status))
+            return false;
+        else if (!inst.equals(other.inst))
+            return false;
+        else if (!spectrumType.equals(other.spectrumType))
+            return false;
+        else if (numProteins != other.numProteins)
+            return false;
+        else if (libFileOffset != other.libFileOffset)
+            return false;
 
 		return true;
 	}
 
     /**
-     * Returns a list of peptide PTMs associated with this Crux peptide. It includes variable and fixed PTMs (including
-     * terminal modifications). It makes use of the parameter parsing result where it can find information about the 
+     * Returns a list of peptide PTMs associated with this SpectraST peptide. It includes variable and fixed PTMs (including
+     * terminal modifications). It makes use of the parameter parsing result where it can find information about the
      * variable and fixed modifications defined during the search.
      *
      * It makes several checks about the existence or not in the param file of the modifications in the sequence, throwing
      * ConverterExcetion (unchecked) when wrong.
-     * 
+     *
      * @return A Collection of PeptidePTM associated with this Crux peptide.
      */
-    public Collection<PeptidePTM> getPTMs(SpectraSTParametersParserResult params) {
-        
+    public Collection<PeptidePTM> getPTMs() {
+
         LinkedList<PeptidePTM> result = new LinkedList<PeptidePTM>();
-        
-        // Add variable PTMs - they are specified in the peptide sequence
-        // first we check potential terminal modifications in pos 0 and length-1 (n and c terms)
-        // after we process in between modifications accessing the aaToPTM map
-        Map<Integer, String> mods = getModifications(sequence);
 
-        // Check nterm modification
-        if (mods.containsKey(1)) {
-            String[] modDelta = mods.get(1).split("[\\[\\]]");
-            if ((params.ntermPTM != null) && (params.ntermPTM.getSearchEnginePTMLabel().equals(modDelta[1]+"@nterm"))) {
-                PeptidePTM newPeptidePTM = newPeptidePtm(params.ntermPTM, 0); // nterm is before the first aa (pos 1)
-                result.add(newPeptidePTM);
-                // remove mod from the list so it is not included in the in between ones
-                mods.remove(1);
-            }
-        }
+        Map<Integer, String> mods = Utils.getModifications(sequence);
 
-        // Check cterm modification
-        String lastMod = getLastMod();
-        if (lastMod != null) { // if there is a mod in the last aa of the sequence...
-            String[] modDelta = lastMod.split("[\\[\\]]"); // get just the aa and the delta
-            if ((params.ctermPTM != null) && (params.ctermPTM.getSearchEnginePTMLabel().equals(modDelta[1]+"@cterm"))) {
-                PeptidePTM newPeptidePTM = newPeptidePtm(params.ctermPTM,
-                        (Integer) mods.keySet().toArray()[mods.size() - 1] + 1); // cterm is after last aa
-                result.add(newPeptidePTM);
-                // remove mod from the list so it is not included in the in between ones
-                mods.remove((Integer)mods.keySet().toArray()[mods.size()-1]);
-            }
-        }
-
-        // in between mods...
         for (Map.Entry<Integer, String> mod: mods.entrySet()) {
             String[] modDelta = mod.getValue().split("[\\[\\]]");
-            PTM ptm = params.aaToPtm.get(mod.getValue());
-            if (ptm == null) throw new ConverterException("Undefined variable PTM in peptide sequence: "+sequence);
-            else {
-                PeptidePTM newPeptidePtm = newPeptidePtm(ptm, mod.getKey());
-                // todo: check if this is correct or residue = single aa
-                result.add(newPeptidePtm);
-            }
+            PTM ptm = new PTM();
+            ptm.setFixedModification(false);
+            ptm.setResidues(modDelta[0]);
+            ptm.setSearchEnginePTMLabel(modDelta[1]+"@"+modDelta[0]);
+            ptm.getModMonoDelta().add(modDelta[1]);
+            PeptidePTM newPeptidePtm = newPeptidePtm(ptm, mod.getKey());
+            result.add(newPeptidePtm);
         }
 
-        // Add now fixed modifications. They are in the params.aaToFixedPTM. For each one check if the AA is in our
-        // sequence. If it is, add an associated PeptidePTM to the result list
-        int pos = 0;
-        for (String aa: getAllAAInSequence(sequence)) {
-            // If the aa is in the fixed mods map, add a PeptidePTM
-            if (params.aaToFixedPtm.containsKey(aa)) {
-                PeptidePTM newPTM = newPeptidePtm(params.aaToFixedPtm.get(aa), pos+1);
-                result.add(newPTM);
-            }
-            pos++;
-        }
-        
-        // don't forget about fixed term...
-        if (params.ntermFixedPTM != null) {
-            PeptidePTM newPtm = newPeptidePtm(params.ntermFixedPTM, 0);
-            result.add(newPtm);
-        }
-        if (params.ctermFixedPTM != null) {
-            PeptidePTM newPtm = newPeptidePtm(params.ntermFixedPTM,
-                    (Integer)mods.keySet().toArray()[mods.size()-1] + 1); // cterm is after last aa
-            result.add(newPtm);
-        }
-        
         return result;
     }
 
     /**
-     * Gets the last modification in the sequence if present
-     * @return The last modification including the aa. Null if not present.
-     */
-    private String getLastMod() {
-        String res = null;
-        // define a regular expression that matches modifications
-        Pattern regex = Pattern.compile( modRegex +"$" );
-        // get a matcher object
-        Matcher m = regex.matcher(sequence);
-        
-        if (m.find()) {
-            int pos = m.start() - 1; // get the aa
-            res = sequence.substring(pos, m.end());
-        }
-        return res;
-    }
+     * Using the passed map, it finds out its index. The peptide queryName member is used to find the appropriate key in
+     * the Map. It has to be prefix of just one key in the Map.
+     * @return The index or -1 if not available or duplicated prefix
+     * */
+    public int getSpectraIndex(Map<String, Integer> titleToSpectraIdMap) {
 
-    /**
-     * Returns a map of modifications and their positions. It has to be true that the position of a modification at
-     * the end of the input is equals to the length of the peptide sequence with modifications not counting for this
-     * length. Modifications match the regular expression: \\[\\d+\\.\\d+\\]      (e.g. [19.9956])
-     * IMPORTANT: Modifications in the result are in the same order that in the sequence.
-     * 
-     * @param sequence The peptide sequence containing peptides and modifications
-     * @return A Map of modifications and their positions. Mods include the preceding AA.
-     */
-    private Map<Integer, String> getModifications(String sequence) {
-        HashMap<Integer, String> res = new HashMap<Integer, String>();
-
-        // define a regular expression that matches modifications
-        Pattern regex = Pattern.compile(modRegex);
-
-        // get a matcher object
-        Matcher m = regex.matcher(sequence);
-
-        // start looking for modifications
-        int totalModsSize = 0; // accumulated total modifications size
-        int numMods = 1;
-        while( m.find() ) {
-            int pos = m.start() - 1; // include the preceding AA
-            String mod = sequence.substring(pos, m.end()); 
-            res.put( pos - totalModsSize + numMods, mod );
-            totalModsSize += mod.length();
-            numMods++;
+        int index = -1;
+        int timesFound = 0;
+        for (Map.Entry<String, Integer> entry: titleToSpectraIdMap.entrySet()) {
+            if (entry.getKey().startsWith(queryName)) {
+                index = entry.getValue();
+                timesFound++;
+            }
         }
 
-        return res;
+        if (timesFound!=1)
+            return -1;
+        else
+            return index;
     }
-    
-    private String [] getAllAAInSequence(String sequence) {
-        String [] tempAss = sequence.replaceAll(modRegex,"").split("");
-        String [] aas = Arrays.copyOfRange(tempAss, 1, tempAss.length);
 
-        return aas;
-    }
-    
     private PeptidePTM newPeptidePtm(PTM ptm, long location) {
         PeptidePTM newPeptidePtm = new PeptidePTM();
         newPeptidePtm.setSearchEnginePTMLabel(ptm.getSearchEnginePTMLabel());
         newPeptidePtm.setFixedModification(ptm.isFixedModification());
         newPeptidePtm.setResidues(ptm.getResidues());
         newPeptidePtm.setModLocation(location);
+        for (String monoDelta: ptm.getModMonoDelta()) {
+            newPeptidePtm.getModMonoDelta().add(monoDelta);
+        }
         return newPeptidePtm;
     }
-    
-    public String getPrevAA(String proteinId) {
-        return ""+this.flankingAA.get(proteinId).charAt(0);
-    }
-    
-    public String getNextAA(String proteinId) {
-        return ""+this.flankingAA.get(proteinId).charAt(1);
-    }
 
-    /**
-     * Creates a new SpectraSTPeptide object from the passed
-     * fields and header.
-     * @param fields The fields of the line representing the peptide.
-     * @param header A Map mapping a given column name to its 0-based index.
-     * @return The SpectraSTPeptide object representing the line.
-     */
-    public static SpectraSTPeptide createCruxPeptide(String[] fields,
-                                                 Map<String, Integer> header) {
-        // we may have several proteins in the protein_id field, comma separated
-        String[] proteinIds = fields[header.get("protein id")].split(",");
-        String[] flankingAA = fields[header.get("flanking aa")].split(",");
-
-        SpectraSTPeptide peptide = new SpectraSTPeptide(
-                Integer.parseInt(fields[header.get("scan")]),
-                Integer.parseInt(fields[header.get("charge")]),
-                Double.parseDouble(fields[header.get("spectrum precursor m/z")]),
-                Double.parseDouble(fields[header.get("spectrum neutral mass")]),
-                Double.parseDouble(fields[header.get("peptide mass")]),
-                Double.parseDouble(fields[header.get("delta_cn")]),
-                Double.parseDouble(fields[header.get("xcorr score")]),
-                Integer.parseInt(fields[header.get("xcorr rank")]),
-                Integer.parseInt(fields[header.get("matches/spectrum")]),
-                fields[header.get("sequence")],
-                fields[header.get("cleavage type")],
-                proteinIds,
-                flankingAA
-        );
-
-        return peptide;
-    }
 
 }
