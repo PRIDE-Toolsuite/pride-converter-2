@@ -61,7 +61,11 @@ public enum DAOCvParams {
     PEPTIDE_P_VALUE("MS", "MS:1001870", "p-value for peptides", "", "MS:1001092"),
     SEQUEST_DELTA_CN("MS", "MS:1001156", "Sequest:deltacn", "", "MS:1001153"),
     SEQUEST_XCORR("MS", "MS:1001155", "Sequest:xcorr", "", "MS:1001153"),
-    SUBMIT_TO_INTACT("PRIDE", "PRIDE:0000405", "Submit PRIDE Experiment to IntAct", "", "")
+    SUBMIT_TO_INTACT("PRIDE", "PRIDE:0000405", "Submit PRIDE Experiment to IntAct", "", ""),
+    SPECTRAST_DOT("MS", "MS:1001417", "SpectraST:dot", "", "MS:1001153"),
+    SPECTRAST_DOT_BIAS("MS", "MS:1001418", "SpectraST:dot_bias", "", "MS:1001153"),
+    SPECTRAST_FVAL("MS", "MS:1001419", "SpectraST:discriminant score F", "", "MS:1001153"),
+    SPECTRAST_DELTA("MS", "MS:1001420", "SpectraST:delta", "", "MS:1001153")
 
     ;
 
