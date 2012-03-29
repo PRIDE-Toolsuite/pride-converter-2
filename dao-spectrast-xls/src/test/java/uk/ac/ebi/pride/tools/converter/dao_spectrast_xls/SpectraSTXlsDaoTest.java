@@ -35,7 +35,6 @@ public class SpectraSTXlsDaoTest extends TestCase {
         Properties props = new Properties();
         props.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), scoreCriteria);
         props.setProperty(SupportedProperty.THRESHOLD.getName(), threshold);
-//        props.setProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "false");
 
         cruxXlsDao.setConfiguration(props);
         cruxXlsDao.setExternalSpectrumFile(spectraFilePath);
@@ -48,9 +47,17 @@ public class SpectraSTXlsDaoTest extends TestCase {
         while (identificationsIt.hasNext()) {
             Identification newIdentification = identificationsIt.next();
             identificationsCount += newIdentification.getPeptide().size();
-//            System.out.println(newIdentification.getAccession());
         }
-//        System.out.println("Identifications*peptide count = " + identificationsCount);
+        assertEquals(identificationsCount, NUM_IDENTIFICATIONS);
+    }
+
+    public void testIdentificationsIteratorPrescan() throws Exception {
+        Iterator<Identification> identificationsIt = cruxXlsDao.getIdentificationIterator(true);
+        int identificationsCount = 0;
+        while (identificationsIt.hasNext()) {
+            Identification newIdentification = identificationsIt.next();
+            identificationsCount += newIdentification.getPeptide().size();
+        }
         assertEquals(identificationsCount, NUM_IDENTIFICATIONS);
     }
 

@@ -609,7 +609,6 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
             fields = this.targetFileIndex.get(cruxPeptideStringIndex).split("\t");  // split the columns
             
             // Check if the entry pass the filter. Otherwise, go for the next line
-            // - check also if we get just the highest on per scan
 //            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
                 // process the peptide
                 SpectraSTPeptide spectraSTPeptide = SpectraSTXlsIdentificationsParser.createSpectraSTPeptide(fields, this.header);
@@ -630,18 +629,14 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
                         // add the additional info
                         Param additional = new Param();
 
-    //                    if (!"*".equals(spectraSTPeptide.getPrevAA(protein.getAccession())))
-    //                        additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getPrevAA(protein.getAccession())));
-    //                    if (!"*".equals(spectraSTPeptide.getNextAA(protein.getAccession())))
-    //                        additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(spectraSTPeptide.getNextAA(protein.getAccession())));
-
                         additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(spectraSTPeptide.getCharge()));
-                        // TODO: CHECK ALL THESE AND ADD OUR OWN PARAMETERS!!!
-    //                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(spectraSTPeptide.getSpecPrecursorMZ()));
-    //                    additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(spectraSTPeptide.getSpecNeutralMass()));
-    //                    additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(spectraSTPeptide.getXcorrRank()));
-    //                    additional.getCvParam().add(DAOCvParams.SEQUEST_DELTA_CN.getParam(spectraSTPeptide.getDeltaCn()));
-    //                    additional.getCvParam().add(DAOCvParams.SEQUEST_XCORR.getParam(spectraSTPeptide.getXcorrScore()));
+                        additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(spectraSTPeptide.getRank()));
+                        additional.getCvParam().add(DAOCvParams.SPECTRAST_DOT.getParam(spectraSTPeptide.getDot()));
+                        additional.getCvParam().add(DAOCvParams.SPECTRAST_DOT_BIAS.getParam(spectraSTPeptide.getDotBias()));
+                        additional.getCvParam().add(DAOCvParams.SPECTRAST_FVAL.getParam(spectraSTPeptide.getFval()));
+                        additional.getCvParam().add(DAOCvParams.SPECTRAST_DELTA.getParam(spectraSTPeptide.getDelta()));
+                        // We use an user param for precursor mz diff
+                        additional.getUserParam().add(new UserParam("Precursor ion m/z delta", ((Double) spectraSTPeptide.getPrecursorMzDiff()).toString()));
 
                         peptide.setAdditional(additional);
 
