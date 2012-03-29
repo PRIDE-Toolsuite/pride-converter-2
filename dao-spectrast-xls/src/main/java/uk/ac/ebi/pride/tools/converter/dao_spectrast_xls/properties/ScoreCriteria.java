@@ -5,9 +5,7 @@ package uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.properties;
  * @version $Id$
  */
 public enum ScoreCriteria {
-    XCORR_RANK("xcorr_rank"),
-    XCORR_SCORE("xcorr_score"),
-    DELTA_CN("delta_cn");
+    FVAL("fval");
 
     private String name;
 

@@ -25,8 +25,8 @@ public class SpectraSTXlsDaoTest extends TestCase {
     private static int spectraInFile = 6062;
     private static String resultFile = "src/test/resources/consensus_1.xls";
 
-    private static String scoreCriteria = ScoreCriteria.XCORR_RANK.getName();
-    private static String threshold = "5";
+    private static String scoreCriteria = ScoreCriteria.FVAL.getName();
+    private static String threshold = "0.0";
 
 
     private static SpectraSTXlsDao cruxXlsDao = new SpectraSTXlsDao(new File(resultFile));

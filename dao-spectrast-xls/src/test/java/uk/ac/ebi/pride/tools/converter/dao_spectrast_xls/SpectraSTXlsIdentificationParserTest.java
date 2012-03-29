@@ -13,49 +13,43 @@ import java.util.Map;
  */
 public class SpectraSTXlsIdentificationParserTest extends TestCase {
 
-    private String targetFilePath = "src/test/resources/crux-output/search.target.txt";
-    private String decoyFilePath = "src/test/resources/crux-output/search.decoy.txt";
+    private String targetFilePath = "src/test/resources/consensus_1.xls";
     private Map<String, Integer> header;
     private SpectraSTIdentificationsParserResult parserResults;
 
     public void testParseHeader() throws Exception {
         header = SpectraSTXlsIdentificationsParser.parseHeader(new File(targetFilePath));
 
-        assertEquals(header.size(), 13);
+        assertEquals(header.size(), 18);
 
         assertNull(header.get("fakeheadertag"));
 
-        assertEquals(header.get("scan"), new Integer(0));
-        assertEquals(header.get("charge"), new Integer(1));
-        assertEquals(header.get("spectrum precursor m/z"), new Integer(2));
-        assertEquals(header.get("spectrum neutral mass"), new Integer(3));
-        assertEquals(header.get("peptide mass"), new Integer(4));
-        assertEquals(header.get("delta_cn"), new Integer(5));
-        assertEquals(header.get("xcorr score"), new Integer(6));
-        assertEquals(header.get("xcorr rank"), new Integer(7));
-        assertEquals(header.get("matches/spectrum"), new Integer(8));
-        assertEquals(header.get("sequence"), new Integer(9));
-        assertEquals(header.get("cleavage type"), new Integer(10));
-        assertEquals(header.get("protein id"), new Integer(11));
-        assertEquals(header.get("flanking aa"), new Integer(12));
-
+        assertEquals(header.get("### Query"), new Integer(0));
+        assertEquals(header.get("Rk"), new Integer(1));
+        assertEquals(header.get("ID"), new Integer(2));
+        assertEquals(header.get("Dot"), new Integer(3));
+        assertEquals(header.get("Delta"), new Integer(4));
+        assertEquals(header.get("DelRk"), new Integer(5));
+        assertEquals(header.get("DBias"), new Integer(6));
+        assertEquals(header.get("MzDiff"), new Integer(7));
+        assertEquals(header.get("#Cand"), new Integer(8));
+        assertEquals(header.get("MeanDot"), new Integer(9));
+        assertEquals(header.get("SDDot"), new Integer(10));
+        assertEquals(header.get("Fval"), new Integer(11));
+        assertEquals(header.get("Status"), new Integer(12));
+        assertEquals(header.get("Inst"), new Integer(13));
+        assertEquals(header.get("Spec"), new Integer(14));
+        assertEquals(header.get("#Pr"), new Integer(15));
+        assertEquals(header.get("Proteins"), new Integer(16));
+        assertEquals(header.get("LibFileOffset"), new Integer(17));
     }
 
     public void testParse() throws Exception {
         parserResults = SpectraSTXlsIdentificationsParser.parse(new File(targetFilePath));
 
-        assertEquals(parserResults.proteins.size(), 14880);
+        assertEquals(parserResults.proteins.size(), 79);
 
-        assertEquals(parserResults.peptideCount, 25010);
-
-    }
-
-    public void testParseDecoy() throws Exception {
-        parserResults = SpectraSTXlsIdentificationsParser.parse(new File(decoyFilePath));
-
-        assertEquals(parserResults.proteins.size(), 19980);
-
-        assertEquals(parserResults.peptideCount, 25005);
+        assertEquals(parserResults.peptideCount, 614);
 
     }
 
