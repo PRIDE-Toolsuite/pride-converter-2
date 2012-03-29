@@ -19,7 +19,7 @@ public class Utils {
     /**
      * Regular expressions
      */
-    public static final String MOD_REGEX = "\\[-?\\d+\\[\\.\\d+\\]?\\]";
+    public static final String MOD_REGEX = "\\[-?\\d+[\\.\\d+]?\\]";
 
     /**
      * An ENUM containing all known peptide
