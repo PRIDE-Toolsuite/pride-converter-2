@@ -6,10 +6,8 @@ import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.DeltaCnFilterCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.FilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.XcorrRankFilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.XcorrScoreFilterCriteria;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.filters.FvalFilterCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTPeptide;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.model.SpectraSTProtein;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.parsers.SpectraSTIdentificationsParserResult;
@@ -173,7 +171,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         supportedProperties.add(threshold);
 
         // Score criteria
-        DAOProperty<String> scoreCriteria = new DAOProperty<String>(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.XCORR_RANK.getName());
+        DAOProperty<String> scoreCriteria = new DAOProperty<String>(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.FVAL.getName());
         scoreCriteria.setDescription("Defines the criteria for ordering and filtering identifications.");
         supportedProperties.add(scoreCriteria);
 
@@ -192,18 +190,12 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         scoreCriteria = props.getProperty(SupportedProperty.SCORE_CRITERIA.getName());
 
         // Create the filter object from the supportedProperties
-        if (ScoreCriteria.XCORR_RANK.getName().equals(scoreCriteria)) {
-            filter = new XcorrRankFilterCriteria();
-            filter.setThreshold(Integer.parseInt(threshold));
-        } else if (ScoreCriteria.XCORR_SCORE.getName().equals(scoreCriteria)) {
-            filter = new XcorrScoreFilterCriteria();
+        if (ScoreCriteria.FVAL.getName().equals(scoreCriteria)) {
+            filter = new FvalFilterCriteria();
             filter.setThreshold(Double.parseDouble(threshold));
-        } else if (ScoreCriteria.DELTA_CN.getName().equals(scoreCriteria)) {
-            filter = new DeltaCnFilterCriteria();
-            filter.setThreshold(Double.parseDouble(threshold));
-        } else { // default case
-            filter = new XcorrRankFilterCriteria();
-            filter.setThreshold(5);
+        } else {   // default filter actually does nothing
+            filter = new FvalFilterCriteria();
+            filter.setThreshold(0.0);
         }
 
     }
@@ -213,12 +205,10 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      */
     private void setDefaultConfiguration() {
         Properties properties = new Properties();
-        properties.setProperty(SupportedProperty.DECOY_PREFIX.getName(), "");
-        properties.setProperty(SupportedProperty.THRESHOLD.getName(), "5");
-        properties.setProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "true");
-        properties.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.XCORR_RANK.getName());
-        this.filter = new XcorrRankFilterCriteria();
-        this.filter.setThreshold(5);
+        properties.setProperty(SupportedProperty.THRESHOLD.getName(), "0");
+        properties.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.FVAL.getName());
+        this.filter = new FvalFilterCriteria();
+        this.filter.setThreshold(0.0);
         this.setConfiguration(properties);
     }
     
@@ -609,7 +599,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
             fields = this.targetFileIndex.get(cruxPeptideStringIndex).split("\t");  // split the columns
             
             // Check if the entry pass the filter. Otherwise, go for the next line
-//            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
+            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
                 // process the peptide
                 SpectraSTPeptide spectraSTPeptide = SpectraSTXlsIdentificationsParser.createSpectraSTPeptide(fields, this.header);
 
@@ -647,7 +637,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 
                     identification.getPeptide().add(peptide);
                 }
-//            }
+            }
 		}
 		
 		return identification;
