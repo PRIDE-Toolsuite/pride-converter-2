@@ -108,20 +108,10 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      */
 	private Properties supportedProperties;
 
-//    /**
-//     * Built up from the search parameter file
-//     */
-//    private SpectraSTParametersParserResult params;
-
     /**
      * Threshold property value: allows ignoring all identifications under/over the value (depending on scoreCriteria)
      */
     private String threshold;
-
-    /**
-     * get highest scored item property: allows retrieving just the highest ranked identification based on scoreCriteria
-     */
-    private boolean getHighest;
 
     /**
      * Score criteria item property: allows ordering and further filtering of identifications
@@ -134,20 +124,15 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
     private FilterCriteria filter;
 
     /**
-     * Main constructor. Will parse three files:
-     *  - Crux txt target identifications file
-     *  - Crux txt decoy identifications file
-     *  - Crux parameters file
-     *  And create the proper internal data structures
+     * Main constructor. Will parse the result .xls file and create the proper internal data structures
      *
      * @param resultFile
      */
 	public SpectraSTXlsDao(File resultFile) {
 		this.targetFile = resultFile;
 
-		// parse the Crux files
+		// parse the xls file
         SpectraSTXlsIdentificationsParser parser = new SpectraSTXlsIdentificationsParser();
-        // parse target file
         SpectraSTIdentificationsParserResult parsingResult = parser.parse(targetFile);
         header = parsingResult.header;
         proteins = parsingResult.proteins;
@@ -167,7 +152,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         
         // Threshold
         DAOProperty<String> threshold = new DAOProperty<String>(SupportedProperty.THRESHOLD.getName(), null);
-        threshold.setDescription("Allows filtering identifications. Default value is 1.0 so all identifications pass the cut.");
+        threshold.setDescription("Allows filtering identifications.");
         supportedProperties.add(threshold);
 
         // Score criteria
@@ -271,7 +256,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      * @throws InvalidFormatException
      */
 	public String getExperimentTitle() throws InvalidFormatException {
-		return "Unknown Crux based experiment";
+		return "Unknown SpectraST based experiment";
 	}
 
     /**
@@ -292,7 +277,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         Param params = new Param();
 
         // original MS format param
-        params.getCvParam().add(DAOCvParams.ORIGINAL_MS_FORMAT.getParam("Crux text file"));
+        params.getCvParam().add(DAOCvParams.ORIGINAL_MS_FORMAT.getParam("SpectraST .xls file"));
        	params.getCvParam().add(DAOCvParams.MS_MS_SEARCH.getParam());
 
         return params;
@@ -334,7 +319,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 
         file.setPathToFile(targetFile.getAbsolutePath());
         file.setNameOfFile(targetFile.getName());
-        file.setFileType("Crux file");
+        file.setFileType("SpectraST .xls file");
 
         return file;
 	}
@@ -362,7 +347,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      */
 	public Software getSoftware() throws InvalidFormatException {
         Software s = new Software();
-        s.setName("Crux");
+        s.setName("SpectraST");
         s.setVersion("");
 		return s;
 	}
@@ -373,10 +358,6 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      */
 	public Param getProcessingMethod() {
         Param param = new Param();
-        // TODO: CHECK THIS
-//        DAOCvParams cvParam = DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE;
-//        cvParam.setValue(this.params.properties.getProperty("precursor-window") + " " + this.params.properties.getProperty("precursor-window-type"));
-//        param.getCvParam().add(cvParam.getParam());
 		return param;
 	}
 
@@ -480,7 +461,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         if (spectraFileType == null)
             guessSpectraSourceType();
 
-        // if only identified return the xtdanem identified count
+        // if only identified return the identified count
         if (!onlyIdentified)
             return getSpectraDao().getSpectrumCount(false);
 
@@ -643,36 +624,6 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 		return identification;
 
 	}
-
-    /**
-     * Assumption: There are 5 entries for each scan
-     * @param fileIndex
-     * @param i
-     * @return
-     */
-    private List<String> getWholeScan(ArrayList<String> fileIndex, Integer i) {
-        List<String> res = null;
-        String[] elem = fileIndex.get(i).split("\t");
-        int elemScan = Integer.parseInt(elem[header.get("scan")]);
-        int elemRank = Integer.parseInt(elem[header.get("xcorr rank")]);
-        int firstElemPos = i-elemRank+1;
-        int lastElemPos = i;
-        int lastElemRank = elemRank;
-        // now we are going to move the index to the end of the scan
-        boolean found = false;
-        while (i<fileIndex.size() && !found) {
-            String[] nextElem = fileIndex.get(lastElemPos+1).split("\t");
-            int nextElemScan = Integer.parseInt(nextElem[header.get("scan")]);
-            found = (elemScan != nextElemScan);
-            lastElemPos++;
-        }
-        if (found) {
-            res = fileIndex.subList(firstElemPos, lastElemPos);     
-        }
-        return res;
-    }
-
-    
 
     /**
      *
