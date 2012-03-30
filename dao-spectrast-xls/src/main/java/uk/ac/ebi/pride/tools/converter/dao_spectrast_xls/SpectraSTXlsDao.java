@@ -606,8 +606,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
                         additional.getCvParam().add(DAOCvParams.SPECTRAST_DOT_BIAS.getParam(spectraSTPeptide.getDotBias()));
                         additional.getCvParam().add(DAOCvParams.SPECTRAST_FVAL.getParam(spectraSTPeptide.getFval()));
                         additional.getCvParam().add(DAOCvParams.SPECTRAST_DELTA.getParam(spectraSTPeptide.getDelta()));
-                        // We use an user param for precursor mz diff
-                        additional.getUserParam().add(new UserParam("Precursor ion m/z delta", ((Double) spectraSTPeptide.getPrecursorMzDiff()).toString()));
+                        additional.getCvParam().add(DAOCvParams.MZ_DIFF.getParam(spectraSTPeptide.getPrecursorMzDiff())); // TODO: to check in the future, when added to the OLS
 
                         peptide.setAdditional(additional);
 
