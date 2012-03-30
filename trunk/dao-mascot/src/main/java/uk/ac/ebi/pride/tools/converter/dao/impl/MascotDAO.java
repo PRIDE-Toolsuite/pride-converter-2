@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -145,7 +147,7 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
     /**
      * Decimal format to use for all doubles
      */
-    private final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    private final DecimalFormat decimalFormat;
 
     /**
      * Creating a (peptide) result summary is a time consuming
@@ -377,6 +379,9 @@ public class MascotDAO extends AbstractDAOImpl implements DAO {
      */
     public MascotDAO(File resultFile) throws InvalidFormatException {
         try {
+        	DecimalFormatSymbols decimalSymbols = new DecimalFormatSymbols(Locale.US);
+        	decimalFormat = new DecimalFormat("#.##", decimalSymbols);
+        	
             // try to load the mascot libaray
             this.loadMascotLibrary();
 
