@@ -65,7 +65,8 @@ public enum DAOCvParams {
     SPECTRAST_DOT("MS", "MS:1001417", "SpectraST:dot", "", "MS:1001153"),
     SPECTRAST_DOT_BIAS("MS", "MS:1001418", "SpectraST:dot_bias", "", "MS:1001153"),
     SPECTRAST_FVAL("MS", "MS:1001419", "SpectraST:discriminant score F", "", "MS:1001153"),
-    SPECTRAST_DELTA("MS", "MS:1001420", "SpectraST:delta", "", "MS:1001153")
+    SPECTRAST_DELTA("MS", "MS:1001420", "SpectraST:delta", "", "MS:1001153"),
+    MZ_DIFF("MS", "MS:1001975", "m/z difference", "", "") // TODO complete info here
 
     ;
 
