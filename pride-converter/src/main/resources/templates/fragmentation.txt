@@ -2,3 +2,4 @@ MS:1000133	CID (Collision-Induced Dissociation)
 MS:1000598	ETD (Electron Transfer Dissociation)
 MS:1000250	ECD (Electron Capture Dissociation)
 MS:1000422	HCD (High-energy Collision-Induced Dissociation)
+XXXX    Other

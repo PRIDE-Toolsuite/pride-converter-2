@@ -198,7 +198,7 @@ public class FilterPanel extends JPanel {
 
             //---- intactSubmissionBox ----
             intactSubmissionBox.setText("Experiment contains interactions data");
-            intactSubmissionBox.setToolTipText("Select this option if your data set contains interaction \ndata and you would like to be contacted by a curator for\ninclusion into IntAct.");
+            intactSubmissionBox.setToolTipText("Select this option if your data set contains interaction\ndata and you would like to be contacted by a curator for\ninclusion into the EBI IntAct database.");
 
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
@@ -231,7 +231,7 @@ public class FilterPanel extends JPanel {
                                     .addComponent(removeWorkfilesBox)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(intactSubmissionBox)
-                                    .addContainerGap(15, Short.MAX_VALUE))
+                                    .addContainerGap(13, Short.MAX_VALUE))
             );
         }
 
@@ -375,7 +375,7 @@ public class FilterPanel extends JPanel {
                                     .addGroup(panel2Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                             .addComponent(whitelistTextfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addComponent(whitelistButton))
-                                    .addContainerGap(17, Short.MAX_VALUE))
+                                    .addContainerGap(19, Short.MAX_VALUE))
             );
         }
 

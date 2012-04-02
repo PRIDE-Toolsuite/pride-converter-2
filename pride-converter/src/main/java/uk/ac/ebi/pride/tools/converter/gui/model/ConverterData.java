@@ -6,6 +6,7 @@ import uk.ac.ebi.pride.tools.converter.dao.handler.HandlerFactory;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
+import uk.ac.ebi.pride.tools.converter.report.model.Param;
 
 import java.io.File;
 import java.util.*;
@@ -42,6 +43,9 @@ public class ConverterData {
     private Set<DatabaseMapping> databaseMappings = new HashSet<DatabaseMapping>();
     private ReportReaderDAO masterDAO;
     private Set<String> filesToDelete = new HashSet<String>();
+
+    private Param fragmentationMethod = new Param();
+
     /**
      * A map that contains custom report beans for a given source file. This is used in the
      * conversion of several files at once. The map is keyed on the absolute path of the
@@ -274,6 +278,10 @@ public class ConverterData {
 
     public void setUseHybridSearchDatabase(boolean useHybridSearchDatabase) {
         this.useHybridSearchDatabase = useHybridSearchDatabase;
+    }
+
+    public Param getFragmentationMethod() {
+        return fragmentationMethod;
     }
 
     @Override

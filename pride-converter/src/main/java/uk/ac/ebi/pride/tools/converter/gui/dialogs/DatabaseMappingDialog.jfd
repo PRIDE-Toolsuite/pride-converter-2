@@ -139,8 +139,9 @@
           </void>
           <void method="setProperty">
            <string>toolTipText</string>
-           <string>Please provide a the version of the search database you 
-used in your experiment (for example release-2012_02 for UniprotKB) or the date you generated or downloaded the
+           <string>Please provide a the version of the search database you
+used in your experiment (for example release-2012_02 for
+UniprotKB) or the date you generated or downloaded the
 search database.</string>
           </void>
           <void property="name">
@@ -210,8 +211,9 @@ search database.</string>
           <string>javax.swing.JTextField</string>
           <void method="setProperty">
            <string>toolTipText</string>
-           <string>Please provide a the version of the search database you 
-used in your experiment (for example release-2012_02 for UniprotKB) or the date you generated or downloaded the
+           <string>Please provide a the version of the search database you
+used in your experiment (for example release-2012_02 for
+UniprotKB) or the date you generated or downloaded the
 search database.</string>
           </void>
           <void property="name">

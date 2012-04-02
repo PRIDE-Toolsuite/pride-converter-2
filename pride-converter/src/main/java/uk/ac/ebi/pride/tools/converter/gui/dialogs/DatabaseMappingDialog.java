@@ -118,7 +118,7 @@ public class DatabaseMappingDialog extends AbstractDialog {
 
             //---- label8 ----
             label8.setText(bundle.getString("NewDatabaseMappingDialog.label8.text"));
-            label8.setToolTipText("Please provide a the version of the search database you \nused in your experiment (for example release-2012_02 for UniprotKB) or the date you generated or downloaded the\nsearch database.");
+            label8.setToolTipText("Please provide a the version of the search database you\nused in your experiment (for example release-2012_02 for\nUniprotKB) or the date you generated or downloaded the\nsearch database.");
 
             //---- seDbName ----
             seDbName.setEditable(false);
@@ -133,7 +133,7 @@ public class DatabaseMappingDialog extends AbstractDialog {
             cDbName.setToolTipText(bundle.getString("NewDatabaseMappingDialog.cDbName.toolTipText"));
 
             //---- cDbVersion ----
-            cDbVersion.setToolTipText("Please provide a the version of the search database you \nused in your experiment (for example release-2012_02 for UniprotKB) or the date you generated or downloaded the\nsearch database.");
+            cDbVersion.setToolTipText("Please provide a the version of the search database you\nused in your experiment (for example release-2012_02 for\nUniprotKB) or the date you generated or downloaded the\nsearch database.");
 
             //---- cancelButton ----
             cancelButton.setText(bundle.getString("NewDatabaseMappingDialog.cancelButton.text"));
