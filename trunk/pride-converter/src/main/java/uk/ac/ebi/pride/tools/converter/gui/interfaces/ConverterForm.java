@@ -22,7 +22,7 @@ public interface ConverterForm {
 
     public void save(ReportReaderDAO dao);
 
-    public void load(ReportReaderDAO dao);
+    public void load(ReportReaderDAO dao) throws GUIException;
 
     public void loadTemplate(String templateName);
 

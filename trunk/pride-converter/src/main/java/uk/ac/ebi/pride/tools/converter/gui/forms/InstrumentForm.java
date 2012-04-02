@@ -6,6 +6,8 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.ols.soap.Query;
+import uk.ac.ebi.ols.soap.QueryServiceLocator;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.combobox.CvComboBoxModel;
@@ -14,20 +16,22 @@ import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParamTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.LoadTemplateDialog;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateType;
 import uk.ac.ebi.pride.tools.converter.gui.util.template.TemplateUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
-import uk.ac.ebi.pride.tools.converter.report.model.InstrumentDescription;
-import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.xml.rpc.ServiceException;
 import java.awt.*;
 import java.awt.event.*;
+import java.rmi.RemoteException;
 import java.util.*;
 
 /**
@@ -41,6 +45,7 @@ public class InstrumentForm extends AbstractForm {
 
     private static final String ANALYZER_PREFIX = "";
     private Map<String, String> fragmentationCache = new HashMap<String, String>();
+    private Set<String> fragmentationParamAccessions = new HashSet<String>();
 
     public InstrumentForm() {
         initComponents();
@@ -162,10 +167,6 @@ public class InstrumentForm extends AbstractForm {
             dialog.edit(objToEdit);
             dialog.setVisible(true);
         }
-    }
-
-    private void fragmentationMethodComboBoxItemStateChanged(ItemEvent e) {
-        // TODO add your code here
     }
 
     private void initComponents() {
@@ -362,14 +363,6 @@ public class InstrumentForm extends AbstractForm {
         //---- label6 ----
         label6.setText(bundle.getString("InstrumentForm.label6.text_2"));
 
-        //---- fragmentationMethodComboBox ----
-        fragmentationMethodComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                fragmentationMethodComboBoxItemStateChanged(e);
-            }
-        });
-
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -534,6 +527,28 @@ public class InstrumentForm extends AbstractForm {
     @Override
     public void save(ReportReaderDAO dao) {
         dao.setInstrument(makeInstrument());
+
+        //remove any existing fragmentation method param from the processing method
+        Param fragmentationMethod = ConverterData.getInstance().getFragmentationMethod();
+        fragmentationMethod.getCvParam().clear();
+        fragmentationMethod.getUserParam().clear();
+
+        //save fragmentation type in processing method
+        if (!fragmentationMethodComboBox.getSelectedItem().equals("Other")) {
+
+            String name = fragmentationMethodComboBox.getSelectedItem().toString();
+            String ac = "";
+            for (Map.Entry<String, String> entry : fragmentationCache.entrySet()) {
+                if (entry.getValue().equals(name)) {
+                    ac = entry.getKey();
+                    break;
+                }
+            }
+            fragmentationMethod.getCvParam().add(new CvParam("MS", ac, name, null));
+        } else {
+            fragmentationMethod.getUserParam().add(new UserParam("DissociationMethod", "Other"));
+        }
+
     }
 
     private InstrumentDescription makeInstrument() {
@@ -555,14 +570,64 @@ public class InstrumentForm extends AbstractForm {
     }
 
     @Override
-    public void load(ReportReaderDAO dao) {
+    public void load(ReportReaderDAO dao) throws GUIException {
         if (!isLoaded) {
             loadInstrument(dao.getInstrument());
+
+            //get possible fragmentation values from OLS
+            initFragmentationValues();
+            //load fragmentation type from processing method
+            Param processingMethod = dao.getProcessingMethod();
+            if (processingMethod != null) {
+                boolean foundFragmentationMethod = false;
+                String fragMethodAc = null;
+                for (Iterator<CvParam> i = processingMethod.getCvParam().iterator(); i.hasNext(); ) {
+                    CvParam cv = i.next();
+                    if (fragmentationParamAccessions.contains(cv.getAccession())) {
+                        //remove it for display, it will be added back at time of writing
+                        i.remove();
+                        //do we already have a match?
+                        if (!foundFragmentationMethod) {
+                            foundFragmentationMethod = true;
+                            fragMethodAc = cv.getName();
+                        } else {
+                            //if we have more than one fragmentation method
+                            //we have to set the list to "Other"
+                            fragMethodAc = "XXXX";
+                        }
+                    }
+                }
+
+                if (foundFragmentationMethod) {
+                    fragmentationMethodComboBox.setSelectedItem(fragmentationCache.get(fragMethodAc));
+                } else {
+                    //default to CID
+                    fragmentationMethodComboBox.setSelectedItem(fragmentationCache.get("MS:1000133"));
+                }
+            }
+
         }
         //fire validation listener on load
         validationListerner.fireValidationListener(isNonNullTextField(instrumentNameField.getText()));
         //update save button on load
         saveButton.setEnabled(isNonNullTextField(instrumentNameField.getText()));
+
+    }
+
+    private void initFragmentationValues() throws GUIException {
+
+        try {
+            QueryServiceLocator service = new QueryServiceLocator();
+            Query olsQuery = service.getOntologyQuery();
+            //get all children of "dissociation method"
+            Map childTerms = olsQuery.getTermRelations("MS:1000044", "MS");
+            fragmentationParamAccessions.addAll(childTerms.keySet());
+
+        } catch (ServiceException e) {
+            throw new GUIException("Could not connect to OLS", e);
+        } catch (RemoteException e) {
+            throw new GUIException("Could not connect to OLS", e);
+        }
 
     }
 
