@@ -217,10 +217,16 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         } catch (InvalidFormatException e) {
             throw new ConverterException("Spectra file type unknown");
         }
-        if (spectraFileType != SpectraType.MGF)
-            throw new ConverterException("Just MGF format supported for spectrum files");
+        if ((spectraFileType != SpectraType.MGF) && (spectraFileType != SpectraType.MZXML) && (spectraFileType != SpectraType.DTA))
+            throw new ConverterException("Just MGF (with titled queries), mzXML, or DTA (with single peak list) formats supported for spectrum files");
         
         // Build the title index
+        if (spectraFileType == SpectraType.MGF) {
+            buildMgfIndex();
+        } 
+    }
+    
+    private void buildMgfIndex() {
         try {
             MgfFile mgfFile = new MgfFile(spectraFile);         // first get access to the MGF file itself
             titleToSpectraIdMap = new HashMap<String, Integer>();
@@ -228,8 +234,8 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
                 String title = mgfFile.getMs2Query(Integer.parseInt(spectraId)).getTitle();
                 if (title != null) { // Title might be absent    TODO: consider throwing exception here
                     titleToSpectraIdMap.put(
-                        title,
-                        Integer.parseInt(spectraId));
+                            title,
+                            Integer.parseInt(spectraId));
                 }
             }
         } catch (JMzReaderException e) {
@@ -237,7 +243,6 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         } catch (InvalidFormatException e) {
             throw new ConverterException("Invalid format exception in MGF file");
         }
-
     }
 
     /**
@@ -522,7 +527,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      */
 	public Iterator<Identification> getIdentificationIterator(
 			boolean prescanMode) throws InvalidFormatException {
-		return new CruxIdentificationIterator(prescanMode);
+		return new SpectraSTIdentificationIterator(prescanMode);
 	}
 
 
@@ -532,12 +537,12 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
      * Because we have two different target files (target and decoy), and because we don't want to mix them due to the 
      * last-moment prefixing system we use, we need here two iterators that we made appear as one.
      */
-	private class CruxIdentificationIterator implements Iterator<Identification> {
+	private class SpectraSTIdentificationIterator implements Iterator<Identification> {
 		private final Iterator<String> accessionIterator = proteins.keySet().iterator();
 
         private boolean prescanMode;
 
-        public CruxIdentificationIterator(boolean prescanMode) {
+        public SpectraSTIdentificationIterator(boolean prescanMode) {
             this.prescanMode = prescanMode;
         }
 
@@ -587,7 +592,15 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
                 Peptide peptide = new Peptide();
 
                 peptide.setSequence(spectraSTPeptide.getSequence());
-                int peptideSpectraindex = spectraSTPeptide.getSpectraIndex(titleToSpectraIdMap);
+                int peptideSpectraindex = 0;
+                if (spectraFileType == SpectraType.MGF) { // for MGF files, we built up the index
+                    peptideSpectraindex = spectraSTPeptide.getSpectraIndex(titleToSpectraIdMap);
+                } else if (spectraFileType == SpectraType.MZXML) { // for MzXML files, the scan is in the ## Query
+                    String [] items = spectraSTPeptide.getQueryName().split("\\.");
+                    peptideSpectraindex = Integer.parseInt(items[items.length-3]);
+                } else if (spectraFileType == SpectraType.DTA) { // for DTA files we just have one peak list per file TODO: check this
+                    peptideSpectraindex = 1;
+                }
                 if (peptideSpectraindex == -1)
                     throw new ConverterException("Spectrum reference does not exist or is ambiguous for peptide " + peptide.getSequence());
                 else {
@@ -739,13 +752,26 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         return res;
     }
 
+    private int getSpectraIndex(String title) {
+        if (spectraFileType == SpectraType.MGF) {
+            return getSpectraIndexMgf(title);
+        } else if (spectraFileType == SpectraType.MZXML) {
+            String [] items = title.split("\\.");
+            return Integer.parseInt(items[items.length-3]);
+        } else if (spectraFileType == SpectraType.DTA) {
+            return 1;
+        }
+        
+        return -1;
+    }
+    
     /**
      * Using the member map, it finds out the index. The title is used to find the appropriate key in
      * the Map. It has to be prefix of just one key in the Map.
      * @param title
      * @return The index or -1 if not available or duplicated prefix
      */
-    private int getSpectraIndex(String title) {
+    private int getSpectraIndexMgf(String title) {
         int index = -1;
         int timesFound = 0;
         for (Map.Entry<String, Integer> entry: titleToSpectraIdMap.entrySet()) {

@@ -17,27 +17,39 @@ import java.util.Properties;
  * @author Jose A. Dianes
  * @version $Id$
  */
-public class SpectraSTXlsDaoTest extends TestCase {
+public abstract class SpectraSTAbstractXlsDaoTest extends TestCase {
 
-    private static final int NUM_IDENTIFICATIONS = 614;
+    private final int numIdentifications;
+    private final int numPtms;
 
-    private static String spectraFilePath = "src/test/resources/consensus_1.mgf";
-    private static int spectraInFile = 6062;
-    private static String resultFile = "src/test/resources/consensus_1.xls";
-
+    private final String spectrumFilePath;
+    private final int spectraInFile;
+    private final String resultFilePath;
+    private final String proteinUID;
+    
     private static String scoreCriteria = ScoreCriteria.FVAL.getName();
     private static String threshold = "0.0";
 
 
-    private static SpectraSTXlsDao cruxXlsDao = new SpectraSTXlsDao(new File(resultFile));
+    private static SpectraSTXlsDao cruxXlsDao;
 
+    public SpectraSTAbstractXlsDaoTest(String spectrumFilePath, int spectraInFile, String resultFilePath,
+                                       String proteinUID, int numIdentifications, int numPtms) {
+        this.spectrumFilePath = spectrumFilePath;
+        this.spectraInFile = spectraInFile;
+        this.resultFilePath = resultFilePath;
+        this.proteinUID = proteinUID;
+        this.numIdentifications = numIdentifications;
+        this.numPtms = numPtms;
+        cruxXlsDao = new SpectraSTXlsDao(new File(this.resultFilePath));
+    }
     public void setUp() throws Exception {
         Properties props = new Properties();
         props.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), scoreCriteria);
         props.setProperty(SupportedProperty.THRESHOLD.getName(), threshold);
 
         cruxXlsDao.setConfiguration(props);
-        cruxXlsDao.setExternalSpectrumFile(spectraFilePath);
+        cruxXlsDao.setExternalSpectrumFile(spectrumFilePath);
 
     }
 
@@ -48,7 +60,7 @@ public class SpectraSTXlsDaoTest extends TestCase {
             Identification newIdentification = identificationsIt.next();
             identificationsCount += newIdentification.getPeptide().size();
         }
-        assertEquals(identificationsCount, NUM_IDENTIFICATIONS);
+        assertEquals(identificationsCount, numIdentifications);
     }
 
     public void testIdentificationsIteratorPrescan() throws Exception {
@@ -58,27 +70,19 @@ public class SpectraSTXlsDaoTest extends TestCase {
             Identification newIdentification = identificationsIt.next();
             identificationsCount += newIdentification.getPeptide().size();
         }
-        assertEquals(identificationsCount, NUM_IDENTIFICATIONS);
+        assertEquals(identificationsCount, numIdentifications);
     }
 
     public void testIdentificationByUID() throws Exception {
-
-        Identification identification = cruxXlsDao.getIdentificationByUID("sp|Q14318|FKBP8_HUMAN");
+        Identification identification = cruxXlsDao.getIdentificationByUID(proteinUID);
         assertNotNull(identification);
-
-        identification = cruxXlsDao.getIdentificationByUID("sp|O60610|DIAP1_HUMAN");
-        assertNotNull(identification);
-
-        identification = cruxXlsDao.getIdentificationByUID("sp|P68402|PA1B2_HUMAN");
-        assertNotNull(identification);
-
     }
 
 
     public void testPTMs() throws Exception {
         Collection<PTM> ptms = cruxXlsDao.getPTMs();
 
-        assertEquals(2, ptms.size());
+        assertEquals(numPtms, ptms.size());
     }
 
     public void testSpectraIterator() throws Exception {
@@ -93,7 +97,7 @@ public class SpectraSTXlsDaoTest extends TestCase {
 
         assertEquals(spectraCountAll,count);
 
-        assertEquals(spectraCountAll,spectraInFile);
+        assertEquals(spectraCountAll, spectraInFile);
 
     }
     
@@ -104,6 +108,7 @@ public class SpectraSTXlsDaoTest extends TestCase {
         while (specIdIt.hasNext()) {
             Spectrum newSpectrum = specIdIt.next();
             countId++;
+//            System.out.println("Obtained spectrum: " + newSpectrum.getId());
         }
 
         assertEquals(spectraCountOnlyIdentified,countId);
