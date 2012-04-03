@@ -6,11 +6,19 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
+import uk.ac.ebi.pride.tools.converter.gui.component.BrowserLauncher;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -20,95 +28,151 @@ import java.util.Collections;
 public class OtherToolsForm extends AbstractForm {
     public OtherToolsForm() {
         initComponents();
+        try {
+            editorPane.setEditorKit(new HTMLEditorKit());
+            editorPane.setContentType("text/html");
+            editorPane.setPage(getClass().getClassLoader().getResource("help/html/usage/ui/othertools.html"));
+        } catch (IOException e) {
+            throw new IllegalStateException("Could not load page content", e);
+        }
+    }
+
+
+    private void editorPaneHyperlinkUpdate(HyperlinkEvent evt) {
+        if (evt.getEventType().equals(HyperlinkEvent.EventType.ENTERED)) {
+            setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        } else if (evt.getEventType().equals(HyperlinkEvent.EventType.EXITED)) {
+            setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        } else if (evt.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
+            if (evt.getDescription().startsWith("#")) {
+                editorPane.scrollToReference(evt.getDescription());
+            } else {
+                this.setCursor(new Cursor(java.awt.Cursor.WAIT_CURSOR));
+                BrowserLauncher.openURL(evt.getDescription());
+                this.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+            }
+        }
+    }
+
+    private void openWebsite(MouseEvent e) {
+        if (e.getClickCount() != 2) {
+            return;
+        }
+
+        String url = null;
+        if (e.getSource().equals(pxLabel)) {
+            url = "http://www.proteomexchange.org";
+        } else if (e.getSource().equals(piLabel)) {
+            url = "http://code.google.com/p/pride-toolsuite/downloads/list";
+        } else {
+            throw new IllegalStateException("Unknown source: " + e.getSource());
+        }
+        this.setCursor(new Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BrowserLauncher.openURL(url);
+        this.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }
+
+    private void showHandCursor() {
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void showDefaultCursor() {
+        setCursor(Cursor.getDefaultCursor());
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
-        label1 = new JLabel();
-        label2 = new JLabel();
         scrollPane1 = new JScrollPane();
-        textArea1 = new JTextArea();
-        scrollPane2 = new JScrollPane();
-        textArea2 = new JTextArea();
-        scrollPane3 = new JScrollPane();
-        textArea3 = new JTextArea();
+        editorPane = new JEditorPane();
+        panel1 = new JPanel();
+        piLabel = new JLabel();
+        pxLabel = new JLabel();
 
         //======== this ========
-
-        //---- label1 ----
-        label1.setIcon(new ImageIcon(getClass().getResource("/images/px-logo.png")));
-        label1.setBackground(Color.black);
-
-        //---- label2 ----
-        label2.setIcon(new ImageIcon(getClass().getResource("/images/pi-logo.png")));
 
         //======== scrollPane1 ========
         {
 
-            //---- textArea1 ----
-            textArea1.setBackground(null);
-            textArea1.setEditable(false);
-            textArea1.setWrapStyleWord(true);
-            textArea1.setLineWrap(true);
-            textArea1.setText("PRIDE Inspector is a desktop application to visualize and perform first quality assessment on Mass Spectrometry data.");
-            scrollPane1.setViewportView(textArea1);
+            //---- editorPane ----
+            editorPane.setContentType("text/html");
+            editorPane.setEditable(false);
+            editorPane.addHyperlinkListener(new HyperlinkListener() {
+                @Override
+                public void hyperlinkUpdate(HyperlinkEvent e) {
+                    editorPaneHyperlinkUpdate(e);
+                }
+            });
+            scrollPane1.setViewportView(editorPane);
         }
 
-        //======== scrollPane2 ========
+        //======== panel1 ========
         {
+            panel1.setLayout(new GridLayout(0, 2, 5, 5));
 
-            //---- textArea2 ----
-            textArea2.setBackground(null);
-            textArea2.setEditable(false);
-            textArea2.setLineWrap(true);
-            textArea2.setWrapStyleWord(true);
-            textArea2.setText("The 'ProteomeXchange' consortium has been set up to provide a single point of submission of MS proteomics data to the main existing proteomics repositories, and encourage the data exchange between them so that the community may easily benefit.");
-            scrollPane2.setViewportView(textArea2);
-        }
+            //---- piLabel ----
+            piLabel.setIcon(new ImageIcon(getClass().getResource("/images/pi-logo.png")));
+            piLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            piLabel.setToolTipText("Double-click to get PRIDE Inspector");
+            piLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    openWebsite(e);
+                }
 
-        //======== scrollPane3 ========
-        {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    showHandCursor();
+                }
 
-            //---- textArea3 ----
-            textArea3.setText("Your search result files have now been converted to PRIDE XML. Several tools are available to help ");
-            textArea3.setEditable(false);
-            textArea3.setLineWrap(true);
-            textArea3.setWrapStyleWord(true);
-            scrollPane3.setViewportView(textArea3);
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    showDefaultCursor();
+                }
+            });
+            panel1.add(piLabel);
+
+            //---- pxLabel ----
+            pxLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            pxLabel.setIcon(new ImageIcon(getClass().getResource("/images/px-logo.png")));
+            pxLabel.setToolTipText("Double-click to go to ProteomExchange");
+            pxLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    openWebsite(e);
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    showHandCursor();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    showDefaultCursor();
+                }
+            });
+            panel1.add(pxLabel);
         }
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                                                        .addComponent(label2, GroupLayout.Alignment.LEADING)
-                                                        .addComponent(label1, GroupLayout.Alignment.LEADING))
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(layout.createParallelGroup()
-                                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)
-                                                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                                        .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                                        .addComponent(label2))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup()
-                                        .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                                        .addComponent(label1))
+                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -116,14 +180,11 @@ public class OtherToolsForm extends AbstractForm {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JLabel label1;
-    private JLabel label2;
     private JScrollPane scrollPane1;
-    private JTextArea textArea1;
-    private JScrollPane scrollPane2;
-    private JTextArea textArea2;
-    private JScrollPane scrollPane3;
-    private JTextArea textArea3;
+    private JEditorPane editorPane;
+    private JPanel panel1;
+    private JLabel piLabel;
+    private JLabel pxLabel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 
@@ -177,4 +238,11 @@ public class OtherToolsForm extends AbstractForm {
     public void finish() throws GUIException {
         //no op
     }
+
+    public static void main(String[] args) {
+        NavigationPanel p = NavigationPanel.getInstance();
+        p.registerForm(new OtherToolsForm());
+        p.reset();
+    }
+
 }
