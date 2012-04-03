@@ -1,0 +1,2 @@
+### Query	Rk	ID	Dot	Delta	DelRk	DBias	MzDiff	#Cand	MeanDot	SDDot	Fval	Status	Inst	Spec	#Pr	Proteins	LibFileOffset
+1a.999.0.2147.2147.2	1	ELTTEIDNNIEQISSYK/2	0.385	0.0181	[2]	0.224	-0.0144	2121	0.0502	0.048	0.25	Normal	it	Con	1	sp|P13645|K1C10_HUMAN	452936488
