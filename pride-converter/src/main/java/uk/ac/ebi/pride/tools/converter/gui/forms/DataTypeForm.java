@@ -243,20 +243,17 @@ public class DataTypeForm extends AbstractForm {
 
 
     private void descriptionAreaHyperlinkUpdate(HyperlinkEvent evt) {
-        if (evt.getEventType().toString().equalsIgnoreCase(
-                javax.swing.event.HyperlinkEvent.EventType.ENTERED.toString())) {
+        if (evt.getEventType().equals(HyperlinkEvent.EventType.ENTERED)) {
             setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        } else if (evt.getEventType().toString().equalsIgnoreCase(
-                javax.swing.event.HyperlinkEvent.EventType.EXITED.toString())) {
+        } else if (evt.getEventType().equals(HyperlinkEvent.EventType.EXITED)) {
             setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        } else if (evt.getEventType().toString().equalsIgnoreCase(
-                javax.swing.event.HyperlinkEvent.EventType.ACTIVATED.toString())) {
+        } else if (evt.getEventType().equals(HyperlinkEvent.EventType.ACTIVATED)) {
             if (evt.getDescription().startsWith("#")) {
                 descriptionArea.scrollToReference(evt.getDescription());
             } else {
-                this.setCursor(new java.awt.Cursor(java.awt.Cursor.WAIT_CURSOR));
+                this.setCursor(new Cursor(java.awt.Cursor.WAIT_CURSOR));
                 BrowserLauncher.openURL(evt.getDescription());
-                this.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                this.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
             }
         }
     }

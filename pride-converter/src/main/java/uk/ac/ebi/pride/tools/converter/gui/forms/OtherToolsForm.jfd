@@ -4,54 +4,48 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {comp scrollPane3::l::588:x, seq l {par t:::p {comp label2::l:p::p:1, comp label1::l:p::p:1}, space :::p, par l {comp scrollPane1::::332:x, comp scrollPane2::l::332:x}}}, space :::p}}"
-			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane3::::191:x, space :::p, par t {comp scrollPane1::::95:x:1, comp label2::t:p::p:1}, space :::p, par l {comp scrollPane2::::95:x:1, comp label1::l:p::p:1}, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::613:x, comp panel1::l::613:x}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1::::320:x, space :::p, comp panel1:::p:107:p, space :::p}}"
 		} ) {
 			name: "this"
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label1"
-				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/px-logo.png" )
-				"background": new java.awt.Color( 0, 0, 0, 255 )
-			} )
-			add( new FormComponent( "javax.swing.JLabel" ) {
-				name: "label2"
-				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/pi-logo.png" )
-			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane1"
-				add( new FormComponent( "javax.swing.JTextArea" ) {
-					name: "textArea1"
-					"background": sfield com.jformdesigner.model.FormObject NULL_VALUE
+				add( new FormComponent( "javax.swing.JEditorPane" ) {
+					name: "editorPane"
+					"contentType": "text/html"
 					"editable": false
-					"wrapStyleWord": true
-					"lineWrap": true
-					"text": "PRIDE Inspector is a desktop application to visualize and perform first quality assessment on Mass Spectrometry data."
+					addEvent( new FormEvent( "javax.swing.event.HyperlinkListener", "hyperlinkUpdate", "editorPaneHyperlinkUpdate", true ) )
 				} )
 			} )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane2"
-				add( new FormComponent( "javax.swing.JTextArea" ) {
-					name: "textArea2"
-					"background": sfield com.jformdesigner.model.FormObject NULL_VALUE
-					"editable": false
-					"lineWrap": true
-					"wrapStyleWord": true
-					"text": "The 'ProteomeXchange' consortium has been set up to provide a single point of submission of MS proteomics data to the main existing proteomics repositories, and encourage the data exchange between them so that the community may easily benefit."
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) {
+				"columns": 2
+				"rows": 0
+				"hgap": 5
+				"vgap": 5
+			} ) {
+				name: "panel1"
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "piLabel"
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/pi-logo.png" )
+					"horizontalAlignment": 0
+					"toolTipText": "Double-click to get PRIDE Inspector"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "openWebsite", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "showHandCursor", false ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "showDefaultCursor", false ) )
 				} )
-			} )
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane3"
-				add( new FormComponent( "javax.swing.JTextArea" ) {
-					name: "textArea3"
-					"text": "Your search result files have now been converted to PRIDE XML. Several tools are available to help "
-					"editable": false
-					"lineWrap": true
-					"wrapStyleWord": true
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "pxLabel"
+					"horizontalAlignment": 0
+					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/px-logo.png" )
+					"toolTipText": "Double-click to go to ProteomExchange"
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "openWebsite", true ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "showHandCursor", false ) )
+					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "showDefaultCursor", false ) )
 				} )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 600, 405 )
+			"size": new java.awt.Dimension( 625, 445 )
 		} )
 	}
 }

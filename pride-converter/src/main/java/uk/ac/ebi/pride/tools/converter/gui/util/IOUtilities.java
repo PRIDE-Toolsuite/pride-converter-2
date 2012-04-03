@@ -29,7 +29,6 @@ import java.util.regex.Pattern;
  * User: rcote
  * Date: 21/10/11
  * Time: 13:34
- * To change this template use File | Settings | File Templates.
  */
 public class IOUtilities {
 
