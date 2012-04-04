@@ -1,23 +1,13 @@
-JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.7.0_03" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane2::l:::x, comp scrollPane1::t:::x, comp label1::l:p::p}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1:::p:68:p, space :::p, comp label1:::p::p, space :::p, comp scrollPane2::::193:x, space :::p}}"
+			"$horizontalGroup": "par l {seq {space :::p, par l {comp scrollPane2::l:::x, seq t {comp label7:::p::p, space ::321:x, comp addTermButton1:::p::p, space :::p, comp expAdditionalEditButton:::p::p}, comp scrollPane3::l::668:x, comp label1::l:p::p}, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, par t {comp addTermButton1::t:p::p, comp expAdditionalEditButton::t:p::p, comp label7:::p::p}, space :::p, comp scrollPane3::::115:x, space :p:18:p, comp label1:::p::p, space :::p, comp scrollPane2::::247:x, space :::p}}"
 		} ) {
 			name: "this"
-			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-				name: "scrollPane1"
-				add( new FormComponent( "javax.swing.JTextArea" ) {
-					name: "textArea1"
-					"background": sfield com.jformdesigner.model.FormObject NULL_VALUE
-					"text": "All data required to generate a valid report file has been captured. Please click on the \"Next\" button to generate the report file or click on the \"Back\" button if you wish to review it."
-					"wrapStyleWord": true
-					"lineWrap": true
-				} )
-			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "scrollPane2"
 				add( new FormComponent( "javax.swing.JTextArea" ) {
@@ -33,9 +23,31 @@ new FormModel {
 				name: "label1"
 				"text": "Messages:"
 			} )
+			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+				name: "scrollPane3"
+				add( new FormComponent( "uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable" ) {
+					name: "expAdditionalTable"
+					"toolTipText": "Additional information about the experiment\nthat was not recorded in previous screens.\nExisting values should generally not be modified."
+				} )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label7"
+				"text": "Experiment Additional Information"
+				"toolTipText": "Additional information about the experiment\nthat was not recorded in previous screens.\nExisting values should generally not be modified."
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "expAdditionalEditButton"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/edit.png" )
+				"toolTipText": "Edit"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "editButtonActionPerformed", true ) )
+			} )
+			add( new FormComponent( "uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton" ) {
+				name: "addTermButton1"
+				"toolTipText": "Add"
+			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 400, 300 )
+			"size": new java.awt.Dimension( 680, 445 )
 		} )
 	}
 }

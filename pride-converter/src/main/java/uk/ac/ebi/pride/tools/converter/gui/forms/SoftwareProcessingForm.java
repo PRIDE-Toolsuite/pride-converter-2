@@ -7,11 +7,14 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 import org.apache.log4j.Logger;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
-import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.BaseTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.DatabaseMappingTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParamTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
@@ -19,8 +22,10 @@ import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
@@ -35,8 +40,14 @@ public class SoftwareProcessingForm extends AbstractForm {
     public SoftwareProcessingForm() {
         initComponents();
         addTermButton.setOwner(processingTable);
-        addTermButton1.setOwner(expAdditionalTable);
         updateTermButtonCvList(addTermButton, "softwareprocessing.suggested.cv");
+
+        //erroneous DBMs will be highlighted in table
+        DatabaseMappingTableModel tableModel = new DatabaseMappingTableModel();
+        databaseTable.setEnableRowValidation(true);
+        databaseTable.setModel(tableModel);
+        databaseTable.setColumnModel(tableModel.getTableColumnModel(databaseTable));
+
     }
 
     private void softwareRequiredFieldFocusLost(FocusEvent e) {
@@ -60,24 +71,35 @@ public class SoftwareProcessingForm extends AbstractForm {
         validationListerner.fireValidationListener(isNonNullTextField(s1) && isNonNullTextField(s2));
     }
 
-    private void editButtonActionPerformed(ActionEvent e) {
-        ParamTable table = null;
-        if (e.getSource().equals(expAdditionalEditButton)) {
-            table = expAdditionalTable;
-        } else if (e.getSource().equals(processingMethodEditButton)) {
-            table = processingTable;
-        }
-        if (table != null && table.getSelectedRowCount() > 0) {
+    private void editButtonActionPerformed() {
+
+        if (processingTable.getSelectedRowCount() > 0) {
             //convert table selected row to underlying model row
-            int modelSelectedRow = table.convertRowIndexToModel(table.getSelectedRow());
+            int modelSelectedRow = processingTable.convertRowIndexToModel(processingTable.getSelectedRow());
             //get object
-            ReportObject objToEdit = ((ParamTableModel) table.getModel()).get(modelSelectedRow);
+            ReportObject objToEdit = ((ParamTableModel) processingTable.getModel()).get(modelSelectedRow);
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
-            AbstractDialog dialog = AbstractDialog.getInstance(table, clazz);
+            AbstractDialog dialog = AbstractDialog.getInstance(processingTable, clazz);
             dialog.edit(objToEdit);
             dialog.setVisible(true);
         }
+
+    }
+
+    private void editDatabaseMappingButtonActionPerformed() {
+        if (databaseTable.getSelectedRowCount() > 0) {
+            //convert table selected row to underlying model row
+            int modelSelectedRow = databaseTable.convertRowIndexToModel(databaseTable.getSelectedRow());
+            //get object
+            ReportObject objToEdit = ((BaseTableModel) databaseTable.getModel()).get(modelSelectedRow);
+            Class clazz = objToEdit.getClass();
+            //show editing dialog for object
+            AbstractDialog dialog = AbstractDialog.getInstance(databaseTable, clazz);
+            dialog.edit(objToEdit);
+            dialog.setVisible(true);
+        }
+
     }
 
     private void initComponents() {
@@ -98,12 +120,11 @@ public class SoftwareProcessingForm extends AbstractForm {
         softwareCommentField = new JTextArea();
         label5 = new JLabel();
         label6 = new JLabel();
-        label7 = new JLabel();
-        scrollPane3 = new JScrollPane();
-        expAdditionalTable = new ParamTable();
-        addTermButton1 = new AddTermButton();
         processingMethodEditButton = new JButton();
-        expAdditionalEditButton = new JButton();
+        editButton = new JButton();
+        scrollPane3 = new JScrollPane();
+        databaseTable = new BaseTable<DatabaseMapping>();
+        label7 = new JLabel();
 
         //======== this ========
 
@@ -229,40 +250,39 @@ public class SoftwareProcessingForm extends AbstractForm {
             );
         }
 
-        //---- label7 ----
-        label7.setText(bundle.getString("SoftwareProcessingForm.label7.text"));
-        label7.setToolTipText(bundle.getString("SoftwareProcessingForm.label7.toolTipText"));
-
-        //======== scrollPane3 ========
-        {
-
-            //---- expAdditionalTable ----
-            expAdditionalTable.setToolTipText(bundle.getString("SoftwareProcessingForm.expAdditionalTable.toolTipText"));
-            scrollPane3.setViewportView(expAdditionalTable);
-        }
-
-        //---- addTermButton1 ----
-        addTermButton1.setToolTipText(bundle.getString("SoftwareProcessingForm.addTermButton1.toolTipText"));
-
         //---- processingMethodEditButton ----
         processingMethodEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
         processingMethodEditButton.setToolTipText(bundle.getString("SoftwareProcessingForm.processingMethodEditButton.toolTipText"));
         processingMethodEditButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                editButtonActionPerformed(e);
+                editButtonActionPerformed();
             }
         });
 
-        //---- expAdditionalEditButton ----
-        expAdditionalEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
-        expAdditionalEditButton.setToolTipText(bundle.getString("SoftwareProcessingForm.expAdditionalEditButton.toolTipText"));
-        expAdditionalEditButton.addActionListener(new ActionListener() {
+        //---- editButton ----
+        editButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        editButton.setToolTipText(bundle.getString("SoftwareProcessingForm.editButton.toolTipText"));
+        editButton.setMaximumSize(new Dimension(50, 26));
+        editButton.setMinimumSize(new Dimension(50, 26));
+        editButton.setPreferredSize(new Dimension(50, 26));
+        editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                editButtonActionPerformed(e);
+                editDatabaseMappingButtonActionPerformed();
             }
         });
+
+        //======== scrollPane3 ========
+        {
+
+            //---- databaseTable ----
+            databaseTable.setModel(new DefaultTableModel());
+            scrollPane3.setViewportView(databaseTable);
+        }
+
+        //---- label7 ----
+        label7.setText(bundle.getString("SoftwareProcessingForm.label7.text"));
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -271,6 +291,11 @@ public class SoftwareProcessingForm extends AbstractForm {
                         .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(scrollPane3, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(label7)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 441, Short.MAX_VALUE)
+                                                .addComponent(editButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                         .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE)
                                         .addGroup(layout.createSequentialGroup()
@@ -278,14 +303,7 @@ public class SoftwareProcessingForm extends AbstractForm {
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 383, Short.MAX_VALUE)
                                                 .addComponent(addTermButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(processingMethodEditButton))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addComponent(label7)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 286, Short.MAX_VALUE)
-                                                .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(expAdditionalEditButton))
-                                        .addComponent(scrollPane3, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 633, Short.MAX_VALUE))
+                                                .addComponent(processingMethodEditButton)))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -299,14 +317,13 @@ public class SoftwareProcessingForm extends AbstractForm {
                                         .addComponent(processingMethodEditButton)
                                         .addComponent(label1))
                                 .addGap(6, 6, 6)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 118, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label7)
-                                        .addComponent(expAdditionalEditButton))
+                                        .addComponent(editButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(label7))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
+                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -328,21 +345,26 @@ public class SoftwareProcessingForm extends AbstractForm {
     private JTextArea softwareCommentField;
     private JLabel label5;
     private JLabel label6;
-    private JLabel label7;
-    private JScrollPane scrollPane3;
-    private ParamTable expAdditionalTable;
-    private AddTermButton addTermButton1;
     private JButton processingMethodEditButton;
-    private JButton expAdditionalEditButton;
+    private JButton editButton;
+    private JScrollPane scrollPane3;
+    private BaseTable<DatabaseMapping> databaseTable;
+    private JLabel label7;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override
     public Collection<ValidatorMessage> validateForm() throws ValidatorException {
+
         ReportObjectValidator validator = ValidatorFactory.getInstance().getReportValidator();
         DataProcessing dataProcessing = new DataProcessing();
         dataProcessing.setSoftware(makeSoftware());
         dataProcessing.setProcessingMethod(makeProcessingMethod());
-        return validator.validate(dataProcessing);
+
+        Collection<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
+        msgs.addAll(validator.validate(dataProcessing));
+        msgs.addAll(validator.validate(databaseTable.getAll()));
+        return msgs;
+
     }
 
     @Override
@@ -352,7 +374,6 @@ public class SoftwareProcessingForm extends AbstractForm {
         softwareCommentField.setText(null);
         softwareVersionField.setText(null);
         processingTable.removeAll();
-        expAdditionalTable.removeAll();
         //inactivate next button
         validationListerner.fireValidationListener(false);
     }
@@ -361,42 +382,7 @@ public class SoftwareProcessingForm extends AbstractForm {
     public void save(ReportReaderDAO dao) {
         dao.setSoftware(makeSoftware());
         dao.setProcessingMethod(makeProcessingMethod());
-        saveExperimentalAdditionalParams(dao);
-    }
-
-    private void saveExperimentalAdditionalParams(ReportReaderDAO dao) {
-
-        Param p = new Param();
-        p.getCvParam().addAll(expAdditionalTable.getCvParamList());
-        p.getUserParam().addAll(expAdditionalTable.getUserParamList());
-        Param daoParam = dao.getExperimentParams();
-        if (daoParam != null) {
-            for (CvParam cv : daoParam.getCvParam()) {
-                if (cv.getAccession().equals(DAOCvParams.PRIDE_PROJECT.getAccession()) ||
-                        cv.getAccession().equals(DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession())) {
-                    p.getCvParam().add(cv);
-                }
-            }
-        }
-        dao.setExperimentParams(p);
-
-    }
-
-    private void loadExperimentalAdditionalParams(ReportReaderDAO dao) {
-
-        Param p = dao.getExperimentParams();
-        if (p != null) {
-            for (CvParam cv : p.getCvParam()) {
-                if (cv.getAccession().equals(DAOCvParams.PRIDE_PROJECT.getAccession()) ||
-                        cv.getAccession().equals(DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession())) {
-                    continue;
-                }
-                expAdditionalTable.add(cv);
-            }
-            for (UserParam u : p.getUserParam()) {
-                expAdditionalTable.add(u);
-            }
-        }
+        dao.setDatabaseMappings(databaseTable.getAll());
     }
 
     private Param makeProcessingMethod() {
@@ -421,7 +407,9 @@ public class SoftwareProcessingForm extends AbstractForm {
             softwareCommentField.setText(dao.getSoftware().getComments());
             softwareVersionField.setText(dao.getSoftware().getVersion());
             processingTable.add(dao.getProcessingMethod());
-            loadExperimentalAdditionalParams(dao);
+            //note that in this instance, the data is obtained from the ConverterData singleton
+            //and not the dao
+            databaseTable.addAll(ConverterData.getInstance().getDatabaseMappings());
             isLoaded = true;
         }
         //fire validation listener on load

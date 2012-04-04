@@ -256,6 +256,8 @@ public class ReportForm extends AbstractForm {
     public void start() {
         NavigationPanel.getInstance().hideValidationIcon();
         refreshValidationReport();
+        //validate form and fire validationListener - required for back & forth when no changes occur
+        validationListerner.fireValidationListener(true);
     }
 
     @Override
