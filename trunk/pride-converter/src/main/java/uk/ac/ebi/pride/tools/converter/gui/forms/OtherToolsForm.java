@@ -231,18 +231,14 @@ public class OtherToolsForm extends AbstractForm {
 
     @Override
     public void start() {
-        //no op
+        NavigationPanel.getInstance().hideValidationIcon();
+        //validate form and fire validationListener - required for back & forth when no changes occur
+        validationListerner.fireValidationListener(true);
     }
 
     @Override
     public void finish() throws GUIException {
         //no op
-    }
-
-    public static void main(String[] args) {
-        NavigationPanel p = NavigationPanel.getInstance();
-        p.registerForm(new OtherToolsForm());
-        p.reset();
     }
 
 }

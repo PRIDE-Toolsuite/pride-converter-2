@@ -34,18 +34,16 @@
          <class>org.jdesktop.layout.GroupLayout</class>
          <void method="setProperty">
           <string>$horizontalGroup</string>
-          <string>par l {seq {space :::p, par l {seq {par t {seq t {par t {comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p}, seq t {comp label3:::p::p, space s:::p}}, par l {comp singleMzTabFile::t::458:x, comp singleSpectrumFile::l::458:x, seq l {comp singleFastaFile::::330:x, space :::p, comp fastaFormatList::::122:x}, seq l {comp singleSourceFile::::437:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :p:6:p}, seq t {comp multipleModeLabel:::p::p, space :::p}}}}</string>
+          <string>par l {seq {space :::p, par l {seq {par t {comp label3:::p::p, comp label2::t:p::p, comp label4::t:p::p, comp dataFileLabel::t:p::p}, space :p:12:p, par l {comp singleMzTabFile::t::462:x, comp singleSpectrumFile::l::462:x, seq l {comp singleFastaFile::::332:x, space :::p, comp fastaFormatList::::124:x}, seq l {comp singleSourceFile::::441:x, space :::p, comp label1:::p:15:p}}, space :::p, par l {comp browseDataFileButton:::p::p, comp browseFastaFileButton:::p::p, comp browseMzTabButton:::p::p, comp browseSpectrumFileButton:::p::p}, space :p:6:p}, seq t {comp multipleModeLabel:::p::p, space :::p}}}}</string>
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq t {space :::p, comp multipleModeLabel:::p::p, space :::x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string>
+          <string>par l {seq t {space :::p, comp multipleModeLabel:::p::p, space ::7:x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string>
          </void>
         </object>
         <void method="setProperty">
          <string>border</string>
-         <object class="javax.swing.border.TitledBorder">
-          <string>i18nKey=SelecFilePanel.singleFilePanel.border</string>
-         </object>
+         <object class="com.jformdesigner.model.FormObject" field="NULL_VALUE"/>
         </void>
         <void method="setProperty">
          <string>minimumSize</string>
@@ -463,17 +461,20 @@
          <class>org.jdesktop.layout.GroupLayout</class>
          <void method="setProperty">
           <string>$horizontalGroup</string>
-          <string>par l {seq t {par t {seq t {space :::p, comp tableScrollPane::::653:x}, seq t {space :p:1:p, par t {comp showHideLabel::t:p::p, seq t {comp advancedOptionPanel:::p::p, space :::p, comp parserOptionHelpButton:::p:149:p}}}}, space :::p}}</string>
+          <string>par l {seq t {par t {seq t {space :::p, comp tableScrollPane::::653:x}, seq t {space :p:1:p, comp advancedOptionPanel:::p::p, space :::p, comp parserOptionHelpButton:::p:149:p}, seq t {space :::p, comp label5:::p::p, space ::360:x, comp showHideLabel:::p::p}}, space :::p}}</string>
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq l {comp showHideLabel:::p::p, space :::p, comp tableScrollPane::::236:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string>
+          <string>par l {seq l {par b {comp showHideLabel::b:p::p, comp label5::b:p::p}, space :::p, comp tableScrollPane::::243:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string>
          </void>
         </object>
         <void method="setProperty">
          <string>border</string>
-         <object class="javax.swing.border.TitledBorder">
-          <string>i18nKey=SelecFilePanel.parserOptionPanel.border</string>
+         <object class="javax.swing.border.EmptyBorder">
+          <int>5</int>
+          <int>5</int>
+          <int>5</int>
+          <int>5</int>
          </object>
         </void>
         <void property="name">
@@ -658,6 +659,21 @@
           </void>
           <void property="name">
            <string>parserOptionHelpButton</string>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JLabel</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>SelecFilePanel.label5.text</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>label5</string>
           </void>
          </object>
         </void>

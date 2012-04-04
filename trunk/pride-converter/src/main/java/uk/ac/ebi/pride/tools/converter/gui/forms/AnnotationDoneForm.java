@@ -7,7 +7,12 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.error.ErrorLevel;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
+import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParamTableModel;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
@@ -15,10 +20,16 @@ import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportMetadataCopier;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportWriter;
+import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
+import uk.ac.ebi.pride.tools.converter.report.model.Param;
+import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
+import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,29 +45,37 @@ public class AnnotationDoneForm extends AbstractForm {
 
     public AnnotationDoneForm() {
         initComponents();
+        addTermButton1.setOwner(expAdditionalTable);
+    }
+
+    private void editButtonActionPerformed(ActionEvent e) {
+        if (expAdditionalTable.getSelectedRowCount() > 0) {
+            //convert table selected row to underlying model row
+            int modelSelectedRow = expAdditionalTable.convertRowIndexToModel(expAdditionalTable.getSelectedRow());
+            //get object
+            ReportObject objToEdit = ((ParamTableModel) expAdditionalTable.getModel()).get(modelSelectedRow);
+            Class clazz = objToEdit.getClass();
+            //show editing dialog for object
+            AbstractDialog dialog = AbstractDialog.getInstance(expAdditionalTable, clazz);
+            dialog.edit(objToEdit);
+            dialog.setVisible(true);
+        }
+
     }
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
-        scrollPane1 = new JScrollPane();
-        textArea1 = new JTextArea();
         scrollPane2 = new JScrollPane();
         messageArea = new JTextArea();
         label1 = new JLabel();
+        scrollPane3 = new JScrollPane();
+        expAdditionalTable = new ParamTable();
+        label7 = new JLabel();
+        expAdditionalEditButton = new JButton();
+        addTermButton1 = new AddTermButton();
 
         //======== this ========
-
-        //======== scrollPane1 ========
-        {
-
-            //---- textArea1 ----
-            textArea1.setBackground(null);
-            textArea1.setText("All data required to generate a valid report file has been captured. Please click on the \"Next\" button to generate the report file or click on the \"Back\" button if you wish to review it.");
-            textArea1.setWrapStyleWord(true);
-            textArea1.setLineWrap(true);
-            scrollPane1.setViewportView(textArea1);
-        }
 
         //======== scrollPane2 ========
         {
@@ -73,27 +92,63 @@ public class AnnotationDoneForm extends AbstractForm {
         //---- label1 ----
         label1.setText("Messages:");
 
+        //======== scrollPane3 ========
+        {
+
+            //---- expAdditionalTable ----
+            expAdditionalTable.setToolTipText("Additional information about the experiment\nthat was not recorded in previous screens.\nExisting values should generally not be modified.");
+            scrollPane3.setViewportView(expAdditionalTable);
+        }
+
+        //---- label7 ----
+        label7.setText("Experiment Additional Information");
+        label7.setToolTipText("Additional information about the experiment\nthat was not recorded in previous screens.\nExisting values should generally not be modified.");
+
+        //---- expAdditionalEditButton ----
+        expAdditionalEditButton.setIcon(new ImageIcon(getClass().getResource("/images/edit.png")));
+        expAdditionalEditButton.setToolTipText("Edit");
+        expAdditionalEditButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                editButtonActionPerformed(e);
+            }
+        });
+
+        //---- addTermButton1 ----
+        addTermButton1.setToolTipText("Add");
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
                 layout.createParallelGroup()
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                        .addComponent(scrollPane2, GroupLayout.Alignment.LEADING)
-                                        .addComponent(scrollPane1)
-                                        .addComponent(label1, GroupLayout.Alignment.LEADING))
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(scrollPane2)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(label7)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 321, Short.MAX_VALUE)
+                                                .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(expAdditionalEditButton))
+                                        .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 668, Short.MAX_VALUE)
+                                        .addComponent(label1))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(expAdditionalEditButton)
+                                        .addComponent(label7))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(scrollPane3, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
                                 .addComponent(label1)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                                .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -101,11 +156,14 @@ public class AnnotationDoneForm extends AbstractForm {
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
-    private JScrollPane scrollPane1;
-    private JTextArea textArea1;
     private JScrollPane scrollPane2;
     private JTextArea messageArea;
     private JLabel label1;
+    private JScrollPane scrollPane3;
+    private ParamTable expAdditionalTable;
+    private JLabel label7;
+    private JButton expAdditionalEditButton;
+    private AddTermButton addTermButton1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override
@@ -115,17 +173,51 @@ public class AnnotationDoneForm extends AbstractForm {
 
     @Override
     public void clear() {
-        /* no op */
+        expAdditionalTable.removeAll();
+        isLoaded = false;
     }
 
     @Override
     public void save(ReportReaderDAO dao) {
-        /* no op */
+        //create new object
+        Param p = new Param();
+        //fill it with table values
+        p.getCvParam().addAll(expAdditionalTable.getCvParamList());
+        p.getUserParam().addAll(expAdditionalTable.getUserParamList());
+        //get previously stored project and exp params and add those too
+        Param daoParam = dao.getExperimentParams();
+        if (daoParam != null) {
+            for (CvParam cv : daoParam.getCvParam()) {
+                if (cv.getAccession().equals(DAOCvParams.PRIDE_PROJECT.getAccession()) ||
+                        cv.getAccession().equals(DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession())) {
+                    p.getCvParam().add(cv);
+                }
+            }
+        }
+        //store to dao
+        dao.setExperimentParams(p);
     }
 
     @Override
     public void load(ReportReaderDAO dao) {
-        /* no op */
+        if (!isLoaded) {
+
+            Param p = dao.getExperimentParams();
+            if (p != null) {
+                for (CvParam cv : p.getCvParam()) {
+                    if (cv.getAccession().equals(DAOCvParams.PRIDE_PROJECT.getAccession()) ||
+                            cv.getAccession().equals(DAOCvParams.EXPERIMENT_DESCRIPTION.getAccession())) {
+                        continue;
+                    }
+                    expAdditionalTable.add(cv);
+                }
+                for (UserParam u : p.getUserParam()) {
+                    expAdditionalTable.add(u);
+                }
+            }
+
+            isLoaded = true;
+        }
     }
 
     @Override

@@ -25,11 +25,11 @@
        <class>org.jdesktop.layout.GroupLayout</class>
        <void method="setProperty">
         <string>$horizontalGroup</string>
-        <string>par l {seq l {space :::p, par l {comp panel4::t::643:x, comp scrollPane1::t::643:x, comp panel2::l::643:x, comp label1::l:p::p}, space :::p}}</string>
+        <string>par l {seq {space :::p, par l {comp scrollPane1::t::643:x, comp panel4::t::643:x, comp panel2::l::643:x, comp label1::l:p::p}, space :::p}}</string>
        </void>
        <void method="setProperty">
         <string>$verticalGroup</string>
-        <string>par l {seq l {space :::p, comp label1:::p::p, space :::p, comp panel2:::p::p, space :::p, comp panel4:::p:149:p, space :::p, comp scrollPane1::::194:x, space :::p}}</string>
+        <string>par l {seq l {space :::p, comp label1:::p::p, space :p:18:p, comp panel2:::p::p, space :p:5:p, comp panel4:::p:149:p, space :::p, comp scrollPane1::::183:x, space :::p}}</string>
        </void>
       </object>
       <void property="name">

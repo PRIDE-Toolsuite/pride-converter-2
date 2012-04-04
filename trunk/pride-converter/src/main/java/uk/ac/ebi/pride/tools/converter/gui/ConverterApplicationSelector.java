@@ -413,7 +413,6 @@ public class ConverterApplicationSelector extends JFrame {
             panel.registerForm(new ProtocolForm());
             panel.registerForm(new InstrumentForm());
             panel.registerForm(new SoftwareProcessingForm());
-            panel.registerForm(new DatabaseMappingForm());
             panel.registerForm(new PTMForm());
             panel.registerForm(new AnnotationDoneForm());
             panel.registerForm(new FileExportForm(false));

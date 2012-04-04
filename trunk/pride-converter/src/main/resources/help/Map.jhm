@@ -28,7 +28,6 @@
     <mapID target="help.ui.protocol" url="html/usage/ui/protocol.html"/>
     <mapID target="help.ui.instrument" url="html/usage/ui/instrument.html"/>
     <mapID target="help.ui.software" url="html/usage/ui/software.html"/>
-    <mapID target="help.ui.databasemapping" url="html/usage/ui/databasemapping.html"/>
     <mapID target="help.ui.ptms" url="html/usage/ui/ptms.html"/>
     <mapID target="help.ui.review" url="html/usage/ui/review.html"/>
     <mapID target="help.ui.export" url="html/usage/ui/export.html"/>
