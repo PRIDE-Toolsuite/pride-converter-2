@@ -1,0 +1,25 @@
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.7.0_03" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, par l {comp fileBox::l::388:x, comp label1::l:p::p}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :::p, comp fileBox:::p::p, space ::249:x}}"
+		} ) {
+			name: "this"
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label1"
+				"text": "Please select the master file:"
+			} )
+			add( new FormComponent( "javax.swing.JComboBox" ) {
+				name: "fileBox"
+				"toolTipText": "Please select the master file"
+				addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "fileBoxItemStateChanged", false ) )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 400, 300 )
+		} )
+	}
+}

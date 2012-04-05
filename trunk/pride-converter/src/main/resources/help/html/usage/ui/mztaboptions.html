@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" media="all"
+          href="../../css/s.css">
+    <title>mzTab Options</title>
+</head>
+
+<body class="template">
+<div id="container">
+
+    <!-- header -->
+    <div id="header">
+        <h1>mzTab Options</h1>
+    </div>
+
+    <!-- table of contents -->
+    <div class="introduction">
+        <p>Several options govern the behaviour of the mzTab generation tool.</p>
+    </div>
+
+    <!-- content -->
+    <div id="content">
+        <div class="section">
+            <h3>Parameters</h3>
+            <table class="dao_option_table">
+                <tr>
+                    <th>Gel Identifier</th>
+                    <td>Sets the gel identifier to be used for identifications in the generated mzTab file.
+                    </td>
+                </tr>
+                <tr>
+                    <th>Spot Identifier</th>
+                    <td>Sets the gel spot identifier to be used for identifications in the generated mzTab file.
+                        This option is ignored if gel_spot_regex is set.
+                    </td>
+                </tr>
+                <tr>
+                    <th>Spot Regular Expression</th>
+                    <td>Used to extract the gel spot identifier based on the sourcefile's name. The first
+                        matching group in the pattern is used as a spot identifier.
+                    </td>
+                </tr>
+                <tr>
+                    <th>Generate Quantitation Fields</th>
+                    <td>Adds (empty) quantitative fields to the generated mzTab file for the number of specified
+                        reagents.
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <div id="seealso">
+        <a name="topicSeeAlsoTopicsList"></a>
+
+        <h2>See Also</h2>
+
+        <p>
+            <strong>Other DAO documentations:</strong>
+        </p>
+
+        <ul>
+            <li><a href="pride.html">PRIDE</a></li>
+            <li><a href="mascot.html">Mascot</a></li>
+            <li><a href="mzxml.html">mzXML</a></li>
+            <li><a href="mzml.html">mzML</a></li>
+            <li><a href="mzidentml.html">mzIdentML</a></li>
+            <li><a href="ms2.html">MS2</a></li>
+            <li><a href="dta.html">DTA</a></li>
+            <li><a href="pkl.html">PKL</a></li>
+            <li><a href="mgf.html">MGF</a></li>
+            <li><a href="mzdata.html">mzData</a></li>
+            <li><a href="msgf.html">MSGF</a></li>
+        </ul>
+    </div>
+    <div id="footer">
+        <p>
+            Comments, questions, suggestions? See the <a href="feedback.html">Feedback</a>
+            page to contact <strong>PRIDE HelpDesk</strong>
+        </p>
+    </div>
+</div>
+</body>
+</html>

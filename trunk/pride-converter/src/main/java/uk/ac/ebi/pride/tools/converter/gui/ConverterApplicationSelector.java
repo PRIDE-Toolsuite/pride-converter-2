@@ -445,6 +445,7 @@ public class ConverterApplicationSelector extends JFrame {
             NavigationPanel panel = NavigationPanel.getInstance();
             panel.registerForm(new MergerInformationForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_MERGED_XML));
+            panel.registerForm(new MergerSelectMasterFileForm());
             panel.registerForm(new MergerReportForm());
             panel.setExitToApplicationSelector(true);
             panel.reset();

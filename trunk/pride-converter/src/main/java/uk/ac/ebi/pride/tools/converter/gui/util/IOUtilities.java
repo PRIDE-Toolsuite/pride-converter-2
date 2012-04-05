@@ -350,7 +350,14 @@ public class IOUtilities {
 
     }
 
-    public static void mergePrideXMLFiles(Properties options, Collection<File> inputFiles) throws GUIException {
+    /**
+     * Merge all PRIDE XML files into a single one. The first file of the list will be the master file.
+     *
+     * @param options    - DAO options
+     * @param inputFiles - a list of PRIDE XML file paths. The first file of the list will be the master file.
+     * @throws GUIException - on error
+     */
+    public static void mergePrideXMLFiles(Properties options, List<String> inputFiles) throws GUIException {
 
         try {
 
@@ -360,18 +367,11 @@ public class IOUtilities {
                 compress = Boolean.valueOf(options.getProperty(COMPRESS));
             }
 
-            //prep input files
-            for (File inFile : inputFiles) {
-                FileBean fileBean = new FileBean(inFile.getAbsolutePath());
-                ConverterData.getInstance().getDataFiles().add(fileBean);
-            }
-            List<String> files = new ArrayList<String>(ConverterData.getInstance().getInputFiles());
-
             //set output file
-            String outputFilePath = files.get(0) + ConverterData.MERGED_XML;
+            String outputFilePath = inputFiles.get(0) + ConverterData.MERGED_XML;
 
             //merge
-            PrideXmlMerger merger = new PrideXmlMerger(files, outputFilePath, compress, true);
+            PrideXmlMerger merger = new PrideXmlMerger(inputFiles, outputFilePath, compress, true);
             //filename can change if compression is set to true
             outputFilePath = merger.mergeXml();
             ConverterData.getInstance().setMergedOutputFile(outputFilePath);

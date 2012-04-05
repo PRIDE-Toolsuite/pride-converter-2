@@ -119,7 +119,7 @@ public class PrideConverterCLIOptions {
 
         Option spotIdentifier = OptionBuilder.withArgName("spot identifier")
                 .hasArg()
-                .withDescription("sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.")
+                .withDescription("sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignored if gel_spot_regex is set.")
                 .create(OPTIONS.SPOT_IDENTIFIER.getValue());
 
         Option spotRegex = OptionBuilder.withArgName("regular expression")
