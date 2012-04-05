@@ -174,11 +174,11 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                         Exception value = (Exception) sw.get();
                         if (value != null) {
                             logger.error("Execution error: " + value.getMessage(), value);
-                            ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An wrror occurred while processing the conversion", "NAVIGATOR_PANEL", value);
+                            ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An error occurred while processing the conversion", "NAVIGATOR_PANEL", value);
                         }
                     } catch (Exception e) {
                         logger.error("Execution error: " + e.getMessage(), e);
-                        ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An wrror occurred while processing the conversion", "NAVIGATOR_PANEL", e);
+                        ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An error occurred while processing the conversion", "NAVIGATOR_PANEL", e);
                     }
                 }
 
