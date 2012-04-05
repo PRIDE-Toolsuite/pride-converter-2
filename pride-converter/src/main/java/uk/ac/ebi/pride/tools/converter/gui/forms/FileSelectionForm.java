@@ -1373,7 +1373,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
             //merging pride xml files
             case PRIDE_MERGED_XML:
-                IOUtilities.mergePrideXMLFiles(getOptions(), dataFileTable.getFiles());
+                //merging will be done in next form
+                ConverterData.getInstance().setOptions(getOptions());
+                for (File inputFile : dataFileTable.getFiles()) {
+                    FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
+                    ConverterData.getInstance().getDataFiles().add(fileBean);
+                }
+
                 break;
 
             //filtering pride xml files
@@ -1417,11 +1423,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         if (format.equals(OutputFormat.MZTAB)) {
             //add mztab-specific options
             DAOProperty<String> gelIdentifier = new DAOProperty<String>(IOUtilities.GEL_IDENTIFIER, null);
-            gelIdentifier.setDescription("Sets the gel identifierz to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.");
+            gelIdentifier.setDescription("Sets the gel identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files.");
             props.add(gelIdentifier);
 
             DAOProperty<String> spotIdentifier = new DAOProperty<String>(IOUtilities.SPOT_IDENTIFIER, null);
-            spotIdentifier.setDescription("Sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignore if gel_spot_regex is set.");
+            spotIdentifier.setDescription("Sets the gel spot identifier to be used for identifications in the generated mzTab file. This option only takes effect when generating mzTab files. This option is ignored if gel_spot_regex is set.");
             props.add(spotIdentifier);
 
             DAOProperty<String> spotRegex = new DAOProperty<String>(IOUtilities.SPOT_REGULAR_EXPRESSION, null);
@@ -1468,9 +1474,30 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         tableScrollPane.setViewportView(noAdvancedOptionTable);
         tableScrollPane.setColumnHeader(null);
 
-        if (ConverterData.getInstance().getDaoFormat().getHelpResource() != null) {
+        //update action for "explain option" button
+        boolean explainOptionsActive = false;
+        String helpResourceID = null;
+
+        if (format.equals(OutputFormat.PRIDE_MERGED_XML)) {
+            explainOptionsActive = true;
+            helpResourceID = "help.ui.merger.options";
+        } else if (format.equals(OutputFormat.MZTAB)) {
+            explainOptionsActive = true;
+            if (ConverterData.getInstance().getDaoFormat().getHelpResource() != null) {
+                helpResourceID = ConverterData.getInstance().getDaoFormat().getHelpResource();
+            } else {
+                helpResourceID = "help.ui.mztab.options";
+            }
+        } else if (format.equals(OutputFormat.PRIDE_FILTERED_XML)) {
+            explainOptionsActive = false;
+        } else {
+            explainOptionsActive = (ConverterData.getInstance().getDaoFormat().getHelpResource() != null);
+            helpResourceID = ConverterData.getInstance().getDaoFormat().getHelpResource();
+        }
+
+        if (explainOptionsActive) {
             parserOptionHelpButton.setEnabled(true);
-            CSH.setHelpIDString(parserOptionHelpButton, ConverterData.getInstance().getDaoFormat().getHelpResource());
+            CSH.setHelpIDString(parserOptionHelpButton, helpResourceID);
             parserOptionHelpButton.addActionListener(new CSH.DisplayHelpFromSource(NavigationPanel.getInstance().getHelpBroker()));
         } else {
             parserOptionHelpButton.setEnabled(false);
