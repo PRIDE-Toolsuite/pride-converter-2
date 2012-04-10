@@ -14,7 +14,7 @@ import java.awt.*;
 public class ShortFilePathListCellRenderer extends DefaultListCellRenderer {
 
     @Override
-    public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         String shortFilePath = IOUtilities.getShortSourceFilePath(value.toString());
         return super.getListCellRendererComponent(list, shortFilePath, index, isSelected, cellHasFocus);
     }
