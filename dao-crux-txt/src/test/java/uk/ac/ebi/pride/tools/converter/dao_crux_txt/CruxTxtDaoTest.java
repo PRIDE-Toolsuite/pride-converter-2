@@ -47,7 +47,8 @@ public class CruxTxtDaoTest extends TestCase {
         int identificationsCount = 0;
         while (identificationsIt.hasNext()) {
             Identification newIdentification = identificationsIt.next();
-            identificationsCount += newIdentification.getPeptide().size();
+            if (newIdentification != null)
+                identificationsCount += newIdentification.getPeptide().size();
 //            System.out.println(newIdentification.getAccession());
         }
 //        System.out.println("Identifications*peptide count = " + identificationsCount);
@@ -61,7 +62,7 @@ public class CruxTxtDaoTest extends TestCase {
         assertNotNull(identification);
 
         identification = cruxTxtDao.getIdentificationByUID("t_sw|Q9H7Z6|MYST1_HUMAN(433)");
-        assertNotNull(identification);
+        assertNull(identification);
     }
 
 
