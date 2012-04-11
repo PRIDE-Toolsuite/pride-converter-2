@@ -697,7 +697,10 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
             }
 		}
 		
-		return identification;
+		if (identification.getPeptide() == null || identification.getPeptide().size() <= 0)
+            return null;
+        else
+            return identification;
 
 	}
 
