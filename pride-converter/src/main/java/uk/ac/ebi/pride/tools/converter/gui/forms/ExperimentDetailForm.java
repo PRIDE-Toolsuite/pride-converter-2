@@ -480,12 +480,19 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
     public void clear() {
         isLoaded = false;
 
+        //reset default values
         projectNameInput.setText("e.g. Analysis of the yeast proteome using shotgun proteomics");
         projectNameInput.setForeground(new Color(153, 153, 153));
+        projectNameInput.setBackground(Color.white);
         experimentTitleInput.setText("e.g. Control sample - Technical replicate #3");
         experimentTitleInput.setForeground(new Color(153, 153, 153));
+        experimentTitleInput.setBackground(Color.white);
         shortNameInput.setText("e.g. SCer-CON-3 (internal identifier)");
         shortNameInput.setForeground(new Color(153, 153, 153));
+        shortNameInput.setBackground(Color.white);
+        defaultValueMap.put(projectNameInput, true);
+        defaultValueMap.put(experimentTitleInput, true);
+        defaultValueMap.put(shortNameInput, true);
 
         descriptionPane.setText(null);
         referenceTable.removeAll();
