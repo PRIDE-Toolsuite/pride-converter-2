@@ -1,8 +1,6 @@
 package uk.ac.ebi.pride.tools.converter.gui.util.template;
 
 import org.apache.log4j.Logger;
-import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
-import uk.ac.ebi.pride.tools.converter.gui.util.PreferenceManager;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshallerFactory;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.unmarshaller.ReportUnmarshaller;
@@ -11,8 +9,6 @@ import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -25,8 +21,7 @@ import java.util.Map;
 public class TemplateUtilities {
 
     private static final Logger logger = Logger.getLogger(TemplateUtilities.class);
-    private static final String FILE_SEPARATOR = System.getProperty("file.separator");
-    private static final String BASE_TEMPLATE_PATH = PreferenceManager.PROGRAM_BASE_DIR + FILE_SEPARATOR + "template";
+    private static final String BASE_TEMPLATE_PATH = "templates";
 
     public static final String PLEASE_SELECT = "Please select";
     public static final String PLEASE_SELECT_OR_TYPE = "Please select or type";
@@ -35,10 +30,10 @@ public class TemplateUtilities {
     public static Map<String, String> initMapCache(String resourceName) {
         Map<String, String> retval = new LinkedHashMap<String, String>();
         try {
-            URL resource = TemplateUtilities.class.getResource(resourceName);
-            if (resource != null) {
+            File templateFile = new File(TemplateUtilities.getUserTemplateDir(), resourceName);
+            if (templateFile.exists()) {
                 retval.put(PLEASE_SELECT, PLEASE_SELECT);
-                BufferedReader in = new BufferedReader(new InputStreamReader(resource.openStream()));
+                BufferedReader in = new BufferedReader(new FileReader(templateFile));
                 String line;
                 while ((line = in.readLine()) != null) {
                     String[] tokens = line.split("\t");
@@ -48,6 +43,8 @@ public class TemplateUtilities {
                 }
                 retval.put(SELECT_OTHER, SELECT_OTHER);
                 in.close();
+            } else {
+                throw new ConverterException("Template file not found: " + resourceName);
             }
         } catch (IOException e) {
             throw new ConverterException("Error reading template:" + resourceName, e);
@@ -68,57 +65,12 @@ public class TemplateUtilities {
             }
         }
 
-        //copy default templates if not already there
-        boolean loadDefaultTempaltes = new Boolean(PreferenceManager.getInstance().getProperty(PreferenceManager.PREFERENCE.LOAD_DEFAULT_TEMPLATES));
-        if (loadDefaultTempaltes) {
-
-            for (TemplateType type : TemplateType.values()) {
-
-                try {
-                    URL url = TemplateUtilities.class.getResource("/templates/" + type.getTemplatePath());
-                    if (url != null) {
-                        File file = new File(url.toURI());
-                        File[] templates = file.listFiles();
-                        if (templates != null) {
-                            File subdir = new File(templateDir, type.getTemplatePath());
-                            for (File templateFile : templates) {
-                                File newTemplate = new File(subdir, templateFile.getName());
-                                System.out.println("Init default template: " + newTemplate.getName());
-                                IOUtilities.copyFile(templateFile, newTemplate);
-                            }
-                        }
-                    }
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            //store preferences so that the default templates don't get written every time the conveter starts
-            PreferenceManager.getInstance().setProperty(PreferenceManager.PREFERENCE.LOAD_DEFAULT_TEMPLATES, "false");
-        }
-
     }
 
     public static File getUserTemplateDir() {
 
-        String userHomeDir = System.getProperty("user.home");
-        if (userHomeDir == null) {
-            logger.error("User home dir not set, defaulting to temp");
-            userHomeDir = System.getProperty("java.io.tmpdir");
-        }
-
-        File prideConvDir = new File(userHomeDir, PreferenceManager.PROGRAM_BASE_DIR);
-        if (!prideConvDir.exists()) {
-            if (!prideConvDir.mkdir()) {
-                throw new ConverterException("Could not create template directory: " + prideConvDir.getAbsolutePath());
-            }
-        }
-
-        File templateDir = new File(userHomeDir, BASE_TEMPLATE_PATH);
+        //look for the templates file in the directory where the program is started
+        File templateDir = new File(".", BASE_TEMPLATE_PATH);
         if (!templateDir.exists()) {
             logger.warn("Template directory doesn't exist, creating in " + templateDir.getAbsolutePath());
             if (!templateDir.mkdir()) {

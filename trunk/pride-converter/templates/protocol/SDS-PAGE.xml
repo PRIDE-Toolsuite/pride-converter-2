@@ -5,7 +5,8 @@
             <cvParam cvLabel="PRIDE" accession="PRIDE:0000039" name="Organelle isolation" value="Supernatant"/>
         </StepDescription>
         <StepDescription>
-            <cvParam cvLabel="SEP" accession="sep:00173" name="sodium dodecyl sulfate polyacrylamide gel electrophoresis" value=""/>
+            <cvParam cvLabel="SEP" accession="sep:00173"
+                     name="sodium dodecyl sulfate polyacrylamide gel electrophoresis" value=""/>
             <cvParam cvLabel="SEP" accession="sep:00163" name="silver staining" value=""/>
             <cvParam cvLabel="SEP" accession="sep:00132" name="excised band" value=""/>
         </StepDescription>

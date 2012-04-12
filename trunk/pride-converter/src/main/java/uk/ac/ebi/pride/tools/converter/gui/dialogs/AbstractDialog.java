@@ -174,5 +174,4 @@ public abstract class AbstractDialog extends JDialog {
         return filtered;
     }
 
-
 }

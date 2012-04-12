@@ -16,13 +16,11 @@ public class PreferenceManager {
 
     private static final Logger logger = Logger.getLogger(PreferenceManager.class);
     private static final String PREFERENCE_FILE = "userprefs.properties";
-    public static final String PROGRAM_BASE_DIR = ".prideconverter";
     private static PreferenceManager instance = new PreferenceManager();
     private Properties preferences = new Properties();
 
     public enum PREFERENCE {
-        IGNORE_MULTIPLE_FILE_EDITING("ignore.multiple.file.editing"),
-        LOAD_DEFAULT_TEMPLATES("load.default.templates");
+        IGNORE_MULTIPLE_FILE_EDITING("ignore.multiple.file.editing"),;
 
         String propName;
 
@@ -37,42 +35,26 @@ public class PreferenceManager {
 
     private PreferenceManager() {
 
-        String userHomeDir = System.getProperty("user.home");
-        if (userHomeDir == null) {
-            logger.error("User home dir not set, unable to read or store user preferences");
-        } else {
-            File userprefs = getPreferenceFile();
-            if (!userprefs.exists()) {
-                //if the pref file doesn't exist, write a skeleton one
-                //also if file doesn't exist, set load default templates to true to initialize them
-                preferences.put(PREFERENCE.LOAD_DEFAULT_TEMPLATES.getPropName(), "true");
-                writePreferencesToFile();
-            } else {
-                try {
-                    preferences.load(new FileReader(userprefs));
-                } catch (IOException e) {
-                    logger.fatal("Error reading property file", e);
-                    throw new ConverterException("Could not reading user property file: " + e.getMessage(), e);
-                }
-            }
-        }
-    }
+        //look for the preference file in the directory where the program is started
+        File userprefs = new File(".", PREFERENCE_FILE);
 
-    private File getPreferenceFile() {
-        String userHomeDir = System.getProperty("user.home");
-        File prideConvDir = new File(userHomeDir, PROGRAM_BASE_DIR);
-        if (!prideConvDir.exists()) {
-            if (!prideConvDir.mkdir()) {
-                throw new ConverterException("Could not create template directory: " + prideConvDir.getAbsolutePath());
+        if (!userprefs.exists()) {
+            writePreferencesToFile();
+        } else {
+            try {
+                preferences.load(new FileReader(userprefs));
+            } catch (IOException e) {
+                logger.fatal("Error reading property file", e);
+                throw new ConverterException("Could not reading user property file: " + e.getMessage(), e);
             }
         }
-        return new File(prideConvDir, PREFERENCE_FILE);
     }
 
     public void writePreferencesToFile() {
 
         try {
-            PrintWriter out = new PrintWriter(new FileWriter(getPreferenceFile()));
+            //write the preference file in the directory where the program is started
+            PrintWriter out = new PrintWriter(new FileWriter(new File(".", PREFERENCE_FILE)));
             preferences.store(out, "Pride Converter user properties");
         } catch (IOException e) {
             logger.fatal("Error writing property file", e);

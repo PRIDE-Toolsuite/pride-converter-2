@@ -37,7 +37,7 @@ public class DatabaseMappingDialog extends AbstractDialog {
     }
 
     private void initDatabaseNames() {
-        Map<String, String> databases = TemplateUtilities.initMapCache("/templates/databases.txt");
+        Map<String, String> databases = TemplateUtilities.initMapCache("databases.txt");
         //update default "PLEASE SELECT"
         databases.put(TemplateUtilities.PLEASE_SELECT, TemplateUtilities.PLEASE_SELECT_OR_TYPE);
         //remove select_other option that is automatically added

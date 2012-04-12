@@ -160,4 +160,5 @@ public abstract class AbstractForm extends JPanel implements ConverterForm {
         return new ImageIcon(icomImage);
 
     }
+
 }

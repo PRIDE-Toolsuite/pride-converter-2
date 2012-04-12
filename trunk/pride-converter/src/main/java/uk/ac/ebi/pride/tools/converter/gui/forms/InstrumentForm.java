@@ -61,7 +61,7 @@ public class InstrumentForm extends AbstractForm {
 
         fragmentationMethodComboBox.setKeySelectionManager(new IgnoreKeySelectionManager());
         fragmentationMethodComboBox.addKeyListener(new IgnoreKeySelectionManager());
-        fragmentationCache = TemplateUtilities.initMapCache("/templates/fragmentation.txt");
+        fragmentationCache = TemplateUtilities.initMapCache("fragmentation.txt");
         fragmentationCache.remove(TemplateUtilities.PLEASE_SELECT);
         fragmentationCache.remove(TemplateUtilities.SELECT_OTHER);
         fragmentationMethodComboBox.setModel(new CvComboBoxModel("MS", false, fragmentationCache.values().toArray()));
