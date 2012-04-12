@@ -83,11 +83,11 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     }
 
     private void initCaches() {
-        speciesCache = TemplateUtilities.initMapCache("/templates/species.txt");
+        speciesCache = TemplateUtilities.initMapCache("species.txt");
         speciesComboBox.setModel(new CvComboBoxModel("NEWT", false, speciesCache.values().toArray()));
-        cellCache = TemplateUtilities.initMapCache("/templates/cell.txt");
+        cellCache = TemplateUtilities.initMapCache("cell.txt");
         cellComboBox.setModel(new CvComboBoxModel("CL", true, cellCache.values().toArray()));
-        tissueCache = TemplateUtilities.initMapCache("/templates/tissue.txt");
+        tissueCache = TemplateUtilities.initMapCache("tissue.txt");
         tissueComboBox.setModel(new CvComboBoxModel("BTO", true, tissueCache.values().toArray()));
     }
 
