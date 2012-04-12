@@ -12,13 +12,11 @@ public class Configurator {
     private static final String OS_NAME_PROP = "os.name";
     private static final String OS_VERSION_PROP = "os.version";
     private static final String OS_ARCH_PROP = "os.arch";
-    private static final String USER_HOME_PROP = "user.home";
 
 
     String nameOS = System.getProperty(OS_NAME_PROP);
     String versionOS = System.getProperty(OS_VERSION_PROP);
     String architectureOS = System.getProperty(OS_ARCH_PROP);
-    String userHome = System.getProperty(USER_HOME_PROP);
 
     public enum PROPERTIES {
         VERSION("version"),
@@ -76,10 +74,6 @@ public class Configurator {
 
     public static String getOSArch() {
         return System.getProperty(OS_ARCH_PROP);
-    }
-
-    public static String getUserHome() {
-        return System.getProperty(USER_HOME_PROP);
     }
 
 }

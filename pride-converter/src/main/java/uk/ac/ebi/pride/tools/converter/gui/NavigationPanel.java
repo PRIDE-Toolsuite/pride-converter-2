@@ -98,7 +98,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         System.out.println("\nName of the OS: " + Configurator.getOSName());
         System.out.println("Version of the OS: " + Configurator.getOSVersion());
         System.out.println("Architecture of The OS: " + Configurator.getOSArch());
-        System.out.println("User Home: " + Configurator.getUserHome());
 
         initComponents();
 
@@ -609,7 +608,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         if (progressDialog != null) {
             progressDialog.setMessage(message);
         } else {
-            System.err.println("MESSGE NOT SHOWN: " + message);
+            System.err.println("MESSAGE NOT SHOWN: " + message);
         }
     }
 
