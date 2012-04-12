@@ -1062,7 +1062,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     @Override
     public Collection<ValidatorMessage> validateForm() {
 
-        System.err.println(getOptions());
+//        System.err.println(getOptions());
 
         //if we're running the merger
         if (format.equals(OutputFormat.PRIDE_MERGED_XML)) {
