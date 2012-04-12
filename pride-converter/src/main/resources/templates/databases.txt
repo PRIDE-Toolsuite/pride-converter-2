@@ -1,7 +1,0 @@
-DB:0001 	IPI
-DB:0002 	UniProtKB
-DB:0003 	UniProtKB/Swissprot
-DB:0004 	UniProtKB/TrEMBL
-DB:0005 	ENSEMBL
-DB:0006 	NCBI nr
-DB:0007 	RefSeq
