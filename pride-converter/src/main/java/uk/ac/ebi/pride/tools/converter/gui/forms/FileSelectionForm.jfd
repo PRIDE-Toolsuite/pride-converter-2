@@ -38,7 +38,7 @@
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq t {space :::p, comp multipleModeLabel:::p::p, space ::7:x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string>
+          <string>par l {seq t {space :::p, comp multipleModeLabel:::p::p, space ::14:x, par b {comp singleSourceFile::b:p::p, comp browseDataFileButton::b:p::p, comp dataFileLabel::b:p::p, comp label1::b:p::p}, space :::p, par t {par b {comp singleFastaFile::b:p::p, comp browseFastaFileButton::b:p::p, comp label2::b:p::p}, comp fastaFormatList:::p::p}, space :::p, par b {comp singleMzTabFile::b:p::p, comp browseMzTabButton::b:p::p, comp label3::b:p::p}, space :::p, par l {par b:l {comp singleSpectrumFile::b:p::p, comp label4::b:p::p}, comp browseSpectrumFileButton::l:p::p}, space :::p}}</string>
          </void>
         </object>
         <void method="setProperty">
@@ -465,7 +465,7 @@
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq l {par b {comp showHideLabel::b:p::p, comp label5::b:p::p}, space :::p, comp tableScrollPane::::243:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string>
+          <string>par l {seq l {par b {comp showHideLabel::b:p::p, comp label5::b:p::p}, space :::p, comp tableScrollPane::::236:x, space :::p, par l {comp parserOptionHelpButton::l:p::p, comp advancedOptionPanel::l:p::p}}}</string>
          </void>
         </object>
         <void method="setProperty">
@@ -748,7 +748,7 @@
        <class>org.jdesktop.layout.GroupLayout</class>
        <void method="setProperty">
         <string>$horizontalGroup</string>
-        <string>par l {seq t {space :::p, par t {comp fileTabbedPane::t::663:x, comp singleModeLabel::t:p::p}, space :::p}}</string>
+        <string>par l {seq t {space :::p, par t {comp fileTabbedPane::t::651:x, comp singleModeLabel::t:p::p}, space :::p}}</string>
        </void>
        <void method="setProperty">
         <string>$verticalGroup</string>
@@ -787,11 +787,11 @@
            <class>org.jdesktop.layout.GroupLayout</class>
            <void method="setProperty">
             <string>$horizontalGroup</string>
-            <string>par l {seq t {space :::p, par t {comp button1::t:p:100:p, comp scrollPane1::t::646:x}, space :::p}}</string>
+            <string>par l {seq t {space :::p, par t {seq t {comp button4:::p::p, space :::p, comp button1:::p:100:p}, comp scrollPane1::t::622:x}, space :::p}}</string>
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq l {space :::p, comp scrollPane1::::146:x, space :::p, comp button1:::p::p, space :::p}}</string>
+            <string>par l {seq l {space :::p, comp scrollPane1::::134:x, space :::p, par b {comp button1::b:p::p, comp button4::b:p::p}, space :::p}}</string>
            </void>
           </object>
           <void property="name">
@@ -853,6 +853,29 @@
             </void>
            </object>
           </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button4.text</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>button4</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>clearSourceFileTable</string>
+              <boolean>false</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
          </object>
          <object class="com.jformdesigner.model.FormLayoutConstraints">
           <null/>
@@ -872,11 +895,11 @@
            <class>org.jdesktop.layout.GroupLayout</class>
            <void method="setProperty">
             <string>$horizontalGroup</string>
-            <string>par l {seq {space :::p, par l {comp button3::t:p:100:p, comp scrollPane3::l::646:x, comp panel6::l::646:x}, space :::p}}</string>
+            <string>par l {seq {space :::p, par l {comp button3::t:p:100:p, comp scrollPane3::l::622:x, comp panel6::l::622:x}, space :::p}}</string>
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq t {space :::p, comp panel6:::p::p, space :::p, comp scrollPane3::::85:x, space :::p, comp button3:::p::p, space :::p}}</string>
+            <string>par l {seq t {space :::p, comp panel6:::p::p, space :::p, comp scrollPane3::::73:x, space :::p, comp button3:::p::p, space :::p}}</string>
            </void>
           </object>
           <void property="name">
@@ -1094,11 +1117,11 @@
            <class>org.jdesktop.layout.GroupLayout</class>
            <void method="setProperty">
             <string>$horizontalGroup</string>
-            <string>par l {seq t {space :::p, par t {comp scrollPane2::l::646:x, comp button2::t:p:100:p}, space :::p}}</string>
+            <string>par l {seq t {space :::p, par t {comp scrollPane2::l::622:x, seq t {comp button7:::p::p, space :::p, comp button2:::p:100:p}}, space :::p}}</string>
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq t {space :::p, comp scrollPane2::::146:x, space :::p, comp button2:::p::p, space :::p}}</string>
+            <string>par l {seq t {space :::p, comp scrollPane2::::134:x, space :::p, par b {comp button2::b:p::p, comp button7::b:p::p}, space :::p}}</string>
            </void>
           </object>
           <void property="name">
@@ -1160,6 +1183,29 @@
             </void>
            </object>
           </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button7.text</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>button7</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>clearMzTabFileTable</string>
+              <boolean>false</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
          </object>
          <object class="com.jformdesigner.model.FormLayoutConstraints">
           <null/>
@@ -1179,11 +1225,11 @@
            <class>org.jdesktop.layout.GroupLayout</class>
            <void method="setProperty">
             <string>$horizontalGroup</string>
-            <string>par l {seq {space :::p, par l {comp button5::t:p:100:p, comp scrollPane4::l::646:x}, space :::p}}</string>
+            <string>par l {seq {space :::p, par l {seq t {comp button6:::p::p, space :::p, comp button5:::p:100:p}, comp scrollPane4::l::622:x}, space :::p}}</string>
            </void>
            <void method="setProperty">
             <string>$verticalGroup</string>
-            <string>par l {seq t {space :::p, comp scrollPane4::::146:x, space :::p, comp button5:::p::p, space :::p}}</string>
+            <string>par l {seq t {space :::p, comp scrollPane4::::134:x, space :::p, par b {comp button5::b:p::p, comp button6::b:p::p}, space :::p}}</string>
            </void>
           </object>
           <void property="name">
@@ -1241,6 +1287,29 @@
               <string>actionPerformed</string>
               <string>loadSpectrumFiles</string>
               <boolean>true</boolean>
+             </object>
+            </void>
+           </object>
+          </void>
+          <void method="add">
+           <object class="com.jformdesigner.model.FormComponent">
+            <string>javax.swing.JButton</string>
+            <void method="setProperty">
+             <string>text</string>
+             <object class="com.jformdesigner.model.FormMessage">
+              <null/>
+              <string>SelecFilePanel.button6.text</string>
+             </object>
+            </void>
+            <void property="name">
+             <string>button6</string>
+            </void>
+            <void method="addEvent">
+             <object class="com.jformdesigner.model.FormEvent">
+              <string>java.awt.event.ActionListener</string>
+              <string>actionPerformed</string>
+              <string>clearSpectraFileTable</string>
+              <boolean>false</boolean>
              </object>
             </void>
            </object>
