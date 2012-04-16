@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.tools.converter.dao;
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.CruxTxtDao;
 import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
+import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.SpectraSTXlsDao;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
@@ -36,7 +37,8 @@ public class DAOFactory {
         MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, false, new MzXMLFileFilter()),
         MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, new MzDataFileFilter()),
         MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter()),
-        CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", false, true, false, new CruxFileFilter());
+        CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", false, true, false, new CruxFileFilter()),
+        SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, true, false, new SpectrastFileFilter()),;
 
         private String commandLineName;
         private String niceName;
@@ -155,6 +157,9 @@ public class DAOFactory {
                 break;
             case CRUX:
                 dao = new CruxTxtDao(new File(sourcePath));
+                break;
+            case SPECTRAST:
+                dao = new SpectraSTXlsDao(new File(sourcePath));
                 break;
             case PRIDE:
                 //todo

@@ -7,6 +7,8 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.component.list.ShortFilePathListCellRenderer;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.ShortFilePathStringRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
@@ -20,6 +22,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Vector;
 
 /**
@@ -135,30 +138,35 @@ public class SpectrumFileMappingForm extends AbstractForm {
             row.add(fileBean.getInputFile());
             data.add(row);
         }
-        ;
 
         Vector<Object> headers = new Vector<Object>();
         headers.add("Input File");
         headers.add("Spectrum File");
 
         mappingTable.setModel(new DefaultTableModel(data, headers) {
-            boolean[] columnEditable = new boolean[]{
-                    false, true
-            };
 
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return columnEditable[columnIndex];
+                //only mztab file will be editable
+                return columnIndex == 1;
             }
         });
-        {
-            TableColumn col = mappingTable.getColumnModel().getColumn(1);
-            col.setCellEditor(new SpectrumComboBoxEditor(ConverterData.getInstance().getSpectrumFiles()));
-            // If the cell should appear like a combobox in its
-            // non-editing state, also set the combobox renderer
-            col.setCellRenderer(new SpectrumComboBoxRenderer(ConverterData.getInstance().getSpectrumFiles()));
-        }
 
+        //update table columns
+        TableColumn col;
+
+        //first column should render short file paths
+        col = mappingTable.getColumnModel().getColumn(0);
+        col.setCellRenderer(new ShortFilePathStringRenderer());
+
+        //make sure that the spectrum files are sorted alphabetically
+        Collections.sort(ConverterData.getInstance().getSpectrumFiles());
+        //second column should render combobox for selection
+        col = mappingTable.getColumnModel().getColumn(1);
+        col.setCellEditor(new SpectrumComboBoxEditor(ConverterData.getInstance().getSpectrumFiles()));
+        // If the cell should appear like a combobox in its
+        // non-editing state, also set the combobox renderer
+        col.setCellRenderer(new SpectrumComboBoxRenderer(ConverterData.getInstance().getSpectrumFiles()));
 
     }
 
@@ -181,15 +189,18 @@ public class SpectrumFileMappingForm extends AbstractForm {
     }
 
     private class SpectrumComboBoxEditor extends DefaultCellEditor {
+
         public SpectrumComboBoxEditor(Collection<String> spectrumFiles) {
             super(new JComboBox(spectrumFiles.toArray()));
             setClickCountToStart(1);
+            ((JComboBox) editorComponent).setRenderer(new ShortFilePathListCellRenderer());
         }
     }
 
     private class SpectrumComboBoxRenderer extends JComboBox implements TableCellRenderer {
         public SpectrumComboBoxRenderer(Collection<String> spectrumFiles) {
             super(spectrumFiles.toArray());
+            setRenderer(new ShortFilePathListCellRenderer());
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
