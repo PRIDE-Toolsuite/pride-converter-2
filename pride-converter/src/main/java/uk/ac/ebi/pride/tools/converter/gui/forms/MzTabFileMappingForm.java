@@ -7,6 +7,7 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 import psidev.psi.tools.validator.MessageLevel;
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
+import uk.ac.ebi.pride.tools.converter.gui.component.list.ShortFilePathListCellRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ShortFilePathStringRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
@@ -21,6 +22,7 @@ import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Vector;
 
 /**
@@ -184,22 +186,21 @@ public class MzTabFileMappingForm extends AbstractForm {
             }
         });
 
-        TableColumn col = mappingTable.getColumnModel().getColumn(1);
-        col.setCellEditor(new MzTabComboBoxEditor(ConverterData.getInstance().getMztabFiles()));
-        // If the cell should appear like a combobox in its
-        // non-editing state, also set the combobox renderer
-        col.setCellRenderer(new MzTabComboBoxRenderer(ConverterData.getInstance().getMztabFiles()));
+        //update table columns
+        TableColumn col;
 
         //first column should render short file paths
         col = mappingTable.getColumnModel().getColumn(0);
         col.setCellRenderer(new ShortFilePathStringRenderer());
 
-        //resize table
-        int width = mappingTable.getWidth();
-        mappingTable.getColumnModel().getColumn(0).setWidth((int) Math.floor(width * 0.33));
-        mappingTable.getColumnModel().getColumn(1).setWidth((int) Math.floor(width * 0.66));
-        mappingTable.revalidate();
-        mappingTable.repaint();
+        //make sure that the mztab files are sorted alphabetically
+        Collections.sort(ConverterData.getInstance().getMztabFiles());
+        //second column should render combobox for selection
+        col = mappingTable.getColumnModel().getColumn(1);
+        col.setCellEditor(new MzTabComboBoxEditor(ConverterData.getInstance().getMztabFiles()));
+        // If the cell should appear like a combobox in its
+        // non-editing state, also set the combobox renderer
+        col.setCellRenderer(new MzTabComboBoxRenderer(ConverterData.getInstance().getMztabFiles()));
 
     }
 
@@ -227,12 +228,14 @@ public class MzTabFileMappingForm extends AbstractForm {
         public MzTabComboBoxEditor(Collection<String> mztabFiles) {
             super(new JComboBox(mztabFiles.toArray()));
             setClickCountToStart(1);
+            ((JComboBox) editorComponent).setRenderer(new ShortFilePathListCellRenderer());
         }
     }
 
     private class MzTabComboBoxRenderer extends JComboBox implements TableCellRenderer {
         public MzTabComboBoxRenderer(Collection<String> mzTabFiles) {
             super(mzTabFiles.toArray());
+            setRenderer(new ShortFilePathListCellRenderer());
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,

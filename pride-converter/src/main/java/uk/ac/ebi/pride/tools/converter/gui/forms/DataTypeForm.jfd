@@ -29,7 +29,7 @@
        </void>
        <void method="setProperty">
         <string>$verticalGroup</string>
-        <string>par l {seq l {space :::p, comp label1:::p::p, space :p:18:p, comp panel2:::p::p, space :p:5:p, comp panel4:::p:149:p, space :::p, comp scrollPane1::::183:x, space :::p}}</string>
+        <string>par l {seq l {space :::p, comp label1:::p::p, space :p:18:p, comp panel2:::p::p, space :p:5:p, comp panel4:::p:149:p, space :::p, comp scrollPane1::::184:x, space :::p}}</string>
        </void>
       </object>
       <void property="name">
@@ -306,6 +306,42 @@
             <string>java.awt.event.ActionListener</string>
             <string>actionPerformed</string>
             <string>cruxButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JRadioButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>WelcomeScreen.spectrastButton.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>$buttonGroup</string>
+           <object class="com.jformdesigner.model.FormReference">
+            <string>dataTypeGroup</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>toolTipText</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>WelcomeScreen.spectrastButton.toolTipText</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>spectrastButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>spectrastButtonActionPerformed</string>
             <boolean>false</boolean>
            </object>
           </void>

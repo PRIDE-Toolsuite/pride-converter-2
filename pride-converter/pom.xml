@@ -198,6 +198,11 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>uk.ac.ebi.pride.tools.converter</groupId>
+            <artifactId>dao-spectrast-xls</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>uk.ac.ebi.pride.</groupId>
             <artifactId>mztab-java</artifactId>
             <version>1.0.5</version>

@@ -268,6 +268,14 @@ public class DataTypeForm extends AbstractForm {
         validationListerner.fireValidationListener(true);
     }
 
+    private void spectrastButtonActionPerformed() {
+        daoFormat = DAOFactory.DAO_FORMAT.SPECTRAST;
+        descriptionArea.setText("TODO");
+        descriptionArea.setCaretPosition(0);
+        warnIfSpectrumOnly();
+        validationListerner.fireValidationListener(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -283,6 +291,7 @@ public class DataTypeForm extends AbstractForm {
         mzIdentMLRadio = new JRadioButton();
         xtandemRadio = new JRadioButton();
         cruxButton = new JRadioButton();
+        spectrastButton = new JRadioButton();
         panel4 = new JPanel();
         mzMLRadio = new JRadioButton();
         mzdataButton = new JRadioButton();
@@ -381,6 +390,17 @@ public class DataTypeForm extends AbstractForm {
                 }
             });
             panel2.add(cruxButton);
+
+            //---- spectrastButton ----
+            spectrastButton.setText(bundle.getString("WelcomeScreen.spectrastButton.text"));
+            spectrastButton.setToolTipText(bundle.getString("WelcomeScreen.spectrastButton.toolTipText"));
+            spectrastButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    spectrastButtonActionPerformed();
+                }
+            });
+            panel2.add(spectrastButton);
         }
 
         //======== panel4 ========
@@ -482,7 +502,7 @@ public class DataTypeForm extends AbstractForm {
                                 .addGap(5, 5, 5)
                                 .addComponent(panel4, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
@@ -492,6 +512,7 @@ public class DataTypeForm extends AbstractForm {
         dataTypeGroup.add(mzIdentMLRadio);
         dataTypeGroup.add(xtandemRadio);
         dataTypeGroup.add(cruxButton);
+        dataTypeGroup.add(spectrastButton);
         dataTypeGroup.add(mzMLRadio);
         dataTypeGroup.add(mzdataButton);
         dataTypeGroup.add(mzxmlButton);
@@ -515,6 +536,7 @@ public class DataTypeForm extends AbstractForm {
     private JRadioButton mzIdentMLRadio;
     private JRadioButton xtandemRadio;
     private JRadioButton cruxButton;
+    private JRadioButton spectrastButton;
     private JPanel panel4;
     private JRadioButton mzMLRadio;
     private JRadioButton mzdataButton;
