@@ -19,6 +19,11 @@ public class IconListModel extends DefaultListModel {
         super.addElement(label);
     }
 
+    public void removeElement(String label, Icon icon) {
+        icons.remove(label);
+        super.removeElement(label);
+    }
+
     public Icon getIconForValue(String label) {
         return icons.get(label);
     }

@@ -209,6 +209,24 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
     }
 
     /**
+     * Remove a form to the main navigation panel. It is assumed that all ConverterForms implementations are JPanels
+     *
+     * @param form
+     */
+    public void deregisterForm(ConverterForm form) {
+        if (!(form instanceof JPanel)) {
+            throw new IllegalArgumentException("All ConverterForm implementations must be JPanels");
+        }
+        //add to card layout
+        contentPanel.remove((JPanel) form);
+        formNames.remove(form.getFormName());
+        forms.remove(form);
+
+        //add to panel list display
+        ((IconListModel) panelList.getModel()).removeElement(form.getFormName(), form.getFormIcon());
+    }
+
+    /**
      * Add a form to the main navigation panel after the current form. It is assumed that all ConverterForms implementations are JPanels
      *
      * @param formToRegister - the form to add
@@ -230,6 +248,14 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
 
         if (index < 0) {
             throw new IllegalArgumentException("Could not find form in forms list: " + currentForm.getFormName());
+        }
+
+        //check to ensure that we're not registering the same form twice!
+        if (index + 1 <= forms.size()) {
+            if (forms.get(index + 1).getClass().equals(formToRegister.getClass())) {
+                logger.info(formToRegister.getFormName() + " already registered. Ignoring.");
+                return;
+            }
         }
 
         //add to card layout
@@ -909,4 +935,5 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
     @Override
     public void windowDeactivated(WindowEvent e) {
     }
+
 }
