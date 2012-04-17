@@ -167,7 +167,6 @@ public class ExperimentDetailMultiTable extends JTable {
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            System.out.println("Trying to Paste");
             int startRow = (getSelectedRows())[0];
             int startCol = (getSelectedColumns())[0];
             try {
