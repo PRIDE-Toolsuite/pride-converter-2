@@ -270,7 +270,9 @@ public class DataTypeForm extends AbstractForm {
 
     private void spectrastButtonActionPerformed() {
         daoFormat = DAOFactory.DAO_FORMAT.SPECTRAST;
-        descriptionArea.setText("TODO");
+        descriptionArea.setText("<br/><b>SpectraST</b><br/><br/>SpectraST (short for \"Spectra Search Tool\") is a spectral library building and searching tool designed primarily for shotgun proteomics applications. It is developed at the Institute for Systems Biology (ISB) and is distributed as a component of the Trans Proteomic Pipeline (TPP) suite of software." +
+                "<br/><br/>" +
+                "More information here: <a href=\"http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST\">http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);

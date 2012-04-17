@@ -14,21 +14,29 @@ import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
+import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Vector;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.util.*;
 
 /**
  * @author User #3
  */
 public class SpectrumFileMappingForm extends AbstractForm {
+
+    private static final String COPY = "Copy";
+    private static final String PASTE = "Paste";
+
+    private Clipboard system;
+
     public SpectrumFileMappingForm() {
         initComponents();
     }
@@ -168,6 +176,27 @@ public class SpectrumFileMappingForm extends AbstractForm {
         // non-editing state, also set the combobox renderer
         col.setCellRenderer(new SpectrumComboBoxRenderer(ConverterData.getInstance().getSpectrumFiles()));
 
+        mappingTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        //register keystrokes
+        if (Configurator.getOSName().toLowerCase().contains("mac")) {
+            mappingTable.getInputMap().put(KeyStroke.getKeyStroke("meta C"), COPY);
+            mappingTable.getActionMap().put(COPY, new CopyAction());
+            mappingTable.getInputMap().put(KeyStroke.getKeyStroke("meta V"), PASTE);
+            mappingTable.getActionMap().put(PASTE, new PasteAction());
+        } else {
+            mappingTable.getInputMap().put(KeyStroke.getKeyStroke("ctrl C"), COPY);
+            mappingTable.getActionMap().put(COPY, new CopyAction());
+            mappingTable.getInputMap().put(KeyStroke.getKeyStroke("ctrl V"), PASTE);
+            mappingTable.getActionMap().put(PASTE, new PasteAction());
+        }
+
+        system = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+        mappingTable.setRowSelectionAllowed(true);
+        mappingTable.setColumnSelectionAllowed(true);
+
+
     }
 
     @Override
@@ -218,4 +247,64 @@ public class SpectrumFileMappingForm extends AbstractForm {
             return this;
         }
     }
+
+    private class CopyAction extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            StringBuffer sbf = new StringBuffer();
+            // Check to ensure we have selected only a contiguous
+            // block of cells
+            int numcols = mappingTable.getSelectedColumnCount();
+            int numrows = mappingTable.getSelectedRowCount();
+            int[] rowsselected = mappingTable.getSelectedRows();
+            int[] colsselected = mappingTable.getSelectedColumns();
+            if (!((numrows - 1 == rowsselected[rowsselected.length - 1] - rowsselected[0] &&
+                    numrows == rowsselected.length) &&
+                    (numcols - 1 == colsselected[colsselected.length - 1] - colsselected[0] &&
+                            numcols == colsselected.length))) {
+                JOptionPane.showMessageDialog(null, "Invalid Copy Selection", "Invalid Copy Selection", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            for (int i = 0; i < numrows; i++) {
+                for (int j = 0; j < numcols; j++) {
+                    sbf.append(mappingTable.getValueAt(rowsselected[i], colsselected[j]));
+                    if (j < numcols - 1) {
+                        sbf.append("\t");
+                    }
+                }
+                sbf.append("\n");
+            }
+            StringSelection stsel = new StringSelection(sbf.toString());
+            system = Toolkit.getDefaultToolkit().getSystemClipboard();
+            system.setContents(stsel, stsel);
+
+        }
+    }
+
+    private class PasteAction extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            int startRow = (mappingTable.getSelectedRows())[0];
+            int startCol = (mappingTable.getSelectedColumns())[0];
+            try {
+                String trstring = (String) (system.getContents(this).getTransferData(DataFlavor.stringFlavor));
+                StringTokenizer st1 = new StringTokenizer(trstring, "\n");
+                for (int i = 0; st1.hasMoreTokens(); i++) {
+                    String rowstring = st1.nextToken();
+                    StringTokenizer st2 = new StringTokenizer(rowstring, "\t");
+                    for (int j = 0; st2.hasMoreTokens(); j++) {
+                        String value = st2.nextToken();
+                        if (startRow + i < mappingTable.getRowCount() && startCol + j < mappingTable.getColumnCount()) {
+                            mappingTable.setValueAt(value, startRow + i, startCol + j);
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
 }
