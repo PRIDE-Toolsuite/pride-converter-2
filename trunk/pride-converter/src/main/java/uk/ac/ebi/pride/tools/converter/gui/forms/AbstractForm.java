@@ -161,4 +161,16 @@ public abstract class AbstractForm extends JPanel implements ConverterForm {
 
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ConverterForm)) return false;
+        ConverterForm that = (ConverterForm) o;
+        return getFormName().equals(that.getFormName());
+    }
+
+    @Override
+    public int hashCode() {
+        return getFormName().hashCode();
+    }
 }

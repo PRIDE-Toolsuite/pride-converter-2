@@ -1295,6 +1295,12 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                     }
                     ConverterData.getInstance().getDataFiles().add(fileBean);
 
+                    //because of back/forth navigation, we might have multiple forms that we don't need anymore
+                    //ensure that they're cleared out
+                    NavigationPanel.getInstance().deregisterForm(new MzTabFileMappingForm());
+                    NavigationPanel.getInstance().deregisterForm(new SpectrumFileMappingForm());
+                    NavigationPanel.getInstance().deregisterForm(new ExperimentDetailMultipleDataForm());
+
                     //convert single file
                     IOUtilities.generateReportFiles(getOptions(), ConverterData.getInstance().getDataFiles(), forceRegenerationBox.isSelected(), true);
 
@@ -1338,6 +1344,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         NavigationPanel.getInstance().registerFormAfter(mzTabFileMappingForm, this);
 
                     } else {
+
+                        //depending on form navigation, we might have a mztab mapping form - deregister it!
+                        NavigationPanel.getInstance().deregisterForm(new MzTabFileMappingForm());
+
                         File mzTabFile = null;
                         //we only have 1/0 mztab file
                         if (!mzTabFileTable.getFiles().isEmpty()) {
@@ -1394,6 +1404,10 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                         }
 
                     } else {
+
+                        //depending on form navigation, we might have a spectrum mapping form - deregister it!
+                        NavigationPanel.getInstance().deregisterForm(new SpectrumFileMappingForm());
+
                         File spectrumFile = null;
                         //we only have 1/0 mztab file
                         if (!spectrumFileTable.getFiles().isEmpty()) {

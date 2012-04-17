@@ -9,11 +9,14 @@ import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.gui.component.list.ShortFilePathListCellRenderer;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ShortFilePathStringRenderer;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.TableCopyAction;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.TablePasteAction;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.FileBean;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.gui.util.IOUtilities;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
+import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -202,6 +205,24 @@ public class MzTabFileMappingForm extends AbstractForm {
         // non-editing state, also set the combobox renderer
         col.setCellRenderer(new MzTabComboBoxRenderer(ConverterData.getInstance().getMztabFiles()));
 
+        mappingTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        //register keystrokes
+        if (Configurator.getOSName().toLowerCase().contains("mac")) {
+            mappingTable.getInputMap().put(TableCopyAction.MAC_COPY_KEYSTROKE, TableCopyAction.COPY);
+            mappingTable.getActionMap().put(TableCopyAction.COPY, new TableCopyAction(mappingTable));
+            mappingTable.getInputMap().put(TablePasteAction.MAC_PASTE_KEYSTROKE, TablePasteAction.PASTE);
+            mappingTable.getActionMap().put(TablePasteAction.PASTE, new TablePasteAction(mappingTable));
+        } else {
+            mappingTable.getInputMap().put(TableCopyAction.COPY_KEYSTROKE, TableCopyAction.COPY);
+            mappingTable.getActionMap().put(TableCopyAction.COPY, new TableCopyAction(mappingTable));
+            mappingTable.getInputMap().put(TablePasteAction.PASTE_KEYSTROKE, TablePasteAction.PASTE);
+            mappingTable.getActionMap().put(TablePasteAction.PASTE, new TablePasteAction(mappingTable));
+        }
+
+        mappingTable.setRowSelectionAllowed(true);
+        mappingTable.setColumnSelectionAllowed(true);
+
     }
 
     @Override
@@ -241,9 +262,11 @@ public class MzTabFileMappingForm extends AbstractForm {
         public Component getTableCellRendererComponent(JTable table, Object value,
                                                        boolean isSelected, boolean hasFocus, int row, int column) {
             if (isSelected) {
+                setOpaque(false);
                 setForeground(table.getSelectionForeground());
-                super.setBackground(table.getSelectionBackground());
+                setBackground(table.getSelectionBackground());
             } else {
+                setOpaque(true);
                 setForeground(table.getForeground());
                 setBackground(table.getBackground());
             }
