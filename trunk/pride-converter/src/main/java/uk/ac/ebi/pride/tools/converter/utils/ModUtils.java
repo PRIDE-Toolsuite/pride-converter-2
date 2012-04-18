@@ -2,11 +2,10 @@ package uk.ac.ebi.pride.tools.converter.utils;
 
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
+import uk.ac.ebi.pridemod.PrideModController;
 import uk.ac.ebi.pridemod.slimmod.model.SlimModCollection;
 import uk.ac.ebi.pridemod.slimmod.model.SlimModification;
-import uk.ac.ebi.pridemod.slimmod.tab.ReadTabSlim;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
@@ -20,7 +19,8 @@ import java.util.ResourceBundle;
  */
 public class ModUtils {
 
-    public static final String MOD_FILE = "modifications.txt";
+    public static final String TXT_MOD_FILE = "modifications.txt";
+    public static final String XML_MOD_FILE = "pride_mods.xml";
     public static final double LOW_PRECISION = 0.1d;
     public static final double HIGH_PRECISION = 0.01d;
 
@@ -33,15 +33,12 @@ public class ModUtils {
 
         //lazy load
         if (preferredModifications == null) {
-            try {
-                URL url = ModUtils.class.getClassLoader().getResource(MOD_FILE);
-                if (url != null) {
-                    preferredModifications = ReadTabSlim.parseSlimModification(url);
-                } else {
-                    throw new IllegalStateException("Could not find preferred modification file");
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("Error reading preferred modification file: " + e.getMessage(), e);
+            URL url = ModUtils.class.getClassLoader().getResource(XML_MOD_FILE);
+            //URL url = ModUtils.class.getClassLoader().getResource(TXT_MOD_FILE);
+            if (url != null) {
+                preferredModifications = PrideModController.parseSlimModCollection(url);
+            } else {
+                throw new IllegalStateException("Could not find preferred modification file");
             }
         }
         return preferredModifications;
