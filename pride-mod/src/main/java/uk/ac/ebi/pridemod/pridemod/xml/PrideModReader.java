@@ -11,6 +11,8 @@ import uk.ac.ebi.pridemod.slimmod.model.SlimModification;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.regex.Pattern;
 
 
@@ -47,19 +49,22 @@ public class PrideModReader {
     /*public PrideModReader(URL url) {
         this(FileUtils.getFileFromURL(url));
     } */
-    public PrideModReader(File xml) throws JAXBException {
-        if (xml == null) {
+    public PrideModReader(URL url) {
+        if (url == null) {
             throw new IllegalArgumentException("Xml file to be indexed must not be null");
-        } else if (!xml.exists()) {
-            throw new IllegalArgumentException("Xml file to be indexed does not exist: " + xml.getAbsolutePath());
         }
-
         // create extractor
         // this.extractor = new UnimodExtractor(xml);
 
-        // create unmarshaller
-        this.unmarshaller = PrideModUnmarshallerFactory.getInstance().initializeUnmarshaller();
-        prideMod_whole = (PrideMod) unmarshaller.unmarshal(xml);
+        try {
+            // create unmarshaller
+            this.unmarshaller = PrideModUnmarshallerFactory.getInstance().initializeUnmarshaller();
+            prideMod_whole = (PrideMod) unmarshaller.unmarshal(url.openStream());
+        } catch (JAXBException e) {
+            throw new IllegalArgumentException("Error unmarshalling XML file: " + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error reading XML file: " + e.getMessage(), e);
+        }
     }
 
     public SlimModCollection getSlimModCollection() {

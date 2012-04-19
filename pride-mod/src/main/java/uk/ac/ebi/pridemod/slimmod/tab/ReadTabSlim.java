@@ -31,17 +31,25 @@ public final class ReadTabSlim {
      * Template method that calls {@link #processLine(String)}.
      */
 
-    public static SlimModCollection parseSlimModification(URL url) throws IOException {
-        Scanner scanner = new Scanner(url.openStream());
-        return parseSlimModification(scanner);
+    public static SlimModCollection parseSlimModification(URL url) {
+        try {
+            Scanner scanner = new Scanner(url.openStream());
+            return parseSlimModification(scanner);
+        } catch (IOException e) {
+            throw new IllegalStateException("Error reading slim file: " + e.getMessage(), e);
+        }
     }
 
-    public static SlimModCollection parseSlimModification(String fileName) throws FileNotFoundException {
-        Scanner scanner = new Scanner(new FileReader(new File(fileName)));
-        return parseSlimModification(scanner);
+    public static SlimModCollection parseSlimModification(String fileName) {
+        try {
+            Scanner scanner = new Scanner(new FileReader(new File(fileName)));
+            return parseSlimModification(scanner);
+        } catch (FileNotFoundException e) {
+            throw new IllegalStateException("Error reading slim file: " + e.getMessage(), e);
+        }
     }
 
-    public static SlimModCollection parseSlimModification(Scanner scanner) throws FileNotFoundException {
+    public static SlimModCollection parseSlimModification(Scanner scanner) {
         //Note that FileReader is used, not File, since File is not Closeable
         SlimModCollection returnModCollection = new SlimModCollection();
         try {

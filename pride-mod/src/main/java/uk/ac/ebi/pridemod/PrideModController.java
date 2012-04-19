@@ -4,9 +4,6 @@ import uk.ac.ebi.pridemod.pridemod.xml.PrideModReader;
 import uk.ac.ebi.pridemod.slimmod.model.SlimModCollection;
 import uk.ac.ebi.pridemod.slimmod.tab.ReadTabSlim;
 
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -25,18 +22,10 @@ public class PrideModController {
     public static SlimModCollection parseSlimModCollection(URL url) {
 
         if (url.getPath().endsWith(PRIDEMOD_TXT)) {
-            try {
-                return ReadTabSlim.parseSlimModification(url);
-            } catch (IOException e) {
-                throw new RuntimeException("Error parsing file: " + url.toString(), e);
-            }
+            return ReadTabSlim.parseSlimModification(url);
         } else if (url.getPath().endsWith(PRIDEMOD_XML)) {
-            try {
-                PrideModReader modReader = new PrideModReader(new File(url.getPath()));
-                return modReader.getSlimModCollection();
-            } catch (JAXBException e) {
-                throw new RuntimeException("Error parsing file: " + url.toString(), e);
-            }
+            PrideModReader modReader = new PrideModReader(url);
+            return modReader.getSlimModCollection();
         } else {
             throw new RuntimeException("No handler defined to parse URL: " + url.toString());
         }
