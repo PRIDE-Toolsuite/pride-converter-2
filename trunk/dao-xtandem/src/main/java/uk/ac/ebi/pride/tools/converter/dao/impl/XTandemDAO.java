@@ -1,6 +1,12 @@
 package uk.ac.ebi.pride.tools.converter.dao.impl;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -258,8 +265,13 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      */
     public XTandemDAO(File sourceFile) throws InvalidFormatException {
         this.sourcefile = sourceFile;
-        // create the parser
+        
         try {
+        	// check whether the file contains duplicate domain ids
+        	if (containsDuplicateDomainIds(sourceFile))
+        		throw new InvalidFormatException("X!Tandem file contains duplicate domain ids. This is currently not supported.");
+        	
+        	// create the parser
             xtandemFile = new XTandemFile(sourceFile.getAbsolutePath());
             
             // check if the X!Tandem file is valid
@@ -273,7 +285,51 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             buildHashMaps();
         } catch (SAXException e) {
             throw new InvalidFormatException("Failed to parse X!Tandem XML file.", e);
-        }
+        } catch (IOException e) {
+			throw new ConverterException("Failed to open input file: " + sourceFile.getPath());
+		}
+    }
+    
+    /**
+     * Checks whether the passed X!Tandem file contains
+     * duplicate domain ids.
+     * @param file
+     * @return
+     * @throws IOException 
+     * @throws InvalidFormatException 
+     */
+    private boolean containsDuplicateDomainIds(File file) throws IOException, InvalidFormatException {
+    	// process the file line by line
+		FileInputStream fstream = new FileInputStream(file);
+		// Get the object of DataInputStream
+		DataInputStream in = new DataInputStream(fstream);
+		BufferedReader br = new BufferedReader(new InputStreamReader(in));
+		String line;
+		Set<String> ids = new HashSet<String>();
+		
+		Pattern domainIdPattern = Pattern.compile(".*id=\"([^\"]+)\".*");
+		
+		while ((line = br.readLine()) != null) {
+			line = line.trim();
+			if (!line.startsWith("<domain id="))
+				continue;
+			
+			Matcher matcher = domainIdPattern.matcher(line);
+			if (!matcher.find())
+				throw new InvalidFormatException("Invalid domain encountered in X!Tandem file.");
+			
+			String id = matcher.group(1);
+			
+			if (ids.contains(id)) {
+				br.close();
+				return true;
+			}
+			
+			ids.add(id);
+		}
+		
+		br.close();
+		return false;
     }
     
     @SuppressWarnings("rawtypes")
