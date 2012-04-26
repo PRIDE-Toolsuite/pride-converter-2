@@ -412,7 +412,7 @@ public class MzXmlDAO extends AbstractPeakListDAO {
 		try {
 			peakList = MzXMLFile.convertPeaksToMap(peaks);
 		} catch (MzXMLParsingException e) {
-			throw new InvalidFormatException("Failed to convert spectrum's peak list (num = " + scan.getNum() + ")");
+			throw new InvalidFormatException("Failed to convert spectrum's peak list (num = " + scan.getNum() + ")", e);
 		}
 
 		// set the spectrum's id
