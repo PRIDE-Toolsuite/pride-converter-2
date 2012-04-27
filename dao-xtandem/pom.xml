@@ -5,7 +5,7 @@
     <groupId>uk.ac.ebi.pride.tools.converter</groupId>
     <artifactId>dao-xtandem-impl</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>XTandem DAO</name>
     <description>This is the XTandem DAO implementation to generate XML files for submission using the PRIDE Converter
         2.0 framework
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>de.proteinms.xtandemparser</groupId>
             <artifactId>xtandem-parser</artifactId>
-            <version>1.3.10</version>
+            <version>1.4</version>
             <exclusions>
                 <exclusion>
                     <groupId>lennart</groupId>
@@ -124,7 +124,7 @@
             <name>The EBI internal snapshot repository</name>
             <url>http://www.ebi.ac.uk/~maven/m2repo_snapshots</url>
         </repository>
-
+ 
         <repository>
             <id>genesis-maven2-repository</id>
             <name>Genesis maven2 repository</name>
