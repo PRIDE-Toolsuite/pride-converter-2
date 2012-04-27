@@ -1,10 +1,9 @@
-package uk.ac.ebi.pride.tools.converter.dao.impl;
+	package uk.ac.ebi.pride.tools.converter.dao.impl;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
@@ -267,10 +266,6 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         this.sourcefile = sourceFile;
         
         try {
-        	// check whether the file contains duplicate domain ids
-        	if (containsDuplicateDomainIds(sourceFile))
-        		throw new InvalidFormatException("X!Tandem file contains duplicate domain ids. This is currently not supported.");
-        	
         	// create the parser
             xtandemFile = new XTandemFile(sourceFile.getAbsolutePath());
             
@@ -285,51 +280,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             buildHashMaps();
         } catch (SAXException e) {
             throw new InvalidFormatException("Failed to parse X!Tandem XML file.", e);
-        } catch (IOException e) {
-			throw new ConverterException("Failed to open input file: " + sourceFile.getPath());
-		}
-    }
-    
-    /**
-     * Checks whether the passed X!Tandem file contains
-     * duplicate domain ids.
-     * @param file
-     * @return
-     * @throws IOException 
-     * @throws InvalidFormatException 
-     */
-    private boolean containsDuplicateDomainIds(File file) throws IOException, InvalidFormatException {
-    	// process the file line by line
-		FileInputStream fstream = new FileInputStream(file);
-		// Get the object of DataInputStream
-		DataInputStream in = new DataInputStream(fstream);
-		BufferedReader br = new BufferedReader(new InputStreamReader(in));
-		String line;
-		Set<String> ids = new HashSet<String>();
-		
-		Pattern domainIdPattern = Pattern.compile(".*id=\"([^\"]+)\".*");
-		
-		while ((line = br.readLine()) != null) {
-			line = line.trim();
-			if (!line.startsWith("<domain id="))
-				continue;
-			
-			Matcher matcher = domainIdPattern.matcher(line);
-			if (!matcher.find())
-				throw new InvalidFormatException("Invalid domain encountered in X!Tandem file.");
-			
-			String id = matcher.group(1);
-			
-			if (ids.contains(id)) {
-				br.close();
-				return true;
-			}
-			
-			ids.add(id);
-		}
-		
-		br.close();
-		return false;
+        }
     }
     
     @SuppressWarnings("rawtypes")
@@ -479,14 +430,14 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             	if (peptide.getDomains().size() < 1)
             		throw new InvalidFormatException("Peptide object encountered that does not contain any domains.");
             	
+            	// WARNING: The domain id and protein id are not unique! (spectra id still is)
+            	// save the spec id as identified (extract the id from the protein id)
             	String firstDomainId = peptide.getDomains().get(0).getDomainID();
             	String protId = firstDomainId.substring(0, firstDomainId.lastIndexOf('.'));
-            	
-            	// save the spec id as identified (extract the id from the protein id)
                 identifiedSpectra.add(Integer.parseInt(protId.substring(0, protId.indexOf('.'))));
             	
             	// get the protein object
-                Protein protein = protMap.getProtein(protId);
+                Protein protein = protMap.getProtein(peptide.getDomains().get(0).getProteinKey());
 
                 // store the peptide in the proteinHasPeptides HashMap
                 if (!proteinHasPeptides.containsKey(protein.getLabel()))
@@ -1085,6 +1036,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public int getSpectrumReferenceForPeptideUID(String peptideUID) throws InvalidFormatException {
+    	//peptideUID is the [spec id] + "." + [domain key]
+    	
         // return the spectrum id (everything before the first ".")
         int index = peptideUID.indexOf('.');
 
@@ -1171,15 +1124,11 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         if (peptides == null)
             throw new InvalidFormatException("Protein '" + proteinLabel + "' does not contain any peptides.");
 
-        // get the protein's id by using the first peptides id
-        String proteinId = peptides.get(0).getDomains().get(0).getDomainID();
-        proteinId = proteinId.substring(0, proteinId.lastIndexOf('.'));
-
         // get the protein object
-        Protein protein = xtandemFile.getProteinMap().getProtein(proteinId);
+        Protein protein = xtandemFile.getProteinMap().getProtein(peptides.get(0).getDomains().get(0).getProteinKey());
 
         if (protein == null)
-            throw new InvalidFormatException("Invalid protein id passed (" + proteinId + ")");
+            throw new InvalidFormatException("Invalid protein id passed (" + peptides.get(0).getDomains().get(0).getProteinKey() + ")");
 
         // create the identification object
         Identification identification = new Identification();
@@ -1253,14 +1202,17 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
                 // create the converted peptide object
                 uk.ac.ebi.pride.tools.converter.report.model.Peptide convertedPeptide = new uk.ac.ebi.pride.tools.converter.report.model.Peptide();
 
+                // get the spectrum reference
+                Long specRef = Long.parseLong(domain.getDomainID().substring(0, domain.getDomainID().indexOf('.')));
+                
                 // set the standard values
-                convertedPeptide.setUniqueIdentifier(domain.getDomainID());
+                convertedPeptide.setUniqueIdentifier(specRef + "." + domain.getDomainKey());
                 convertedPeptide.setSequence(domain.getDomainSequence());
                 convertedPeptide.setStart(domain.getDomainStart());
                 convertedPeptide.setEnd(domain.getDomainEnd());
 
                 // use the spectrum id as spectrum reference (extract from the domain id)
-                convertedPeptide.setSpectrumReference(Long.parseLong(domain.getDomainID().substring(0, domain.getDomainID().indexOf('.'))));
+                convertedPeptide.setSpectrumReference(specRef);
 
                 // check whether the peptide is unique (by checking whether it only fits one protein
                 convertedPeptide.setIsSpecific(sequenceInAccessions.get(domain.getDomainSequence()).size() == 1);
@@ -1366,13 +1318,13 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         ArrayList<PeptidePTM> ptms = new ArrayList<PeptidePTM>();
 
         // process the fixed modifications
-        ArrayList<Modification> fixedMods = modMap.getFixedModifications(domain.getDomainID());
+        ArrayList<Modification> fixedMods = modMap.getFixedModifications(domain.getDomainKey());
 
         for (Modification mod : fixedMods)
             ptms.add(convertModification(domain, mod, true));
 
         // process the variable modifications
-        ArrayList<Modification> varMods = modMap.getVariableModifications(domain.getDomainID());
+        ArrayList<Modification> varMods = modMap.getVariableModifications(domain.getDomainKey());
 
         for (Modification mod : varMods)
             ptms.add(convertModification(domain, mod, false));
