@@ -13,12 +13,12 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.pride.mztab_java.MzTabFile;
-import uk.ac.ebi.pride.mztab_java.MzTabParsingException;
-import uk.ac.ebi.pride.mztab_java.model.Param.ParamType;
-import uk.ac.ebi.pride.mztab_java.model.Protein;
-import uk.ac.ebi.pride.mztab_java.model.Subsample;
-import uk.ac.ebi.pride.mztab_java.model.Unit;
+import uk.ac.ebi.pride.jmztab.MzTabFile;
+import uk.ac.ebi.pride.jmztab.MzTabParsingException;
+import uk.ac.ebi.pride.jmztab.model.Param.ParamType;
+import uk.ac.ebi.pride.jmztab.model.Protein;
+import uk.ac.ebi.pride.jmztab.model.Subsample;
+import uk.ac.ebi.pride.jmztab.model.Unit;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.Utils;
 import uk.ac.ebi.pride.tools.converter.dao.handler.ExternalHandler;
@@ -180,10 +180,10 @@ public class MzTabHandler implements ExternalHandler {
      */
     public Properties getDaoConfiguration() {
     	Properties configuration = new Properties();
-    	List<uk.ac.ebi.pride.mztab_java.model.Param> parameters = unit.getCustomParams();
+    	List<uk.ac.ebi.pride.jmztab.model.Param> parameters = unit.getCustomParams();
     	boolean prideConverterGenerated = false;
     	
-    	for (uk.ac.ebi.pride.mztab_java.model.Param param : parameters) {
+    	for (uk.ac.ebi.pride.jmztab.model.Param param : parameters) {
     		if ("MzTab generation software".equals(param.getName()) && "PRIDE Converter".equals(param.getValue())) {
     			prideConverterGenerated = true;
     			continue;
@@ -296,7 +296,7 @@ public class MzTabHandler implements ExternalHandler {
      */
     private Peptide updatePeptide(Peptide peptide, String accession, String unitId) {
         // get the peptide from the mzTab file
-        Collection<uk.ac.ebi.pride.mztab_java.model.Peptide> mzTabPeptides = mzTabFile.getProteinPeptides(accession, unitId);
+        Collection<uk.ac.ebi.pride.jmztab.model.Peptide> mzTabPeptides = mzTabFile.getProteinPeptides(accession, unitId);
 
         if (mzTabPeptides == null) {
         	logger.warn("The peptide '" + peptide.getSequence() + "' in " + accession + " was not found in the mzTab file.");
@@ -307,12 +307,12 @@ public class MzTabHandler implements ExternalHandler {
         Map<String, Double> peptideScores = Utils.extractPeptideScores(peptide);
 
         // find the peptide in the collection
-        uk.ac.ebi.pride.mztab_java.model.Peptide mzTabPeptide = null;
+        uk.ac.ebi.pride.jmztab.model.Peptide mzTabPeptide = null;
 
-        for (uk.ac.ebi.pride.mztab_java.model.Peptide p : mzTabPeptides) {
+        for (uk.ac.ebi.pride.jmztab.model.Peptide p : mzTabPeptides) {
             // check the scores
             if (p.getSearchEngineScore() != null) {
-                for (uk.ac.ebi.pride.mztab_java.model.Param scoreParam : p.getSearchEngineScore()) {
+                for (uk.ac.ebi.pride.jmztab.model.Param scoreParam : p.getSearchEngineScore()) {
                     // check if the value is the same as in the peptide object
                     if (peptideScores.containsKey(scoreParam.getAccession()) &&
                             peptideScores.get(scoreParam.getAccession()).toString().equals(scoreParam.getValue())) {
@@ -509,7 +509,7 @@ public class MzTabHandler implements ExternalHandler {
                 param.getCvParam().add(QuantitationCvParams.getSubsampleDescription(subsampleIndex, subsample.getDescription()));
 
             // add the reagent
-            uk.ac.ebi.pride.mztab_java.model.Param reagentParam = subsample.getQuantificationReagent();
+            uk.ac.ebi.pride.jmztab.model.Param reagentParam = subsample.getQuantificationReagent();
             // make sure the reagent is set and a cvParam
             if (reagentParam != null && reagentParam.getType() == ParamType.CV_PARAM) {
                 CvParam reportParam = convertCvParam(reagentParam);
@@ -586,7 +586,7 @@ public class MzTabHandler implements ExternalHandler {
         // if TIC values weren't detected at the protein level check the peptide
         // level
         if (!ticDetected && mzTabFile.getPeptides().size() > 0) {
-        	uk.ac.ebi.pride.mztab_java.model.Peptide peptide = mzTabFile.getPeptides().iterator().next();
+        	uk.ac.ebi.pride.jmztab.model.Peptide peptide = mzTabFile.getPeptides().iterator().next();
         	
         	if (peptide != null && peptide.getCustom().containsKey(TIC_COLUMN)) {
         		param.getCvParam().add(QuantitationCvParams.TIC_QUANTIFIED.getParam());
@@ -604,7 +604,7 @@ public class MzTabHandler implements ExternalHandler {
      * @param param
      * @return
      */
-    private CvParam convertCvParam(uk.ac.ebi.pride.mztab_java.model.Param param) {
+    private CvParam convertCvParam(uk.ac.ebi.pride.jmztab.model.Param param) {
         return new CvParam(param.getCvLabel(), param.getAccession(), param.getName(), param.getValue());
     }
 
@@ -617,10 +617,10 @@ public class MzTabHandler implements ExternalHandler {
      * @param value  If not null this value replaces all the CvParams values.
      * @return
      */
-    private Collection<CvParam> convertCvParams(Collection<uk.ac.ebi.pride.mztab_java.model.Param> params, String value) {
+    private Collection<CvParam> convertCvParams(Collection<uk.ac.ebi.pride.jmztab.model.Param> params, String value) {
         ArrayList<CvParam> convertedParams = new ArrayList<CvParam>(params.size());
 
-        for (uk.ac.ebi.pride.mztab_java.model.Param param : params) {
+        for (uk.ac.ebi.pride.jmztab.model.Param param : params) {
             if (param.getType() == ParamType.CV_PARAM) {
                 CvParam reportParam = convertCvParam(param);
                 if (value != null)

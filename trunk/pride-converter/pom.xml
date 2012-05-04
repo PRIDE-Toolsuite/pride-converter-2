@@ -204,8 +204,8 @@
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.pride.</groupId>
-            <artifactId>mztab-java</artifactId>
-            <version>1.0.5</version>
+            <artifactId>jmztab</artifactId>
+            <version>1.0.7</version>
         </dependency>
 
         <!--validator -->
