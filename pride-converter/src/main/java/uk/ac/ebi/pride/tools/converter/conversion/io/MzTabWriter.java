@@ -12,13 +12,13 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-import uk.ac.ebi.pride.mztab_java.MzTabFile;
-import uk.ac.ebi.pride.mztab_java.MzTabParsingException;
-import uk.ac.ebi.pride.mztab_java.model.Param;
-import uk.ac.ebi.pride.mztab_java.model.ParamList;
-import uk.ac.ebi.pride.mztab_java.model.Protein;
-import uk.ac.ebi.pride.mztab_java.model.Subsample;
-import uk.ac.ebi.pride.mztab_java.model.Unit;
+import uk.ac.ebi.pride.jmztab.MzTabFile;
+import uk.ac.ebi.pride.jmztab.MzTabParsingException;
+import uk.ac.ebi.pride.jmztab.model.Param;
+import uk.ac.ebi.pride.jmztab.model.ParamList;
+import uk.ac.ebi.pride.jmztab.model.Protein;
+import uk.ac.ebi.pride.jmztab.model.Subsample;
+import uk.ac.ebi.pride.jmztab.model.Unit;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.Utils;
@@ -300,7 +300,7 @@ public class MzTabWriter {
         // iterate over all the peptides
         for (Peptide p : identification.getPeptide()) {
             // initialize the new peptide
-            uk.ac.ebi.pride.mztab_java.model.Peptide peptide = new uk.ac.ebi.pride.mztab_java.model.Peptide();
+            uk.ac.ebi.pride.jmztab.model.Peptide peptide = new uk.ac.ebi.pride.jmztab.model.Peptide();
 
             // sequence
             peptide.setSequence(p.getSequence());

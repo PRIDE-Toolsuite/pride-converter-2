@@ -1,8 +1,8 @@
 package uk.ac.ebi.pride.tools.cellzome;
 
-import uk.ac.ebi.pride.mztab_java.MzTabFile;
-import uk.ac.ebi.pride.mztab_java.MzTabParsingException;
-import uk.ac.ebi.pride.mztab_java.model.*;
+import uk.ac.ebi.pride.jmztab.MzTabFile;
+import uk.ac.ebi.pride.jmztab.MzTabParsingException;
+import uk.ac.ebi.pride.jmztab.model.*;
 
 import java.io.*;
 import java.util.ArrayList;
