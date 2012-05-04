@@ -4,6 +4,8 @@
 
 package uk.ac.ebi.pride.tools.converter.gui.dialogs;
 
+import no.uib.olsdialog.OLSDialog;
+import no.uib.olsdialog.OLSInputable;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.error.ErrorLevel;
 import uk.ac.ebi.ols.soap.Query;
@@ -11,8 +13,6 @@ import uk.ac.ebi.ols.soap.QueryServiceLocator;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
-import uk.ac.ebi.pride.tools.converter.gui.ols.OLSDialog;
-import uk.ac.ebi.pride.tools.converter.gui.ols.OLSInputable;
 import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
