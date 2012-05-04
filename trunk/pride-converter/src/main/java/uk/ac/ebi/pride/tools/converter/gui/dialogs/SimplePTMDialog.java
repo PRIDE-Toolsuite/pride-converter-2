@@ -4,10 +4,10 @@
 
 package uk.ac.ebi.pride.tools.converter.gui.dialogs;
 
+import no.uib.olsdialog.OLSDialog;
+import no.uib.olsdialog.OLSInputable;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable;
-import uk.ac.ebi.pride.tools.converter.gui.ols.OLSDialog;
-import uk.ac.ebi.pride.tools.converter.gui.ols.OLSInputable;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
