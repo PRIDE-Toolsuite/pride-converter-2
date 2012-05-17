@@ -8,8 +8,8 @@ import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.filters.EValueFilterCriteria;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.filters.FilterCriteria;
-import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.model.OmssaProtein;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.model.OmssaPeptide;
+import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.model.OmssaProtein;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.parsers.OmssaIdentificationsParser;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.parsers.OmssaIdentificationsParserResult;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.properties.ScoreCriteria;
@@ -18,8 +18,6 @@ import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
-import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
-import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -283,25 +281,6 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 
 
 
-    }
-    
-    private void buildMgfIndex() {
-        try {
-            MgfFile mgfFile = new MgfFile(spectraFile);         // first get access to the MGF file itself
-            titleToSpectraIdMap = new HashMap<String, Integer>();
-            for (String spectraId: ((MgfDAO)getSpectraDao()).getSpectraIds()) { // for each spectra Id (its an integer for MgfDAO)
-                String title = mgfFile.getMs2Query(Integer.parseInt(spectraId)).getTitle();
-                if (title != null) { // Title might be absent    TODO: consider throwing exception here
-                    titleToSpectraIdMap.put(
-                            title,
-                            Integer.parseInt(spectraId));
-                }
-            }
-        } catch (JMzReaderException e) {
-            throw new ConverterException("Unable to access source MGF file");
-        } catch (InvalidFormatException e) {
-            throw new ConverterException("Invalid format exception in MGF file");
-        }
     }
 
     /**
@@ -794,16 +773,6 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         // make sure the type was set correctly
         if (spectraFileType == null)
             throw new InvalidFormatException("Unsupported spectra file type used (" + filename + ")");
-    }
-
-    private List<Integer> buildIdentifiedSpecIdsFromTitles(List<String> identifiedSpectraTitles) {
-        List<Integer> res = new LinkedList<Integer>();
-        for (String title: identifiedSpectraTitles) {
-            int index = getSpectraIndex(title);
-            if (index != -1)
-                res.add(index);
-        }
-        return res;
     }
 
     private int getSpectraIndex(String title) {
