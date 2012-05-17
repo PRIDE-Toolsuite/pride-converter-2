@@ -320,7 +320,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
      * @throws InvalidFormatException
      */
 	public String getExperimentTitle() throws InvalidFormatException {
-		return "Unknown SpectraST based experiment";
+		return "Unknown Omssa based experiment";
 	}
 
     /**
@@ -341,7 +341,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         Param params = new Param();
 
         // original MS format param
-        params.getCvParam().add(DAOCvParams.ORIGINAL_MS_FORMAT.getParam("SpectraST .xls file"));
+        params.getCvParam().add(DAOCvParams.ORIGINAL_MS_FORMAT.getParam("Omssa .csv file"));
        	params.getCvParam().add(DAOCvParams.MS_MS_SEARCH.getParam());
 
         return params;
@@ -383,7 +383,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 
         file.setPathToFile(targetFile.getAbsolutePath());
         file.setNameOfFile(targetFile.getName());
-        file.setFileType("SpectraST .xls file");
+        file.setFileType("Omssa .csv file");
 
         return file;
 	}
@@ -411,7 +411,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
      */
 	public Software getSoftware() throws InvalidFormatException {
         Software s = new Software();
-        s.setName("SpectraST");
+        s.setName("Omssa");
         s.setVersion("");
 		return s;
 	}
@@ -791,6 +791,8 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
             spectraFileType = SpectraType.MZXML;
         else if (filename.toLowerCase().endsWith("ms2"))
             spectraFileType = SpectraType.MS2;
+        else if (filename.toLowerCase().endsWith("mzml"))
+            spectraFileType = SpectraType.MZML;
 
         // make sure the type was set correctly
         if (spectraFileType == null)
