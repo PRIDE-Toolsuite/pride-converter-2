@@ -665,19 +665,16 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
                         // add the additional info
                         Param additional = new Param();
 
-                        // TODO: Add here all, and ask for new CV params (or look for them)
                         additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(omssaPeptide.getCharge()));
-//                        additional.getCvParam().add(DAOCvParams.PEPTIDE_RANK.getParam(omssaPeptide.getRank()));
-//                        additional.getCvParam().add(DAOCvParams.SPECTRAST_DOT.getParam(omssaPeptide.getDot()));
-//                        additional.getCvParam().add(DAOCvParams.SPECTRAST_DOT_BIAS.getParam(omssaPeptide.getDotBias()));
-//                        additional.getCvParam().add(DAOCvParams.SPECTRAST_FVAL.getParam(omssaPeptide.getFval()));
-//                        additional.getCvParam().add(DAOCvParams.SPECTRAST_DELTA.getParam(omssaPeptide.getDelta()));
-//                        additional.getCvParam().add(DAOCvParams.MZ_DIFF.getParam(omssaPeptide.getPrecursorMzDiff())); // TODO: to check in the future, when added to the OLS
+                        additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(omssaPeptide.getMass()));
+                        additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(omssaPeptide.getCharge()));
+                        additional.getCvParam().add(DAOCvParams.OMSSA_E_VALUE.getParam(omssaPeptide.geteValue()));
+                        additional.getCvParam().add(DAOCvParams.OMSSA_P_VALUE.getParam(omssaPeptide.getpValue()));
 
                         peptide.setAdditional(additional);
 
-                        // TODO: add the modifications
-//                        peptide.getPTM().addAll(omssaPeptide.getPTMs());
+                        // add the PTMs
+                        peptide.getPTM().addAll(omssaPeptide.getPTMs(omssaPeptide.getPeptide(),fixedPtms,variablePtms));
 
                     }
 
