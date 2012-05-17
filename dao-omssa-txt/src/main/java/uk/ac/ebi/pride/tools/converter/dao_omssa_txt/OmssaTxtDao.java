@@ -86,11 +86,6 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
      * The spectra file type
      */
     private SpectraType spectraFileType;
-
-    /**
-     * The Map from identification titles to spectra IDs
-     */
-    private Map<String, Integer> titleToSpectraIdMap;
     
     /**
      * DAO used to parse the corresponding peak list
@@ -775,38 +770,5 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
             throw new InvalidFormatException("Unsupported spectra file type used (" + filename + ")");
     }
 
-    private int getSpectraIndex(String title) {
-        if (spectraFileType == SpectraType.MGF) {
-            return getSpectraIndexMgf(title);
-        } else if (spectraFileType == SpectraType.MZXML) {
-            String [] items = title.split("\\.");
-            return Integer.parseInt(items[items.length-3]);
-        } else if (spectraFileType == SpectraType.DTA) {
-            return 1;
-        }
-        
-        return -1;
-    }
-    
-    /**
-     * Using the member map, it finds out the index. The title is used to find the appropriate key in
-     * the Map. It has to be prefix of just one key in the Map.
-     * @param title
-     * @return The index or -1 if not available or duplicated prefix
-     */
-    private int getSpectraIndexMgf(String title) {
-        int index = -1;
-        int timesFound = 0;
-        for (Map.Entry<String, Integer> entry: titleToSpectraIdMap.entrySet()) {
-            if (entry.getKey().startsWith(title)) {
-                index = entry.getValue();
-                timesFound++;
-            }
-        }
-        if (timesFound!=1)
-            return -1;
-        else
-            return index;
-    }
 
 }
