@@ -263,28 +263,6 @@ public class OmssaPeptide {
         return result;
     }
 
-//    /**
-//     * Using the passed map, it finds out its index. The peptide queryName member is used to find the appropriate key in
-//     * the Map. It has to be prefix of just one key in the Map.
-//     * @return The index or -1 if not available or duplicated prefix
-//     * */
-//    public int getSpectraIndex(Map<String, Integer> titleToSpectraIdMap) {
-//
-//        int index = -1;
-//        int timesFound = 0;
-//        for (Map.Entry<String, Integer> entry: titleToSpectraIdMap.entrySet()) {
-//            if (entry.getKey().startsWith(queryName)) {
-//                index = entry.getValue();
-//                timesFound++;
-//            }
-//        }
-//
-//        if (timesFound!=1)
-//            return -1;
-//        else
-//            return index;
-//    }
-
     private static PeptidePTM newPeptidePtm(PTM ptm, long location) {
         PeptidePTM newPeptidePtm = new PeptidePTM();
         newPeptidePtm.setSearchEnginePTMLabel(ptm.getSearchEnginePTMLabel());

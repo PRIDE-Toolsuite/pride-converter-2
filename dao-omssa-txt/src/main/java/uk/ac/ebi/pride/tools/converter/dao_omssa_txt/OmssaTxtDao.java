@@ -24,6 +24,14 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ *
+ * NOTE (something to keep in mind):
+ * Using an internal file index the DAO stores number lines for each identification in the passed result file. Doing so,
+ * it doesn't keep the whole thing in memory (something that can be really big). The positions are used in the very last
+ * moment to built the identifications in the convertIdentification method.
+ *
+ * About score criteria valid for Omssa DAO: right now we support eValue for threshold based filtering.
+ *
  * @author Jose A. Dianes
  * @version $Id$
  */
@@ -57,7 +65,9 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
     private Map<String, Integer> header;
 
     /**
-     * Target file index
+     * Target file index: here we store number lines for each identification in the result file. Doing so, we don't keep
+     * the whole thing in memory (something that can be really big). The positions are used in the very last moment to
+     * built the identifications in the convertIdentification method.
      */
     private ArrayList<String[]> targetFileIndex;
     
@@ -88,8 +98,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
     private SpectraType spectraFileType;
     
     /**
-     * DAO used to parse the corresponding peak list
-     * file.
+     * DAO used to parse the corresponding peak list file.
      */
     private AbstractPeakListDAO spectraDAO;
 
@@ -613,7 +622,6 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 		// process the peptides
 		for (Integer cruxPeptideStringIndex : protein.getPeptides()) {
             String[] fields;
-            List<String> wholeScan;
 
             fields = this.targetFileIndex.get(cruxPeptideStringIndex);  // split the columns
             
