@@ -117,7 +117,7 @@ public class OmssaIdentificationsParser {
                 if ( line.length !=  res.header.size() ) throw new ConverterException("Identification line doesn't match header columns");
 
 
-                addPTMs(line[res.header.get(PEPTIDE_HEADER)], fixedPtms, variablePtms, res.ptms); // TODO: have a look on this
+                addPTMs(line[res.header.get(PEPTIDE_HEADER)], fixedPtms, variablePtms, res.ptms);
 
                 // for the protein accession (key), create an entry and add the peptide string to the peptide list (value)
                 // if the protein doesn't exist add it for the first time

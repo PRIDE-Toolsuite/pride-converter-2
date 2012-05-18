@@ -31,7 +31,7 @@ public class OmssaDaoTest {
     private static final int NUM_SPECTRA = 1957;
     private static final String PROTEIN_UID = "sp|P51649|SSDH_HUMAN Succinate-semialdehyde dehydrogenase, mitochondrial OS=Homo sapiens GN=ALDH5A1 PE=1 SV=2";
 
-    private static OmssaTxtDao cruxXlsDao;
+    private static OmssaTxtDao omssaTxtDao;
 
     Map<Character, Double> fixedPtms;
     Map<Character, Double> variablePtms;
@@ -39,7 +39,7 @@ public class OmssaDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        cruxXlsDao = new OmssaTxtDao(new File(this.RESULT_FILE_PATH));
+        omssaTxtDao = new OmssaTxtDao(new File(this.RESULT_FILE_PATH));
 
         // add PTMs
         fixedPtms = new HashMap<Character, Double>();
@@ -47,20 +47,19 @@ public class OmssaDaoTest {
         variablePtms = new HashMap<Character, Double>();
         variablePtms.put('M',15.99);
 
-        // TODO: set right properties here
         Properties props = new Properties();
         props.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), SCORE_CRITERIA);
         props.setProperty(SupportedProperty.THRESHOLD.getName(), THRESHOLD);
 
-        cruxXlsDao.setConfiguration(props);
+        omssaTxtDao.setConfiguration(props);
 
-        cruxXlsDao.setExternalSpectrumFile(SPECTRA_FILE_PATH);
+        omssaTxtDao.setExternalSpectrumFile(SPECTRA_FILE_PATH);
 
     }
 
     @Test
     public void testIdentificationsIterator() throws Exception {
-        Iterator<Identification> identificationsIt = cruxXlsDao.getIdentificationIterator(false);
+        Iterator<Identification> identificationsIt = omssaTxtDao.getIdentificationIterator(false);
         int identificationsCount = 0;
         while (identificationsIt.hasNext()) {
             Identification newIdentification = identificationsIt.next();
@@ -71,7 +70,7 @@ public class OmssaDaoTest {
 
     @Test
     public void testIdentificationsIteratorPrescan() throws Exception {
-        Iterator<Identification> identificationsIt = cruxXlsDao.getIdentificationIterator(true);
+        Iterator<Identification> identificationsIt = omssaTxtDao.getIdentificationIterator(true);
         int identificationsCount = 0;
         while (identificationsIt.hasNext()) {
             Identification newIdentification = identificationsIt.next();
@@ -82,21 +81,21 @@ public class OmssaDaoTest {
 
     @Test
     public void testIdentificationByUID() throws Exception {
-        Identification identification = cruxXlsDao.getIdentificationByUID(PROTEIN_UID);
+        Identification identification = omssaTxtDao.getIdentificationByUID(PROTEIN_UID);
         assertNotNull(identification);
     }
 
     @Test
     public void testPTMs() throws Exception {
-        Collection<PTM> ptms = cruxXlsDao.getPTMs();
+        Collection<PTM> ptms = omssaTxtDao.getPTMs();
 
         assertThat(ptms.size(), is(NUM_PTMS));
     }
 
     @Test
     public void testSpectraIterator() throws Exception {
-        int spectraCountAll = cruxXlsDao.getSpectrumCount(false);        
-        Iterator<Spectrum> specAllIt = cruxXlsDao.getSpectrumIterator(false);
+        int spectraCountAll = omssaTxtDao.getSpectrumCount(false);
+        Iterator<Spectrum> specAllIt = omssaTxtDao.getSpectrumIterator(false);
         int count = 0;
         while (specAllIt.hasNext()) {
             Spectrum newSpectrum = specAllIt.next();
@@ -112,8 +111,8 @@ public class OmssaDaoTest {
 
     @Test
     public void testSpectraIteratorIdentified() throws Exception {
-        int spectraCountOnlyIdentified = cruxXlsDao.getSpectrumCount(true);
-        Iterator<Spectrum> specIdIt = cruxXlsDao.getSpectrumIterator(true);
+        int spectraCountOnlyIdentified = omssaTxtDao.getSpectrumCount(true);
+        Iterator<Spectrum> specIdIt = omssaTxtDao.getSpectrumIterator(true);
         int countId = 0;
         while (specIdIt.hasNext()) {
             Spectrum newSpectrum = specIdIt.next();
@@ -127,7 +126,7 @@ public class OmssaDaoTest {
 
     @Test
     public void testOtherAPIMethods() {
-        Param param = cruxXlsDao.getProcessingMethod();
+        Param param = omssaTxtDao.getProcessingMethod();
         assertNotNull(param);
     }
 
