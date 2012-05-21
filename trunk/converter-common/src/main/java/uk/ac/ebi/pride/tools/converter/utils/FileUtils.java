@@ -25,6 +25,7 @@ public class FileUtils {
     public final static String xml = ".xml";
     public final static String mzML = ".mzml";
     public final static String xls = ".xls";
+    public final static String csv = ".csv";
     public final static String mzXML = ".mzxml";
     public final static String mzData = ".mzdata";
     public final static String mzIdentML = ".mzid";
