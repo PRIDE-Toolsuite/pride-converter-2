@@ -102,22 +102,6 @@ public class DataTypeForm extends AbstractForm {
         validationListerner.fireValidationListener(true);
     }
 
-    private void dtaRadioMultipleActionPerformed(ActionEvent e) {
-        daoFormat = DAOFactory.DAO_FORMAT.DTA;
-        descriptionArea.setText("<br>" +
-                "<b>SEQUEST DTA Files</b><br><br>" +
-                "SEQUEST DTA File is a simple MS/MS data format without identifications. " +
-                "The first line contains the singly protonated peptide mass (MH+) and the peptide charge " +
-                "state. Subsequent lines contain space separated pairs of fragment ion m/z and intensity values. " +
-                "<br><br>NB: Each file contains a single MS/MS data set.<br><br>" +
-                "File Extension: .dta<br><br>" +
-                "More Information: <a href=\"http://www.matrixscience.com/help/data_file_help.html#DTA\">" +
-                "www.matrixscience.com/help/data_file_help.html#DTA</a>");
-        descriptionArea.setCaretPosition(0);
-        warnIfSpectrumOnly();
-        validationListerner.fireValidationListener(true);
-    }
-
     private void dtaRadioActionPerformed(ActionEvent e) {
         daoFormat = DAOFactory.DAO_FORMAT.DTA;
         descriptionArea.setText("<br>" +
@@ -180,21 +164,6 @@ public class DataTypeForm extends AbstractForm {
                 "<p>Apart from reading indexed and non-indexed mzML files, <strong>jmzML</strong> also allows writing of non-indexed mzML files. </p>\n" +
                 "<p><strong>jmzML</strong> is written in 100% pure Java, and is made available under the permissive Apache2 open source license. </p>\n" +
                 "<p>A one-page guide on using the <strong>jmzML</strong> API can be found here: <a href=\"http://code.google.com/p/jmzml/wiki/HowToUseJMzML\">HowToUseJMzML</a> </p>");
-        descriptionArea.setCaretPosition(0);
-        warnIfSpectrumOnly();
-        validationListerner.fireValidationListener(true);
-    }
-
-    private void pklRadioMultipleActionPerformed(ActionEvent e) {
-        daoFormat = DAOFactory.DAO_FORMAT.PKL;
-        descriptionArea.setText("<br>" +
-                "<b>Waters MassLynx</b><br><br>" +
-                "Waters uses two formats to represent mass spectrometry data via the MassLynx program. " +
-                "The .pkl format is a plain-text file containing one or more centroided, monoisotopic " +
-                "peak list of a .raw/directory structure.<br><br>" +
-                "File Extensions: .pkl <br><br>" +
-                "Homepage: <a href=\"http://www.waters.com/waters/nav.htm?cid=513164\">" +
-                "Waters MassLynx</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -278,6 +247,19 @@ public class DataTypeForm extends AbstractForm {
         validationListerner.fireValidationListener(true);
     }
 
+    private void omssaButtonActionPerformed() {
+        daoFormat = DAOFactory.DAO_FORMAT.OMSSA;
+        descriptionArea.setText("<br>" +
+                "<b>OMSSA CSV Files</b><br><br>" +
+                "OMSSA CSV files are the comma-separated values (CSV) export of search results from the Open Mass Spectrometry Search Algorithm [OMSSA] search engine. " +
+                "<br><br>" +
+                "File Extension: .csv<br><br>" +
+                "Homepage: <a href=\"http://pubchem.ncbi.nlm.nih.gov/omssa/\">http://pubchem.ncbi.nlm.nih.gov/omssa/</a>");
+        descriptionArea.setCaretPosition(0);
+        warnIfSpectrumOnly();
+        validationListerner.fireValidationListener(true);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
@@ -289,9 +271,10 @@ public class DataTypeForm extends AbstractForm {
         panel1 = new JPanel();
         mascotRadio = new JRadioButton();
         macOsWarningLabel = new JLabel();
-        msgfRadio = new JRadioButton();
-        mzIdentMLRadio = new JRadioButton();
         xtandemRadio = new JRadioButton();
+        mzIdentMLRadio = new JRadioButton();
+        omssaButton = new JRadioButton();
+        msgfRadio = new JRadioButton();
         cruxButton = new JRadioButton();
         spectrastButton = new JRadioButton();
         panel4 = new JPanel();
@@ -353,15 +336,15 @@ public class DataTypeForm extends AbstractForm {
             }
             panel2.add(panel1);
 
-            //---- msgfRadio ----
-            msgfRadio.setText(bundle.getString("WelcomeScreen.msgfRadio.text"));
-            msgfRadio.addActionListener(new ActionListener() {
+            //---- xtandemRadio ----
+            xtandemRadio.setText(bundle.getString("WelcomeScreen.xtandemRadio.text"));
+            xtandemRadio.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    msgfRadioActionPerformed(e);
+                    xtandemRadioActionPerformed(e);
                 }
             });
-            panel2.add(msgfRadio);
+            panel2.add(xtandemRadio);
 
             //---- mzIdentMLRadio ----
             mzIdentMLRadio.setText(bundle.getString("WelcomeScreen.mzIdentMLRadio.text"));
@@ -373,15 +356,25 @@ public class DataTypeForm extends AbstractForm {
             });
             panel2.add(mzIdentMLRadio);
 
-            //---- xtandemRadio ----
-            xtandemRadio.setText(bundle.getString("WelcomeScreen.xtandemRadio.text"));
-            xtandemRadio.addActionListener(new ActionListener() {
+            //---- omssaButton ----
+            omssaButton.setText(bundle.getString("WelcomeScreen.omssaButton.text"));
+            omssaButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    xtandemRadioActionPerformed(e);
+                    omssaButtonActionPerformed();
                 }
             });
-            panel2.add(xtandemRadio);
+            panel2.add(omssaButton);
+
+            //---- msgfRadio ----
+            msgfRadio.setText(bundle.getString("WelcomeScreen.msgfRadio.text"));
+            msgfRadio.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    msgfRadioActionPerformed(e);
+                }
+            });
+            panel2.add(msgfRadio);
 
             //---- cruxButton ----
             cruxButton.setText(bundle.getString("WelcomeScreen.cruxButton.text"));
@@ -504,15 +497,16 @@ public class DataTypeForm extends AbstractForm {
                                 .addGap(5, 5, 5)
                                 .addComponent(panel4, GroupLayout.PREFERRED_SIZE, 149, GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                                 .addContainerGap())
         );
 
         //---- dataTypeGroup ----
         dataTypeGroup.add(mascotRadio);
-        dataTypeGroup.add(msgfRadio);
-        dataTypeGroup.add(mzIdentMLRadio);
         dataTypeGroup.add(xtandemRadio);
+        dataTypeGroup.add(mzIdentMLRadio);
+        dataTypeGroup.add(omssaButton);
+        dataTypeGroup.add(msgfRadio);
         dataTypeGroup.add(cruxButton);
         dataTypeGroup.add(spectrastButton);
         dataTypeGroup.add(mzMLRadio);
@@ -534,9 +528,10 @@ public class DataTypeForm extends AbstractForm {
     private JPanel panel1;
     private JRadioButton mascotRadio;
     private JLabel macOsWarningLabel;
-    private JRadioButton msgfRadio;
-    private JRadioButton mzIdentMLRadio;
     private JRadioButton xtandemRadio;
+    private JRadioButton mzIdentMLRadio;
+    private JRadioButton omssaButton;
+    private JRadioButton msgfRadio;
     private JRadioButton cruxButton;
     private JRadioButton spectrastButton;
     private JPanel panel4;

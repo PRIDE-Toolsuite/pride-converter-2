@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.tools.converter.dao;
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.CruxTxtDao;
 import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
+import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.OmssaTxtDao;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.SpectraSTXlsDao;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
@@ -25,7 +26,6 @@ public class DAOFactory {
         PRIDE("pride", "PRIDE", false, "help.ui.dao.pride", false, false, false, new PrideFileFilter()),
         MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot", false, false, false, new MascotFileFilter()),
         SEQUEST("sequest", "Sequest", false, null, false, true, false, null),
-        OMSSA("omssa", "OMSSA", false, null, false, false, false, null),
         MS_LIMS("mslims", "ms_lims", false, null, false, false, false, null),
         X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem", false, true, false, new XTandemFileFilter()),
         MGF("mgf", "MGF", true, "help.ui.dao.mgf", false, false, false, new MGFFileFilter()),
@@ -38,7 +38,8 @@ public class DAOFactory {
         MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, new MzDataFileFilter()),
         MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter()),
         CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", false, true, false, new CruxFileFilter()),
-        SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, true, false, new SpectrastFileFilter()),;
+        SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, true, false, new SpectrastFileFilter()),
+        OMSSA("OMSSA", "OMSSA", false, "help.ui.dao.omssa", false, true, false, new OMSSAFileFilter()),;
 
         private String commandLineName;
         private String niceName;
@@ -161,6 +162,9 @@ public class DAOFactory {
             case SPECTRAST:
                 dao = new SpectraSTXlsDao(new File(sourcePath));
                 break;
+            case OMSSA:
+                dao = new OmssaTxtDao(new File(sourcePath));
+                break;
             case PRIDE:
                 //todo
                 throw new UnsupportedOperationException("No DAO defined for " + format);
@@ -203,6 +207,8 @@ public class DAOFactory {
                 return MsgfDao.getSupportedProperties();
             case CRUX:
                 return CruxTxtDao.getSupportedProperties();
+            case OMSSA:
+                return OmssaTxtDao.getSupportedProperties();
             case PRIDE:
                 //todo
                 return Collections.emptyList();

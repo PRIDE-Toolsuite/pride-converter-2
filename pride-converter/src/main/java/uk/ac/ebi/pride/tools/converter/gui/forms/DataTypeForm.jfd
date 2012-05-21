@@ -29,7 +29,7 @@
        </void>
        <void method="setProperty">
         <string>$verticalGroup</string>
-        <string>par l {seq l {space :::p, comp label1:::p::p, space :p:18:p, comp panel2:::p::p, space :p:5:p, comp panel4:::p:149:p, space :::p, comp scrollPane1::::184:x, space :::p}}</string>
+        <string>par l {seq l {space :::p, comp label1:::p::p, space :p:18:p, comp panel2:::p::p, space :p:5:p, comp panel4:::p:149:p, space :::p, comp scrollPane1::::151:x, space :::p}}</string>
        </void>
       </object>
       <void property="name">
@@ -202,7 +202,7 @@
            <string>text</string>
            <object class="com.jformdesigner.model.FormMessage">
             <null/>
-            <string>WelcomeScreen.msgfRadio.text</string>
+            <string>WelcomeScreen.xtandemRadio.text</string>
            </object>
           </void>
           <void method="setProperty">
@@ -212,13 +212,13 @@
            </object>
           </void>
           <void property="name">
-           <string>msgfRadio</string>
+           <string>xtandemRadio</string>
           </void>
           <void method="addEvent">
            <object class="com.jformdesigner.model.FormEvent">
             <string>java.awt.event.ActionListener</string>
             <string>actionPerformed</string>
-            <string>msgfRadioActionPerformed</string>
+            <string>xtandemRadioActionPerformed</string>
             <boolean>true</boolean>
            </object>
           </void>
@@ -260,7 +260,7 @@
            <string>text</string>
            <object class="com.jformdesigner.model.FormMessage">
             <null/>
-            <string>WelcomeScreen.xtandemRadio.text</string>
+            <string>WelcomeScreen.omssaButton.text</string>
            </object>
           </void>
           <void method="setProperty">
@@ -270,13 +270,42 @@
            </object>
           </void>
           <void property="name">
-           <string>xtandemRadio</string>
+           <string>omssaButton</string>
           </void>
           <void method="addEvent">
            <object class="com.jformdesigner.model.FormEvent">
             <string>java.awt.event.ActionListener</string>
             <string>actionPerformed</string>
-            <string>xtandemRadioActionPerformed</string>
+            <string>omssaButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JRadioButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>WelcomeScreen.msgfRadio.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>$buttonGroup</string>
+           <object class="com.jformdesigner.model.FormReference">
+            <string>dataTypeGroup</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>msgfRadio</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>msgfRadioActionPerformed</string>
             <boolean>true</boolean>
            </object>
           </void>
