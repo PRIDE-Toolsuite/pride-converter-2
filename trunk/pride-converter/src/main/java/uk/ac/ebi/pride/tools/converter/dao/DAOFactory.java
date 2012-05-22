@@ -207,6 +207,8 @@ public class DAOFactory {
                 return MsgfDao.getSupportedProperties();
             case CRUX:
                 return CruxTxtDao.getSupportedProperties();
+            case SPECTRAST:
+                return SpectraSTXlsDao.getSupportedProperties();
             case OMSSA:
                 return OmssaTxtDao.getSupportedProperties();
             case PRIDE:
