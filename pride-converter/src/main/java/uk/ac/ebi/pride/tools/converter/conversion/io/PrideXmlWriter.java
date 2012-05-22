@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.conversion.io;
 
 import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.jaxb.model.CvParam;
 import uk.ac.ebi.pride.jaxb.model.*;
@@ -165,10 +166,10 @@ public class PrideXmlWriter {
             if (meta.getExperimentAccession() != null && !"".equals(meta.getExperimentAccession().trim())) {
                 out.println("<ExperimentAccession>" + meta.getExperimentAccession() + "</ExperimentAccession>");
             }
-            out.println("<Title>" + meta.getTitle() + "</Title>");
+            out.println("<Title>" + StringEscapeUtils.escapeXml(meta.getTitle()) + "</Title>");
 
             marshallReportObject(out, meta.getReference());
-            out.println("<ShortLabel>" + meta.getShortLabel() + "</ShortLabel>");
+            out.println("<ShortLabel>" + StringEscapeUtils.escapeXml(meta.getShortLabel()) + "</ShortLabel>");
 
             //protocol
             marshallReportObject(out, meta.getProtocol());
