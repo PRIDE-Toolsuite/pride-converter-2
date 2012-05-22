@@ -108,6 +108,11 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 	private List<Integer> identifiedSpecIds;
 
     /**
+     * Spectra by Omssa accession (Peptide UID) map
+     */
+    private Map<String, Integer> peptideUIDToSpectraMap;
+
+    /**
 	 * The search engine reported for the proteins
 	 */
 	private String searchEngine = "Omssa";
@@ -202,7 +207,11 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         // Create the filter object from the supportedProperties
         if (ScoreCriteria.E_VALUE.getName().equals(scoreCriteria)) {
             filter = new EValueFilterCriteria();
-            filter.setThreshold(Double.parseDouble(threshold));
+            try {
+                filter.setThreshold(Double.parseDouble(threshold));
+            } catch (NumberFormatException e) {
+                filter.setThreshold(0.0);
+            }
         } else {   // default filter actually does nothing
             filter = new EValueFilterCriteria();
             filter.setThreshold(0.0);
@@ -543,7 +552,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 	public int getSpectrumReferenceForPeptideUID(String peptideUID)
 			throws InvalidFormatException {
         String [] items = peptideUID.split("_");
-		return Integer.parseInt(items[1]);
+		return Integer.parseInt(items[0]);
 	}
 
     /**
