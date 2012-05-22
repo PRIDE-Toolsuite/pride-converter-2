@@ -30,6 +30,7 @@ public class OmssaDaoTest {
     private static final int NUM_PTMS = 2;
     private static final int NUM_SPECTRA = 1957;
     private static final String PROTEIN_UID = "sp|P51649|SSDH_HUMAN Succinate-semialdehyde dehydrogenase, mitochondrial OS=Homo sapiens GN=ALDH5A1 PE=1 SV=2";
+    private static final String PEPTIDE_UID = "213_BL_ORD_ID:43806";
 
     private static OmssaTxtDao omssaTxtDao;
 
@@ -124,8 +125,17 @@ public class OmssaDaoTest {
 
     }
 
+
     @Test
-    public void testOtherAPIMethods() {
+    public void testGetSpectrumReferenceByUID() throws Exception {
+        int spectrumRef = omssaTxtDao.getSpectrumReferenceForPeptideUID(PEPTIDE_UID);
+
+        assertThat(spectrumRef, is(213));
+
+    }
+
+    @Test
+    public void testOtherAPIMethods() throws Exception {
         Param param = omssaTxtDao.getProcessingMethod();
         assertNotNull(param);
     }
