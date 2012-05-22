@@ -209,7 +209,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
             filter = new EValueFilterCriteria();
             try {
                 filter.setThreshold(Double.parseDouble(threshold));
-            } catch (NumberFormatException e) {
+            } catch (Exception e) {
                 filter.setThreshold(0.0);
             }
         } else {   // default filter actually does nothing
