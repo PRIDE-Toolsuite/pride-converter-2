@@ -177,7 +177,11 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
         // Create the filter object from the supportedProperties
         if (ScoreCriteria.FVAL.getName().equals(scoreCriteria)) {
             filter = new FvalFilterCriteria();
-            filter.setThreshold(Double.parseDouble(threshold));
+            try {
+                filter.setThreshold(Double.parseDouble(threshold));
+            } catch (Exception e) {
+                filter.setThreshold(0.0);
+            }
         } else {   // default filter actually does nothing
             filter = new FvalFilterCriteria();
             filter.setThreshold(0.0);
@@ -501,7 +505,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 	public int getSpectrumReferenceForPeptideUID(String peptideUID)
 			throws InvalidFormatException {
         String [] items = peptideUID.split("_");
-		return Integer.parseInt(items[1]);
+		return Integer.parseInt(items[0]);
 	}
 
     /**
