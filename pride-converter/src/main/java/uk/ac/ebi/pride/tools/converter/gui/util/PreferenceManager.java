@@ -20,7 +20,7 @@ public class PreferenceManager {
     private Properties preferences = new Properties();
 
     public enum PREFERENCE {
-        IGNORE_MULTIPLE_FILE_EDITING("ignore.multiple.file.editing"),;
+        IGNORE_MULTIPLE_FILE_EDITING("ignore.multiple.file.editing");
 
         String propName;
 

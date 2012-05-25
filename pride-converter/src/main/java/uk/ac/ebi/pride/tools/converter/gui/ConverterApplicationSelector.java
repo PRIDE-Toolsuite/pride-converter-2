@@ -133,6 +133,13 @@ public class ConverterApplicationSelector extends JFrame {
         }
 
         //bootstrap process
+        StringBuilder cmdBuffer = new StringBuilder();
+
+        //system values
+        String systemJREHome = System.getProperty("java.home");
+        String systemJavaHome = System.getenv("JAVA_HOME");
+
+        //user config
         String javaHome = properties.getProperty(ConverterProperties.JAVAHOME.getValue());
         String jvmArgs = properties.getProperty(ConverterProperties.JVMARGS.getValue());
         String proxyHost = properties.getProperty(ConverterProperties.PROXYHOST.getValue());
@@ -142,9 +149,12 @@ public class ConverterApplicationSelector extends JFrame {
         String proxyPassword = properties.getProperty(ConverterProperties.PROXYPASSWORD.getValue());
 
         // create the command
-        StringBuilder cmdBuffer = new StringBuilder();
         if (javaHome != null && !"".equals(javaHome.trim())) {
             cmdBuffer.append(javaHome.trim()).append(File.separatorChar);
+        } else if (systemJREHome != null) {
+            cmdBuffer.append(systemJREHome.trim()).append(File.separatorChar).append("bin").append(File.separatorChar);
+        } else if (systemJavaHome != null) {
+            cmdBuffer.append(systemJavaHome.trim()).append(File.separatorChar).append("bin").append(File.separatorChar);
         }
         cmdBuffer.append("java");
 
