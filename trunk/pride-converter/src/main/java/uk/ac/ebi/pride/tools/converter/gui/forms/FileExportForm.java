@@ -26,10 +26,7 @@ import uk.ac.ebi.pride.validator.PrideXmlValidator;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author User #3
@@ -222,17 +219,27 @@ public class FileExportForm extends AbstractForm {
                 //if only filtering, don't waste time validating file
                 if (!filterOnly) {
                     //validate PRIDE XML file
-                    //warn user
-                    logger.info("Validating PRIDE XML file: " + finalPrideXmlFile);
-                    NavigationPanel.getInstance().setWorkingMessage("Validating PRIDE XML file: " + finalPrideXmlFile);
-                    PrideXmlValidator validator = ValidatorFactory.getInstance().getPrideXmlValidator();
-                    //validate
-                    Collection<ValidatorMessage> msgs;
-                    if (filterPanel1.isGzipped()) {
-                        msgs = validator.validateGZFile(new File(finalPrideXmlFile));
-                    } else {
-                        msgs = validator.validate(new File(finalPrideXmlFile));
+
+                    //prepare
+                    Collection<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
+
+                    //is validation turned on/off?
+                    boolean isValidating = Boolean.valueOf(config.getString("pride.xml.validation.enabled"));
+
+                    if (isValidating) {
+                        //warn user
+                        logger.info("Validating PRIDE XML file: " + finalPrideXmlFile);
+
+                        //validate
+                        NavigationPanel.getInstance().setWorkingMessage("Validating PRIDE XML file: " + finalPrideXmlFile);
+                        PrideXmlValidator validator = ValidatorFactory.getInstance().getPrideXmlValidator();
+                        if (filterPanel1.isGzipped()) {
+                            msgs = validator.validateGZFile(new File(finalPrideXmlFile));
+                        } else {
+                            msgs = validator.validate(new File(finalPrideXmlFile));
+                        }
                     }
+
                     //store messages for later display
                     ConverterData.getInstance().setValidationMessages(finalPrideXmlFile, msgs);
                 }

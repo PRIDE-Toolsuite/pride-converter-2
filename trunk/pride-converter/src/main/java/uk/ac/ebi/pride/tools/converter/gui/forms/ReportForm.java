@@ -26,8 +26,13 @@ import java.util.*;
  */
 public class ReportForm extends AbstractForm {
 
+    //is validation turned on/off?
+    private boolean isValidating;
+
+
     public ReportForm() {
         initComponents();
+        isValidating = Boolean.valueOf(config.getString("pride.xml.validation.enabled"));
     }
 
 
@@ -109,14 +114,14 @@ public class ReportForm extends AbstractForm {
                             .addGroup(panel2Layout.createSequentialGroup()
                                     .addContainerGap()
                                     .addGroup(panel2Layout.createParallelGroup()
-                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 611, Short.MAX_VALUE)
+                                            .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
                                             .addComponent(collapseValidationMessageBox))
                                     .addContainerGap())
             );
             panel2Layout.setVerticalGroup(
                     panel2Layout.createParallelGroup()
                             .addGroup(GroupLayout.Alignment.TRAILING, panel2Layout.createSequentialGroup()
-                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
+                                    .addComponent(scrollPane2, GroupLayout.DEFAULT_SIZE, 249, Short.MAX_VALUE)
                                     .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                                     .addComponent(collapseValidationMessageBox))
             );
@@ -178,36 +183,52 @@ public class ReportForm extends AbstractForm {
         int nbFiles = validationMessages.size();
         int nbError = 0;
         int nbWarning = 0;
-        for (Collection<ValidatorMessage> msgs : validationMessages.values()) {
-            for (ValidatorMessage msg : msgs) {
-                //FATAL > ERROR > WARN > INFO > DEBUG
-                if (msg.getLevel().isSame(MessageLevel.ERROR) || msg.getLevel().isSame(MessageLevel.FATAL)) {
-                    nbError++;
-                }
-                if (msg.getLevel().isSame(MessageLevel.WARN)) {
-                    nbWarning++;
+
+        if (isValidating) {
+
+            for (Collection<ValidatorMessage> msgs : validationMessages.values()) {
+                for (ValidatorMessage msg : msgs) {
+                    //FATAL > ERROR > WARN > INFO > DEBUG
+                    if (msg.getLevel().isSame(MessageLevel.ERROR) || msg.getLevel().isSame(MessageLevel.FATAL)) {
+                        nbError++;
+                    }
+                    if (msg.getLevel().isSame(MessageLevel.WARN)) {
+                        nbWarning++;
+                    }
                 }
             }
         }
-
         StringBuilder sb = new StringBuilder();
         sb.append(nbFiles).append(" files generated. ");
-        sb.append(nbWarning).append(" warnings generated. ");
-        sb.append(nbError).append(" errors detected.");
+        if (isValidating) {
+            sb.append(nbWarning).append(" warnings generated. ");
+            sb.append(nbError).append(" errors detected.");
+        }
 
         statusArea.setText(sb.toString());
 
-        ArrayList<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
-        for (Collection<ValidatorMessage> msgColl : validationMessages.values()) {
-            msgs.addAll(msgColl);
+        if (isValidating) {
+            ArrayList<ValidatorMessage> msgs = new ArrayList<ValidatorMessage>();
+            for (Collection<ValidatorMessage> msgColl : validationMessages.values()) {
+                msgs.addAll(msgColl);
+            }
+            messageTable.setAutoCreateRowSorter(true);
+            messageTable.setModel(new ValidatorMessageTableModel(msgs, collapseValidationMessageBox.isSelected()));
+            messageTable.setDefaultRenderer(String.class, new LineWrapCellRenderer());
+            TableColumnModel cm = messageTable.getColumnModel();
+            cm.getColumn(0).setPreferredWidth(75);
+            cm.getColumn(1).setPreferredWidth(75);
+            cm.getColumn(2).setPreferredWidth(400);
+        } else {
+            //messageTable.setModel(new DefaultTableModel());
+            JLabel lab = new JLabel("PRIDE XML validation turned off.");
+            lab.setVerticalAlignment(SwingConstants.TOP);
+            lab.setHorizontalAlignment(SwingConstants.CENTER);
+            scrollPane2.setViewportView(lab);
         }
-        messageTable.setAutoCreateRowSorter(true);
-        messageTable.setModel(new ValidatorMessageTableModel(msgs, collapseValidationMessageBox.isSelected()));
-        messageTable.setDefaultRenderer(String.class, new LineWrapCellRenderer());
-        TableColumnModel cm = messageTable.getColumnModel();
-        cm.getColumn(0).setPreferredWidth(75);
-        cm.getColumn(1).setPreferredWidth(75);
-        cm.getColumn(2).setPreferredWidth(400);
+        //update UI components
+        messageTable.setEnabled(isValidating);
+        collapseValidationMessageBox.setEnabled(isValidating);
 
     }
 
