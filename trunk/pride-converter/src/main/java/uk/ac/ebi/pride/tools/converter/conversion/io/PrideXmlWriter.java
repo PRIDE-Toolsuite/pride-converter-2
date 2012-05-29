@@ -629,16 +629,17 @@ public class PrideXmlWriter {
         for (uk.ac.ebi.pride.tools.converter.report.model.CvParam cv : overrideParam.getCvParam()) {
             if (currentAccessions.contains(cv.getCvLabel() + cv.getAccession())) {
                 deleteCvParam(originalParam, cv.getCvLabel(), cv.getAccession());
-
-                //create replacement cv param
-                CvParam newCV = new CvParam();
-                newCV.setCvLabel(cv.getCvLabel());
-                newCV.setAccession(cv.getAccession());
-                newCV.setName(cv.getName());
-                newCV.setValue(cv.getValue());
-                //store it
-                originalParam.getCvParam().add(newCV);
             }
+            //at this point, no more conflict
+            //add param
+            CvParam newCV = new CvParam();
+            newCV.setCvLabel(cv.getCvLabel());
+            newCV.setAccession(cv.getAccession());
+            newCV.setName(cv.getName());
+            newCV.setValue(cv.getValue());
+            //store it
+            originalParam.getCvParam().add(newCV);
+
         }
 
         //iterate over overrideParams. If there is a conflict, delete from originalParam and replace with new
@@ -646,14 +647,14 @@ public class PrideXmlWriter {
         for (uk.ac.ebi.pride.tools.converter.report.model.UserParam user : overrideParam.getUserParam()) {
             if (currentAccessions.contains(user.getName())) {
                 deleteUserParam(originalParam, user.getName());
-
-                //create replacement user param
-                UserParam newUP = new UserParam();
-                newUP.setName(user.getName());
-                newUP.setValue(user.getValue());
-                //store it
-                originalParam.getUserParam().add(newUP);
             }
+            //at this point, no more conflict
+            //add param
+            UserParam newUP = new UserParam();
+            newUP.setName(user.getName());
+            newUP.setValue(user.getValue());
+            //store it
+            originalParam.getUserParam().add(newUP);
         }
 
         return originalParam;
