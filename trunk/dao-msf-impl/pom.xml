@@ -83,6 +83,7 @@
             <version>1.0.7</version>
         </dependency>
     </dependencies>
+
     <repositories>
         <repository>
             <id>ebi-repo</id>
@@ -101,4 +102,20 @@
             <layout>default</layout>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>ebi-repo</id>
+            <name>EBI Repository</name>
+            <url>scp://lobster.ebi.ac.uk/homes/maven/public_html/m2repo</url>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>false</uniqueVersion>
+            <id>ebi-repo-snapshots</id>
+            <name>EBI Snapshots Repository</name>
+            <url>scp://lobster.ebi.ac.uk/homes/maven/public_html/m2repo_snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
 </project>
