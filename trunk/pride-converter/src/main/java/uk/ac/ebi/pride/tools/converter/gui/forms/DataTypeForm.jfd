@@ -376,6 +376,35 @@
           </void>
          </object>
         </void>
+        <void method="add">
+         <object class="com.jformdesigner.model.FormComponent">
+          <string>javax.swing.JRadioButton</string>
+          <void method="setProperty">
+           <string>text</string>
+           <object class="com.jformdesigner.model.FormMessage">
+            <null/>
+            <string>WelcomeScreen.msfButton.text</string>
+           </object>
+          </void>
+          <void method="setProperty">
+           <string>$buttonGroup</string>
+           <object class="com.jformdesigner.model.FormReference">
+            <string>dataTypeGroup</string>
+           </object>
+          </void>
+          <void property="name">
+           <string>msfButton</string>
+          </void>
+          <void method="addEvent">
+           <object class="com.jformdesigner.model.FormEvent">
+            <string>java.awt.event.ActionListener</string>
+            <string>actionPerformed</string>
+            <string>msfButtonActionPerformed</string>
+            <boolean>false</boolean>
+           </object>
+          </void>
+         </object>
+        </void>
        </object>
       </void>
       <void method="add">
