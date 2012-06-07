@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.dao;
 
 import uk.ac.ebi.pride.tools.converter.dao.impl.*;
+import uk.ac.ebi.pride.tools.converter.dao.impl.msf.MsfDao;
 import uk.ac.ebi.pride.tools.converter.dao_crux_txt.CruxTxtDao;
 import uk.ac.ebi.pride.tools.converter.dao_msgf_impl.MsgfDao;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.OmssaTxtDao;
@@ -39,7 +40,8 @@ public class DAOFactory {
         MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter()),
         CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", false, true, false, new CruxFileFilter()),
         SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, true, false, new SpectrastFileFilter()),
-        OMSSA("OMSSA", "OMSSA", false, "help.ui.dao.omssa", false, true, false, new OMSSAFileFilter()),;
+        OMSSA("OMSSA", "OMSSA", false, "help.ui.dao.omssa", false, true, false, new OMSSAFileFilter()),
+        MSF("MSF", "Proteome Discoverer", false, "help.ui.dao.proteomediscoverer", false, false, false, new ProteomeDiscoveryFileFilter()),;
 
         private String commandLineName;
         private String niceName;
@@ -165,6 +167,9 @@ public class DAOFactory {
             case OMSSA:
                 dao = new OmssaTxtDao(new File(sourcePath));
                 break;
+            case MSF:
+                dao = new MsfDao(new File(sourcePath));
+                break;
             case PRIDE:
                 //todo
                 throw new UnsupportedOperationException("No DAO defined for " + format);
@@ -211,6 +216,8 @@ public class DAOFactory {
                 return SpectraSTXlsDao.getSupportedProperties();
             case OMSSA:
                 return OmssaTxtDao.getSupportedProperties();
+            case MSF:
+                return MsfDao.getSupportedProperties();
             case PRIDE:
                 //todo
                 return Collections.emptyList();
