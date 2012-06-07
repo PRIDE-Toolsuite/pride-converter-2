@@ -23,6 +23,7 @@ public class FileUtils {
     public final static String dta = ".dta";
     public final static String mgf = ".mgf";
     public final static String xml = ".xml";
+    public final static String msf = ".msf";
     public final static String mzML = ".mzml";
     public final static String xls = ".xls";
     public final static String csv = ".csv";
