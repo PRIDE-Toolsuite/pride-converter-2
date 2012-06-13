@@ -22,17 +22,20 @@ public class EmptySpectrumFilter implements Filter<Spectrum> {
      * @return
      */
     public boolean filter(Spectrum objectToFilter) {
+
         boolean intenArrayOk = true;
         boolean mzArrayOk = true;
         if (objectToFilter.getIntenArrayBinary() == null ||
                 objectToFilter.getIntenArrayBinary().getData() == null ||
                 objectToFilter.getIntenArrayBinary().getData().getLength() == 0) {
             intenArrayOk = false;
+            System.out.println("Empty intensity array for spectrum " + objectToFilter.getId());
         }
         if (objectToFilter.getMzArrayBinary() == null ||
                 objectToFilter.getMzArrayBinary().getData() == null ||
                 objectToFilter.getMzArrayBinary().getData().getLength() == 0) {
             mzArrayOk = false;
+            System.out.println("Empty mz array for spectrum " + objectToFilter.getId());
         }
         return !mzArrayOk || !intenArrayOk;
     }

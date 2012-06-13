@@ -1461,6 +1461,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
                 //only store input files, the logic will be handled by other form
                 if (singleFileSelectionMode) {
                     FileBean fileBean = new FileBean(new File(singleSourceFile.getText()).getAbsolutePath());
+                    ConverterData.getInstance().getDataFiles().add(fileBean);
                 } else {
                     for (File inputFile : dataFileTable.getFiles()) {
                         FileBean fileBean = new FileBean(inputFile.getAbsolutePath());
