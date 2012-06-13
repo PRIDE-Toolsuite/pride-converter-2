@@ -39,6 +39,7 @@ public class FileExportForm extends AbstractForm {
     public FileExportForm(boolean filterOnly) {
         initComponents();
         this.filterOnly = filterOnly;
+        filterPanel1.setFilterOnly(filterOnly);
     }
 
     private void initComponents() {

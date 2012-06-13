@@ -28,7 +28,8 @@ public class FilterPanel extends JPanel {
 
     private static final Logger logger = Logger.getLogger(FilterPanel.class);
 
-    boolean filterXml = false;
+    private boolean filterXml = false;
+    private boolean filterOnly = false;
 
     public FilterPanel() {
         initComponents();
@@ -492,7 +493,7 @@ public class FilterPanel extends JPanel {
     public void reset() {
         gzipCheckBox.setSelected(true);
         includeOnlyIdentifiedSpectraBox.setSelected(false);
-        removeWorkfilesBox.setSelected(true);
+        removeWorkfilesBox.setSelected(!filterOnly); //when filtering only, the checkbox will be inactive and must not be selected
         removeEmptySpectraBox.setSelected(false);
         filterIdentsWIthNbPepBox.setSelected(false);
         nbPeptideFilterTextField.setText(null);
@@ -505,5 +506,15 @@ public class FilterPanel extends JPanel {
 
     public boolean isRemoveWorkfiles() {
         return removeWorkfilesBox.isSelected();
+    }
+
+    public void setFilterOnly(boolean filterOnly) {
+
+        this.filterOnly = filterOnly;
+        //if filtering only, some boxed need to be inactivated
+        removeWorkfilesBox.setSelected(!filterOnly);
+        removeWorkfilesBox.setEnabled(!filterOnly);
+        intactSubmissionBox.setEnabled(!filterOnly);
+
     }
 }
