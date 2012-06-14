@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import uk.ac.ebi.pridemod.slimmod.model.SlimModCollection;
+import uk.ac.ebi.pridemod.slimmod.model.SlimModification;
 
 import java.net.URL;
 
@@ -28,6 +29,15 @@ public class PrideModControllerTest {
     public void PrideControllerReader() {
         URL fileName = PrideModControllerTest.class.getClassLoader().getResource("pride_mods.xml");
         SlimModCollection slimModCollection = PrideModController.parseSlimModCollection(fileName);
+        for (SlimModification mod : slimModCollection) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(mod.getIdPsiMod()).append(",");
+            sb.append(mod.getIdUnimod()).append(",");
+            sb.append(mod.getShortNamePsiMod()).append(",");
+            sb.append(mod.getPsiModDesc()).append(",");
+            sb.append(mod.getDeltaMass()).append(",");
+            System.out.println(sb.toString());
+        }
 
 
     }
