@@ -1,5 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.conversion.PrideConverter;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ImageDialog;
 import uk.ac.ebi.pride.tools.converter.gui.forms.*;
@@ -26,6 +28,12 @@ import java.util.Properties;
 public class ConverterApplicationSelector extends JFrame {
 
     private static ConverterApplicationSelector selector = null;
+    private static Logger logger = Logger.getLogger(ConverterApplicationSelector.class);
+
+    static {
+        //always ensure that the messages in this class are logged
+        logger.setLevel(Level.INFO);
+    }
 
     private enum ConverterProperties {
 
@@ -196,6 +204,7 @@ public class ConverterApplicationSelector extends JFrame {
 
         cmdBuffer.append(" ").append(mainClass);
         System.err.println("Bootstrap command: " + cmdBuffer.toString());
+        logger.info("Bootstrap command: " + cmdBuffer.toString());
 
         // call the command
         Process process;
@@ -208,6 +217,7 @@ public class ConverterApplicationSelector extends JFrame {
         } catch (IOException ioe) {
             System.err.println("Error while bootstrapping the PRIDE Converter");
             ioe.printStackTrace();
+            logger.fatal("Error while bootstrapping PRIDE Converter", ioe);
             System.exit(1);
         }
     }
@@ -225,9 +235,11 @@ public class ConverterApplicationSelector extends JFrame {
                 properties.load(new FileReader(propFile));
             } else {
                 System.err.println("WARNING: no converter.properties file found in " + currentDir.getAbsolutePath());
+                logger.warn("WARNING: no converter.properties file found in " + currentDir.getAbsolutePath());
             }
         } catch (IOException e) {
             System.err.println("Error reading properties file: " + e.getMessage());
+            logger.error("Error reading properties file: " + e.getMessage());
         }
         return properties;
 
