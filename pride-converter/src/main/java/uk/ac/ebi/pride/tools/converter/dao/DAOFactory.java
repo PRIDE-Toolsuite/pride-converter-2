@@ -38,7 +38,7 @@ public class DAOFactory {
         MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, false, new MzXMLFileFilter()),
         MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, new MzDataFileFilter()),
         MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter()),
-        CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", false, true, false, new CruxFileFilter()),
+        CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", true, true, false, new CruxFileFilter()),
         SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, true, false, new SpectrastFileFilter()),
         OMSSA("OMSSA", "OMSSA", false, "help.ui.dao.omssa", false, true, false, new OMSSAFileFilter()),
         MSF("MSF", "Proteome Discoverer", false, "help.ui.dao.proteomediscoverer", false, false, false, new ProteomeDiscoveryFileFilter()),;
