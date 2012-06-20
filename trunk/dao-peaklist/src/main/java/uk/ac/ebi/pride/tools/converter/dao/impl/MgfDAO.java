@@ -3,39 +3,16 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import uk.ac.ebi.pride.jaxb.model.Data;
-import uk.ac.ebi.pride.jaxb.model.IntenArrayBinary;
-import uk.ac.ebi.pride.jaxb.model.MzArrayBinary;
-import uk.ac.ebi.pride.jaxb.model.Precursor;
-import uk.ac.ebi.pride.jaxb.model.PrecursorList;
-import uk.ac.ebi.pride.jaxb.model.Spectrum;
-import uk.ac.ebi.pride.jaxb.model.SpectrumDesc;
-import uk.ac.ebi.pride.jaxb.model.SpectrumInstrument;
-import uk.ac.ebi.pride.jaxb.model.SpectrumSettings;
+import uk.ac.ebi.pride.jaxb.model.*;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.report.model.CV;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.model.Contact;
-import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
-import uk.ac.ebi.pride.tools.converter.report.model.InstrumentDescription;
-import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.report.model.Protocol;
 import uk.ac.ebi.pride.tools.converter.report.model.Reference;
-import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
 import uk.ac.ebi.pride.tools.converter.report.model.Software;
 import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
 import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
@@ -45,6 +22,10 @@ import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 import uk.ac.ebi.pride.tools.jmzreader.JMzReaderException;
 import uk.ac.ebi.pride.tools.mgf_parser.MgfFile;
 import uk.ac.ebi.pride.tools.mgf_parser.model.Ms2Query;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * This DAO converts MGF files into PRIDE XML files.
@@ -66,12 +47,13 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
      * Creates a new MgfDAO.
      *
      * @param sourceFile The mgf file to create the DAO from.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     public MgfDAO(File sourceFile) throws InvalidFormatException {
         // create the mgfFile object
         try {
-            mgfFile = new MgfFile(sourceFile);
+            //by default, allow custom tags to be parsed
+            mgfFile = new MgfFile(sourceFile, true);
         } catch (Exception e) {
             throw new InvalidFormatException("Failed to parse mgf file", e);
         }
@@ -106,11 +88,11 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
         // as the DAO supports no properties, an empty object is returned
         return new Properties();
     }
-    
+
     @Override
-	public void setExternalSpectrumFile(String filename) {
-		// not applicable to the dao
-	}
+    public void setExternalSpectrumFile(String filename) {
+        // not applicable to the dao
+    }
 
     @Override
     public String getExperimentTitle() {
@@ -298,13 +280,13 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
          * Counter to create spectrum ids (1 based)
          */
         private Integer currentSpectrum = 1;
-        
+
         public MgfSpectrumIterator() throws InvalidFormatException {
-        	try {
-				ms2QueryIterator =  mgfFile.getMs2QueryIterator();
-			} catch (JMzReaderException e) {
-				throw new InvalidFormatException(e.getMessage(), e);
-			}
+            try {
+                ms2QueryIterator = mgfFile.getMs2QueryIterator();
+            } catch (JMzReaderException e) {
+                throw new InvalidFormatException(e.getMessage(), e);
+            }
         }
 
         @Override
@@ -345,20 +327,20 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
         Spectrum spectrum = new Spectrum();
 
         Map<Double, Double> peakList = query.getPeakList();
-        
+
         // convert the peak list to the required byte arrays
         List<Double> masses;
         if (peakList != null)
-        	masses = new ArrayList<Double>(peakList.keySet());
+            masses = new ArrayList<Double>(peakList.keySet());
         else
-        	masses = Collections.emptyList();
+            masses = Collections.emptyList();
         List<Double> intensities = new ArrayList<Double>(masses.size());
-        
+
         Collections.sort(masses);
 
         // add the intensities in the correct order
         for (Double mz : masses)
-        	intensities.add(peakList.get(mz));
+            intensities.add(peakList.get(mz));
 
         // create the byte arrays
         byte[] massesBytes = doubleCollectionToByteArray(masses);
@@ -400,9 +382,9 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
         // sort the masses to get the minimum and max
         Float rangeStart = new Float(0), rangeStop = new Float(0);
         if (masses.size() > 0) {
-	        Collections.sort(masses);
-	        rangeStart = new Float(masses.get(0));
-	        rangeStop = new Float(masses.get(masses.size() - 1));
+            Collections.sort(masses);
+            rangeStart = new Float(masses.get(0));
+            rangeStop = new Float(masses.get(masses.size() - 1));
         }
 
         instrument.setMzRangeStart(rangeStart);
@@ -435,18 +417,18 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
         if (query.getRetentionTime() != null)
             ionSelection.getCvParam().add(DAOCvParams.RETENTION_TIME.getJaxbParam(query.getRetentionTime()));
         if (query.getChargeState() != null) {
-        	// ignore multiple charge states
-        	if (!query.getChargeState().contains("and")) {
-        		String charges[] = query.getChargeState().split(",");
-        		DAOCvParams chargeParam = (charges.length > 1) ? DAOCvParams.POSSIBLE_CHARGE_STATE : DAOCvParams.CHARGE_STATE;
-        		
-        		for (String charge : charges) {
-        			if (charge.contains("+"))
-        				ionSelection.getCvParam().add(chargeParam.getJaxbParam(charge.replaceAll("\\+", "")));
-        			else if (charge.contains("-"))
-        				ionSelection.getCvParam().add(chargeParam.getJaxbParam("-" + charge.replaceAll("-", "")));
-        		}
-        	}
+            // ignore multiple charge states
+            if (!query.getChargeState().contains("and")) {
+                String charges[] = query.getChargeState().split(",");
+                DAOCvParams chargeParam = (charges.length > 1) ? DAOCvParams.POSSIBLE_CHARGE_STATE : DAOCvParams.CHARGE_STATE;
+
+                for (String charge : charges) {
+                    if (charge.contains("+"))
+                        ionSelection.getCvParam().add(chargeParam.getJaxbParam(charge.replaceAll("\\+", "")));
+                    else if (charge.contains("-"))
+                        ionSelection.getCvParam().add(chargeParam.getJaxbParam("-" + charge.replaceAll("-", "")));
+                }
+            }
         }
         if (query.getScan() != null)
             ionSelection.getCvParam().add(DAOCvParams.PEAK_LIST_SCANS.getJaxbParam(query.getScan()));
