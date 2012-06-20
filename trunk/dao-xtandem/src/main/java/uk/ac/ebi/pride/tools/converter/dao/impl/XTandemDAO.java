@@ -1,70 +1,34 @@
-	package uk.ac.ebi.pride.tools.converter.dao.impl;
+package uk.ac.ebi.pride.tools.converter.dao.impl;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import de.proteinms.xtandemparser.interfaces.Modification;
+import de.proteinms.xtandemparser.xtandem.*;
+import de.proteinms.xtandemparser.xtandem.FragmentIon;
+import de.proteinms.xtandemparser.xtandem.Peptide;
 import org.xml.sax.SAXException;
-
-import uk.ac.ebi.pride.jaxb.model.Data;
-import uk.ac.ebi.pride.jaxb.model.IntenArrayBinary;
-import uk.ac.ebi.pride.jaxb.model.MzArrayBinary;
-import uk.ac.ebi.pride.jaxb.model.Precursor;
-import uk.ac.ebi.pride.jaxb.model.PrecursorList;
+import uk.ac.ebi.pride.jaxb.model.*;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
-import uk.ac.ebi.pride.jaxb.model.SpectrumDesc;
-import uk.ac.ebi.pride.jaxb.model.SpectrumInstrument;
-import uk.ac.ebi.pride.jaxb.model.SpectrumSettings;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.report.model.CV;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.model.Contact;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
-import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
-import uk.ac.ebi.pride.tools.converter.report.model.InstrumentDescription;
-import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Protocol;
 import uk.ac.ebi.pride.tools.converter.report.model.Reference;
-import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
 import uk.ac.ebi.pride.tools.converter.report.model.Software;
 import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
 import uk.ac.ebi.pride.tools.converter.report.model.UserParam;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
-import de.proteinms.xtandemparser.interfaces.Modification;
-import de.proteinms.xtandemparser.xtandem.Domain;
-import de.proteinms.xtandemparser.xtandem.FragmentIon;
-import de.proteinms.xtandemparser.xtandem.InputParams;
-import de.proteinms.xtandemparser.xtandem.ModificationMap;
-import de.proteinms.xtandemparser.xtandem.Peptide;
-import de.proteinms.xtandemparser.xtandem.PeptideMap;
-import de.proteinms.xtandemparser.xtandem.PerformParams;
-import de.proteinms.xtandemparser.xtandem.Protein;
-import de.proteinms.xtandemparser.xtandem.ProteinMap;
-import de.proteinms.xtandemparser.xtandem.SupportData;
-import de.proteinms.xtandemparser.xtandem.XTandemFile;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This DAO converts X!Tandem xml output files into PRIDE
@@ -80,50 +44,50 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * DAO used to parse the spectra data
      */
     private DAO spectraDAO = null;
-    
+
     public enum XTANDEM_FRAGMENT_IONS {
-    	// the order of the ions in the returned fragment
-    	// ion vector. the order of the ions is set in 
-    	// XTandemFile.java:285 (return value of getFragmentIonsForPeptide)
+        // the order of the ions in the returned fragment
+        // ion vector. the order of the ions is set in
+        // XTandemFile.java:285 (return value of getFragmentIonsForPeptide)
 //    	MH_IONS(0),
 //    	MHNH3_IONS(1),
 //    	MHH2O_IONS(2),
 //    	A_IONS(3),
 //    	AH2O_IONS(4),
 //    	ANH3_IONS(5),
-    	B_IONS(6),
-    	BH2O_IONS(7),
-    	BNH3_IONS(8),
-//    	C_IONS(9),
+        B_IONS(6),
+        BH2O_IONS(7),
+        BNH3_IONS(8),
+        //    	C_IONS(9),
 //    	X_IONS(10),
-    	Y_IONS(11),
-    	YH2O_IONS(12),
-    	YNH3_IONS(13);
-    	
-    	private int index;
-    	
-    	private XTANDEM_FRAGMENT_IONS(int index) {
-    		this.index = index;
-    	}
-    	
-    	public int getIndex() {
-    		return index;
-    	}
-    	
-    	public CvParam getIonTypeParam(String position) {
-    		switch (this) {
-    			case Y_IONS:
-    				return new CvParam("PRIDE", "PRIDE:0000193", "y ion", position);
-    			case YH2O_IONS:
-    				return new CvParam("PRIDE", "PRIDE:0000197", "y ion -H2O", position);
-    			case YNH3_IONS:
-    				return new CvParam("PRIDE", "PRIDE:0000198", "y ion -NH3", position);
-    			case B_IONS:
-    				return new CvParam("PRIDE", "PRIDE:0000194", "b ion", position);
-    			case BH2O_IONS:
-    				return new CvParam("PRIDE", "PRIDE:0000196", "b ion -H2O", position);
-    			case BNH3_IONS:
-    				return new CvParam("PRIDE", "PRIDE:0000195", "b ion -NH3", position);
+        Y_IONS(11),
+        YH2O_IONS(12),
+        YNH3_IONS(13);
+
+        private int index;
+
+        private XTANDEM_FRAGMENT_IONS(int index) {
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public CvParam getIonTypeParam(String position) {
+            switch (this) {
+                case Y_IONS:
+                    return new CvParam("PRIDE", "PRIDE:0000193", "y ion", position);
+                case YH2O_IONS:
+                    return new CvParam("PRIDE", "PRIDE:0000197", "y ion -H2O", position);
+                case YNH3_IONS:
+                    return new CvParam("PRIDE", "PRIDE:0000198", "y ion -NH3", position);
+                case B_IONS:
+                    return new CvParam("PRIDE", "PRIDE:0000194", "b ion", position);
+                case BH2O_IONS:
+                    return new CvParam("PRIDE", "PRIDE:0000196", "b ion -H2O", position);
+                case BNH3_IONS:
+                    return new CvParam("PRIDE", "PRIDE:0000195", "b ion -NH3", position);
 //    			case A_IONS:
 //    				 return new CvParam("PRIDE", "PRIDE:0000233", "a ion", position);
 //    			case AH2O_IONS:
@@ -134,14 +98,14 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 //    				return new CvParam("PRIDE", "PRIDE:0000236", "c ion", position);
 //    			case X_IONS:
 //    				return new CvParam("PRIDE", "PRIDE:0000227", "x ion", position);
-				default:
-					return null; // this shouldn't happen
-    		}
-    	}
-    	
-    	public static XTANDEM_FRAGMENT_IONS[] getFragmentIonTypes() {
-    		return values();
-    	}
+                default:
+                    return null; // this shouldn't happen
+            }
+        }
+
+        public static XTANDEM_FRAGMENT_IONS[] getFragmentIonTypes() {
+            return values();
+        }
     }
 
     /**
@@ -157,33 +121,35 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         INTERNAL,
         PKL,
         DTA,
-        MGF, 
+        MGF,
         MZXML,
         MZML;
     }
 
     ;
+
     /**
      * Describes the supported properties
      * from this DAO
-     * @author jg
      *
+     * @author jg
      */
     public enum SupportedProperty {
-    	EXPECT_THRESHOLD("expect_threshold"),
-    	USE_INTERNAL_SPECTA("use_internal_spectra"),
-    	DECOY_PREFIX("decoy_prefix");
-    	
-    	private String name;
-    	
-    	private SupportedProperty(String name) {
-    		this.name = name;
-    	}
-    	
-    	public String getName() {
-    		return name;
-    	}
+        EXPECT_THRESHOLD("expect_threshold"),
+        USE_INTERNAL_SPECTA("use_internal_spectra"),
+        DECOY_PREFIX("decoy_prefix");
+
+        private String name;
+
+        private SupportedProperty(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
+
     /**
      * The type of spectra input
      */
@@ -260,18 +226,18 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * Creates a new XTdanem DAO.
      *
      * @param sourceFile The file to convert.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     public XTandemDAO(File sourceFile) throws InvalidFormatException {
         this.sourcefile = sourceFile;
-        
+
         try {
-        	// create the parser
+            // create the parser
             xtandemFile = new XTandemFile(sourceFile.getAbsolutePath());
-            
+
             // check if the X!Tandem file is valid
             if (!isValid(xtandemFile))
-            	throw new InvalidFormatException("Passed file is not an X!Tandem output file.");
+                throw new InvalidFormatException("Passed file is not an X!Tandem output file.");
 
             // set the modification map
             modMap = xtandemFile.getModificationMap();
@@ -282,39 +248,39 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             throw new InvalidFormatException("Failed to parse X!Tandem XML file.", e);
         }
     }
-    
+
     @SuppressWarnings("rawtypes")
     public static Collection<DAOProperty> getSupportedProperties() {
         List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
-        
+
         DAOProperty<Double> expectThreshold = new DAOProperty<Double>(SupportedProperty.EXPECT_THRESHOLD.getName(), 0.05, 0.0, 1.0);
         expectThreshold.setDescription("the maximum X!Tandem expect value allowed for peptide hits to be reported. The default value is 0.05");
         expectThreshold.setShortDescription("Maximum X!Tandem expect value for peptide identifications.");
         supportedProperties.add(expectThreshold);
-        
+
         DAOProperty<Boolean> useInternalSpectra = new DAOProperty<Boolean>(SupportedProperty.USE_INTERNAL_SPECTA.getName(), false);
         useInternalSpectra.setDescription("if this parameter is set to \"true\" the spectra stored in the X!Tandem file are used irrespective of whether an external peak list file is referenced. These spectra are highly preprocessed and do not properly represent the input spectra. This option should only be used if the original spectra are not available.");
         useInternalSpectra.setShortDescription("Use highly preprocessed internal spectra instead of original spectra (not recommended).");
         useInternalSpectra.setAdvanced(true);
         supportedProperties.add(useInternalSpectra);
-        
+
         DAOProperty<String> decoyAccPrec = new DAOProperty<String>(SupportedProperty.DECOY_PREFIX.getName(), "DECOY_");
         decoyAccPrec.setDescription("An accession prefix that identifies decoy hits. Every protein with an accession starting with this precursor will be flagged as decoy hit. Furthermore, any decoy hit generated using X!Tandem's inbuilt reverse function will be converted to using this prefix as well.");
         decoyAccPrec.setShortDescription("Protein accession prefix to identify decoy hits.");
         supportedProperties.add(decoyAccPrec);
-        
+
         return supportedProperties;
     }
-    
+
     @Override
     public void setConfiguration(Properties props) {
         properties = props;
-        
+
         // set the actual supported values
-        useInternalSpectra = Boolean.parseBoolean( properties.getProperty(SupportedProperty.USE_INTERNAL_SPECTA.getName(), "false") );
-        expectThreshold = Double.parseDouble( properties.getProperty(SupportedProperty.EXPECT_THRESHOLD.getName(), "0.05") );
+        useInternalSpectra = Boolean.parseBoolean(properties.getProperty(SupportedProperty.USE_INTERNAL_SPECTA.getName(), "false"));
+        expectThreshold = Double.parseDouble(properties.getProperty(SupportedProperty.EXPECT_THRESHOLD.getName(), "0.05"));
         decoyPrefix = properties.getProperty(SupportedProperty.DECOY_PREFIX.getName(), "DECOY_");
-        
+
         // reset the spectra dao
         spectraDAO = null;
     }
@@ -323,25 +289,26 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     public Properties getConfiguration() {
         return properties;
     }
-    
-    @Override
-	public void setExternalSpectrumFile(String filename) {
-		manualSpectrumFilePath = filename;
-	}
 
-	/**
+    @Override
+    public void setExternalSpectrumFile(String filename) {
+        manualSpectrumFilePath = filename;
+    }
+
+    /**
      * Returns the spectraDAO to be used for the
      * given spectrum file. Makes sure only one
      * instance of the DAO is created and only
      * when it's needed.
+     *
      * @return The spectra DAO to be used to retrieve the spectra information.
      * @throws InvalidFormatException
      */
     private DAO getSpectraDao() throws InvalidFormatException {
-    	if (spectraDAO != null)
-    		return spectraDAO;
-    	
-    	 // guess the spectra filetype
+        if (spectraDAO != null)
+            return spectraDAO;
+
+        // guess the spectra filetype
         guessSpectraSourceType();
 
         // create the respective dao
@@ -356,41 +323,43 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
                 spectraDAO = new MgfDAO(spectraFile);
                 break;
             case MZXML:
-            	spectraDAO = new MzXmlDAO(spectraFile);
-            	break;
+                spectraDAO = new MzXmlDAO(spectraFile);
+                break;
             case MZML:
-            	spectraDAO = new MzmlDAO(spectraFile);
-            	break;
+                spectraDAO = new MzmlDAO(spectraFile);
+                break;
         }
-        
+
         return spectraDAO;
     }
 
     /**
      * Checks whether the passed xtandem-parser
      * object represents a valid X!Tandem file.
+     *
      * @param xtandemFile2
      * @return
      */
     private boolean isValid(XTandemFile xtandemFile2) {
-		if (xtandemFile2.getInputParameters() == null)
-			return false;
-		// check if there are proteins
-		if (xtandemFile2.getProteinMap() == null || !xtandemFile2.getProteinMap().getProteinIDIterator().hasNext())
-			return false;
-    	// check if there are peptides
-		if (xtandemFile2.getSpectraList() == null || xtandemFile2.getSpectraList().size() < 1)
-			return false;
-    	
-		return true;
-	}
+        if (xtandemFile2.getInputParameters() == null)
+            return false;
+        // check if there are proteins
+        if (xtandemFile2.getProteinMap() == null || !xtandemFile2.getProteinMap().getProteinIDIterator().hasNext())
+            return false;
+        // check if there are peptides
+        if (xtandemFile2.getSpectraList() == null || xtandemFile2.getSpectraList().size() < 1)
+            return false;
 
-	/**
+        return true;
+    }
+
+    /**
      * Populates the sequenceInAccession HashMap as well
      * as the proteinHasPeptides HashMap. For detailed
      * information about the two HashMaps see the javadoc
      * at the variable declaration.
-     * @throws InvalidFormatException 
+     *
+     * @throws InvalidFormatException
      */
     private void buildHashMaps() throws InvalidFormatException {
         // reset the hashmaps
@@ -426,17 +395,17 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
             // process every peptide
             for (Peptide peptide : peptides) {
-            	// get the protein id by extracting it from the first domain (one peptide is only in one protein)
-            	if (peptide.getDomains().size() < 1)
-            		throw new InvalidFormatException("Peptide object encountered that does not contain any domains.");
-            	
-            	// WARNING: The domain id and protein id are not unique! (spectra id still is)
-            	// save the spec id as identified (extract the id from the protein id)
-            	String firstDomainId = peptide.getDomains().get(0).getDomainID();
-            	String protId = firstDomainId.substring(0, firstDomainId.lastIndexOf('.'));
+                // get the protein id by extracting it from the first domain (one peptide is only in one protein)
+                if (peptide.getDomains().size() < 1)
+                    throw new InvalidFormatException("Peptide object encountered that does not contain any domains.");
+
+                // WARNING: The domain id and protein id are not unique! (spectra id still is)
+                // save the spec id as identified (extract the id from the protein id)
+                String firstDomainId = peptide.getDomains().get(0).getDomainID();
+                String protId = firstDomainId.substring(0, firstDomainId.lastIndexOf('.'));
                 identifiedSpectra.add(Integer.parseInt(protId.substring(0, protId.indexOf('.'))));
-            	
-            	// get the protein object
+
+                // get the protein object
                 Protein protein = protMap.getProtein(peptide.getDomains().get(0).getProteinKey());
 
                 // store the peptide in the proteinHasPeptides HashMap
@@ -444,13 +413,13 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
                     proteinHasPeptides.put(protein.getLabel(), new ArrayList<Peptide>());
                 // add the peptide
                 proteinHasPeptides.get(protein.getLabel()).add(peptide);
-            	
+
                 // process every domain in the peptide
                 for (Domain domain : peptide.getDomains()) {
-                	// ignore domains above the threshold
-                	if (domain.getDomainExpect() > expectThreshold)
-                		continue;
-                	
+                    // ignore domains above the threshold
+                    if (domain.getDomainExpect() > expectThreshold)
+                        continue;
+
                     // expect the first peptide to be the highest ranking one (= smalles expect value)
                     if (minExpect == null)
                         minExpect = domain.getDomainExpect();
@@ -474,21 +443,22 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
     /**
      * Guesses the type of spectra file used
      * and sets spectrFileType accordingly.
-     * @throws InvalidFormatException 
+     *
+     * @throws InvalidFormatException
      */
     private void guessSpectraSourceType() throws InvalidFormatException {
         spectraFileType = null;
-        
+
         if (useInternalSpectra) {
-        	spectraFileType = SpectraType.INTERNAL;
-        	return;
+            spectraFileType = SpectraType.INTERNAL;
+            return;
         }
-        
+
         // get the source file - use the "manualSpectrumFilePath" if it was set instead of the one in the X!Tandem file
         String spectraPath = (manualSpectrumFilePath != null) ? manualSpectrumFilePath : xtandemFile.getInputParameters().getSpectrumPath();
-        
+
         if (spectraPath == null)
-        	throw new InvalidFormatException("Missing spectra source information. No reference to spectra source file found in X!Tandem file.");
+            throw new InvalidFormatException("Missing spectra source information. No reference to spectra source file found in X!Tandem file.");
 
         // check if it's a file
         File spectraFile = new File(spectraPath);
@@ -531,9 +501,9 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         else if (filename.endsWith("mgf"))
             spectraFileType = SpectraType.MGF;
         else if (filename.toLowerCase().endsWith("mzxml"))
-        	spectraFileType = SpectraType.MZXML;
+            spectraFileType = SpectraType.MZXML;
         else if (filename.toLowerCase().endsWith("mzml"))
-        	spectraFileType = SpectraType.MZML;
+            spectraFileType = SpectraType.MZML;
 
         // make sure the type was set correctly
         if (spectraFileType == null)
@@ -542,13 +512,13 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public String getExperimentTitle() throws InvalidFormatException {
-    	// make sure the spectrum file exists - this function
-    	// is called at this point as the getExperimentTitle()
-    	// will be called in pre-scan mode after the spectrum
-    	// source could have been manually set via the
-    	// setConfiguration function.
-    	guessSpectraSourceType();
-    	
+        // make sure the spectrum file exists - this function
+        // is called at this point as the getExperimentTitle()
+        // will be called in pre-scan mode after the spectrum
+        // source could have been manually set via the
+        // setConfiguration function.
+        guessSpectraSourceType();
+
         // not supported
         return "";
     }
@@ -629,37 +599,37 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public Param getProcessingMethod() {
-    	Param params = new Param();
-    	
-    	InputParams inputParams = xtandemFile.getInputParameters();
-    	
-    	// set the fragment error
-    	Double fragmentError = inputParams.getSpectrumMonoIsoMassError();
-    	if (fragmentError != null && fragmentError > 0)
-    		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_FRAGMENT_MASS_TOLERANCE.getParam(fragmentError));
-    	
-    	// set the parent error
-    	Double minusValue = inputParams.getSpectrumParentMonoIsoMassErrorMinus();
-    	if (minusValue != null && minusValue > 0)
-    		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_TOLERANCE_MINUS_VALUE.getParam(minusValue));
-    	
-    	Double plusValue = inputParams.getSpectrumParentMonoIsoMassErrorPlus();
-    	if (plusValue != null && plusValue > 0)
-    		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_TOLERANCE_PLUS_VALUE.getParam(plusValue));
-    	
-    	// maximum missed cleavages
-    	Integer missedCleavages = inputParams.getScoringMissCleavageSites();
-    	if (missedCleavages != null)
-    		params.getCvParam().add(DAOCvParams.SEARCH_SETTING_MISSED_CLEAVAGES.getParam(missedCleavages));
-    	
-    	// check whether k-score was used
-    	if (xtandemFile.getXTandemParser().getInputParamMap().containsKey("SCORING_ALGORITHM")) {
-    		params.getUserParam().add(
-    				new UserParam(	"X!Tandem scoring algorithm", 
-    								xtandemFile.getXTandemParser().getInputParamMap().get("SCORING_ALGORITHM"))
-    		);
-    	}
-    	
+        Param params = new Param();
+
+        InputParams inputParams = xtandemFile.getInputParameters();
+
+        // set the fragment error
+        Double fragmentError = inputParams.getSpectrumMonoIsoMassError();
+        if (fragmentError != null && fragmentError > 0)
+            params.getCvParam().add(DAOCvParams.SEARCH_SETTING_FRAGMENT_MASS_TOLERANCE.getParam(fragmentError));
+
+        // set the parent error
+        Double minusValue = inputParams.getSpectrumParentMonoIsoMassErrorMinus();
+        if (minusValue != null && minusValue > 0)
+            params.getCvParam().add(DAOCvParams.SEARCH_SETTING_TOLERANCE_MINUS_VALUE.getParam(minusValue));
+
+        Double plusValue = inputParams.getSpectrumParentMonoIsoMassErrorPlus();
+        if (plusValue != null && plusValue > 0)
+            params.getCvParam().add(DAOCvParams.SEARCH_SETTING_TOLERANCE_PLUS_VALUE.getParam(plusValue));
+
+        // maximum missed cleavages
+        Integer missedCleavages = inputParams.getScoringMissCleavageSites();
+        if (missedCleavages != null)
+            params.getCvParam().add(DAOCvParams.SEARCH_SETTING_MISSED_CLEAVAGES.getParam(missedCleavages));
+
+        // check whether k-score was used
+        if (xtandemFile.getXTandemParser().getInputParamMap().containsKey("SCORING_ALGORITHM")) {
+            params.getUserParam().add(
+                    new UserParam("X!Tandem scoring algorithm",
+                            xtandemFile.getXTandemParser().getInputParamMap().get("SCORING_ALGORITHM"))
+            );
+        }
+
         return params;
     }
 
@@ -699,12 +669,12 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         // in these cases the paths to the used databases is used as name.
         for (String path : sequenceSourceDescription.keySet()) {
             String source = sequenceSourceDescription.get(path);
-        	
-        	DatabaseMapping mapping = new DatabaseMapping();
-            
-        	// don't use the description as it might not be unique
+
+            DatabaseMapping mapping = new DatabaseMapping();
+
+            // don't use the description as it might not be unique
 //          mapping.setSearchEngineDatabaseName(source != null ? source : path);
-        	mapping.setSearchEngineDatabaseName(path + (source != null ? " (" + source + ")" : ""));
+            mapping.setSearchEngineDatabaseName(path + (source != null ? " (" + source + ")" : ""));
             mapping.setSearchEngineDatabaseVersion("");
 
             mappings.add(mapping);
@@ -732,14 +702,14 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * @param modifications       An ArrayList of xtandem-parser Modifications to convert.
      * @param isFixedModification Indicates whether the given modifications are fixed
      * @return A Collection of PRIDE Converter PTMs
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     private Collection<PTM> convertModificationArray(ArrayList<Modification> modifications, boolean isFixedModification) throws InvalidFormatException {
         HashSet<String> ptmLabels = new HashSet<String>();
 
         // convert the modifications
         for (Modification m : modifications) {
-        	ptmLabels.add(m.getName());
+            ptmLabels.add(m.getName());
         }
 
         // convert the labels to ptms
@@ -798,9 +768,9 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public int getSpectrumCount(boolean onlyIdentified) throws InvalidFormatException {
-    	if (spectraFileType == null)
-    		guessSpectraSourceType();
-    	
+        if (spectraFileType == null)
+            guessSpectraSourceType();
+
         // if only identified return the xtdanem identified count
         if (onlyIdentified || spectraFileType == SpectraType.INTERNAL)
             return xtandemFile.getSpectraNumber();
@@ -811,9 +781,9 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public Iterator<Spectrum> getSpectrumIterator(boolean onlyIdentified) throws InvalidFormatException {
-    	if (spectraFileType == null)
-    		guessSpectraSourceType();
-    	
+        if (spectraFileType == null)
+            guessSpectraSourceType();
+
         // xtandem xml files don't support unidentified spectra
         if (spectraFileType == SpectraType.INTERNAL)
             return new XTandemDaoSpectrumIterator();
@@ -840,8 +810,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         private Iterator<Spectrum> daoIterator;
 
         public IdentifiedDAOSpectrumIterator() throws InvalidFormatException {
-        	daoIterator = getSpectraDao().getSpectrumIterator(false);
-        	
+            daoIterator = getSpectraDao().getSpectrumIterator(false);
+
             // create the identified spectra array
             identifiedSpectraArray = new ArrayList<Integer>(identifiedSpectra);
 
@@ -864,9 +834,9 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
             int currentSpecIndex = identifiedSpectraArray.get(identifiedSpecIndex++);
 
             Spectrum s = daoIterator.next();
-            
+
             while (s.getId() < currentSpecIndex && daoIterator.hasNext())
-            	s = daoIterator.next();
+                s = daoIterator.next();
 
             // make sure the spec was found
             if (s.getId() != currentSpecIndex)
@@ -1036,8 +1006,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public int getSpectrumReferenceForPeptideUID(String peptideUID) throws InvalidFormatException {
-    	//peptideUID is the [spec id] + "." + [domain key]
-    	
+        //peptideUID is the [spec id] + "." + [domain key]
+
         // return the spectrum id (everything before the first ".")
         int index = peptideUID.indexOf('.');
 
@@ -1095,10 +1065,10 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         @Override
         public Identification next() {
             try {
-				return convertProteinToIdentification(proteinLabelIterator.next(), prescanMode);
-			} catch (InvalidFormatException e) {
-				throw new ConverterException(e);
-			}
+                return convertProteinToIdentification(proteinLabelIterator.next(), prescanMode);
+            } catch (InvalidFormatException e) {
+                throw new ConverterException(e);
+            }
         }
 
         @Override
@@ -1115,7 +1085,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * @param proteinLabel Identifies the protein to convert.
      * @param prescanMode  Indicates whether in prescan mode.
      * @return The created PRIDE Converter Identification object.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     private Identification convertProteinToIdentification(String proteinLabel, boolean prescanMode) throws InvalidFormatException {
         // get the protein's peptides
@@ -1135,8 +1105,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         String accession = proteinLabel;
         // check if the proteinLabel contains the ":reversed" tag
         if (decoyPrefix.length() > 0 && accession.endsWith(":reversed")) {
-        	accession = decoyPrefix + accession.substring(0, proteinLabel.length() - 9);
-        }	
+            accession = decoyPrefix + accession.substring(0, proteinLabel.length() - 9);
+        }
         // set the accession        
         identification.setAccession(accession);
         // set the unique identifier
@@ -1162,7 +1132,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         List<uk.ac.ebi.pride.tools.converter.report.model.Peptide> convertedPeptides = convertPeptides(peptides, prescanMode, isDecoy);
         // if the protein has no peptides (threshold) return null
         if (convertedPeptides.size() < 1)
-        	return null;
+            return null;
         identification.getPeptide().addAll(convertedPeptides);
 
         // add the additional information (only in prescan mode)
@@ -1171,8 +1141,8 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 //            additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(protein.getExpectValue()));
 
             if (decoyPrefix.length() > 0 && identification.getAccession().startsWith(decoyPrefix))
-            	additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
-            
+                additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
+
             identification.setAdditional(additional);
         }
 
@@ -1195,16 +1165,16 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
         for (Peptide peptide : peptides) {
             // process the different domains
             for (Domain domain : peptide.getDomains()) {
-            	// make sure the domain is below the threshold
-            	if (domain.getDomainExpect() > expectThreshold)
-            		continue;
-            	
+                // make sure the domain is below the threshold
+                if (domain.getDomainExpect() > expectThreshold)
+                    continue;
+
                 // create the converted peptide object
                 uk.ac.ebi.pride.tools.converter.report.model.Peptide convertedPeptide = new uk.ac.ebi.pride.tools.converter.report.model.Peptide();
 
                 // get the spectrum reference
                 Long specRef = Long.parseLong(domain.getDomainID().substring(0, domain.getDomainID().indexOf('.')));
-                
+
                 // set the standard values
                 convertedPeptide.setUniqueIdentifier(specRef + "." + domain.getDomainKey());
                 convertedPeptide.setSequence(domain.getDomainSequence());
@@ -1223,26 +1193,25 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
                     // add the additional info
                     Param additional = new Param();
-                    additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(xtandemFile.getSpectrum( peptide.getSpectrumNumber() ).getPrecursorCharge()));
+                    additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(xtandemFile.getSpectrum(peptide.getSpectrumNumber()).getPrecursorCharge()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_EXPECT.getParam(domain.getDomainExpect()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_HYPERSCORE.getParam(domain.getDomainHyperScore()));
                     additional.getCvParam().add(DAOCvParams.PRECURSOR_MH.getParam(domain.getDomainMh()));
                     if (domain.getUpFlankSequence() != null && !domain.getUpFlankSequence().contains("[") && !domain.getUpFlankSequence().contains("]"))
-                    	additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(domain.getUpFlankSequence()));
+                        additional.getCvParam().add(DAOCvParams.UPSTREAM_FLANKING_SEQUENCE.getParam(domain.getUpFlankSequence()));
                     if (domain.getDownFlankSequence() != null && !domain.getDownFlankSequence().contains("[") && !domain.getDownFlankSequence().contains("]"))
-                    	additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(domain.getDownFlankSequence()));
+                        additional.getCvParam().add(DAOCvParams.DOWNSTREAM_FLANKING_SEQUENCE.getParam(domain.getDownFlankSequence()));
                     additional.getCvParam().add(DAOCvParams.XTANDEM_DELTASCORE.getParam(domain.getDomainDeltaMh()));
                     if (isDecoy)
-                    	additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
+                        additional.getCvParam().add(DAOCvParams.DECOY_HIT.getParam());
 
                     convertedPeptide.setAdditional(additional);
-                }
-                else {
-                	// add the fragment ions
-                	List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> fragmentIons = getPeptideFragmentIons(peptide, domain);
-                	
-                	if (fragmentIons != null && fragmentIons.size() > 0)
-                		convertedPeptide.getFragmentIon().addAll(fragmentIons);
+                } else {
+                    // add the fragment ions
+                    List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> fragmentIons = getPeptideFragmentIons(peptide, domain);
+
+                    if (fragmentIons != null && fragmentIons.size() > 0)
+                        convertedPeptide.getFragmentIon().addAll(fragmentIons);
                 }
 
                 convertedPeptides.add(convertedPeptide);
@@ -1251,59 +1220,60 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
 
         return convertedPeptides;
     }
-    
+
     /**
      * Returns a peptide's fragment ions as a List of
      * report model FragmentIons.
+     *
      * @param peptide
      * @param domain
      * @return
      */
     private List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> getPeptideFragmentIons(Peptide peptide, Domain domain) {
-    	// get the fragment ions
-    	@SuppressWarnings("unchecked")
-		Vector<FragmentIon[]> ions = xtandemFile.getFragmentIonsForPeptide(peptide, domain);
-    	List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> prideIons = 
-    		new ArrayList<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon>();
-		
-    	// iterate over all ion types
-    	for (XTANDEM_FRAGMENT_IONS ionType : XTANDEM_FRAGMENT_IONS.getFragmentIonTypes()) {
-    		// get the array
-    		FragmentIon[] fragmentIons = ions.get(ionType.getIndex());
-    		
-    		if (fragmentIons == null)
-    			continue;
-    		
-    		// iterate over the found fragment ions
-    		for (FragmentIon fragmentIon : fragmentIons) {
-    			uk.ac.ebi.pride.tools.converter.report.model.FragmentIon prideIon = 
-    				new uk.ac.ebi.pride.tools.converter.report.model.FragmentIon();
-    			
-    			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_CHARGE.getParam(new Double(fragmentIon.getCharge()).intValue()));
+        // get the fragment ions
+        @SuppressWarnings("unchecked")
+        Vector<FragmentIon[]> ions = xtandemFile.getFragmentIonsForPeptide(peptide, domain);
+        List<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon> prideIons =
+                new ArrayList<uk.ac.ebi.pride.tools.converter.report.model.FragmentIon>();
+
+        // iterate over all ion types
+        for (XTANDEM_FRAGMENT_IONS ionType : XTANDEM_FRAGMENT_IONS.getFragmentIonTypes()) {
+            // get the array
+            FragmentIon[] fragmentIons = ions.get(ionType.getIndex());
+
+            if (fragmentIons == null)
+                continue;
+
+            // iterate over the found fragment ions
+            for (FragmentIon fragmentIon : fragmentIons) {
+                uk.ac.ebi.pride.tools.converter.report.model.FragmentIon prideIon =
+                        new uk.ac.ebi.pride.tools.converter.report.model.FragmentIon();
+
+                prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_CHARGE.getParam(new Double(fragmentIon.getCharge()).intValue()));
                 // intensity - the intensity can not be properly set since the intensity stored in the
-    			// X!Tandem file is changed and does not correspond to the original intensity
-    			// to get the actual intensity one would have to load the original spectrum, parse
-    			// the peak list etc.
-    			if (useInternalSpectra)
-    				prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(fragmentIon.getIntensity()));
-    			else
-    				prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(0));
+                // X!Tandem file is changed and does not correspond to the original intensity
+                // to get the actual intensity one would have to load the original spectrum, parse
+                // the peak list etc.
+                if (useInternalSpectra)
+                    prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(fragmentIon.getIntensity()));
+                else
+                    prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(0));
                 // m/z
-    			double mz = fragmentIon.getMZ() + fragmentIon.getTheoreticalExperimentalMassError();
-    			prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MZ.getParam(mz));
+                double mz = fragmentIon.getMZ() + fragmentIon.getTheoreticalExperimentalMassError();
+                prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MZ.getParam(mz));
                 // mass error
                 prideIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MASS_ERROR.getParam(
-                		fragmentIon.getTheoreticalExperimentalMassError()));
+                        fragmentIon.getTheoreticalExperimentalMassError()));
 
                 // set the name
                 CvParam name = ionType.getIonTypeParam("" + fragmentIon.getNumber());
                 if (name != null) prideIon.getCvParam().add(name);
-                
+
                 prideIons.add(prideIon);
-    		}
-    	}
-    	
-    	return prideIons;
+            }
+        }
+
+        return prideIons;
     }
 
     /**
