@@ -76,43 +76,7 @@ public class IdentificationConverter {
                 continue;
             }
 
-            Set<String> currentPeptideSequences = getPeptideSequences(protein, confidenceLevel);
-            currentPeptideSequences.removeAll(getPeptideSequences(groupProtein, confidenceLevel));
-
-            Set<String> otherPeptideSequences = getPeptideSequences(groupProtein, confidenceLevel);
-            allOtherPeptideSequences.addAll(otherPeptideSequences);
-
-            otherPeptideSequences.removeAll(getPeptideSequences(protein, confidenceLevel));
-
-            if (currentPeptideSequences.size() == 0 && otherPeptideSequences.size() > 0) {
-                params.add(MsfCvTermReference.SEQUENCE_SAME_SET_PROTEIN.getCvParam(groupProtein.getUtilAccession()));
-            } else if (currentPeptideSequences.size() == 0 && otherPeptideSequences.size() > 0) {
-                params.add(MsfCvTermReference.SEQUENCE_SUB_SET_PROTEIN.getCvParam(groupProtein.getUtilAccession()));
-            } else if (currentPeptideSequences.size() > 0 && otherPeptideSequences.size() > 0) {
-                params.add(MsfCvTermReference.FAMILY_MEMBER_PROTEIN.getCvParam(groupProtein.getUtilAccession()));
-            } else {
-                params.add(MsfCvTermReference.UNDEFINED_RELATIONSHIP.getCvParam(groupProtein.getUtilAccession()));
-            }
-        }
-
-        Set<String> currentPeptideSequences = getPeptideSequences(protein, confidenceLevel);
-        currentPeptideSequences.removeAll(allOtherPeptideSequences);
-
-        if (currentPeptideSequences.isEmpty()) { // This means the protein is subsumable, now loop to see which other proteins contain all of its peptides
-            Set<String> myPeptideSequences = getPeptideSequences(protein, confidenceLevel);
-
-            for (Protein groupProtein : proteinGroup.getProteins()) {
-
-                if (groupProtein.equals(protein)) {
-                    continue;
-                }
-                Set<String> groupProteinPeptideSequences = getPeptideSequences(groupProtein, confidenceLevel);
-                int originalLength = groupProteinPeptideSequences.size();
-                groupProteinPeptideSequences.removeAll(myPeptideSequences);
-                if (groupProteinPeptideSequences.size() < originalLength) {
-                    params.add(MsfCvTermReference.SEQUENCE_SUBSUMABLE_PROTEIN.getCvParam(groupProtein.getUtilAccession()));
-                }
-            }
+            params.add(MsfCvTermReference.PRIDE_GROUP_MEMBER.getCvParam(groupProtein.getUtilAccession()));
         }
 
         identification.getAdditional().getCvParam().addAll(params);
