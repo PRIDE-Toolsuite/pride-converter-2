@@ -51,13 +51,8 @@ public enum MsfCvTermReference {
     PSI_INTENSITY_UNIT_PERCENT_OF_BASE_PEAK("PSI", "PSI:1000132", "Percent of Base Peak", "PSI:1000043"),
     PSI_MZ_RATIO("PSI", "PSI:1000040", "Mass To Charge Ratio", "PSI:1000455"),
     
-    // Protein Group Membership valus
-    ANCHOR_PROTEIN("MS", "MS:1001591", "anchor protein", "MS:1001101"),
-    FAMILY_MEMBER_PROTEIN("MS", "MS:1001592", "family member protein", "MS:1001101"),
-    UNDEFINED_RELATIONSHIP("MS", "MS:1001593", "group member with undefined relationship OR ortholog protein", "MS:1001101"),
-    SEQUENCE_SAME_SET_PROTEIN("MS", "MS:1001594", "sequence same-set protein", "MS:1001101"),
-    SEQUENCE_SUB_SET_PROTEIN("MS", "MS:1001596", "sequence sub-set protein", "MS:1001101"),
-    SEQUENCE_SUBSUMABLE_PROTEIN("MS", "MS:1001598", "sequence subsumable protein", "MS:1001101"),
+    // Protein Group Membership
+    PRIDE_GROUP_MEMBER("PRIDE", "PRIDE:0000418", "Other member of protein ambiguity group", "PRIDE:0000004"),
     
     // PD parameters, currently not used.
     PD_PARAM_1_DYNAMIC_MODIFICATION("MS", "MS:1001720", "ProteomeDiscoverer:1. Dynamic Modification", "MS:1001302"),
