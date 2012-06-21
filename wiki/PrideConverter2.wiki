@@ -21,7 +21,7 @@ Currently, PRIDE Converter 2 supports the following MS data formats:
 || pkl || Spectra || Complete. Not tested ||
 || [CruxTxt Crux-txt] || Identifications + Spectra || Complete. Initial tests performed. ||
 || [SpectraSTxls SpectraST-xls] || Identifications + Spectra || Complete. Initial tests performed. ||
-|| OMSSA-csv || Identifications + Spectra || Complete. Initial tests performed. ||
+|| [OMSSAcsv OMSSA-csv] || Identifications + Spectra || Complete. Initial tests performed. ||
 
 
 = Supported additional data =
