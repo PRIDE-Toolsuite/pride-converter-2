@@ -19,3 +19,5 @@ Currently, the *Crux-txt DAO* supports spectra in _MS2 format_ only.
 *Get Highest Score Item*: if true, only the highest scored peptide for a given spectrum will be included in the Pride XML file. Default value is _true_.
 
 = Details =
+
+**PTMs*: Post-translational modifications are specified in the peptide sequence (variable modifications) and in the parameter file (variable modifications, fixed modifications, and terminal modifications).
