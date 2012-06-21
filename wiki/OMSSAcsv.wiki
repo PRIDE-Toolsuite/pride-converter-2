@@ -10,6 +10,8 @@ Currently, the *OMSSA-csv DAO* supports spectra in PKL, DTA, MGF, MZXML, MS2, an
 
  * *Threshold*: The maximum expect value a peptide may have to still be included in the PRIDE XML file. All peptides with an expect value greater than the set threshold will be ignored. Default value is _0.0_.
 
+ * *Score Criteria*: the score criteria used to apply the Threshold filter. Default value is _E-value_.
+
  * *Fixed PTMs*: a user defined collection of fixed PTMs in the format _delta-value@aminoacid_ and comma separated. Default list contains 57.02@C.
 
  * *Variable PTMs*: a user defined collection of fixed PTMs in the format _delta-value@aminoacid_ and comma separated. Default list contains 15.99@M.
