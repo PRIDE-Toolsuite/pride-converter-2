@@ -19,7 +19,7 @@ Currently, PRIDE Converter 2 supports the following MS data formats:
 || mzML || Spectra || Complete. Not tested ||
 || [MzXmlDAO mzXML] || Spectra || Tested on 1 submission ||
 || pkl || Spectra || Complete. Not tested ||
-|| Crux-txt || Identifications + Spectra || Complete. Initial tests performed. ||
+|| [CruxTxt Crux-txt] || Identifications + Spectra || Complete. Initial tests performed. ||
 || SpectraST-xls || Identifications + Spectra || Complete. Initial tests performed. ||
 || OMSSA-csv || Identifications + Spectra || Complete. Initial tests performed. ||
 
