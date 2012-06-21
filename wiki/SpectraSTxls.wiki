@@ -1,0 +1,17 @@
+#summary Documentation of the SpectraST-xls DAO from PRIDE Converter 2
+
+= Introduction =
+
+SpectraST (short for "Spectra Search Tool" and rhymes with "contrast") is a spectral library building and searching tool designed primarily for shotgun proteomics applications. Spectral searching is an alternative approach that promises to address some of the shortcomings of sequence searching. Detailed information can be found at http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST.
+
+Currently, the *SpectraST-xls* supports spectra in MGF, mzXML, and DTA (see details below) formats.
+
+= Parameters =
+
+ * *Threshold*: The maximum expect value a peptide may have to still be included in the PRIDE XML file. All peptides with an expect value greater than the set threshold will be ignored. Default value is _0.0_.
+
+* *Score Criteria*: the score criteria used to apply the Threshold filter. Default value is _fval_.
+
+= Details =
+
+ * *Spectrum files*: Just MGF (with titled queries), mzXML, or DTA (with single peak list) formats supported for spectrum files.
