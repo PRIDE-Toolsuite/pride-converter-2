@@ -15,3 +15,4 @@ Currently, the *SpectraST-xls* supports spectra in MGF, mzXML, and DTA (see deta
 = Details =
 
  * *Spectrum files*: Just MGF (with titled queries), mzXML, or DTA (with single peak list) formats supported for spectrum files.
+ * *PTMs: PTMs are contained in the peptide sequence in the identifications result file, under the ID column.
