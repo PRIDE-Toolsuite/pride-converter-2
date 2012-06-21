@@ -4,7 +4,7 @@
 
 The Open Mass Spectrometry Search Algorithm [OMSSA] is an efficient search engine for identifying MS/MS peptide spectra by searching libraries of known protein sequences. OMSSA scores significant hits with a probability score developed using classical hypothesis testing, the same statistical method used in BLAST. OMSSA is free and in the public domain. Detailed information can be found at http://pubchem.ncbi.nlm.nih.gov/omssa/.
 
-Currently, the *XTandem DAO* supports spectra in PKL, DTA, MGF, MZXML, MS2, and MZML formats.
+Currently, the *OMSSA-csv DAO* supports spectra in PKL, DTA, MGF, MZXML, MS2, and MZML formats.
 
 = Parameters =
 
