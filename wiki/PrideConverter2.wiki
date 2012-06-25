@@ -8,20 +8,20 @@ PRIDE Converter 2 is a complete rewrite of the previous version.
 
 Currently, PRIDE Converter 2 supports the following MS data formats:
 
-|| *Format* || *Type* || *Status* ||
-|| [MascotDatDAO Mascot .dat] || Identifications + Spectra || Tested on 6 submissions ||
-|| [XTandemDAO X!Tandem] || Identifications + (processed spectra) <br>Can process additional peak list files for spectra || Tested on 1 submission ||
-|| [MzIdentMlDAO mzIdentML] || Identifications + spectra in additional file || Complete. Not tested ||
-|| [OmxDAO OMSSA] || Identifications + Spectra || Under development ||
-|| dta || Spectra || Complete. Not tested ||
-|| mgf || Spectra || Complete. Not tested ||
-|| ms2 || Spectra || Complete. Not tested ||
-|| mzML || Spectra || Complete. Not tested ||
-|| [MzXmlDAO mzXML] || Spectra || Tested on 1 submission ||
-|| pkl || Spectra || Complete. Not tested ||
-|| [CruxTxt Crux-txt] || Identifications + Spectra || Complete. Initial tests performed. ||
-|| [SpectraSTxls SpectraST-xls] || Identifications + Spectra || Complete. Initial tests performed. ||
-|| [OMSSAcsv OMSSA-csv] || Identifications + Spectra || Complete. Initial tests performed. ||
+|| *Format* || *Type* ||
+|| [MascotDatDAO Mascot .dat] || Identifications + Spectra ||
+|| [XTandemDAO X!Tandem] || Identifications + (processed spectra) <br>Can process additional peak list files for spectra ||
+|| [MzIdentMlDAO mzIdentML] || Identifications + spectra in additional file || 
+|| [OmxDAO OMSSA] || Identifications + Spectra ||
+|| dta || Spectra || 
+|| mgf || Spectra || 
+|| ms2 || Spectra ||
+|| mzML || Spectra ||
+|| [MzXmlDAO mzXML] || Spectra ||
+|| pkl || Spectra ||
+|| [CruxTxt Crux-txt] || Identifications + Spectra ||
+|| [SpectraSTxls SpectraST-xls] || Identifications + Spectra ||
+|| [OMSSAcsv OMSSA-csv] || Identifications + Spectra ||
 
 
 = Supported additional data =
