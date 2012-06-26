@@ -8,6 +8,7 @@
     * [CruxTxt Crux-txt]
     * [OMSSAcsv OMSSA-csv]
     * [SpectraSTxls SpectraST-xls]
+    * [ProteomeDiscoverer Proteome Discoverer]
   * [QuantitativeMzTabFiles Quantitative data]
   * [GelBasedData Gel based data]
   * [IntegratingPrideConverter Integrating PRIDE Converter]
