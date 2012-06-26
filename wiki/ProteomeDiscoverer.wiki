@@ -41,5 +41,5 @@ Additionally, a probability for every individual phosphorylated site is calculat
 
 =Future work=
 
-  * This converter is based on an updated 'msf parser' from the Martens Lab. Optimizations will be made to be able to open larger files.
-  * Since Proteome Discoverer does create quantitative data, some work has to be done to store this data in the PRIDE database.
+  * This converter is based on an updated 'msf parser' ([http://pubs.acs.org/doi/abs/10.1021/pr2005154 Colaert et al: J Proteome Res. 2011 Aug 5;10(8):3840-3]). Optimizations will be made to be able to open larger files.
+  * Since Proteome Discoverer does create quantitative data, this should be stored in the PrideXML file.
