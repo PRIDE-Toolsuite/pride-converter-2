@@ -29,7 +29,7 @@ On each node, the user has to select a number of parameters. Pride Converter 2 w
 
 ==protein groups==
 
-Proteome Discoverer has an algorithm for assigning peptides to proteins or protein groups. These protein groups consist of proteins that share a number of peptides. Since the PRIDE database does not support the concept of protein groups, we've settled on a compromise. For any protein identification, a list of supplied parameters with the id's of the "other" proteins of the same protein group (ontology term: [PRIDE:0000418]) is supplied. A 'representative' protein for the protein group is assigned by Protein Discoverer, and is marked with the annotation 'anchor protein' [MS:1001591] by the converter.
+Proteome Discoverer has an algorithm for assigning peptides to proteins or protein groups. These protein groups consist of proteins that share a number of peptides. Since at present, the PRIDE database does not support the concept of protein groups, we've settled on a compromise. For any protein identification, a list of supplied parameters with the id's of the "other" proteins of the same protein group (ontology term: [PRIDE:0000418]) is supplied. A 'representative' protein for the protein group is assigned by Protein Discoverer, and is marked with the annotation 'anchor protein' [MS:1001591] by the converter.
 
 Protein groups are taken 'as is' from the Proteome Discoverer .msf file, i.e. any peptide filtering does not influence the protein groups.
 
