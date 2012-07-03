@@ -196,10 +196,7 @@ search database.</string>
           </void>
           <void method="setProperty">
            <string>toolTipText</string>
-           <object class="com.jformdesigner.model.FormMessage">
-            <null/>
-            <string>NewDatabaseMappingDialog.cDbName.toolTipText</string>
-           </object>
+           <string>&lt;html&gt;Please select a database name from the list supplied&lt;br&gt;or enter a clean, concise description of the search&lt;br&gt;database you used in your experiment&lt;/html&gt;</string>
           </void>
           <void property="name">
            <string>cDbName</string>
@@ -211,10 +208,7 @@ search database.</string>
           <string>javax.swing.JTextField</string>
           <void method="setProperty">
            <string>toolTipText</string>
-           <string>Please provide a the version of the search database you
-used in your experiment (for example release-2012_02 for
-UniprotKB) or the date you generated or downloaded the
-search database.</string>
+           <string>&lt;html&gt;Please provide a the version of the search database you&lt;br&gt;used in your experiment (for example release-2012_02 for&lt;br&gt;UniprotKB) or the date you generated or downloaded the&lt;br&gt;search database.&lt;/html</string>
           </void>
           <void property="name">
            <string>cDbVersion</string>

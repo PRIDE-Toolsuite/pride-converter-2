@@ -16,6 +16,7 @@ import uk.ac.ebi.pride.tools.converter.gui.dialogs.AbstractDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ContactDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ReferenceDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
+import uk.ac.ebi.pride.tools.converter.gui.util.Colours;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.Contact;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
@@ -129,6 +130,7 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
     private void clearDefaultText(FocusEvent e) {
         if (isLoaded && !e.isTemporary() && e.getID() == FocusEvent.FOCUS_GAINED) {
             if (defaultValueMap.get((JComponent) e.getSource())) {
+
                 //the source component has the default value
                 //clear it
                 JTextField source = (JTextField) e.getSource();
@@ -136,6 +138,7 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
                 //set default colour
                 source.setForeground(null);
                 defaultValueMap.put((JComponent) e.getSource(), false);
+
             }
         }
     }
@@ -573,14 +576,20 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
         //to deal with this data
         if (ConverterData.getInstance().getInputFiles().size() > 1 && !doneOnce) {
             experimentTitleInput.setText("will be set in next form");
-            experimentTitleInput.setForeground(null);
-            experimentTitleInput.setBackground(null);
+            experimentTitleInput.setForeground(Color.black);
+            experimentTitleInput.setBackground(Colours.lightgrey);
             experimentTitleInput.setEditable(false);
+            for (FocusListener f : experimentTitleInput.getFocusListeners()) {
+                experimentTitleInput.removeFocusListener(f);
+            }
             defaultValueMap.put(experimentTitleInput, false);
             shortNameInput.setText("will be set in next form");
             shortNameInput.setEditable(false);
-            shortNameInput.setForeground(null);
-            shortNameInput.setBackground(null);
+            shortNameInput.setForeground(Color.black);
+            shortNameInput.setBackground(Colours.lightgrey);
+            for (FocusListener f : shortNameInput.getFocusListeners()) {
+                shortNameInput.removeFocusListener(f);
+            }
             defaultValueMap.put(shortNameInput, false);
             NavigationPanel.getInstance().registerFormAfter(new ExperimentDetailMultipleDataForm(), this);
             doneOnce = true;
