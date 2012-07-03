@@ -42,7 +42,7 @@ public class MergerInformationForm extends AbstractForm {
             textArea1.setEditable(false);
             textArea1.setLineWrap(true);
             textArea1.setWrapStyleWord(true);
-            textArea1.setText("This application will allow you to select multiple PRIDE XML files and merge them into a single PRIDE XML file. \n\nIt is assumed that each individual file is valid. Files will be ordered alphabetically and the metadata from the first file will be used to generate the final, merged file. The identifications and spectra from the other files will be merged into the final output file. \n\nPlease note that the spectrum IDs from the source files will not necessarily be kept, but the internal references between peptide-spectrum_refs will be maintained.  ");
+            textArea1.setText("This application will allow you to select multiple PRIDE XML files and merge them into a single PRIDE XML file. \n\nIt is assumed that each individual file is valid. A master file will be selected and the metadata from that file will be used to generate the final, merged file. The identifications and spectra from the other files will be merged into the final output file. \n\nPlease note that the spectrum IDs from the source files will not necessarily be kept, but the internal references between peptide-spectrum_refs will be maintained.  ");
             scrollPane1.setViewportView(textArea1);
         }
 

@@ -183,8 +183,8 @@ public class MergerReportForm extends AbstractForm {
         {
             TableColumnModel cm = fileTable.getColumnModel();
             cm.getColumn(0).setResizable(false);
+            cm.getColumn(0).setCellRenderer(new ShortFilePathStringRenderer());
         }
-        fileTable.setDefaultRenderer(String.class, new ShortFilePathStringRenderer());
     }
 
     @Override

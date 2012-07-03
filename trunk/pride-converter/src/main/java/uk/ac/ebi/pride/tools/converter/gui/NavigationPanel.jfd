@@ -89,7 +89,7 @@ new FormModel {
 				"font": new java.awt.Font( "Dialog", 1, 20 )
 			} )
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 0, 0 )
+			"location": new java.awt.Point( 45, 0 )
 			"size": new java.awt.Dimension( 955, 700 )
 		} )
 	}

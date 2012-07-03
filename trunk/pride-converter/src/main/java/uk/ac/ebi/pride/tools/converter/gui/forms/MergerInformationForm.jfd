@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "5.1.0.0.11" Java: "1.6.0_26" encoding: "UTF-8"
+JFDML JFormDesigner: "5.1.0.0.11" Java: "1.7.0_03" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
@@ -19,7 +19,7 @@ new FormModel {
 					"editable": false
 					"lineWrap": true
 					"wrapStyleWord": true
-					"text": "This application will allow you to select multiple PRIDE XML files and merge them into a single PRIDE XML file. \n\nIt is assumed that each individual file is valid. Files will be ordered alphabetically and the metadata from the first file will be used to generate the final, merged file. The identifications and spectra from the other files will be merged into the final output file. \n\nPlease note that the spectrum IDs from the source files will not necessarily be kept, but the internal references between peptide-spectrum_refs will be maintained.  "
+					"text": "This application will allow you to select multiple PRIDE XML files and merge them into a single PRIDE XML file. \n\nIt is assumed that each individual file is valid. A master file will be selected and the metadata from that file will be used to generate the final, merged file. The identifications and spectra from the other files will be merged into the final output file. \n\nPlease note that the spectrum IDs from the source files will not necessarily be kept, but the internal references between peptide-spectrum_refs will be maintained.  "
 				} )
 			} )
 		}, new FormLayoutConstraints( null ) {

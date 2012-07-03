@@ -84,6 +84,7 @@ public class ModUtils {
                         filteredMods = preferredMods.getbyDelta(delta, HIGH_PRECISION);
                         if (filteredMods.size() == 1) {
 
+                            System.err.println("Warning - multiple PTM assignments possible for mass delta:" + delta);
                             canMap = true;
                             mod = filteredMods.get(0);
 

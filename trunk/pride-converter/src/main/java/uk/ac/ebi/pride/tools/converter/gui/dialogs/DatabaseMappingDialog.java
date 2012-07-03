@@ -130,10 +130,10 @@ public class DatabaseMappingDialog extends AbstractDialog {
 
             //---- cDbName ----
             cDbName.setEditable(true);
-            cDbName.setToolTipText(bundle.getString("NewDatabaseMappingDialog.cDbName.toolTipText"));
+            cDbName.setToolTipText("<html>Please select a database name from the list supplied<br>or enter a clean, concise description of the search<br>database you used in your experiment</html>");
 
             //---- cDbVersion ----
-            cDbVersion.setToolTipText("Please provide a the version of the search database you\nused in your experiment (for example release-2012_02 for\nUniprotKB) or the date you generated or downloaded the\nsearch database.");
+            cDbVersion.setToolTipText("<html>Please provide a the version of the search database you<br>used in your experiment (for example release-2012_02 for<br>UniprotKB) or the date you generated or downloaded the<br>search database.</html");
 
             //---- cancelButton ----
             cancelButton.setText(bundle.getString("NewDatabaseMappingDialog.cancelButton.text"));

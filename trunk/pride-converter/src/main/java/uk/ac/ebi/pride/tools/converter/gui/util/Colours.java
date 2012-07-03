@@ -13,6 +13,7 @@ public class Colours {
     public static final Color selectedGreen = new Color(153, 255, 153);
     //    public static final Color selectedGreen = new Color(0, 153, 153);
     public static final Color grey = new Color(219, 213, 218);
+    public static final Color lightgrey = new Color(204, 204, 204);
     public static final Color lightBlue = new Color(153, 153, 255);
     //    public static final Color lightBlue = new Color(100, 117, 245);
     //public static final Color errorRed = new Color(255, 102, 102);
