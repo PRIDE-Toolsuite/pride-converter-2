@@ -15,6 +15,13 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${project.basedir}/documents</directory>
+            <outputDirectory>/</outputDirectory>
+            <includes>
+                <include>*.pdf</include>
+            </includes>
+        </fileSet>
+        <fileSet>
             <directory>${project.basedir}/templates</directory>
             <outputDirectory>/templates</outputDirectory>
             <includes>
