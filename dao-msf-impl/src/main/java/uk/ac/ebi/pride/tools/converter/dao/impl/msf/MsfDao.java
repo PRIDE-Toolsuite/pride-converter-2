@@ -10,9 +10,6 @@ import com.compomics.thermo_msf_parser.msf.ProcessingNode;
 import com.compomics.thermo_msf_parser.msf.ProcessingNodeParameter;
 import com.compomics.thermo_msf_parser.msf.Protein;
 import com.compomics.thermo_msf_parser.msf.util.Joiner;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.*;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
@@ -22,11 +19,15 @@ import uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters.IdentificationCon
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters.PTMConverter;
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters.SpectrumConverter;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.FileUtils;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 /**
- *
  * @author toorn101
  */
 public class MsfDao extends AbstractDAOImpl implements DAO {
@@ -44,7 +45,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         try {
             parser = new Parser(source.getAbsolutePath(), true); // Create a parser that is set to 'low memory' usage.
         } catch (Exception e) {
-            throw new RuntimeException("Errors while opening msf files.", e);
+            throw new ConverterException("Errors while opening msf files.", e);
         }
     }
 
@@ -52,7 +53,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         Collection<DAOProperty> properties = new ArrayList<DAOProperty>();
 
         DAOProperty<Integer> confidenceLevel = new DAOProperty<Integer>("confidence_level", 3, 1, 3);
-        
+
         confidenceLevel.setUnit("level");
         confidenceLevel.setAdvanced(false);
         confidenceLevel.setDescription("Allow peptides at a certain confidence level: 1=low confidence, 2=intermediate confidence, 3=high confidence");
@@ -85,7 +86,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
 
         // date of search
         experimentParam.getCvParam().add(DAOCvParams.DATE_OF_SEARCH.getParam(formatter.format(inputFile.lastModified()).toString()));
-        System.out.println(inputFile.lastModified());
+        //System.out.println(inputFile.lastModified());
         // original MS format param
         experimentParam.getCvParam().add(DAOCvParams.ORIGINAL_MS_FORMAT.getParam(MSF_FILE_STRING));
 
@@ -128,9 +129,8 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     /**
      * Software
      *
-     * @return
-     * @throws InvalidFormatException
      * @return Proteome Discoverer, with version.
+     * @throws InvalidFormatException
      */
     public Software getSoftware() {
         Software s = new Software();
@@ -268,7 +268,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         identifier.setSourceFilePath(inputFile.getAbsolutePath());
         identifier.setTimeCreated(formatter.format(inputFile.lastModified()).toString());
         identifier.setHash(FileUtils.MD5Hash(inputFile.getAbsolutePath()));
-        System.out.println("Identifier: " + identifier);
+        //System.out.println("Identifier: " + identifier);
         return identifier;
     }
 
@@ -322,7 +322,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
             try {
                 result = SpectrumConverter.convert(spectrum);
             } catch (Exception ex) {
-                throw new RuntimeException("While converting spectrum " + spectrum.getSpectrumTitle() + " (id=" + spectrum.getSpectrumId() + ")", ex);
+                throw new ConverterException("While converting spectrum " + spectrum.getSpectrumTitle() + " (id=" + spectrum.getSpectrumId() + ")", ex);
             }
             return result;
         }
@@ -383,7 +383,6 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     }
 
     /**
-     *
      * @param preScanMode
      * @return
      * @throws InvalidFormatException

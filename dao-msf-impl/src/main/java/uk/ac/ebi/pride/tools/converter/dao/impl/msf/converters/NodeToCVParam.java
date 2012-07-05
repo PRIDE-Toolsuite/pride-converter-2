@@ -7,23 +7,21 @@ package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 import com.compomics.thermo_msf_parser.Parser;
 import com.compomics.thermo_msf_parser.msf.ProcessingNode;
 import com.compomics.thermo_msf_parser.msf.ProcessingNodeParameter;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.terms.MsfCvTermReference;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
- *
  * @author toorn101
  */
 public class NodeToCVParam {
+
+    private static final Logger logger = Logger.getLogger(NodeToCVParam.class);
 
     public static List<CvParam> convert(ProcessingNode node, Parser parser) {
         List<CvParam> result = new ArrayList<CvParam>();
@@ -55,28 +53,10 @@ public class NodeToCVParam {
             }
             result.addAll(convertParameters(node, methodParameterPrefix));
         } else {
-            System.out.println("Could not map "+ node.getNodeName());
+            logger.warn("Could not map " + node.getNodeName());
         }
         return result;
     }
-    
-    /**
-     * 
-     * @param parser
-     * @return 
-     */
-    private static Map<String, String> extractSoftwareVersions(Parser parser) {
-        Map<String, String> result = new HashMap<String, String>();
-        try {
-            Statement stmt = parser.getConnection().createStatement();
-            stmt.execute("select * from ");
-            
-        } catch (SQLException ex) {
-            Logger.getLogger(NodeToCVParam.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return result;
-    }
-    
 
     private static List<CvParam> convertParameters(ProcessingNode node, String methodParameterPrefix) {
         ArrayList<CvParam> result = new ArrayList<CvParam>();
@@ -87,7 +67,7 @@ public class NodeToCVParam {
                 try {
                     result.add(mapFriendlyNameToCvParam(param.getFriendlyName(), param.getParameterValue()));
                 } catch (RuntimeException ex2) {
-                    System.out.println("Could not map " + param.getFriendlyName());
+                    logger.warn("Could not map " + param.getFriendlyName());
                 }
             }
         }
@@ -96,7 +76,6 @@ public class NodeToCVParam {
     }
 
     /**
-     *
      * @param friendlyName
      * @return
      */
@@ -110,7 +89,7 @@ public class NodeToCVParam {
             }
         }
         if (result == null) {
-            throw new RuntimeException("No result");
+            throw new ConverterException("Could not build param for:" + friendlyName);
         }
         return result;
     }
