@@ -18,12 +18,11 @@
     <mapID target="help.ui" url="html/usage/user_interface.html"/>
 
     <mapID target="help.ui.format" url="html/usage/ui/format.html"/>
+    <mapID target="help.ui.tools" url="html/usage/ui/othertools.html"/>
     <mapID target="help.ui.file" url="html/usage/ui/fileselect.html"/>
     <mapID target="help.ui.fileextra" url="html/usage/ui/fileselectextra.html"/>
     <mapID target="help.ui.experimentdetails" url="html/usage/ui/experimentdetails.html"/>
     <mapID target="help.ui.experimentdetailsextra" url="html/usage/ui/experimentdetailsextra.html"/>
-    <mapID target="help.ui.contacts" url="html/usage/ui/contacts.html"/>
-    <mapID target="help.ui.references" url="html/usage/ui/references.html"/>
     <mapID target="help.ui.sample" url="html/usage/ui/sample.html"/>
     <mapID target="help.ui.protocol" url="html/usage/ui/protocol.html"/>
     <mapID target="help.ui.instrument" url="html/usage/ui/instrument.html"/>
@@ -51,7 +50,6 @@
 
     <mapID target="help.ui.merger.information" url="html/usage/ui/mergerinformation.html"/>
     <mapID target="help.ui.merger.masterfile" url="html/usage/ui/mergermasterfile.html"/>
-    <mapID target="help.ui.merger.options" url="html/usage/ui/mergeroptions.html"/>
 
     <mapID target="help.ui.merger.report" url="html/usage/ui/mergerreport.html"/>
     <mapID target="help.ui.filter.information" url="html/usage/ui/filterinformation.html"/>
@@ -61,6 +59,6 @@
     <mapID target="help.faq" url="html/faq.html"/>
     <mapID target="help.faq.pride" url="html/faq/pride.html"/>
     <mapID target="help.faq.pridexml" url="html/faq/pride_xml.html"/>
-    <mapID target="help.faq.memory" url="html/faq/memory.html"/>
+    <mapID target="help.faq.troubleshooting" url="html/faq/troubleshooting.html"/>
 
 </map>

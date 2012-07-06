@@ -226,7 +226,7 @@ public class OtherToolsForm extends AbstractForm {
 
     @Override
     public String getHelpResource() {
-        return "help.index";
+        return "help.ui.tools";
     }
 
     @Override

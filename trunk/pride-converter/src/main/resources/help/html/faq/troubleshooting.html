@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" media="all" href="../css/s.css">
+    <title>Troubleshooting PRIDE Converter 2</title>
+</head>
+
+<body class="template">
+<div id="container">
+
+    <!-- header -->
+    <div id="header">
+        <h1>Troubleshooting PRIDE Converter 2</h1>
+    </div>
+
+    <!-- navigation -->
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+        <tr>
+            <td align="left" class="topicpath">
+                <a href="pride_xml.html">Previous</a> | <span style="color:#666666;">Next</span> |
+                <span style="color:#666666;">See Also</span>
+            </td>
+            <td width="70%" class="topicpath"></td>
+        </tr>
+    </table>
+
+    <!-- table of contents -->
+    <div class="introduction">
+        <p>
+            These tips should help you sort out the most common problems with PRIDE Converter 2
+        </p>
+    </div>
+    <div class="content">
+
+        <h2>The Application Selector window appears but no tools start when a button is clicked</h2>
+
+        <p>When PRIDE Converter 2 starts in the GUI mode, the first screen that is displayed is the application selector
+            In rare occasions, it is possible that nothing happens when the users click on a button to start
+            a specific application (Converter, Filter, Merger, mzTab generator). This is generally a problem caused with
+            improper Java configuration. Please ensure that JAVA_HOME is correctly set in your environment and that the
+            java runtime executable file is in your path. Please refer to the Java documentation on how to properly
+            install and configure the Java Runtime Environment (http://java.com/en/download/help/download_options.xml).
+
+        <p>When a button is clicked from the application selector, a new process is launched based on the settings found
+            in the converter.properties file that is located in the same directory as the PRIDE Converter 2 jar file.
+
+<pre>
+        ###############################################################
+        # Pride Converter GUI Bootstrap configuration
+        ###############################################################
+
+        #set the exact path of the java executable if not already in the path
+        #do not include the executable itself and include a trailing slash
+        #eg java.home=/home/rcote/dev/jdk1.6.0_13/bin/
+        #and not #eg java.home=/home/rcote/dev/jdk1.6.0_13/bin/java
+        java.home=
+
+        # any JVM argument listed here will be passed verbatim to the JVM
+        jvm.args=-Xms128M -Xmx4000M
+
+        # uncomment and set accordingly to configure PROXY settings
+        #http.proxyHost=webcache.mydomain.com
+        #http.proxyPort=8080
+        #http.proxyUser=
+        #http.proxyPassword=
+        #http.proxySet=true
+</pre>
+
+        <p>If JAVA_HOME isn’t properly set, the new process might not properly start. One way to circumvent this problem
+            is to update the java.home setting in the properties file. You need to include the full path to the java
+            executable, including the final slash, but do not include the java application itself.
+
+<pre>
+        java.home=/home/rcote/dev/jdk1.6.0_13/bin/ - correct for linux and Mac OS X
+        java.home=c:\Program Files\jdk1.6.0_13\bin\ - correct for Windows
+</pre>
+
+        <p>If this still does not work correctly, try starting PRIDE Converter 2 from the command line, as useful
+            debugging information is logged to the console window.
+<pre>
+        rcote@bobble: target$ java -jar pride-converter-2.0-SNAPSHOT.jar
+
+        Reading properties file: ./converter.properties
+        Bootstrap command: /home/rcote/dev/jdk1.7.0_03/jre/bin/java -Xms128M -Xmx4000M -cp
+        pride-converter-2.0-SNAPSHOT.jar
+        uk.ac.ebi.pride.tools.converter.gui.ConverterApplicationSelector$ConverterLauncher
+
+        Name of the OS: Linux
+        Version of the OS: 2.6.32-41-generic
+        Architecture of The OS: amd64
+        Validator Loaded
+</pre>
+
+        <p>This information can be communicated with the PRIDE helpdesk to help fix the problem.
+
+
+        <h2>A progress window appears but the application seems to hang</h2>
+
+        <p>If you are converting a large number of files or files that are very big or contain a large number of
+            spectra, the conversion process can take anywhere from minutes to hours. This is normal and the time
+            required will be in direct proportion to the number, size and complexity of the source files. The GUI
+            will always show message dialogs if exceptions occur. If the application still seems to hang but no error
+            message is shown, users should look in the log file that is in the log directory where the PRIDE Converter
+            2 was installed.
+
+        <h2>The application runs out of memory</h2>
+
+        The PRIDE Converter 2 tool suite was written to be as memory-efficient as possible. However, if converting a
+        large number of big files, it is always possible to run out of memory. If this should happen, please update
+        the <i>jvm.args</i> setting in the <i>converter.properties</i> file.
+
+        <h2> The application cannot use the OLS</h2>
+
+        <p>The PRIDE Converter 2 tool suite requires a working internet connection to connect to the OLS web service to
+            perform CV term related queries. If you are on a computer that requires a proxy configuration to access
+            external network resources, you will need to uncomment and update the five <i>http.proxy</i> settings in
+            the <i>converter.properties</i> file.
+
+    </div>
+
+    <div id="footer">
+        <p>Comments, questions, suggestions? See the
+            <a href="../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+        </p>
+    </div>
+</div>
+</body>
+</html>

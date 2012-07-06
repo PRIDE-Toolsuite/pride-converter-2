@@ -19,8 +19,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
             <td align="left" class="topicpath">
-                <span style="color:#666666;"><a href="review.html">Previous</a></span> | <a
-                    href="validation.html">Next</a>
+                <a href="review.html">Previous</a> | <a href="validation.html">Next</a>
                 | <a href="#topicSeeAlsoTopicsList">See Also</a>
             </td>
             <td width="70%" class="topicpath"></td>
@@ -29,17 +28,76 @@
 
     <!-- table of contents -->
     <div class="introduction">
-        <p>In this section:</p>
-        <ul>
-            <li><a href="one.html">One</a></li>
-            <li><a href="two.html">two</a></li>
-        </ul>
+        <p>This screen allows you to set options for the generation of the PRIDE XML files and set options
+            for any subsequent filters that should be run on those files
+        </p>
     </div>
 
     <!-- content -->
     <div id="content">
         <div class="section">
-            <img src="caps/export.png">
+
+
+            <h2>PRIDE XML Export</h2>
+
+            <p>
+                PRIDE Converter 2 can generate compressed files using the gzip algorithm to save on disk space. This is
+                enabled by default, as is the option to remove any temporary work files, such as report files, once the
+                application exits. PRIDE Converter 2 will always include all spectra in the generated PRIDE XML file
+                unless
+                the “include only identified” spectra option is selected. If the experiment contains interaction data
+                that
+                would benefit from being submitted to the IntAct interaction database (http://www.ebi.ac.uk/intact) at
+                the
+                EBI, users are encouraged to select the relevant option in the export dialog. This will add a CV term in
+                the
+                generated XML file that will be recognized by the submission process and the person whose contact
+                details
+                have been captured will be contacted by an IntAct curator for further discussion.
+            </p>
+
+            <h2>PRIDE XML Filtering</h2>
+
+            <p>
+                The <b>“include only identified spectra”</b> filter is the only filter that does not need to generate an
+                intermediate PRIDE XML file, as this can be done at the DAO level. All other filters will first write a
+                complete PRIDE XML file, as normal, then post-process this file to generate the fully-filtered PRIDE XML
+                file. This will have consequences on the time and disk space required to fully produce the final file.
+            </p>
+
+            <p>
+
+                The <b>“remove empty spectra”</b> filter will remove any spectra that do not contain any peaks. The
+                “remove
+                identification with less than X peptides” filter will scan and remove any protein identification from
+                the PRIDE XML file that contains less peptides than the number given as parameter.
+            </p>
+
+            <p>
+                The <b>“remove selected identifications”</b> filter requires a list of contaminant protein
+                identifications in
+                the form of a text file with one protein accession per line. It will use this blacklist to remove
+                corresponding identifications from the XML file where the submitted protein accession identically
+                matches one of the blacklisted protein identifiers.
+            </p>
+
+            <p>
+                The <b>“use protein inference results”</b> filter also requires a list of protein identifications in the
+                same
+                manner as the previous filter but works in the complete opposite fashion. Only identifications found in
+                the whitelist are retained in the final PRIDE XML file.
+            </p>
+
+            <h2>Notes</h2>
+
+            <p>
+                Generating the PRIDE XML files can take anywhere between minutes and hours. This is proportional to the
+                size, number and complexity of the source files. Users should ensure that they have sufficient disk
+                space. If filtering is enabled, the full PRIDE XML file is first written to disk, then written again in
+                its filtered form after it has been processed. The report file and the intermediate PRIDE XML file are
+                only deleted when PRIDE Converter 2 exits if the “remove temporary files” option is selected.
+            </p>
+
         </div>
     </div>
 
@@ -57,22 +115,28 @@
             <li><a href="format.html">Format Selection</a></li>
             <li><a href="fileselect.html">File Selection</a></li>
             <li><a href="experimentdetails.html">Experiment Details</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
-            <li><a href="references.html">References</a></li>
             <li><a href="sample.html">Sample Description</a></li>
             <li><a href="protocol.html">Protocol Description</a></li>
             <li><a href="instrument.html">Instrument Description</a></li>
             <li><a href="software.html">Software Processing</a></li>
-            <li><a href="databasemapping.html">Database Information</a></li>
             <li><a href="ptms.html">PTMs</a></li>
             <li><a href="review.html">Review</a></li>
             <li><a href="export.html">File Export</a></li>
-            <li><a href="validation.html">Validation Report</a></li>
+            <li><a href="othertools.html">Useful Tools</a></li>
         </ul>
+
+        <p>
+            <strong>The PRIDE XML Filter forms:</strong>
+        </p>
+
+        <ul>
+            <li><a href="filterinformation.html">Filter Information</a></li>
+        </ul>
+
     </div>
     <div id="footer">
         <p>Comments, questions, suggestions? See the
-            <a href="feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+            <a href="../../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>

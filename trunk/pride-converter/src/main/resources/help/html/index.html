@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" media="all" href="css/s.css">
-    <title>PRIDE Converter</title>
+    <title>PRIDE Converte 2 Tool Suiter</title>
 </head>
 
 <body class="template">
@@ -12,7 +12,7 @@
 
     <!-- header -->
     <div id="header">
-        <h1>PRIDE Converter</h1>
+        <h1>PRIDE Converte 2 Tool Suite</h1>
     </div>
 
     <!-- navigation -->
@@ -29,18 +29,54 @@
     <!-- table of contents -->
     <div class="introduction">
         <p>
-            <a href="http://code.google.com/p/pride-inspector">PRIDE Converter </a> is an open source application to
+            <a href="http://code.google.com/p/pride-converter-2">PRIDE Converter </a> is an open source application to
             convert vendor-specific formats or PSI community standards into XML files suitable for submission to PRIDE.
-
         </p>
+    </div>
 
-        <strong>Key Features</strong>:
+    <!-- content -->
+    <div id="content">
+        <p>The PRIDE Converter 2 tool suite is a composed of 4 independent applications:</p>
+        <ul>
+            <li>The <b>PRIDE Converter 2</b> application will convert MS search result files containing identification
+                and spectra into PRIDE XML.
+            </li>
+            <li>The <b>PRIDE mzTab Generator</b> will produce skeleton mzTab files from MS search results files. These
+                skeleton files require either manual or scripted editing to add quantitation and/or gel information.
+            </li>
+            <li>The <b>PRIDE XML Filter</b> will remove identifications or spectra from PRIDE XML files based on a
+                series of configurable filters.
+            </li>
+            <li>The <b>PRIDE XML Merger</b> will combine several PRIDE XML files into a single one.</li>
+        </ul>
+
+        <p>All tools have both a Graphical User Interface (GUI) and a Command-Line Interface (CLI). The GUIs have been
+            designed to provide a rich, user-friendly interface while the CLIs have been developed mainly for tool and
+            pipeline developers to be able to integrate the PRIDE Converter 2 tools in their own software to provide an
+            efficient way to generate PRIDE XML from their own resources.
+
+        <p><u>System Requirements:</u></p>
+        <ul>
+
+            <li>Java: JRE 1.5 +</li>
+            <li>CPU: 1 gigahertz (GHz) or faster 32-bit or 64-bit processor.</li>
+            <li>Memory: 1 gigabyte (GB) RAM.</li>
+            <li>Hard Disk: 55 MB available for installation, more if doing file conversions.</li>
+            <li>Platform: Tested in Mac OS X, Linux, and Windows (XP, Vista, 7).</li>
+            <li> PRIDE Converter 2 requires Internet access for connection to the Ontology Lookup Service (OLS) web
+                service
+            </li>
+            and automatic access to PubMed records already published.</li>
+        </ul>
+
+        <p><strong>Key Features</strong>:
         <ul>
             <li>Possibility to converty multiple files at once.</li>
             <li>Low memory footprint, even for arbitrarily large source files.</li>
             <li>Scriptable and interactive use are both possible.</li>
             <li>A host of programmable open source API/libraries.</li>
         </ul>
+
     </div>
 
     <div id="footer">

@@ -19,8 +19,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
             <td align="left" class="topicpath">
-                <span style="color:#666666;"><a href="software.html">Previous</a></span> | <a
-                    href="review.html">Next</a>
+                <a href="software.html">Previous</a> | <a href="review.html">Next</a>
                 | <a href="#topicSeeAlsoTopicsList">See Also</a>
             </td>
             <td width="70%" class="topicpath"></td>
@@ -29,18 +28,40 @@
 
     <!-- table of contents -->
     <div class="introduction">
-        <p>In this section:</p>
-        <ul>
-            <li><a href="one.html">One</a></li>
-            <li><a href="two.html">two</a></li>
-        </ul>
+        <p>This screen allows you to provide as much information as possible to describe the reported Post-Translational
+            Modifications (PTMs) reported in your search.
+        </p>
     </div>
 
     <!-- content -->
     <div id="content">
         <div class="section">
-            <img src="caps/PTMs.png">
-            <img src="caps/ptm-error.png">
+
+
+            <p>
+                PRIDE Converter 2 attempts to assign the correct PTM annotation based on a curated list of the most
+                commonly observed PTMs and the mass delta as reported by the search engine. Please refer to Table 2
+                below for the full list of automatically assigned PTMs. If a unique PTM can be assigned to a mass delta
+                within a 0.1 Da mass tolerance, the annotation is automatically shown to the user.
+            </p>
+
+            <p>
+                In cases where multiple PTMs can be assigned to a mass delta with a precision of 0.1 Da, PRIDE Converter
+                2 will try to locate a unique PTM assignment to within 0.01 Da. If a unique match is found at the higher
+                precision threshold, it will be assigned but the GUI will report the fact that multiple PTMs have been
+                observed. In the case that multiple PTMs are still found at the higher precision threshold, no mapping
+                is done. The GUI will report the fact that multiple PTMs have been observed within the mass tolerance
+                window by highlighting the conflict in yellow. PTMs that have not been automatically assigned will be
+                highlighted in red.
+
+            </p>
+
+            <p>
+                By double-clicking on a row highlighted in red, the user will be presented with a window showing the
+                preferred PTMs (those that map to a mass delta with a precision of 0.1 Da), if any. The user has the
+                choice to either select a preferred PTM, if applicable, or to search the PSI-MOD ontology via the OLS.
+            </p>
+
         </div>
     </div>
 
@@ -58,22 +79,20 @@
             <li><a href="format.html">Format Selection</a></li>
             <li><a href="fileselect.html">File Selection</a></li>
             <li><a href="experimentdetails.html">Experiment Details</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
-            <li><a href="references.html">References</a></li>
             <li><a href="sample.html">Sample Description</a></li>
             <li><a href="protocol.html">Protocol Description</a></li>
             <li><a href="instrument.html">Instrument Description</a></li>
             <li><a href="software.html">Software Processing</a></li>
-            <li><a href="databasemapping.html">Database Information</a></li>
             <li><a href="ptms.html">PTMs</a></li>
             <li><a href="review.html">Review</a></li>
             <li><a href="export.html">File Export</a></li>
-            <li><a href="validation.html">Validation Report</a></li>
+            <li><a href="othertools.html">Useful Tools</a></li>
+
         </ul>
     </div>
     <div id="footer">
         <p>Comments, questions, suggestions? See the
-            <a href="feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+            <a href="../../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>
