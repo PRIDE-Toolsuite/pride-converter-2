@@ -33,7 +33,8 @@ public class MergerTest extends TestCase {
         PrideXmlMerger m = new PrideXmlMerger(toMerge, "merge-test.xml", false, false);
         m.mergeXml();
 
-        PrideXmlReader in = new PrideXmlReader(new File("merge-test.xml"));
+        File mergedXML = new File("merge-test.xml");
+        PrideXmlReader in = new PrideXmlReader(mergedXML);
         assertEquals("There should be 4 merged spectra", 4, in.getSpectrumIds().size());
         assertEquals("There should be 4 merged identifications", 4, in.getIdentIds().size());
 
@@ -72,6 +73,7 @@ public class MergerTest extends TestCase {
             }
         }
 
+        assertEquals("Error during file delete", mergedXML.delete(), true);
 
     }
 

@@ -67,9 +67,11 @@ public class DataTypeForm extends AbstractForm {
         descriptionArea.setText("<br>" +
                 "<b>Mascot DAT Files</b><br><br>" +
                 "Mascot DAT Files are result files " +
-                "from a Mascot search. <br>Both the spectra and the identifications are included.<br><br>" +
+                "from a Mascot search. <br><br>" +
+                "Data Type: Identifications and Spectra<br><br>" +
                 "File Extension: .dat<br><br>" +
-                "Homepage: <a href=\"http://www.matrixscience.com\">www.matrixscience.com</a>");
+                "External spectra: N/A<br><br>" +
+                "More Information: <a href=\"http://www.matrixscience.com\">www.matrixscience.com</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -80,12 +82,13 @@ public class DataTypeForm extends AbstractForm {
         descriptionArea.setText("<br>" +
                 "<b>X!Tandem</b><br><br>" +
                 "X!Tandem is open source software that matches " +
-                "tandem mass spectra to peptide sequences.<br><br>" +
+                "tandem mass spectra to peptide sequences." +
                 "The output format is described here:<br>" +
-                "<a href=\"http://www.thegpm.org/docs/X_series_output_form.pdf\">www.thegpm.org/docs/X_series_output_form.pdf</a>" +
-                "<br><br>" +
-                "File Extension: .xml (the identifications) and dta, mgf, pkl, mzData or mzXML (the spectra)<br><br>" +
-                "Homepage: <a href=\"http://www.thegpm.org/TANDEM\">www.thegpm.org/TANDEM</a>");
+                "<a href=\"http://www.thegpm.org/docs/X_series_output_form.pdf\">www.thegpm.org/docs/X_series_output_form.pdf</a><br><br>" +
+                "Data Type: Identifications and Spectra<br><br>" +
+                "File Extension: .xml<br><br>" +
+                "External spectra: [OPTIONAL] A single file containing all spectra: dta, mgf, pkl, mzData or mzXML<br><br>" +
+                "More Information: <a href=\"http://www.thegpm.org/TANDEM\">www.thegpm.org/TANDEM</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -94,9 +97,12 @@ public class DataTypeForm extends AbstractForm {
     private void mzIdentMLRadioActionPerformed(ActionEvent e) {
         daoFormat = DAOFactory.DAO_FORMAT.MZIDENTML;
         descriptionArea.setText("<br>" +
-                "<b>MzIdentML</b><br>" +
-                "<p><strong>jmzIdentML</strong> provides a portable and lightweight JAXB-based implementation of the full mzIdentML 1.1 standard format (note that the <strong>jmzIdentML</strong> version number has no relation to the mzIdentML version number), with considerable tweaks to make the processing of files memory efficient. In particular, mzIdentML files are effectively indexed on the fly and used as swap files, with only requested snippets of data loaded from a file when accessing it. Additionally, internal references in the mzIdentML XML are resolved automatically by <strong>jmzIdentML</strong>, giving you direct access in the object model to entities that are only referenced by ID in the actual XML file. </p>\n" +
-                "<p><strong>jmzIdentML</strong> is written in 100% pure Java, and is made available under the permissive Apache2 open source license. </p>\n");
+                "<b>mzIdentML</b><br><br>" +
+                "mzIdentML is the current PSI standard for reporting proteomics results. <br><br>" +
+                "Data Type: Identifications and Spectra<br><br>" +
+                "File Extension: .xml<br><br>" +
+                "External spectra: [REQUIRED] A single file or a directory containing all spectra files: dta, mgf, pkl or mzML<br><br>" +
+                "More Information: <a href=\"http://www.psidev.info/mzidentml\">http://www.psidev.info/mzidentml</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -110,7 +116,9 @@ public class DataTypeForm extends AbstractForm {
                 "The first line contains the singly protonated peptide mass (MH+) and the peptide charge " +
                 "state. Subsequent lines contain space separated pairs of fragment ion m/z and intensity values. " +
                 "<br><br>NB: Each file contains a single MS/MS data set.<br><br>" +
+                "Data Type: Spectra only<br><br>" +
                 "File Extension: .dta<br><br>" +
+                "External spectra: N/A<br><br>" +
                 "More Information: <a href=\"http://www.matrixscience.com/help/data_file_help.html#DTA\">" +
                 "www.matrixscience.com/help/data_file_help.html#DTA</a>");
         descriptionArea.setCaretPosition(0);
@@ -123,9 +131,11 @@ public class DataTypeForm extends AbstractForm {
         descriptionArea.setText("<br>" +
                 "<b>Mascot Generic Files</b><br><br>" +
                 "The Mascot Generic File format is a generic format for submitting " +
-                "data to Mascot. <br>It only contains information about the spectra.<br><br>" +
+                "data to Mascot. <br><br>" +
+                "Data Type: Spectra only<br><br>" +
                 "File Extension: .mgf<br><br>" +
-                "Homepage: <a href=\"http://www.matrixscience.com\">www.matrixscience.com</a>");
+                "External spectra: N/A<br><br>" +
+                "More Information: <a href=\"http://www.matrixscience.com\">www.matrixscience.com</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -137,7 +147,9 @@ public class DataTypeForm extends AbstractForm {
                 "<b>MS2</b><br><br>" +
                 "MS2 files stores MS/MS data and can replace a folder of thousands of DTA files. " +
                 "It contains all the spectral information necessary for database searching algorithms.<br><br>" +
+                "Data Type: Spectra only<br><br>" +
                 "File Extension: .ms2<br><br>" +
+                "External spectra: N/A<br><br>" +
                 "More Information: <a href=\"http://doi.wiley.com/10.1002/rcm.1603\">" +
                 "http://doi.wiley.com/10.1002/rcm.1603</a>");
         descriptionArea.setCaretPosition(0);
@@ -149,8 +161,12 @@ public class DataTypeForm extends AbstractForm {
         daoFormat = DAOFactory.DAO_FORMAT.MSGF;
         descriptionArea.setText("<br>" +
                 "<b>MSGF files</b><br><br>" +
-                "MSGF files are generated by the MSGF utility.<br>" +
-                "Detailed information can be found at <a href=\"http://proteomics.ucsd.edu/Software/MSGeneratingFunction.html\">http://proteomics.ucsd.edu/Software/MSGeneratingFunction.html</a>");
+                "MSGF files are generated by the MS-GeneratingFunction utility.<br><br>" +
+                "Data Type: Identification and Spectra<br><br>" +
+                "File Extension: .msgf<br><br>" +
+                "External spectra: [REQUIRED] A directory containing all the spectra file: mzXML, mgf, ms2 or pkl<br><br>" +
+                "More Information: <a href=\"http://proteomics.ucsd.edu/Software/MSGeneratingFunction.html\">http://proteomics.ucsd.edu/Software/MSGeneratingFunction.html</a>");
+
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -159,11 +175,13 @@ public class DataTypeForm extends AbstractForm {
     private void mzMLRadioActionPerformed(ActionEvent e) {
         daoFormat = DAOFactory.DAO_FORMAT.MZML;
         descriptionArea.setText("<br>" +
-                "<b>MZML</b><br>" +
-                "<p><strong>jmzML</strong> provides a portable and lightweight JAXB-based implementation of the full mzML 1.1 standard format (note that the <strong>jmzML</strong> version number has no relation to the mzML version number), with considerable tweaks to make the processing of files memory efficient. In particular, mzML files are effectively indexed on the fly and used as swap files, with only requested snippets of data loaded from a file when accessing it. Additionally, internal references in the mzML XML are resolved automatically by <strong>jmzML</strong>, giving you direct access in the object model to entities that are only referenced by ID in the actual XML file. </p>\n" +
-                "<p>Apart from reading indexed and non-indexed mzML files, <strong>jmzML</strong> also allows writing of non-indexed mzML files. </p>\n" +
-                "<p><strong>jmzML</strong> is written in 100% pure Java, and is made available under the permissive Apache2 open source license. </p>\n" +
-                "<p>A one-page guide on using the <strong>jmzML</strong> API can be found here: <a href=\"http://code.google.com/p/jmzml/wiki/HowToUseJMzML\">HowToUseJMzML</a> </p>");
+                "<b>mzML</b><br><br>" +
+                "mzML is the current PSI's standard format for MS data. mzML" +
+                " files only contain spectra and chromatograms but no identifications.<br><br>" +
+                "Data Type: Spectra only<br><br>" +
+                "File Extension: .xml<br><br>" +
+                "External spectra: N/A<br><br>" +
+                "More Information: <a href=\"http://www.psidev.info/mzml\">http://www.psidev.info/mzml</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -176,8 +194,10 @@ public class DataTypeForm extends AbstractForm {
                 "Waters uses two formats to represent mass spectrometry data via the MassLynx program. " +
                 "The .pkl format is a plain-text file containing one or more centroided, monoisotopic " +
                 "peak list of a .raw/directory structure.<br><br>" +
+                "Data Type: Spectra only<br><br>" +
                 "File Extensions: .pkl <br><br>" +
-                "Homepage: <a href=\"http://www.waters.com/waters/nav.htm?cid=513164\">" +
+                "External spectra: N/A<br><br>" +
+                "More Information: <a href=\"http://www.waters.com/waters/nav.htm?cid=513164\">" +
                 "Waters MassLynx</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
@@ -189,9 +209,11 @@ public class DataTypeForm extends AbstractForm {
         descriptionArea.setText("<br>" +
                 "<b>mzXML</b><br><br>" +
                 "mzXML is an open data format for storage and exchange of mass spectroscopy data, developed at the " +
-                "Institute for Systems Biology. mzXML provides a standard container for ms and ms/ms proteomics data. " +
-                "Raw, proprietary file formats from most vendors can be converted to the open mzXML format.<br><br>" +
-                "Homepage: <a href=\"http://tools.proteomecenter.org/software.php\">" +
+                "Institute for Systems Biology. mzXML provides a standard container for ms and ms/ms proteomics data.<BR><BR> " +
+                "Data Type: Identifications and Spectra<br><br>" +
+                "File Extensions: .xml <br><br>" +
+                "External spectra: N/A<br><br>" +
+                "More Information: <a href=\"http://tools.proteomecenter.org/software.php\">" +
                 "http://tools.proteomecenter.org/software.php</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
@@ -202,9 +224,12 @@ public class DataTypeForm extends AbstractForm {
         daoFormat = DAOFactory.DAO_FORMAT.MZDATA;
         descriptionArea.setText("<br>" +
                 "<b>mzData</b><br><br>" +
-                "The mzData standard, which captures mass spectrometry output data. mzData's aim is to unite the large number of current formats (pkl's, dta's, mgf's, .....) into a single format. mzData has been released and is stable at version 1.05. It is now deprecated in favor of mzML.<br><br>" +
-                "Homepage: <a href=\"http://www.psidev.info/index.php?q=node/80#mzdata\">" +
-                "http://www.psidev.info/index.php?q=node/80#mzdata</a>");
+                "The PSI's mzData standard, which captures mass spectrometry output data. mzData has been released and is stable at version 1.05. It is now deprecated in favor of mzML.<br><br>" +
+                "Data Type: Spectra only<br><br>" +
+                "File Extensions: .xml <br><br>" +
+                "External spectra: N/A<br><br>" +
+                "More Information: <a href=\"http://www.psidev.info/mzdata-1_0_5\">" +
+                "http://www.psidev.info/mzdata-1_0_5</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -229,9 +254,17 @@ public class DataTypeForm extends AbstractForm {
 
     private void cruxButtonActionPerformed() {
         daoFormat = DAOFactory.DAO_FORMAT.CRUX;
-        descriptionArea.setText("<br/><b>Crux</b><br/><br/>Crux is a software toolkit for tandem mass spectrometry analysis, with a focus on peptide identification. The Crux-txt file format records the matches between MS/MS spectra and a sequence database using lines of tab delimited fields." +
-                "<br/><br/>" +
-                "More information here: <a href=\"http://noble.gs.washington.edu/proj/crux/\">http://noble.gs.washington.edu/proj/crux/</a>");
+        descriptionArea.setText("<br/>" +
+                "<b>Crux</b><br/><br/>" +
+                "Crux is a software toolkit for tandem mass spectrometry analysis, " +
+                "with a focus on peptide identification. The Crux-txt file format " +
+                "records the matches between MS/MS spectra and a sequence " +
+                "database using lines of tab delimited fields.<br/><br/>" +
+                "Data Type: Identifications and Spectra<br><br>" +
+                "File Extensions: .txt <br><br>" +
+                "External spectra: [REQUIRED] A single file or a directory containing all spectra files: dta, mgf, pkl, mzData or mzXML<br><br>" +
+                "More Information: <a href=\"http://noble.gs.washington.edu/proj/crux/\">" +
+                "http://noble.gs.washington.edu/proj/crux/</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -239,9 +272,17 @@ public class DataTypeForm extends AbstractForm {
 
     private void spectrastButtonActionPerformed() {
         daoFormat = DAOFactory.DAO_FORMAT.SPECTRAST;
-        descriptionArea.setText("<br/><b>SpectraST</b><br/><br/>SpectraST (short for \"Spectra Search Tool\") is a spectral library building and searching tool designed primarily for shotgun proteomics applications. It is developed at the Institute for Systems Biology (ISB) and is distributed as a component of the Trans Proteomic Pipeline (TPP) suite of software." +
-                "<br/><br/>" +
-                "More information here: <a href=\"http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST\">http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST</a>");
+        descriptionArea.setText("<br/>" +
+                "<b>SpectraST</b><br/>" +
+                "<br/>SpectraST (short for \"Spectra Search Tool\") is a spectral " +
+                "library building and searching tool designed primarily " +
+                "for shotgun proteomics applications " +
+                "as a component of the Trans Proteomic Pipeline (TPP) suite of software.<br/><br/>" +
+                "Data Type: Identifications and Spectra<br><br>" +
+                "File Extensions: .txt <br><br>" +
+                "External spectra: [REQUIRED] A single file containing all spectra: dta, mgf, pkl, mzData or mzXML<br><br>" +
+                "More Information: <a href=\"http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST\">" +
+                "http://tools.proteomecenter.org/wiki/index.php?title=Software:SpectraST</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -251,10 +292,12 @@ public class DataTypeForm extends AbstractForm {
         daoFormat = DAOFactory.DAO_FORMAT.OMSSA;
         descriptionArea.setText("<br>" +
                 "<b>OMSSA CSV Files</b><br><br>" +
-                "OMSSA CSV files are the comma-separated values (CSV) export of search results from the Open Mass Spectrometry Search Algorithm [OMSSA] search engine. " +
-                "<br><br>" +
-                "File Extension: .csv<br><br>" +
-                "Homepage: <a href=\"http://pubchem.ncbi.nlm.nih.gov/omssa/\">http://pubchem.ncbi.nlm.nih.gov/omssa/</a>");
+                "OMSSA CSV files are the comma-separated values (CSV) export of " +
+                "search results from the Open Mass Spectrometry Search Algorithm [OMSSA] search engine. <br><br>" +
+                "Data Type: Identifications and Spectra<br><br>" +
+                "File Extensions: .csv <br><br>" +
+                "External spectra: A single file containing all spectra: dta, mgf, pkl, ms2, mzML or mzXML<br><br>" +
+                "More Information: <a href=\"http://pubchem.ncbi.nlm.nih.gov/omssa/\">http://pubchem.ncbi.nlm.nih.gov/omssa/</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
@@ -264,10 +307,12 @@ public class DataTypeForm extends AbstractForm {
         daoFormat = DAOFactory.DAO_FORMAT.MSF;
         descriptionArea.setText("<br>" +
                 "<b>Proteome Discoverer Files</b><br><br>" +
-                "Thermo Scientific Proteome Discoverer software is a flexible, expandable platform for the analysis of qualitative and quantitative proteomics data. " +
-                "<br><br>" +
-                "File Extension: .msf<br><br>" +
-                "Homepage: <a href=\"http://www.thermoscientific.com/\">http://www.thermoscientific.com/</a>");
+                "Thermo Scientific Proteome Discoverer software is a platform for the analysis " +
+                "of qualitative and quantitative proteomics data. <br><br>" +
+                "Data Type: Identifications and Spectra<br><br>" +
+                "File Extensions: .msf <br><br>" +
+                "External spectra: N/A<br><br>" +
+                "More Information: <a href=\"http://www.thermoscientific.com/\">http://www.thermoscientific.com/</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
         validationListerner.fireValidationListener(true);
