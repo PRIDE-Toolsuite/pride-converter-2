@@ -57,7 +57,10 @@
             <tocitem text="DTA DAO Options" target="help.ui.dao.dta"/>
             <tocitem text="PKL DAO Options" target="help.ui.dao.pkl"/>
             <tocitem text="MGF DAO Options" target="help.ui.dao.mgf"/>
-            <tocitem text="mzData DAO Options" target="help.ui.dao.mzdata"/>
+            <tocitem text="SpectraST DAO Options" target="help.ui.dao.spectrast"/>
+            <tocitem text="CRUX DAO Options" target="help.ui.dao.crux"/>
+            <tocitem text="OMSSA DAO Options" target="help.ui.dao.omssa"/>
+            <tocitem text="Proteome Discoverer DAO Options" target="help.ui.dao.proteomediscoverer"/>
         </tocitem>
 
         <tocitem text="Feedback Page" target="help.feedback"/>

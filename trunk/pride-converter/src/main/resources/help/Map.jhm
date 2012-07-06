@@ -47,6 +47,11 @@
     <mapID target="help.ui.dao.pride" url="html/usage/ui/dao/pride.html"/>
     <mapID target="help.ui.dao.msgf" url="html/usage/ui/dao/msgf.html"/>
     <mapID target="help.ui.mztab.options" url="html/usage/ui/dao/mztaboptions.html"/>
+    <mapID target="help.ui.dao.spectrast" url="html/usage/ui/missing.html"/>
+    <mapID target="help.ui.dao.crux" url="html/usage/ui/missing.html"/>
+    <mapID target="help.ui.dao.spectrast" url="html/usage/ui/missing.html"/>
+    <mapID target="help.ui.dao.omssa" url="html/usage/ui/missing.html"/>
+    <mapID target="help.ui.dao.proteomediscoverer" url="html/usage/ui/missing.html"/>
 
     <mapID target="help.ui.merger.information" url="html/usage/ui/mergerinformation.html"/>
     <mapID target="help.ui.merger.masterfile" url="html/usage/ui/mergermasterfile.html"/>
