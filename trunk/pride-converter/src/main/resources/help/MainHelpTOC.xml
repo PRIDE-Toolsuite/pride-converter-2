@@ -48,19 +48,20 @@
         </tocitem>
 
         <tocitem text="DAO Options" target="help.ui.dao">
-            <tocitem text="Mascot DAO Options" target="help.ui.dao.mascot"/>
-            <tocitem text="mzXML DAO Options" target="help.ui.dao.mzxml"/>
-            <tocitem text="mzML DAO Options" target="help.ui.dao.mzml"/>
-            <tocitem text="mzIdentML DAO Options" target="help.ui.dao.mzidentml"/>
-            <tocitem text="X!Tandem DAO Options" target="help.ui.dao.xtandem"/>
-            <tocitem text="MS2 DAO Options" target="help.ui.dao.ms2"/>
-            <tocitem text="DTA DAO Options" target="help.ui.dao.dta"/>
-            <tocitem text="PKL DAO Options" target="help.ui.dao.pkl"/>
-            <tocitem text="MGF DAO Options" target="help.ui.dao.mgf"/>
-            <tocitem text="SpectraST DAO Options" target="help.ui.dao.spectrast"/>
             <tocitem text="CRUX DAO Options" target="help.ui.dao.crux"/>
+            <tocitem text="DTA DAO Options" target="help.ui.dao.dta"/>
+            <tocitem text="Mascot DAO Options" target="help.ui.dao.mascot"/>
+            <tocitem text="MGF DAO Options" target="help.ui.dao.mgf"/>
+            <tocitem text="MSGF DAO Options" target="help.ui.dao.msgf"/>
+            <tocitem text="MS2 DAO Options" target="help.ui.dao.ms2"/>
+            <tocitem text="mzIdentML DAO Options" target="help.ui.dao.mzidentml"/>
+            <tocitem text="mzML DAO Options" target="help.ui.dao.mzml"/>
+            <tocitem text="mzXML DAO Options" target="help.ui.dao.mzxml"/>
             <tocitem text="OMSSA DAO Options" target="help.ui.dao.omssa"/>
             <tocitem text="Proteome Discoverer DAO Options" target="help.ui.dao.proteomediscoverer"/>
+            <tocitem text="PKL DAO Options" target="help.ui.dao.pkl"/>
+            <tocitem text="SpectraST DAO Options" target="help.ui.dao.spectrast"/>
+            <tocitem text="X!Tandem DAO Options" target="help.ui.dao.xtandem"/>
         </tocitem>
 
         <tocitem text="Feedback Page" target="help.feedback"/>
