@@ -16,6 +16,8 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
@@ -31,7 +33,7 @@ public class OtherToolsForm extends AbstractForm {
         try {
             editorPane.setEditorKit(new HTMLEditorKit());
             editorPane.setContentType("text/html");
-            editorPane.setPage(getClass().getClassLoader().getResource("help/html/usage/ui/othertools.html"));
+            editorPane.setPage(getClass().getResource("OtherToolsForm.html"));
         } catch (IOException e) {
             throw new IllegalStateException("Could not load page content", e);
         }
@@ -80,14 +82,29 @@ public class OtherToolsForm extends AbstractForm {
         setCursor(Cursor.getDefaultCursor());
     }
 
+    private void openWebsite(ActionEvent e) {
+        String url = null;
+        if (e.getSource().equals(pxLabelButton)) {
+            url = "http://www.proteomexchange.org";
+        } else if (e.getSource().equals(piLabelButton)) {
+            url = "http://code.google.com/p/pride-toolsuite/downloads/list";
+        } else {
+            throw new IllegalStateException("Unknown source: " + e.getSource());
+        }
+        this.setCursor(new Cursor(java.awt.Cursor.WAIT_CURSOR));
+        BrowserLauncher.openURL(url);
+        this.setCursor(new Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
         scrollPane1 = new JScrollPane();
         editorPane = new JEditorPane();
-        panel1 = new JPanel();
         piLabel = new JLabel();
         pxLabel = new JLabel();
+        piLabelButton = new JButton();
+        pxLabelButton = new JButton();
 
         //======== this ========
 
@@ -106,54 +123,65 @@ public class OtherToolsForm extends AbstractForm {
             scrollPane1.setViewportView(editorPane);
         }
 
-        //======== panel1 ========
-        {
-            panel1.setLayout(new GridLayout(0, 2, 5, 5));
+        //---- piLabel ----
+        piLabel.setIcon(new ImageIcon(getClass().getResource("/images/pi-logo.png")));
+        piLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        piLabel.setToolTipText("Double-click to get PRIDE Inspector");
+        piLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                openWebsite(e);
+            }
 
-            //---- piLabel ----
-            piLabel.setIcon(new ImageIcon(getClass().getResource("/images/pi-logo.png")));
-            piLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            piLabel.setToolTipText("Double-click to get PRIDE Inspector");
-            piLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    openWebsite(e);
-                }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                showHandCursor();
+            }
 
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    showHandCursor();
-                }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                showDefaultCursor();
+            }
+        });
 
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    showDefaultCursor();
-                }
-            });
-            panel1.add(piLabel);
+        //---- pxLabel ----
+        pxLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        pxLabel.setIcon(new ImageIcon(getClass().getResource("/images/px-logo.png")));
+        pxLabel.setToolTipText("Double-click to go to ProteomExchange");
+        pxLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                openWebsite(e);
+            }
 
-            //---- pxLabel ----
-            pxLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            pxLabel.setIcon(new ImageIcon(getClass().getResource("/images/px-logo.png")));
-            pxLabel.setToolTipText("Double-click to go to ProteomExchange");
-            pxLabel.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    openWebsite(e);
-                }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                showHandCursor();
+            }
 
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    showHandCursor();
-                }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                showDefaultCursor();
+            }
+        });
 
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    showDefaultCursor();
-                }
-            });
-            panel1.add(pxLabel);
-        }
+        //---- piLabelButton ----
+        piLabelButton.setText("Start PRIDE Inspector");
+        piLabelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openWebsite(e);
+            }
+        });
+
+        //---- pxLabelButton ----
+        pxLabelButton.setText("Go to ProteomeXchange");
+        pxLabelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openWebsite(e);
+            }
+        });
 
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
@@ -163,16 +191,29 @@ public class OtherToolsForm extends AbstractForm {
                                 .addContainerGap()
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(scrollPane1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
-                                        .addComponent(panel1, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup()
+                                                        .addComponent(piLabelButton, GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
+                                                        .addComponent(piLabel, GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addGroup(layout.createParallelGroup()
+                                                        .addComponent(pxLabel, GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
+                                                        .addComponent(pxLabelButton, GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE))))
                                 .addContainerGap())
         );
         layout.setVerticalGroup(
                 layout.createParallelGroup()
-                        .addGroup(layout.createSequentialGroup()
+                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                        .addComponent(piLabel)
+                                        .addComponent(pxLabel))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup()
+                                        .addComponent(piLabelButton)
+                                        .addComponent(pxLabelButton))
                                 .addContainerGap())
         );
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -182,9 +223,10 @@ public class OtherToolsForm extends AbstractForm {
     // Generated using JFormDesigner non-commercial license
     private JScrollPane scrollPane1;
     private JEditorPane editorPane;
-    private JPanel panel1;
     private JLabel piLabel;
     private JLabel pxLabel;
+    private JButton piLabelButton;
+    private JButton pxLabelButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

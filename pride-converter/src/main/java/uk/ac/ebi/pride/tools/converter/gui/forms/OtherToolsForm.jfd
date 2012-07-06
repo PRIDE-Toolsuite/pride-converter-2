@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "uk.ac.ebi.pride.tools.converter.gui.forms.AbstractForm", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::613:x, comp panel1::l::613:x}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp scrollPane1::::320:x, space :::p, comp panel1:::p:107:p, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :p::p, par t {comp scrollPane1::l::613:x, seq t {par l {comp piLabelButton::::302:x, comp piLabel::l::302:x}, space :::p, par l {comp pxLabel::::305:x, comp pxLabelButton::l::305:x}}}, space :::p}}"
+			"$verticalGroup": "par l {seq t {space :::p, comp scrollPane1::::376:x, space :::p, par t {comp piLabel:::p::p, comp pxLabel:::p::p}, space :::p, par l {comp piLabelButton:::p::p, comp pxLabelButton:::p::p}, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
@@ -17,35 +17,37 @@ new FormModel {
 					addEvent( new FormEvent( "javax.swing.event.HyperlinkListener", "hyperlinkUpdate", "editorPaneHyperlinkUpdate", true ) )
 				} )
 			} )
-			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.GridLayout ) {
-				"columns": 2
-				"rows": 0
-				"hgap": 5
-				"vgap": 5
-			} ) {
-				name: "panel1"
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "piLabel"
-					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/pi-logo.png" )
-					"horizontalAlignment": 0
-					"toolTipText": "Double-click to get PRIDE Inspector"
-					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "openWebsite", true ) )
-					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "showHandCursor", false ) )
-					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "showDefaultCursor", false ) )
-				} )
-				add( new FormComponent( "javax.swing.JLabel" ) {
-					name: "pxLabel"
-					"horizontalAlignment": 0
-					"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/px-logo.png" )
-					"toolTipText": "Double-click to go to ProteomExchange"
-					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "openWebsite", true ) )
-					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "showHandCursor", false ) )
-					addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "showDefaultCursor", false ) )
-				} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "piLabel"
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/pi-logo.png" )
+				"horizontalAlignment": 0
+				"toolTipText": "Double-click to get PRIDE Inspector"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "openWebsite", true ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "showHandCursor", false ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "showDefaultCursor", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "pxLabel"
+				"horizontalAlignment": 0
+				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/px-logo.png" )
+				"toolTipText": "Double-click to go to ProteomExchange"
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "openWebsite", true ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseEntered", "showHandCursor", false ) )
+				addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseExited", "showDefaultCursor", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "piLabelButton"
+				"text": "Start PRIDE Inspector"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openWebsite", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "pxLabelButton"
+				"text": "Go to ProteomeXchange"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openWebsite", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
-			"size": new java.awt.Dimension( 625, 445 )
+			"size": new java.awt.Dimension( 625, 520 )
 		} )
 	}
 }
