@@ -244,7 +244,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         // Create the filter object from the supportedProperties
         if (ScoreCriteria.XCORR_RANK.getName().equals(scoreCriteria)) {
             filter = new XcorrRankFilterCriteria();
-            filter.setThreshold(Integer.parseInt(threshold));
+            filter.setThreshold(Double.parseDouble(threshold));
         } else if (ScoreCriteria.XCORR_SCORE.getName().equals(scoreCriteria)) {
             filter = new XcorrScoreFilterCriteria();
             filter.setThreshold(Double.parseDouble(threshold));

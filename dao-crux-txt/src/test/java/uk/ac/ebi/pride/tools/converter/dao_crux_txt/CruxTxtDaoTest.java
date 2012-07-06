@@ -26,7 +26,7 @@ public class CruxTxtDaoTest extends TestCase {
 
     private static String decoyPrefix = "DECOY_";
     private static String scoreCriteria = ScoreCriteria.XCORR_RANK.getName();
-    private static String threshold = "5";
+    private static String threshold = "1.0";
 
 
     private static CruxTxtDao cruxTxtDao = new CruxTxtDao(new File(resultDirectory));
@@ -83,9 +83,9 @@ public class CruxTxtDaoTest extends TestCase {
 //            System.out.println("Obtained spectrum: " + newSpectrum.getId());
         }
 
-        assertEquals(spectraCountAll,count);
+        assertEquals(spectraCountAll, count);
 
-        assertEquals(spectraCountAll,spectraInFile);
+        assertEquals(spectraCountAll, spectraInFile);
 
     }
 
