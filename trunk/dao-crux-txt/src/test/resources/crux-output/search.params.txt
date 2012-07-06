@@ -569,7 +569,7 @@ mod=15.994915:MASK:2
 # Available from parameter file for crux-generate-peptides and
 # crux-search-for-matches and the the same must be used for crux
 # compute-q-value.
-nmod=12.123456:0
+nmod=no mods
 
 # Specify a variable modification to apply to C-terminus of peptides.
 # <mass change>:<max distance from protein c-term (-1 for no max)>.
@@ -577,5 +577,5 @@ nmod=12.123456:0
 # Available from parameter file for crux-generate-peptides and
 # crux-search-for-matches and the the same must be used for crux
 # compute-q-value.
-cmod=-21.654321:0
+cmod=no mods
 
