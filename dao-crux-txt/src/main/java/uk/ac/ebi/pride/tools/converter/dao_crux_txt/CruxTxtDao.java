@@ -45,14 +45,14 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     }
 
     /**
-	 * Logger used by this class
-	 */
-	private static final Logger logger = Logger.getLogger(CruxTxtDao.class);
+     * Logger used by this class
+     */
+    private static final Logger logger = Logger.getLogger(CruxTxtDao.class);
 
     /**
-	 * The input target Crux-txt file.
-	 */
-	private final File targetFile;
+     * The input target Crux-txt file.
+     */
+    private final File targetFile;
 
     /**
      * The input decoy Crux-txt file.
@@ -75,25 +75,25 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     private ArrayList<String> targetFileIndex;
 
     /**
-     * Decoy file index 
+     * Decoy file index
      */
     private ArrayList<String> decoyFileIndex;
 
-    
-	/**
-	 * The proteins found in the Crux-txt target file
-	 */
-	private Map<String, CruxProtein> proteins;
+
+    /**
+     * The proteins found in the Crux-txt target file
+     */
+    private Map<String, CruxProtein> proteins;
 
     /**
      * The proteins found in the Crux-txt decoy file
      */
     private Map<String, CruxProtein> proteinsDecoy;
 
-	/**
-	 * The spectra file
-	 */
-	private File spectraFile;
+    /**
+     * The spectra file
+     */
+    private File spectraFile;
 
     /**
      * The spectra file type
@@ -111,19 +111,19 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     private String decoyPrefix = "";
 
     /**
-	 * List of spectra ids that were identified
-	 */
-	private List<Integer> identifiedSpecIds;
+     * List of spectra ids that were identified
+     */
+    private List<Integer> identifiedSpecIds;
 
     /**
-	 * The search engine reported for the proteins
-	 */
-	private String searchEngine = "Crux";
+     * The search engine reported for the proteins
+     */
+    private String searchEngine = "Crux";
 
     /**
      * Contains all the supportedProperties of this DAO (get/setConfiguration)
      */
-	private Properties supportedProperties;
+    private Properties supportedProperties;
 
     /**
      * Built up from the search parameter file
@@ -152,19 +152,19 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
     /**
      * Main constructor. Will parse three files:
-     *  - Crux txt target identifications file
-     *  - Crux txt decoy identifications file
-     *  - Crux parameters file
-     *  And create the proper internal data structures
+     * - Crux txt target identifications file
+     * - Crux txt decoy identifications file
+     * - Crux parameters file
+     * And create the proper internal data structures
      *
      * @param resultFolder
      */
-	public CruxTxtDao(File resultFolder) {
-		this.targetFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.target.txt");
-		this.parametersFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.params.txt");
-        this.decoyFile = new File(resultFolder.getAbsolutePath()+ System.getProperty("file.separator") + "search.decoy.txt");
+    public CruxTxtDao(File resultFolder) {
+        this.targetFile = new File(resultFolder.getAbsolutePath() + System.getProperty("file.separator") + "search.target.txt");
+        this.parametersFile = new File(resultFolder.getAbsolutePath() + System.getProperty("file.separator") + "search.params.txt");
+        this.decoyFile = new File(resultFolder.getAbsolutePath() + System.getProperty("file.separator") + "search.decoy.txt");
 
-		// parse the Crux files
+        // parse the Crux files
         CruxTxtIdentificationsParser parser = new CruxTxtIdentificationsParser();
         // parse target file
         CruxIdentificationsParserResult resTarget = parser.parse(targetFile);
@@ -180,7 +180,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         params = CruxTxtParamsParser.parse(parametersFile);
 
         setDefaultConfiguration();
-	}
+    }
 
     @SuppressWarnings("rawtypes")
     public static Collection<DAOProperty> getSupportedProperties() {
@@ -196,9 +196,9 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         DAOProperty<String> decoyPrefix = new DAOProperty<String>(SupportedProperty.DECOY_PREFIX.getName(), null);
         decoyPrefix.setDescription("Allows adding a prefix to decoy file identifications.");
         supportedProperties.add(decoyPrefix);
-        
+
         // Threshold
-        DAOProperty<String> threshold = new DAOProperty<String>(SupportedProperty.THRESHOLD.getName(), null);
+        DAOProperty<String> threshold = new DAOProperty<String>(SupportedProperty.THRESHOLD.getName(), "1.0");
         threshold.setDescription("Allows filtering identifications. Default value is 1.0 so all identifications pass the cut.");
         supportedProperties.add(threshold);
 
@@ -208,7 +208,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         supportedProperties.add(scoreCriteria);
 
         // Get just highest ranked item
-        DAOProperty<String> getMaxScoreItem = new DAOProperty<String>(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "true");
+        DAOProperty<Boolean> getMaxScoreItem = new DAOProperty<Boolean>(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), true);
         getMaxScoreItem.setDescription("Defines if this DAO retrieves just the highest ranked identification for each " +
                 "scan, based on the defined score_criteria. If there are several identifications with the same score, " +
                 "all of them will be returned. True by default");
@@ -219,6 +219,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
     /**
      * Sets the supportedProperties associated to this DAO
+     *
      * @param props The supportedProperties to be associated with the DAO
      */
     public void setConfiguration(Properties props) {
@@ -227,13 +228,13 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         // set member supportedProperties here using supportedProperties object
 //        spectraFile = new File(props.getProperty(SupportedProperty.SPECTRUM_FILE.getName()));
         decoyPrefix = props.getProperty(SupportedProperty.DECOY_PREFIX.getName());
-        if (props.getProperty(SupportedProperty.THRESHOLD.getName()) == null ) {
-            threshold = "0.0";
+        if (props.getProperty(SupportedProperty.THRESHOLD.getName()) == null) {
+            threshold = "1.0";
         } else {
             threshold = props.getProperty(SupportedProperty.THRESHOLD.getName());
         }
 
-        if (props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()) == null) { // todo: I couldn't make defaults to work
+        if (props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()) == null) {
             getHighest = true;
         } else {
             getHighest = Boolean.parseBoolean(props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()));
@@ -263,16 +264,17 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     private void setDefaultConfiguration() {
         Properties properties = new Properties();
         properties.setProperty(SupportedProperty.DECOY_PREFIX.getName(), "");
-        properties.setProperty(SupportedProperty.THRESHOLD.getName(), "5");
+        properties.setProperty(SupportedProperty.THRESHOLD.getName(), "1.0");
         properties.setProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName(), "true");
         properties.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), ScoreCriteria.XCORR_RANK.getName());
         this.filter = new XcorrRankFilterCriteria();
         this.filter.setThreshold(5);
         this.setConfiguration(properties);
     }
-    
+
     /**
      * Gets the supportedProperties associated with this DAO
+     *
      * @return The supportedProperties associated with the DAO
      */
     public Properties getConfiguration() {
@@ -281,6 +283,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
     /**
      * Sets the spectra file associated with this set of files.
+     *
      * @throws ConverterException if file does not exist.
      */
     public void setExternalSpectrumFile(String s) {
@@ -294,7 +297,6 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
@@ -304,70 +306,63 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public String getExperimentTitle() throws InvalidFormatException {
-		return "Unknown Crux based experiment";
-	}
+    public String getExperimentTitle() throws InvalidFormatException {
+        return "Unknown Crux based experiment";
+    }
 
     /**
-     *
      * @return
      */
-	public String getExperimentShortLabel() {
-		return null;
-	}
+    public String getExperimentShortLabel() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Param getExperimentParams() throws InvalidFormatException {
-		// initialize the collection to hold the params
+    public Param getExperimentParams() throws InvalidFormatException {
+        // initialize the collection to hold the params
         Param params = new Param();
 
         // original MS format param
         params.getCvParam().add(DAOCvParams.ORIGINAL_MS_FORMAT.getParam("Crux text file"));
-       	params.getCvParam().add(DAOCvParams.MS_MS_SEARCH.getParam());
+        params.getCvParam().add(DAOCvParams.MS_MS_SEARCH.getParam());
 
         return params;
-	}
+    }
 
     /**
-     *
      * @return
      */
-	public String getSampleName() {
-		return null;
-	}
+    public String getSampleName() {
+        return null;
+    }
 
     /**
-     *
      * @return
      */
-	public String getSampleComment() {
-		return null;
-	}
+    public String getSampleComment() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Param getSampleParams() throws InvalidFormatException {
-		return new Param();
-	}
+    public Param getSampleParams() throws InvalidFormatException {
+        return new Param();
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public SourceFile getSourceFile() throws InvalidFormatException {
-		// initialize the return variable
+    public SourceFile getSourceFile() throws InvalidFormatException {
+        // initialize the return variable
         SourceFile file = new SourceFile();
 
         file.setPathToFile(targetFile.getAbsolutePath());
@@ -375,109 +370,99 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         file.setFileType("Crux file");
 
         return file;
-	}
+    }
 
     /**
-     *
      * @return
      */
-	public Collection<Contact> getContacts() {
-		return null;
-	}
+    public Collection<Contact> getContacts() {
+        return null;
+    }
 
     /**
-     *
      * @return
      */
-	public InstrumentDescription getInstrument() {
-		return null;
-	}
+    public InstrumentDescription getInstrument() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Software getSoftware() throws InvalidFormatException {
+    public Software getSoftware() throws InvalidFormatException {
         Software s = new Software();
         s.setName("Crux");
         s.setVersion("");
-		return s;
-	}
+        return s;
+    }
 
     /**
-     *
      * @return
      */
-	public Param getProcessingMethod() {
+    public Param getProcessingMethod() {
         Param param = new Param();
         DAOCvParams cvParam = DAOCvParams.SEARCH_SETTING_PARENT_MASS_TOLERANCE;
         cvParam.setValue(this.params.properties.getProperty("precursor-window") + " " + this.params.properties.getProperty("precursor-window-type"));
         param.getCvParam().add(cvParam.getParam());
-		return param;
-	}
+        return param;
+    }
 
     /**
-     *
      * @return
      */
-	public Protocol getProtocol() {
-		return null;
-	}
+    public Protocol getProtocol() {
+        return null;
+    }
 
     /**
-     *
      * @return
      */
-	public Collection<Reference> getReferences() {
-		return null;
-	}
+    public Collection<Reference> getReferences() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public String getSearchDatabaseName() throws InvalidFormatException {
-		return "Unknown database";
-	}
+    public String getSearchDatabaseName() throws InvalidFormatException {
+        return "Unknown database";
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public String getSearchDatabaseVersion() throws InvalidFormatException {
-		return "Unknown";
-	}
+    public String getSearchDatabaseVersion() throws InvalidFormatException {
+        return "Unknown";
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Collection<DatabaseMapping> getDatabaseMappings()
-			throws InvalidFormatException {
-		ArrayList<DatabaseMapping> mappings = new ArrayList<DatabaseMapping>(1);
+    public Collection<DatabaseMapping> getDatabaseMappings()
+            throws InvalidFormatException {
+        ArrayList<DatabaseMapping> mappings = new ArrayList<DatabaseMapping>(1);
 
-		DatabaseMapping mapping = new DatabaseMapping();
+        DatabaseMapping mapping = new DatabaseMapping();
 
-		mapping.setSearchEngineDatabaseName("Unknown database");
-		mapping.setSearchEngineDatabaseVersion("Unknown");
+        mapping.setSearchEngineDatabaseName("Unknown database");
+        mapping.setSearchEngineDatabaseVersion("Unknown");
 
-		mappings.add(mapping);
+        mappings.add(mapping);
 
-		return mappings;
-	}
+        return mappings;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public SearchResultIdentifier getSearchResultIdentifier()
-			throws InvalidFormatException {
-		// intialize the search result identifier
+    public SearchResultIdentifier getSearchResultIdentifier()
+            throws InvalidFormatException {
+        // intialize the search result identifier
         SearchResultIdentifier identifier = new SearchResultIdentifier();
 
         // format the current time
@@ -488,32 +473,30 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         identifier.setHash(FileUtils.MD5Hash(targetFile.getAbsolutePath()));
 
         return identifier;
-	}
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Collection<CV> getCvLookup() throws InvalidFormatException {
-		// just create a set containing the 2 cvLookups used here
+    public Collection<CV> getCvLookup() throws InvalidFormatException {
+        // just create a set containing the 2 cvLookups used here
         ArrayList<CV> cvs = new ArrayList<CV>();
 
         cvs.add(new CV("MS", "PSI Mass Spectrometry Ontology", "1.2", "http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo"));
         cvs.add(new CV("PRIDE", "PRIDE Controlled Vocabulary", "1.101", "http://ebi-pride.googlecode.com/svn/trunk/pride-core/schema/pride_cv.obo"));
 
         return cvs;
-	}
+    }
 
     /**
-     *
      * @param onlyIdentified
      * @return
      * @throws InvalidFormatException
      */
     @Override
-	public int getSpectrumCount(boolean onlyIdentified)
-			throws InvalidFormatException {
+    public int getSpectrumCount(boolean onlyIdentified)
+            throws InvalidFormatException {
         if (spectraFileType == null)
             guessSpectraSourceType();
 
@@ -523,16 +506,15 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
         // return the spectra dao's spec count
         return this.identifiedSpecIds.size();
-	}
+    }
 
     /**
-     *
      * @param onlyIdentified
      * @return
      * @throws InvalidFormatException
      */
-	public Iterator<Spectrum> getSpectrumIterator(boolean onlyIdentified)
-			throws InvalidFormatException {
+    public Iterator<Spectrum> getSpectrumIterator(boolean onlyIdentified)
+            throws InvalidFormatException {
         if (spectraFileType == null)
             guessSpectraSourceType();
 
@@ -541,65 +523,61 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
         // use the special identified DAO iterator
         return new OnlyIdentifiedSpectrumIterator();
-	}
+    }
 
     /**
-     *
      * @param peptideUID
      * @return
      * @throws InvalidFormatException
      */
-	public int getSpectrumReferenceForPeptideUID(String peptideUID)
-			throws InvalidFormatException {
-        String [] items = peptideUID.split("_");
-		return Integer.parseInt(items[1]);
-	}
+    public int getSpectrumReferenceForPeptideUID(String peptideUID)
+            throws InvalidFormatException {
+        String[] items = peptideUID.split("_");
+        return Integer.parseInt(items[1]);
+    }
 
     /**
-     *
      * @param identificationUID
      * @return
      * @throws InvalidFormatException
      */
-	public Identification getIdentificationByUID(String identificationUID)
-			throws InvalidFormatException {
+    public Identification getIdentificationByUID(String identificationUID)
+            throws InvalidFormatException {
         CruxProtein protein;
-        String[] items = identificationUID.split("_",2);
+        String[] items = identificationUID.split("_", 2);
         if ("t".equals(items[0])) { // non decoy protein
-		    protein = proteins.get(items[1]);
+            protein = proteins.get(items[1]);
             if (protein == null)
                 throw new InvalidFormatException("Protein with UID=" + identificationUID + " does not exist");
             return convertIdentification(protein, "t_", "", false);
-        }
-        else { // decoy protein
+        } else { // decoy protein
             protein = proteinsDecoy.get(items[1]);
             if (protein == null)
                 throw new InvalidFormatException("Protein with UID=" + identificationUID + " does not exist");
             return convertIdentification(protein, "d_", decoyPrefix, false);
         }
 
-	}
+    }
 
     /**
-     *
      * @param prescanMode
      * @return
      * @throws InvalidFormatException
      */
-	public Iterator<Identification> getIdentificationIterator(
-			boolean prescanMode) throws InvalidFormatException {
-		return new CruxIdentificationIterator(prescanMode);
-	}
+    public Iterator<Identification> getIdentificationIterator(
+            boolean prescanMode) throws InvalidFormatException {
+        return new CruxIdentificationIterator(prescanMode);
+    }
 
 
     /**
      * Redefine the iterator in order to not to keep all the Identification objects in memory (there are quite heavy
      * and can be quite a lot)
-     * Because we have two different target files (target and decoy), and because we don't want to mix them due to the 
+     * Because we have two different target files (target and decoy), and because we don't want to mix them due to the
      * last-moment prefixing system we use, we need here two iterators that we made appear as one.
      */
-	private class CruxIdentificationIterator implements Iterator<Identification> {
-		private final Iterator<String> accessionIterator = proteins.keySet().iterator();
+    private class CruxIdentificationIterator implements Iterator<Identification> {
+        private final Iterator<String> accessionIterator = proteins.keySet().iterator();
         private final Iterator<String> accessionIteratorDecoy = proteinsDecoy.keySet().iterator();
         private boolean prescanMode;
 
@@ -607,42 +585,43 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
             this.prescanMode = prescanMode;
         }
 
-		public boolean hasNext() {
-			return accessionIterator.hasNext() || accessionIteratorDecoy.hasNext();
-		}
+        public boolean hasNext() {
+            return accessionIterator.hasNext() || accessionIteratorDecoy.hasNext();
+        }
 
-		public Identification next() {
+        public Identification next() {
             if (accessionIterator.hasNext())
-			    return convertIdentification(proteins.get(accessionIterator.next()), "t_", "", prescanMode);
-            else 
+                return convertIdentification(proteins.get(accessionIterator.next()), "t_", "", prescanMode);
+            else
                 return convertIdentification(proteinsDecoy.get(accessionIteratorDecoy.next()), "d_", decoyPrefix, prescanMode);
-		}
+        }
 
-		public void remove() {
-			// not supported
-		}
-	}
+        public void remove() {
+            // not supported
+        }
+    }
 
     /**
      * Converts from our internal CruxProtein to the DAO representation
+     *
      * @param protein
      * @return
      */
-	private Identification convertIdentification(CruxProtein protein, String uidPrefix, String publicPrefix, boolean prescanMode) {
+    private Identification convertIdentification(CruxProtein protein, String uidPrefix, String publicPrefix, boolean prescanMode) {
 
-		Identification identification = new Identification();
-		
-		identification.setAccession(publicPrefix + protein.getAccession());
-		identification.setScore(0.0);
-		identification.setThreshold(0.0);
-		identification.setDatabase("Unknown database");
-		identification.setDatabaseVersion("Unknown");
-		identification.setUniqueIdentifier(uidPrefix + protein.getAccession());
-		
-		identification.setSearchEngine(searchEngine);
+        Identification identification = new Identification();
 
-		// process the peptides
-		for (Integer cruxPeptideStringIndex : protein.getPeptides()) {
+        identification.setAccession(publicPrefix + protein.getAccession());
+        identification.setScore(0.0);
+        identification.setThreshold(0.0);
+        identification.setDatabase("Unknown database");
+        identification.setDatabaseVersion("Unknown");
+        identification.setUniqueIdentifier(uidPrefix + protein.getAccession());
+
+        identification.setSearchEngine(searchEngine);
+
+        // process the peptides
+        for (Integer cruxPeptideStringIndex : protein.getPeptides()) {
             String[] fields;
             List<String> wholeScan;
             ArrayList<String> currentIndex;
@@ -653,17 +632,17 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
             }
 
             fields = currentIndex.get(cruxPeptideStringIndex).split("\t");  // split the columns
-            
+
             if (getHighest) {
                 // now we get the highest score in the scan. we need this to apply the GET_HIGHEST_SCORE_ITEM PROPERTY 
                 wholeScan = getWholeScan(currentIndex, cruxPeptideStringIndex); // get the whole scan lines
                 Object newThreshold = this.filter.getHighestScore(header, wholeScan);
                 this.filter.setThreshold(newThreshold);
             }
-            
+
             // Check if the entry pass the filter. Otherwise, go for the next line
             // - check also if we get just the highest on per scan
-            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
+            if ((this.filter == null) || filter.passFilter(this.header, fields)) {
                 // process the peptide
                 CruxPeptide cruxPeptide = CruxPeptide.createCruxPeptide(fields, this.header);
 
@@ -700,17 +679,18 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
 
                 identification.getPeptide().add(peptide);
             }
-		}
-		
-		if (identification.getPeptide() == null || identification.getPeptide().size() <= 0)
+        }
+
+        if (identification.getPeptide() == null || identification.getPeptide().size() <= 0)
             return null;
         else
             return identification;
 
-	}
+    }
 
     /**
      * Assumption: There are 5 entries for each scan
+     *
      * @param fileIndex
      * @param i
      * @return
@@ -720,64 +700,64 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         String[] elem = fileIndex.get(i).split("\t");
         int elemScan = Integer.parseInt(elem[header.get("scan")]);
         int elemRank = Integer.parseInt(elem[header.get("xcorr rank")]);
-        int firstElemPos = i-elemRank+1;
+        int firstElemPos = i - elemRank + 1;
         int lastElemPos = i;
         int lastElemRank = elemRank;
         // now we are going to move the index to the end of the scan
         boolean found = false;
-        while (i<fileIndex.size() && !found) {
-            String[] nextElem = fileIndex.get(lastElemPos+1).split("\t");
+        while (i < fileIndex.size() && !found) {
+            String[] nextElem = fileIndex.get(lastElemPos + 1).split("\t");
             int nextElemScan = Integer.parseInt(nextElem[header.get("scan")]);
             found = (elemScan != nextElemScan);
             lastElemPos++;
         }
         if (found) {
-            res = fileIndex.subList(firstElemPos, lastElemPos);     
+            res = fileIndex.subList(firstElemPos, lastElemPos);
         }
         return res;
     }
 
-    
 
     /**
      *
      */
-	private class OnlyIdentifiedSpectrumIterator implements Iterator<Spectrum> {
-		private Iterator<Integer> specIdIterator;
-		private Iterator<Spectrum> specIterator;
-		
-		public OnlyIdentifiedSpectrumIterator() throws InvalidFormatException {
-			specIterator = spectraDAO.getSpectrumIterator(false);
-			Collections.sort(identifiedSpecIds);
-			specIdIterator = identifiedSpecIds.iterator();
-		}
+    private class OnlyIdentifiedSpectrumIterator implements Iterator<Spectrum> {
+        private Iterator<Integer> specIdIterator;
+        private Iterator<Spectrum> specIterator;
 
-		public boolean hasNext() {
-			return specIdIterator.hasNext();
-		}
+        public OnlyIdentifiedSpectrumIterator() throws InvalidFormatException {
+            specIterator = spectraDAO.getSpectrumIterator(false);
+            Collections.sort(identifiedSpecIds);
+            specIdIterator = identifiedSpecIds.iterator();
+        }
 
-		public Spectrum next() {
-			Integer id = specIdIterator.next();
-			
-			Spectrum s = specIterator.next();
-			
-			while (s.getId() != id) {
-				s = specIterator.next();
-			}
-			
-			return s;
-		}
+        public boolean hasNext() {
+            return specIdIterator.hasNext();
+        }
 
-		public void remove() {
-			// not supported			
-		}
-	}
+        public Spectrum next() {
+            Integer id = specIdIterator.next();
+
+            Spectrum s = specIterator.next();
+
+            while (s.getId() != id) {
+                s = specIterator.next();
+            }
+
+            return s;
+        }
+
+        public void remove() {
+            // not supported
+        }
+    }
 
     /**
      * Returns the spectraDAO to be used for the
      * given spectrum file. Makes sure only one
      * instance of the DAO is created and only
      * when it's needed.
+     *
      * @return The spectra DAO to be used to retrieve the spectra information.
      * @throws InvalidFormatException
      */
@@ -813,6 +793,7 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
     /**
      * Guesses the type of spectra file used
      * and sets spectrFileType accordingly.
+     *
      * @throws InvalidFormatException
      */
     private void guessSpectraSourceType() throws InvalidFormatException {
