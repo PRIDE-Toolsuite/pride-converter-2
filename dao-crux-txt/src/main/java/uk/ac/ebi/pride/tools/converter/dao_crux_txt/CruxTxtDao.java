@@ -227,7 +227,12 @@ public class CruxTxtDao extends AbstractDAOImpl implements DAO {
         // set member supportedProperties here using supportedProperties object
 //        spectraFile = new File(props.getProperty(SupportedProperty.SPECTRUM_FILE.getName()));
         decoyPrefix = props.getProperty(SupportedProperty.DECOY_PREFIX.getName());
-        threshold = props.getProperty(SupportedProperty.THRESHOLD.getName());
+        if (props.getProperty(SupportedProperty.THRESHOLD.getName()) == null ) {
+            threshold = "0.0";
+        } else {
+            threshold = props.getProperty(SupportedProperty.THRESHOLD.getName());
+        }
+
         if (props.getProperty(SupportedProperty.GET_HIGHEST_SCORE_ITEM.getName()) == null) { // todo: I couldn't make defaults to work
             getHighest = true;
         } else {
