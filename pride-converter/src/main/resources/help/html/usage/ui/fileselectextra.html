@@ -19,7 +19,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
             <td align="left" class="topicpath">
-                <span style="color:#666666;"><a href="format.html">Previous</a></span> | <a
+                <a href="fileselect.html">Previous</a> | <a
                     href="experimentdetails.html">Next</a>
                 | <a href="#topicSeeAlsoTopicsList">See Also</a>
             </td>
@@ -29,35 +29,25 @@
 
     <!-- table of contents -->
     <div class="introduction">
-        <p>This screen allows you to select the input file(s) that you wish to convert into PRIDE XML and set any
-            parser-specific options, if available. You may also select FASTA-formatted protein sequence files and mzTab
-            files to use as additional annotations.</p>
+        <p>This screen allows you to assign the proper mzTab file to the source file that corresponds to it.</p>
     </div>
 
     <!-- content -->
     <div id="content">
         <div class="section">
-            <img src="caps/fileselect.png">
 
+            <p>
+                In the case that you have multiple source files and multiple mzTab files as part of a single conversion,
+                this form will enable you to map the correct mzTab file to the appropriate source file. If you have used
+                the PRIDE mzTab generator to generate your mzTab files, it will have used the default file naming
+                convention of [SOURCE_FILE]-mztab.txt. PRIDE Converter will try and automatically pair up source files
+                and mzTab files based on the default file naming convention.
+            </p>
 
-            <p>You must provide at least one source file before you can proceed. Fasta sequence files and mzTab files
-                are optional. You may only select one sequence file. Click on the "Browse" button
-                to open a file chooser dialog.</p>
-
-            <p>In the case of the PRIDE mzTab generator and the PRIDE XML merger, the sequence and mztab tabs
-                are disabled.</p>
-
-            <p>Some formats allow parser-specific options to be set. These, if any, will be displayed in the
-                "Parser Options" table. Documentation on the meaning of the various options can be obtained by clicking
-                on the "Explain Options" button. To edit the value of an option, you need to double-click on it and then
-                you will be able to modify its value.</p>
-
-            <p>By design, PRIDE Converter keeps intermediate work files called <i>report</i> files in the same
-                directory as the source file(s). If such a report file is already present, PRIDE Converter will
-                try to reload it so that the conversion process can be continued from where it was previously
-                stopped. If report files are not present or are invalid, they will be created. You can force
-                PRIDE Converter to ignore previous report files by clicking on the "Force generation of new report file"
-                checbox.</p>
+            <p>
+                If the mzTab files do not follow the default file naming convention, you will need to choose from the
+                pull-down menu and assign the proper file manually.
+            </p>
         </div>
     </div>
 
@@ -75,39 +65,27 @@
             <li><a href="format.html">Format Selection</a></li>
             <li><a href="fileselect.html">File Selection</a></li>
             <li><a href="experimentdetails.html">Experiment Details</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
-            <li><a href="references.html">References</a></li>
             <li><a href="sample.html">Sample Description</a></li>
             <li><a href="protocol.html">Protocol Description</a></li>
             <li><a href="instrument.html">Instrument Description</a></li>
             <li><a href="software.html">Software Processing</a></li>
-            <li><a href="databasemapping.html">Database Information</a></li>
             <li><a href="ptms.html">PTMs</a></li>
             <li><a href="review.html">Review</a></li>
             <li><a href="export.html">File Export</a></li>
-            <li><a href="validation.html">Validation Report</a></li>
+            <li><a href="othertools.html">Useful Tools</a></li>
         </ul>
 
         <p>
-            <strong>DAO Specific options:</strong>
+            <strong>The PRIDE mzTab Generator forms:</strong>
         </p>
-
         <ul>
-            <li><a href="dao/pride.html">PRIDE</a></li>
-            <li><a href="dao/dta.html">DTA</a></li>
-            <li><a href="dao/mascot.html">Mascot</a></li>
-            <li><a href="dao/mgf.html">MGF</a></li>
-            <li><a href="dao/ms2.html">MS2</a></li>
-            <li><a href="dao/mzdata.html">mzData</a></li>
-            <li><a href="dao/mzidentml.html">mzIdentML</a></li>
-            <li><a href="dao/mzml.html">mzML</a></li>
-            <li><a href="dao/mzxml.html">mzXML</a></li>
-            <li><a href="dao/pkl.html">PKL</a></li>
-            <li><a href="dao/xtandem.html">X!Tandem</a></li>
+            <li><a href="mztaboptions.html">mzTab Options</a></li>
+        </ul>
+
     </div>
     <div id="footer">
         <p>Comments, questions, suggestions? See the
-            <a href="feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+            <a href="../../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>

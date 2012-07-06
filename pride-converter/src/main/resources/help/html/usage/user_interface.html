@@ -19,7 +19,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
             <td align="left" class="topicpath">
-                <span style="color:#666666;"><a href="#">Previous</a></span> | <a href="ui/format.html">Next</a>
+                <a href="../index.html">Previous</a> | <a href="ui/format.html">Next</a>
                 | <a href="#topicSeeAlsoTopicsList">See Also</a>
             </td>
             <td width="70%" class="topicpath"></td>
@@ -35,6 +35,28 @@
     <!-- content -->
     <div id="content">
         <div class="section">
+            <img src="../images/userinterface.png">
+
+            <p>Tools are made up of a series of forms, that can be navigated using the Next/Back/Quit buttons at the
+                bottom right corner of the nagivation frame. Each form will provide information that is used to update
+                the GUI: a form title, a short description of its purpose and required fields, a context-specific help
+                page and a
+                mechanism to validate the form content to ensure that all required fields are filled in and contain
+                correctly-formatted values.
+
+            <p>The result of this validation are shown next to the navigation buttons (<img src="../images/check.png">
+                if all fields are OK, <img src="../images/warning.png"> on warnings, <img src="../images/error.png">
+                on errors). If errors are detected, the users will be shown an error dialog with more information on the
+                validation rule that generated the error. Users will not be able to proceed with the conversion process
+                until all errors are corrected.
+
+            <p>PRIDE Converter 2 forms maintain a standard functionality scheme. Any field marked with a red asterisk
+                (<span style="color:#FF0000">*</span>) is mandatory and the user cannot proceed to the next form until
+                all mandatory fields are filled. They will be highlighted in red
+                if their value is null or invalid.The <img src="../images/add.png"> button can be used to add entries.
+                When entries are selected from a table, the <img src="../images/edit.png"> button can be used to
+                edit those entries and the button can be used to delete them.
+
         </div>
     </div>
 
@@ -52,22 +74,47 @@
             <li><a href="ui/format.html">Format Selection</a></li>
             <li><a href="ui/fileselect.html">File Selection</a></li>
             <li><a href="ui/experimentdetails.html">Experiment Details</a></li>
-            <li><a href="ui/contacts.html">Contacts</a></li>
-            <li><a href="ui/references.html">References</a></li>
             <li><a href="ui/sample.html">Sample Description</a></li>
             <li><a href="ui/protocol.html">Protocol Description</a></li>
             <li><a href="ui/instrument.html">Instrument Description</a></li>
             <li><a href="ui/software.html">Software Processing</a></li>
-            <li><a href="ui/databasemapping.html">Database Information</a></li>
             <li><a href="ui/ptms.html">PTMs</a></li>
             <li><a href="ui/review.html">Review</a></li>
             <li><a href="ui/export.html">File Export</a></li>
-            <li><a href="ui/validation.html">Validation Report</a></li>
+            <li><a href="ui/othertools.html">Useful Tools</a></li>
         </ul>
+
+        <p>
+            <strong>The PRIDE Merger forms:</strong>
+        </p>
+
+        <ul>
+            <li><a href="ui/mergerinformation.html">Merger Information</a></li>
+            <li><a href="ui/mergermasterfile.html">Merger Master File Selection</a></li>
+            <li><a href="ui/mergerreport.html">Merger Report</a></li>
+        </ul>
+
+        <p>
+            <strong>The PRIDE mzTab Generator forms:</strong>
+        </p>
+        <ul>
+            <li><a href="ui/mztaboptions.html">mzTab Options</a></li>
+            <li><a href="ui/mztabreport.html">mzTab Report</a></li>
+        </ul>
+
+        <p>
+            <strong>The PRIDE Filter forms:</strong>
+        </p>
+
+        <ul>
+            <li><a href="ui/filterinformation.html">Filter Information</a></li>
+            <li><a href="ui/filterreport.html">Filter Report</a></li>
+        </ul>
+
     </div>
     <div id="footer">
         <p>Comments, questions, suggestions? See the
-            <a href="feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+            <a href="../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>

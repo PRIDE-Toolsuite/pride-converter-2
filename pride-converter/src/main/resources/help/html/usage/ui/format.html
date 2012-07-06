@@ -19,7 +19,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
             <td align="left" class="topicpath">
-                <span style="color:#666666;"><a href="../user_interface.html">Previous</a></span> | <a
+                <a href="../user_interface.html">Previous</a> | <a
                     href="fileselect.html">Next</a>
                 | <a href="#topicSeeAlsoTopicsList">See Also</a>
             </td>
@@ -38,25 +38,105 @@
     <!-- content -->
     <div id="content">
         <div class="section">
-            <img src="caps/format.png">
 
-            <p>Although PRIDE Converter allows you to convert several files at once, they must be in the same file
+            <p>Input format selection is the first choice that the user must make. When selecting a format, the user
+                will be given information on the exact file type(s) required, as well as links to the vendor and/or
+                format specification documentation. Please note that Mascot conversion is not available on
+                the Mac OS platform, due to limitations imposed by the Mascot API itself. Although PRIDE Converter
+                allows you to convert several files
+                at once, they must be in the same file
                 format.</p>
 
             <p>PRIDE Converter currently supports the following formats:
-            <ul>
-                <li>mzML</li>
-                <li>mzIdentML</li>
-                <li>mzXML</li>
-                <li>Mascot</li>
-                <li>X|Tandem</li>
-                <li>mzData</li>
-                <li>Peaklist formats (MGF, MS2, DTA, PKL)</li>
-            </ul>
+            <table border=1>
+                <tr>
+                    <td width="30%">Format Name</td>
+                    <td width="20%">File Type</td>
+                    <td width="50%">Data Content</td>
+                </tr>
+                <tr>
+                    <td width="30%">Mascot</td>
+                    <td width="20%">.dat</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">mzIdentML</td>
+                    <td width="20%">.xml</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">X!Tandem</td>
+                    <td width="20%">.xml</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">OMSSA</td>
+                    <td width="20%">.csv</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">SpectraST</td>
+                    <td width="20%">.txt</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">CRUX</td>
+                    <td width="20%">.dtxtat</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">MSGF</td>
+                    <td width="20%">.txt</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">Proteome Discoverer</td>
+                    <td width="20%">.msf</td>
+                    <td width="50%">Spectra and Identifications</td>
+                </tr>
+                <tr>
+                    <td width="30%">mzML</td>
+                    <td width="20%">.xml</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+                <tr>
+                    <td width="30%">mzML</td>
+                    <td width="20%">.xml</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+                <tr>
+                    <td width="30%">mzML</td>
+                    <td width="20%">.xml</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+                <tr>
+                    <td width="30%">DTA</td>
+                    <td width="20%">.dta</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+                <tr>
+                    <td width="30%">MGF</td>
+                    <td width="20%">.mgf</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+                <tr>
+                    <td width="30%">PKL</td>
+                    <td width="20%">.pkl</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+                <tr>
+                    <td width="30%">mzData</td>
+                    <td width="20%">.xml</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+                <tr>
+                    <td width="30%">mzXML</td>
+                    <td width="20%">.xml</td>
+                    <td width="50%">Spectra only</td>
+                </tr>
+            </table>
             </p>
 
-            <p>Note that some peaklist formats come in multiple versions, depending on whether the source files
-                contain a single spectrum per file or multiple spectra per file.</p>
         </div>
     </div>
 
@@ -74,22 +154,27 @@
             <li><a href="format.html">Format Selection</a></li>
             <li><a href="fileselect.html">File Selection</a></li>
             <li><a href="experimentdetails.html">Experiment Details</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
-            <li><a href="references.html">References</a></li>
             <li><a href="sample.html">Sample Description</a></li>
             <li><a href="protocol.html">Protocol Description</a></li>
             <li><a href="instrument.html">Instrument Description</a></li>
             <li><a href="software.html">Software Processing</a></li>
-            <li><a href="databasemapping.html">Database Information</a></li>
             <li><a href="ptms.html">PTMs</a></li>
             <li><a href="review.html">Review</a></li>
             <li><a href="export.html">File Export</a></li>
-            <li><a href="validation.html">Validation Report</a></li>
+            <li><a href="othertools.html">Useful Tools</a></li>
         </ul>
+
+        <p>
+            <strong>The PRIDE mzTab Generator forms:</strong>
+        </p>
+        <ul>
+            <li><a href="mztaboptions.html">mzTab Options</a></li>
+        </ul>
+
     </div>
     <div id="footer">
         <p>Comments, questions, suggestions? See the
-            <a href="feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+            <a href="../../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>

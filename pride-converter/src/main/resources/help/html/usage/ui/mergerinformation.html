@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" type="text/css" media="all" href="../../css/s.css">
-    <title>File Selection</title>
+    <title>PRIDE XML Merger Information</title>
 </head>
 
 <body class="template">
@@ -12,15 +12,14 @@
 
     <!-- header -->
     <div id="header">
-        <h1>PRIDE XML Merger</h1>
+        <h1>PRIDE XML Merger Information</h1>
     </div>
 
     <!-- navigation -->
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
             <td align="left" class="topicpath">
-                <span style="color:#666666;">Previous</span> | <a
-                    href="mergerreport.html">Next</a>
+                <a href="../user_interface.html">Previous</a> | <a href="fileselect.html">Next</a>
                 | <a href="#topicSeeAlsoTopicsList">See Also</a>
             </td>
             <td width="70%" class="topicpath"></td>
@@ -37,13 +36,12 @@
     <!-- content -->
     <div id="content">
         <div class="section">
-            <p>It is assumed that each individual file is valid. Files will be ordered alphabetically and the metadata
-                from the first file will be used to generate the final, merged file. The identifications and spectra
-                from
-                the other files will be merged into the final output file. </p>
-
-            <p>Please note that the spectrum IDs from the source files will not necessarily be kept,
-                but the internal references between peptide-spectrum_refs will be maintained. </p>
+            <p>The first screen of the PRIDE XML Merger provides an overview of the role of the tool and informs the
+                user of several design assumptions and restrictions. All the PRIDE XML files must be valid according to
+                the PRIDE XML schema. A master file will be selected, which will serve as the basis for the final PRIDE
+                XML file in terms of metadata. The identifications and spectra from the other files will be merged into
+                the final output file. Users should note that the spectrum IDs from the source files will not
+                necessarily be kept, but the internal references between peptide-spectrum_refs will be maintained. </p>
         </div>
     </div>
 
@@ -58,14 +56,22 @@
         </p>
 
         <ul>
-            <li><a href="fileselect.html">File Selection</a></li>
+            <li><a href="mergerinformation.html">Merger Information</a></li>
+            <li><a href="mergermasterfile.html">Merger Master File Selection</a></li>
             <li><a href="mergerreport.html">Merger Report</a></li>
+        </ul>
+
+        <p>
+            <strong>The PRIDE Converter forms:</strong>
+        </p>
+        <ul>
+            <li><a href="fileselect.html">File Selection</a></li>
         </ul>
 
     </div>
     <div id="footer">
         <p>Comments, questions, suggestions? See the
-            <a href="feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+            <a href="../../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>

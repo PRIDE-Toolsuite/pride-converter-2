@@ -19,8 +19,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
         <tr>
             <td align="left" class="topicpath">
-                <span style="color:#666666;"><a href="instrument.html">Previous</a></span> | <a
-                    href="ptms.html">Next</a>
+                <a href="instrument.html">Previous</a> | <a href="ptms.html">Next</a>
                 | <a href="#topicSeeAlsoTopicsList">See Also</a>
             </td>
             <td width="70%" class="topicpath"></td>
@@ -29,17 +28,38 @@
 
     <!-- table of contents -->
     <div class="introduction">
-        <p>In this section:</p>
-        <ul>
-            <li><a href="one.html">One</a></li>
-            <li><a href="two.html">two</a></li>
-        </ul>
+        <p>This screen allows you to provide as much information as possible to describe your MS search software
+            configuration and describe the protein sequence database that was searched against, if applicable.
+        </p>
     </div>
 
     <!-- content -->
     <div id="content">
         <div class="section">
-            <img src="caps/software.png">
+
+            <h2>Software Processing</h2>
+
+            <p>
+                The software processing form report information on the software settings and the search
+                database used. The “software” and “processing method” information will more often than not be reported
+                directly by the DAO and should not be modified. Users should be aware that If converting multiple files,
+                these two sections will be taken directly from the source file and any additions made to the GUI will
+                not be carried across all converted files.
+            </p>
+
+            <h2>Database Mappings</h2>
+
+            <p>
+                The “search database” mappings will help standardize the names of the sources of the protein sequences
+                that have been used to generate the search databases. The most common sources of protein sequences have
+                been included (UniProtKB/Swiss-Prot, UniProtKB/TrEMBL, International Protein Index (IPI), Ensembl,
+                RefSeq, NCBI nr database) and the users are encouraged to provide either a release number or the date
+                the search database was built. Users can also manually enter a custom database name, if the supplied
+                options are not appropriate. The “curated database name” is mandatory, but the “curated database
+                version”, while desired, is not. A warning will be generated if the database version is omitted however.
+
+            <p>
+
         </div>
     </div>
 
@@ -57,22 +77,19 @@
             <li><a href="format.html">Format Selection</a></li>
             <li><a href="fileselect.html">File Selection</a></li>
             <li><a href="experimentdetails.html">Experiment Details</a></li>
-            <li><a href="contacts.html">Contacts</a></li>
-            <li><a href="references.html">References</a></li>
             <li><a href="sample.html">Sample Description</a></li>
             <li><a href="protocol.html">Protocol Description</a></li>
             <li><a href="instrument.html">Instrument Description</a></li>
             <li><a href="software.html">Software Processing</a></li>
-            <li><a href="databasemapping.html">Database Information</a></li>
             <li><a href="ptms.html">PTMs</a></li>
             <li><a href="review.html">Review</a></li>
             <li><a href="export.html">File Export</a></li>
-            <li><a href="validation.html">Validation Report</a></li>
+            <li><a href="othertools.html">Useful Tools</a></li>
         </ul>
     </div>
     <div id="footer">
         <p>Comments, questions, suggestions? See the
-            <a href="feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
+            <a href="../../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>

@@ -7,29 +7,44 @@
 <toc version="1.0">
     <tocitem text="PRIDE Converter" target="help.index">
 
-        <tocitem text="Familiarize Yourself with User Interface" target="help.ui">
+        <tocitem text="PRIDE Converter 2 User Interface" target="help.ui">
             <tocitem text="Format Selection" target="help.ui.format"/>
             <tocitem text="File Selection" target="help.ui.file"/>
             <tocitem text="Experiment Details" target="help.ui.experimentdetails"/>
-            <tocitem text="Contacts" target="help.ui.contacts"/>
-            <tocitem text="References" target="help.ui.references"/>
             <tocitem text="Sample Description" target="help.ui.sample"/>
             <tocitem text="Protocol Description" target="help.ui.protocol"/>
             <tocitem text="Instrument Description" target="help.ui.instrument"/>
             <tocitem text="Software Processing" target="help.ui.software"/>
-            <tocitem text="Database Information" target="help.ui.databasemapping"/>
             <tocitem text="PTMs" target="help.ui.ptms"/>
             <tocitem text="Review" target="help.ui.review"/>
             <tocitem text="File Export" target="help.ui.export"/>
-            <tocitem text="Validation Report" target="help.ui.validation"/>
-            <tocitem text="CV and User Params" target="help.ui.cvparam"/>
+            <tocitem text="Helpful Tools" target="help.ui.tools"/>
+        </tocitem>
+
+        <tocitem text="PRIDE mzTab Generator User Interface" target="help.ui">
+            <tocitem text="Format Selection" target="help.ui.format"/>
+            <tocitem text="File Selection" target="help.ui.file"/>
+            <tocitem text="mzTab Report" target="help.ui.mztab.report"/>
+        </tocitem>
+
+        <tocitem text="PRIDE XML Merger User Interface" target="help.ui">
+            <tocitem text="Merger Information" target="help.ui.merger.information"/>
+            <tocitem text="File Selection" target="help.ui.file"/>
+            <tocitem text="Master File Selection" target="help.ui.merger.masterfile"/>
+            <tocitem text="Merger Report" target="help.ui.merger.report"/>
+        </tocitem>
+
+        <tocitem text="PRIDE XML Filter User Interface" target="help.ui">
+            <tocitem text="Filter Information" target="help.ui.filter.information"/>
+            <tocitem text="File Selection" target="help.ui.file"/>
+            <tocitem text="File Export" target="help.ui.export"/>
+            <tocitem text="Filter Report" target="help.ui.filter.report"/>
         </tocitem>
 
         <tocitem text="FAQ" target="help.faq">
             <tocitem text="What is PRIDE?" target="help.faq.pride"/>
             <tocitem text="What is the PRIDE XML Format?" target="help.faq.pridexml"/>
-            <tocitem text="What is the Report Format?" target="help.faq.report"/>
-            <tocitem text="What to do when PRIDE Converter run out of memory?" target="help.faq.memory"/>
+            <tocitem text="Troubleshooting" target="help.faq.troubleshooting"/>
         </tocitem>
 
         <tocitem text="DAO Options" target="help.ui.dao">
@@ -38,7 +53,6 @@
             <tocitem text="mzML DAO Options" target="help.ui.dao.mzml"/>
             <tocitem text="mzIdentML DAO Options" target="help.ui.dao.mzidentml"/>
             <tocitem text="X!Tandem DAO Options" target="help.ui.dao.xtandem"/>
-            
             <tocitem text="MS2 DAO Options" target="help.ui.dao.ms2"/>
             <tocitem text="DTA DAO Options" target="help.ui.dao.dta"/>
             <tocitem text="PKL DAO Options" target="help.ui.dao.pkl"/>

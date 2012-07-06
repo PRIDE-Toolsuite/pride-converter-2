@@ -24,7 +24,7 @@
     <!-- content -->
     <div id="content">
         <div class="section">
-            <h3>Parameters</h3>
+            <h2>Parameters</h2>
             <table class="dao_option_table">
                 <tr>
                     <th>Gel Identifier</th>
@@ -50,6 +50,98 @@
                     </td>
                 </tr>
             </table>
+
+            <p>
+                The DAO options, if any, will be identical to those present in the PRIDE Converter 2 and will be stored
+                in the mzTab file. In order to avoid unpredictable DAO behaviour, users must use the same settings when
+                generating the mzTab files and when using the PRIDE Converter 2. As the options are stored in both the
+                report file and the mzTab file, validity checks will be performed to ensure that both sets of options
+                are identical. Any differences will cause an exception and the Conversion process will be blocked until
+                all options match.
+            </p>
+
+            <h2>Adding Gel-based information</h2>
+
+            <p>The <b>“gel identifier”</b> option is used to set the gel identifier to be used for identifications in
+                the generated mzTab file. This identifier should correspond to the gel’s “name” in the publication (f.e.
+                “Gel A”, “Gel B” etc.). It should enable reviewers and readers to easily link the submitted data to the
+                data presented in the corresponding manuscript.
+
+            <p>The <b>“gel spot identifier”</b> option sets the gel spot identifier to be used for identifications in
+                the generated mzTab file. This represents the gel spot’s description used in the manuscript – similar
+                to the “gel identifier” for the gel itself. Expected values would be “Spot 1”, “Spot 2”, etc. Together
+                with the “gel identifier” it is therefore possible for the reviewer and reader to unambiguously link
+                findings presented in the manuscript to specific identifications reported in the PRIDE XML file. This
+                option is
+                ignored if the “gel spot regex” option is set. The “gel spot regex” option is used to extract the gel
+                spot
+                identifier based on the source file's name. The value of this option must correspond to a valid Java
+                regular
+                expression. The first matching group in the pattern will be used as a spot identifier.
+
+            <p>Both of these fields can also be added manually to an existing mzTab file: the <b>“gel spot
+                identifier”</b> is
+                mapped to the <b>“opt_gel_identifier”</b> column and the <b>“gel spot identifier”</b> to the <b>“opt_gel_spotidentifier”</b>
+                column in the mzTab file. Additional gel specific information can be supplied using the following
+                optional
+                columns in the mzTab file:
+            <ul>
+                <li><b>opt_gel_ur</b>l The gel's URL to use as a link.
+                <li><b>opt_ycoord_pixel</b> Y coordinates in pixel of the spot in the gel
+                <li><b>opt_xcoord_pixel</b> X coordinates in pixel of the spot in the gel
+                <li><b>opt_mw</b> The protein's (observed) molecular weight.
+                <li><b>opt_pi</b> The protein's (observed) pI.
+            </ul>
+            <p>Once these columns are present in the supplied mzTab file, PRIDE Converter will automatically add the
+                corresponding values to the PRIDE XML file. For more information on mzTab and on optional columns in
+                mzTab
+                files please refer to the mzTab format specification at http://mztab.googlecode.com.
+
+            <h2>Adding quantitative data</h2>
+
+            <p>The <b>“generate quant fields”</b> option will add empty placeholder quantitative fields to the generated
+                mzTab
+                file for the number of specified labels. These fields and columns will need to be manually or
+                programmatically filled in with the proper values before the mzTab file is ready to be used by the PRIDE
+                Converter 2. If, for example, a 4-plex iTRAQ approach was used in which 4 different samples were
+                labelled,
+                the <b>“generate quant fields”</b> should be set to “4”.
+
+            <p>As a result, the mzTab generator will automatically add the required meta-data fields to the generated
+                mzTab
+                file:
+            <ul>
+                <li>A placeholder for the used quantification method (“[UNIT_ID]-quantification_method”)
+                <li>A placeholder for the used protein quantification unit (“[UNIT_ID]-protein-quantification_unit”)
+                <li>A placeholder for the used peptide quantification unit (“[UNIT_ID]-peptide-quantification_unit”)
+            </ul>
+            <p>Additionally, so-called “subsamples” will be added to the mzTab file for every label. These subsamples
+                will
+                contain place holders to describe the used label as well as the characteristics of the labelled
+                (biological)
+                sample:
+            <ul>
+                <li>A placeholder for the used quantification reagent
+                <li>A placeholder for the human readable description of the labelled sample (f.e. “healthy control”)
+            </ul>
+            The way these data is represented in the mzTab file is documented in detail in the mzTab format
+            specification (http://mztab.googlecode.com).
+
+            <p>At last, the mzTab generator will also add columns to the mzTab file’s protein and peptide section to
+                hold
+                the actual measured quantitative values for each protein and peptide identified in the MS run. The user
+                must
+                then manually or preferably automatically insert the actual quantification values into this mzTab file.
+                Once
+                PRIDE Converter is supplied with an mzTab file containing such quantitative information, these data will
+                automatically be reported in the generated PRIDE XML file.
+
+            <p>A step-by-step description of how to generate quantitative mzTab file using the PRIDE mzTab Generator can
+                be
+                found in the PRIDE Converter 2 wiki:
+                https://code.google.com/p/pride-converter-2/wiki/QuantitativeMzTabFiles.
+
+
         </div>
 
     </div>
@@ -60,27 +152,42 @@
         <h2>See Also</h2>
 
         <p>
-            <strong>Other DAO documentations:</strong>
+            <strong>The PRIDE mzTab Generator forms:</strong>
+        </p>
+        <ul>
+            <li><a href="mztaboptions.html">mzTab Options</a></li>
+            <li><a href="mztabreport.html">mzTab Report</a></li>
+        </ul>
+
+        <p>
+            <strong>The PRIDE Converter forms:</strong>
+        </p>
+        <ul>
+            <li><a href="format.html">Format Selection</a></li>
+            <li><a href="fileselect.html">File Selection</a></li>
+        </ul>
+
+        <p>
+            <strong>DAO Specific options:</strong>
         </p>
 
         <ul>
-            <li><a href="pride.html">PRIDE</a></li>
-            <li><a href="mascot.html">Mascot</a></li>
-            <li><a href="mzxml.html">mzXML</a></li>
-            <li><a href="mzml.html">mzML</a></li>
-            <li><a href="mzidentml.html">mzIdentML</a></li>
-            <li><a href="ms2.html">MS2</a></li>
-            <li><a href="dta.html">DTA</a></li>
-            <li><a href="pkl.html">PKL</a></li>
-            <li><a href="mgf.html">MGF</a></li>
-            <li><a href="mzdata.html">mzData</a></li>
-            <li><a href="msgf.html">MSGF</a></li>
-        </ul>
+            <li><a href="dao/pride.html">PRIDE</a></li>
+            <li><a href="dao/dta.html">DTA</a></li>
+            <li><a href="dao/mascot.html">Mascot</a></li>
+            <li><a href="dao/mgf.html">MGF</a></li>
+            <li><a href="dao/ms2.html">MS2</a></li>
+            <li><a href="dao/mzdata.html">mzData</a></li>
+            <li><a href="dao/mzidentml.html">mzIdentML</a></li>
+            <li><a href="dao/mzml.html">mzML</a></li>
+            <li><a href="dao/mzxml.html">mzXML</a></li>
+            <li><a href="dao/pkl.html">PKL</a></li>
+            <li><a href="dao/xtandem.html">X!Tandem</a></li>
+
     </div>
     <div id="footer">
-        <p>
-            Comments, questions, suggestions? See the <a href="feedback.html">Feedback</a>
-            page to contact <strong>PRIDE HelpDesk</strong>
+        <p>Comments, questions, suggestions? See the
+            <a href="../../feedback.html">Feedback</a> page to contact <strong>PRIDE HelpDesk</strong>
         </p>
     </div>
 </div>
