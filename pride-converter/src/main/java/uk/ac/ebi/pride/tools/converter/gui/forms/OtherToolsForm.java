@@ -33,7 +33,7 @@ public class OtherToolsForm extends AbstractForm {
         try {
             editorPane.setEditorKit(new HTMLEditorKit());
             editorPane.setContentType("text/html");
-            editorPane.setPage(getClass().getResource("OtherToolsForm.html"));
+            editorPane.setPage(getClass().getClassLoader().getResource("help/html/usage/ui/OtherToolsForm.html"));
         } catch (IOException e) {
             throw new IllegalStateException("Could not load page content", e);
         }

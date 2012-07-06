@@ -20,12 +20,12 @@ public class SpectrastFileFilter extends FileFilter {
         }
         String extension = FileUtils.getExtension(file);
         if (extension != null) {
-            return (extension.equalsIgnoreCase(FileUtils.xls));
+            return extension.equalsIgnoreCase(FileUtils.xls) || extension.equalsIgnoreCase(FileUtils.txt);
         } else return false;
     }
 
     @Override
     public String getDescription() {
-        return "SpectraST Files (.xls)";
+        return "SpectraST Files (.txt)";
     }
 }
