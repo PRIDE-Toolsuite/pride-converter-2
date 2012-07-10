@@ -24,24 +24,24 @@ import java.util.Properties;
 public class DAOFactory {
 
     public enum DAO_FORMAT {
-        PRIDE("pride", "PRIDE", false, "help.ui.dao.pride", false, false, false, new PrideFileFilter()),
-        MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot", false, false, false, new MascotFileFilter()),
-        SEQUEST("sequest", "Sequest", false, null, false, true, false, null),
-        MS_LIMS("mslims", "ms_lims", false, null, false, false, false, null),
-        X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem", false, true, false, new XTandemFileFilter()),
-        MGF("mgf", "MGF", true, "help.ui.dao.mgf", false, false, false, new MGFFileFilter()),
-        MZIDENTML("mzidentml", "mzIdentML", false, "help.ui.dao.mzidentml", false, true, true, new MzIdentMLFileFilter()),
-        DTA("dta", "DTA", true, "help.ui.dao.dta", true, false, false, new DTAFileFilter()),
-        PKL("pkl", "PKL", true, "help.ui.dao.pkl", true, false, false, new PKLFileFilter()),
-        MS2("ms2", "MS2", true, "help.ui.dao.ms2", false, false, false, new MGFFileFilter()),
-        MZML("mzml", "mzML", true, "help.ui.dao.mzml", false, false, false, new MzMLFileFilter()),
-        MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, false, new MzXMLFileFilter()),
-        MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, new MzDataFileFilter()),
-        MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, true, true, new MSGFFileFilter()),
-        CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", true, true, false, new CruxFileFilter()),
-        SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, true, false, new SpectrastFileFilter()),
-        OMSSA("OMSSA", "OMSSA", false, "help.ui.dao.omssa", false, true, false, new OMSSAFileFilter()),
-        MSF("MSF", "Proteome Discoverer", false, "help.ui.dao.proteomediscoverer", false, false, false, new ProteomeDiscoveryFileFilter()),;
+        PRIDE("pride", "PRIDE", false, "help.ui.dao.pride", false, false, false, false, new PrideFileFilter()),
+        MASCOT("mascot", "Mascot", false, "help.ui.dao.mascot", false, false, false, false, new MascotFileFilter()),
+        SEQUEST("sequest", "Sequest", false, null, false, false, true, false, null),
+        MS_LIMS("mslims", "ms_lims", false, null, false, false, false, false, null),
+        X_TANDEM("xtandem", "X!Tandem", false, "help.ui.dao.xtandem", false, false, true, false, new XTandemFileFilter()),
+        MGF("mgf", "MGF", true, "help.ui.dao.mgf", false, false, false, false, new MGFFileFilter()),
+        MZIDENTML("mzidentml", "mzIdentML", false, "help.ui.dao.mzidentml", false, false, true, true, new MzIdentMLFileFilter()),
+        DTA("dta", "DTA", true, "help.ui.dao.dta", true, false, false, false, new DTAFileFilter()),
+        PKL("pkl", "PKL", true, "help.ui.dao.pkl", true, false, false, false, new PKLFileFilter()),
+        MS2("ms2", "MS2", true, "help.ui.dao.ms2", false, false, false, false, new MGFFileFilter()),
+        MZML("mzml", "mzML", true, "help.ui.dao.mzml", false, false, false, false, new MzMLFileFilter()),
+        MZXML("mzxml", "mzXML", true, "help.ui.dao.mzxml", false, false, false, false, new MzXMLFileFilter()),
+        MZDATA("mzdata", "mzData", true, "help.ui.dao.mzdata", false, false, false, false, new MzDataFileFilter()),
+        MSGF("msgf", "MSGF", false, "help.ui.dao.msgf", false, false, true, true, new MSGFFileFilter()),
+        CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", true, true, true, false, new CruxFileFilter()),
+        SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, false, true, false, new SpectrastFileFilter()),
+        OMSSA("OMSSA", "OMSSA", false, "help.ui.dao.omssa", false, false, true, false, new OMSSAFileFilter()),
+        MSF("MSF", "Proteome Discoverer", false, "help.ui.dao.proteomediscoverer", false, false, false, false, new ProteomeDiscoveryFileFilter()),;
 
         private String commandLineName;
         private String niceName;
@@ -49,15 +49,17 @@ public class DAOFactory {
         private String helpResource;
         private FileFilter filter;
         private boolean allowDirectory;
+        private boolean allowDirectoryOnly;
         private boolean allowExternalSpectra;
         private boolean externalSpectraIsDirectory;
 
-        private DAO_FORMAT(String commandLineName, String niceName, boolean spectrumOnly, String helpResource, boolean allowDirectory, boolean allowExternalSpectra, boolean externalSpectraIsDirectory, FileFilter fileFilter) {
+        private DAO_FORMAT(String commandLineName, String niceName, boolean spectrumOnly, String helpResource, boolean allowDirectory, boolean allowDirectoryOnly, boolean allowExternalSpectra, boolean externalSpectraIsDirectory, FileFilter fileFilter) {
             this.commandLineName = commandLineName;
             this.niceName = niceName;
             this.spectrumOnly = spectrumOnly;
             this.helpResource = helpResource;
             this.allowDirectory = allowDirectory;
+            this.allowDirectoryOnly = allowDirectoryOnly;
             this.allowExternalSpectra = allowExternalSpectra;
             this.externalSpectraIsDirectory = externalSpectraIsDirectory;
             this.filter = fileFilter;
@@ -104,6 +106,10 @@ public class DAOFactory {
 
         public boolean isExternalSpectraIsDirectory() {
             return externalSpectraIsDirectory;
+        }
+
+        public boolean isAllowDirectoryOnly() {
+            return allowDirectoryOnly;
         }
     }
 

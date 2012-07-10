@@ -105,7 +105,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     }
 
-    private Collection<File> chooseFiles(boolean allowMultipleSelection, boolean allowDirectory, FileFilter filter) {
+    private Collection<File> chooseFiles(boolean allowMultipleSelection, boolean allowDirectory, boolean allowDirectoryOnly, FileFilter filter) {
 
         JFileChooser chooser = new JFileChooser();
         if (filter != null) {
@@ -118,7 +118,11 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         }
 
         if (allowDirectory) {
-            chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            if (allowDirectoryOnly) {
+                chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            } else {
+                chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            }
         } else {
             chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         }
@@ -146,7 +150,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private void loadDataFiles(ActionEvent e) {
         Set<File> tableFiles = new TreeSet<File>();
         tableFiles.addAll(dataFileTable.getFiles());
-        tableFiles.addAll(chooseFiles(true, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().getFilter()));
+        tableFiles.addAll(chooseFiles(true, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().isAllowDirectoryOnly(), ConverterData.getInstance().getDaoFormat().getFilter()));
         dataFileTable.clearFiles();
         dataFileTable.addFiles(tableFiles);
 
@@ -159,7 +163,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     private void loadSpectrumFiles(ActionEvent e) {
         Set<File> tableFiles = new HashSet<File>();
-        tableFiles.addAll(chooseFiles(true, true, null));
+        tableFiles.addAll(chooseFiles(true, ConverterData.getInstance().getDaoFormat().isExternalSpectraIsDirectory(), true, null));
         spectrumFileTable.clearFiles();
         spectrumFileTable.addFiles(tableFiles);
     }
@@ -168,7 +172,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         Set<File> tableFiles = new HashSet<File>();
         //only 1 sequence file allowed per conversion
         //tableFiles.addAll(sequenceFileTable.getFiles());
-        tableFiles.addAll(chooseFiles(false, false, new FastaFileFilter()));
+        tableFiles.addAll(chooseFiles(false, false, false, new FastaFileFilter()));
         sequenceFileTable.clearFiles();
         sequenceFileTable.addFiles(tableFiles);
     }
@@ -176,7 +180,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     private void loadTabFiles(ActionEvent e) {
         Set<File> tableFiles = new TreeSet<File>();
         tableFiles.addAll(mzTabFileTable.getFiles());
-        tableFiles.addAll(chooseFiles(true, false, new MzTabFileFilter()));
+        tableFiles.addAll(chooseFiles(true, false, false, new MzTabFileFilter()));
         mzTabFileTable.clearFiles();
         mzTabFileTable.addFiles(tableFiles);
 
@@ -280,7 +284,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     private void browseSpectrumFileButtonActionPerformed() {
-        Collection<File> files = chooseFiles(false, false, null);
+        Collection<File> files = chooseFiles(false, ConverterData.getInstance().getDaoFormat().isExternalSpectraIsDirectory(), true, null);
         if (!files.isEmpty()) {
             singleSpectrumFile.setText(files.iterator().next().getAbsolutePath());
         }
@@ -288,7 +292,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     private void browseMzTabButtonActionPerformed() {
         boolean oldState = forceRegenerationBox.isSelected();
-        Collection<File> files = chooseFiles(false, false, new MzTabFileFilter());
+        Collection<File> files = chooseFiles(false, false, false, new MzTabFileFilter());
         if (!files.isEmpty()) {
             singleMzTabFile.setText(files.iterator().next().getAbsolutePath());
             forceRegenerationBox.setSelected(true);
@@ -300,14 +304,14 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     private void browseFastaFileButtonActionPerformed() {
-        Collection<File> files = chooseFiles(false, false, new FastaFileFilter());
+        Collection<File> files = chooseFiles(false, false, false, new FastaFileFilter());
         if (!files.isEmpty()) {
             singleFastaFile.setText(files.iterator().next().getAbsolutePath());
         }
     }
 
     private void browseDataFileButtonActionPerformed() {
-        Collection<File> files = chooseFiles(false, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().getFilter());
+        Collection<File> files = chooseFiles(false, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().isAllowDirectoryOnly(), ConverterData.getInstance().getDaoFormat().getFilter());
         if (!files.isEmpty()) {
             singleSourceFile.setText(files.iterator().next().getAbsolutePath());
             validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()));
