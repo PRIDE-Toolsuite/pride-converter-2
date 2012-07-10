@@ -42,6 +42,13 @@ public class FilterPanel extends JPanel {
 
     //make sure the information is correct when the panel is displayed
     public void paintComponent(Graphics g) {
+
+        //doesn't make sense to have this option for spectra-only DAOs
+        if (ConverterData.getInstance().getDaoFormat().isSpectrumOnly()) {
+            includeOnlyIdentifiedSpectraBox.setSelected(false);
+            includeOnlyIdentifiedSpectraBox.setEnabled(false);
+        }
+
         if (ConverterData.getInstance().getLastSelectedDirectory() != null) {
             pathField.setText(ConverterData.getInstance().getLastSelectedDirectory());
         } else {

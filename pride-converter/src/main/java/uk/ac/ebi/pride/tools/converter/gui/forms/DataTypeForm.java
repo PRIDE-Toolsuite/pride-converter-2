@@ -101,7 +101,7 @@ public class DataTypeForm extends AbstractForm {
                 "mzIdentML is the current PSI standard for reporting proteomics results. <br><br>" +
                 "Data Type: Identifications and Spectra<br><br>" +
                 "File Extension: .xml<br><br>" +
-                "External spectra: [REQUIRED] A single file or a directory containing all spectra files: dta, mgf, pkl or mzML<br><br>" +
+                "External spectra: [OPTIONAL] A single directory containing all spectra files: dta, mgf, pkl or mzML<br><br>" +
                 "More Information: <a href=\"http://www.psidev.info/mzidentml\">http://www.psidev.info/mzidentml</a>");
         descriptionArea.setCaretPosition(0);
         warnIfSpectrumOnly();
