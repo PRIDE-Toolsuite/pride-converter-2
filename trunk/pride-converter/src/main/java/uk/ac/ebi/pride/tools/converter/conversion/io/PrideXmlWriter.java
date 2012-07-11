@@ -155,6 +155,10 @@ public class PrideXmlWriter {
                 out = new PrintWriter(new FileWriter(xmlFile));
             }
 
+            if (logger.isInfoEnabled()) {
+                logger.info("DAO Configuration: " + dao.getConfiguration());
+            }
+
             logger.warn("Writing file : " + xmlFile.getAbsolutePath());
 
             //write header

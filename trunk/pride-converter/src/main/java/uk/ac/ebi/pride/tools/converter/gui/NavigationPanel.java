@@ -4,6 +4,7 @@
 
 package uk.ac.ebi.pride.tools.converter.gui;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.border.DropShadowBorder;
 import org.jdesktop.swingx.error.ErrorLevel;
@@ -67,6 +68,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
     //user notification
     private ProgressDialog progressDialog = null;
     private boolean exitToApplicationSelector = false;
+    private boolean debug = false;
 
     public static NavigationPanel getInstance() {
         return instance;
@@ -98,6 +100,19 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
         System.out.println("\nName of the OS: " + Configurator.getOSName());
         System.out.println("Version of the OS: " + Configurator.getOSVersion());
         System.out.println("Architecture of The OS: " + Configurator.getOSArch());
+
+        String systemJREHome = System.getProperty("java.home");
+        String systemJREVersion = System.getProperty("java.version");
+        String systemJREVendor = System.getProperty("java.vendor");
+        System.out.println("Java Home: " + systemJREHome);
+        System.out.println("Java Version: " + systemJREVersion + " (" + systemJREVendor + ")");
+
+        int nbProc = Runtime.getRuntime().availableProcessors();
+        System.out.println("Number of processors: " + nbProc);
+        long freeMem = Runtime.getRuntime().freeMemory() / 1024 / 1024;
+        long totalMem = Runtime.getRuntime().totalMemory() / 1024 / 1024;
+        long maxMem = Runtime.getRuntime().maxMemory() / 1024 / 1024;
+        System.out.println("Memory Usage: " + totalMem + "MB used, " + freeMem + "MB free, " + maxMem + "MB Max");
 
         initComponents();
 
@@ -538,11 +553,6 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
      * display help based on the current ConverterForm being displayed
      */
     private void help() {
-
-//        //for now, show about dialog
-//        AboutDialog about = new AboutDialog(this);
-//        about.setVisible(true);
-
     }
 
     public void reset() {
@@ -904,6 +914,20 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
 
     public int getSelectedIndex() {
         return selectedIndex;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
+        if (debug) {
+            System.out.println("Verbose debugging enabled.");
+            Logger baseLogger = Logger.getLogger("uk.ac.ebi.pride.tools.converter");
+            if (baseLogger != null) {
+                //make it verbose
+                baseLogger.setLevel(Level.INFO);
+                //also dump to console and not just to log file
+                baseLogger.setAdditivity(true);
+            }
+        }
     }
 
     //////////////////////////////////////////////////////////////// WindowListener Interface

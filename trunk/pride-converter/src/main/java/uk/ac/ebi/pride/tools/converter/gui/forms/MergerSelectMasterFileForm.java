@@ -137,7 +137,7 @@ public class MergerSelectMasterFileForm extends AbstractForm {
     public void finish() throws GUIException {
 
         List<String> inputFiles = new ArrayList<String>();
-        //put master file at head
+        //put master file at head - first file to merge will always be master file!
         String masterFile = fileBox.getModel().getSelectedItem().toString();
         inputFiles.add(masterFile);
         //then add all other files

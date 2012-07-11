@@ -132,6 +132,10 @@ public class IOUtilities {
         //store all options to converterdata
         ConverterData.getInstance().setOptions(options);
 
+        if (logger.isInfoEnabled()) {
+            logger.info("DAO options: " + options);
+        }
+
         //keep local copy of options for processing
         Properties localOptions = new Properties();
         for (Map.Entry entry : options.entrySet()) {
@@ -218,6 +222,10 @@ public class IOUtilities {
 
         ConverterData.getInstance().setOptions(options);
 
+        if (logger.isInfoEnabled()) {
+            logger.info("DAO options: " + options);
+        }
+
         for (FileBean fileBean : dataFiles) {
 
             try {
@@ -234,7 +242,14 @@ public class IOUtilities {
                     if (!repFile.exists() || !ReportXMLUtilities.isUnmodifiedSourceForReportFile(repFile, fileBean.getInputFile())) {
                         logger.warn("Source file modified since report generation, will recreate report file");
                         generateReportFile(fileBean, options, automaticallyMapPreferredPTMs);
+                    } else {
+
+                        if (logger.isInfoEnabled()) {
+                            logger.info("Reading existing report file: " + repFile.getAbsolutePath());
+                        }
+
                     }
+
                 }
 
                 fileBean.setReportFile(reportFile);
@@ -313,6 +328,10 @@ public class IOUtilities {
         File masterFile = File.createTempFile("master_report.", ".xml", reportFile.getParentFile());
         masterFile.deleteOnExit();
 
+        if (logger.isInfoEnabled()) {
+            logger.info("Creating master report file: " + masterFile.getAbsolutePath());
+        }
+
         copyFile(reportFile, masterFile);
 
         return masterFile;
@@ -345,7 +364,6 @@ public class IOUtilities {
             writer.setExternalHandler(HandlerFactory.getInstance().getDefaultExternalHanlder(fileBean.getMzTabFile()));
         }
 
-        logger.warn("Writing = " + reportFile);
         writer.writeReport();
 
     }

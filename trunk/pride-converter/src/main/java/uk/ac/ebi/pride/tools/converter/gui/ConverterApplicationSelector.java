@@ -3,12 +3,17 @@ package uk.ac.ebi.pride.tools.converter.gui;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.conversion.PrideConverter;
+import uk.ac.ebi.pride.tools.converter.gui.dialogs.AboutDialog;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.ImageDialog;
 import uk.ac.ebi.pride.tools.converter.gui.forms.*;
 import uk.ac.ebi.pride.tools.converter.gui.model.OutputFormat;
 import uk.ac.ebi.pride.tools.filter.PrideFilter;
 import uk.ac.ebi.pride.tools.merger.PrideMerger;
 
+import javax.help.CSH;
+import javax.help.HelpBroker;
+import javax.help.HelpSet;
+import javax.help.HelpSetException;
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -17,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.*;
+import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -29,6 +35,8 @@ public class ConverterApplicationSelector extends JFrame {
 
     private static ConverterApplicationSelector selector = null;
     private static Logger logger = Logger.getLogger(ConverterApplicationSelector.class);
+
+    private static boolean debug = false;
 
     static {
         //always ensure that the messages in this class are logged
@@ -57,7 +65,11 @@ public class ConverterApplicationSelector extends JFrame {
     }
 
     public ConverterApplicationSelector() {
+
+        //init
         initComponents();
+
+        //update text boxes
         SimpleAttributeSet attribs = new SimpleAttributeSet();
         StyleConstants.setFontSize(attribs, 10);
         StyleConstants.setAlignment(attribs, StyleConstants.ALIGN_RIGHT);
@@ -66,7 +78,21 @@ public class ConverterApplicationSelector extends JFrame {
         textPane3.setParagraphAttributes(attribs, true);
         textPane4.setParagraphAttributes(attribs, true);
         textPane5.setParagraphAttributes(attribs, true);
+
+        //init help
+        try {
+            ClassLoader cl = ConverterApplicationSelector.class.getClassLoader();
+            URL url = HelpSet.findHelpSet(cl, "help/MainHelp.hs");
+            HelpSet mainHelpSet = new HelpSet(cl, url);
+            HelpBroker mainHelpBroker = mainHelpSet.createHelpBroker();
+            CSH.setHelpIDString(helpTopicsMenuItem, "help.ui");
+            helpTopicsMenuItem.addActionListener(new CSH.DisplayHelpFromSource(mainHelpBroker));
+        } catch (HelpSetException hse) {
+            logger.error("Failed to initialize help documents", hse);
+        }
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }
 
     public static void main(String[] args) {
@@ -203,6 +229,11 @@ public class ConverterApplicationSelector extends JFrame {
         }
 
         cmdBuffer.append(" ").append(mainClass);
+
+        if (debug) {
+            cmdBuffer.append(" -debug ");
+        }
+
         System.err.println("Bootstrap command: " + cmdBuffer.toString());
         logger.info("Bootstrap command: " + cmdBuffer.toString());
 
@@ -256,9 +287,29 @@ public class ConverterApplicationSelector extends JFrame {
         }
     }
 
+    private void menuItem1ActionPerformed(ActionEvent e) {
+        AboutDialog ab = new AboutDialog(this);
+        ab.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        ab.setVisible(true);
+    }
+
+    private void checkBoxMenuItem1ActionPerformed(ActionEvent e) {
+        debug = debugMenuItem.isSelected();
+    }
+
+    private void menuItem2ActionPerformed(ActionEvent e) {
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner non-commercial license
+        menuBar1 = new JMenuBar();
+        menuBar1.add(Box.createHorizontalGlue());
+        menu1 = new JMenu();
+        helpTopicsMenuItem = new JMenuItem();
+        aboutMenuItem = new JMenuItem();
+        debugMenuItem = new JCheckBoxMenuItem();
         mzTabButton = new JButton();
         filterButton = new JButton();
         exitButton = new JButton();
@@ -275,6 +326,54 @@ public class ConverterApplicationSelector extends JFrame {
         setResizable(false);
         setTitle("PRIDE Converter Toolsuite");
         Container contentPane = getContentPane();
+
+        //======== menuBar1 ========
+        {
+
+            //======== menu1 ========
+            {
+                menu1.setText("Help");
+                menu1.setMnemonic('H');
+
+                //---- helpTopicsMenuItem ----
+                helpTopicsMenuItem.setText("Help Topics");
+                helpTopicsMenuItem.setMnemonic('E');
+                helpTopicsMenuItem.setIcon(null);
+                helpTopicsMenuItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        menuItem2ActionPerformed(e);
+                    }
+                });
+                menu1.add(helpTopicsMenuItem);
+
+                //---- aboutMenuItem ----
+                aboutMenuItem.setText("About");
+                aboutMenuItem.setMnemonic('A');
+                aboutMenuItem.setIcon(null);
+                aboutMenuItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        menuItem1ActionPerformed(e);
+                    }
+                });
+                menu1.add(aboutMenuItem);
+                menu1.addSeparator();
+
+                //---- debugMenuItem ----
+                debugMenuItem.setText("Show Debug Information");
+                debugMenuItem.setMnemonic('S');
+                debugMenuItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        checkBoxMenuItem1ActionPerformed(e);
+                    }
+                });
+                menu1.add(debugMenuItem);
+            }
+            menuBar1.add(menu1);
+        }
+        setJMenuBar(menuBar1);
 
         //---- mzTabButton ----
         mzTabButton.setText("Launch PRIDE mzTab Generator");
@@ -324,7 +423,7 @@ public class ConverterApplicationSelector extends JFrame {
 
         //---- textPane3 ----
         textPane3.setBackground(UIManager.getColor("Button.background"));
-        textPane3.setText("Combines multiple PRIDE XML files into one single PRIDE XML file, while maintaing the links between peptides and spectra.");
+        textPane3.setText("Combines multiple PRIDE XML files into a single one one, while maintaing the links between peptides and spectra.");
         textPane3.setFont(new Font("Dialog", Font.PLAIN, 9));
 
         //---- mergerButton ----
@@ -359,19 +458,20 @@ public class ConverterApplicationSelector extends JFrame {
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addComponent(label1, GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                                        .addComponent(textPane1, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
-                                                        .addComponent(textPane5, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
-                                                        .addComponent(textPane4, GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-                                                        .addComponent(textPane3, GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-                                                        .addComponent(textPane2, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
+                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                        .addComponent(textPane4, 0, 0, Short.MAX_VALUE)
+                                                        .addComponent(textPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                                                        .addComponent(textPane2, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                                                        .addComponent(textPane3, 0, 0, Short.MAX_VALUE)
+                                                        .addComponent(textPane5, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE))
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(converterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(mzTabButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
-                                                        .addComponent(filterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE))))
+                                                .addGroup(contentPaneLayout.createParallelGroup()
+                                                        .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 235, GroupLayout.PREFERRED_SIZE)
+                                                        .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                                .addComponent(mergerButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(converterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                                .addComponent(mzTabButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE)
+                                                                .addComponent(filterButton, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                                 .addContainerGap())
         );
         contentPaneLayout.setVerticalGroup(
@@ -384,33 +484,37 @@ public class ConverterApplicationSelector extends JFrame {
                                         .addComponent(textPane1)
                                         .addComponent(converterButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(textPane2)
+                                        .addComponent(mzTabButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(mzTabButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+                                                .addComponent(textPane3, GroupLayout.PREFERRED_SIZE, 36, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(textPane4, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                                        .addGroup(contentPaneLayout.createSequentialGroup()
                                                 .addComponent(mergerButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(filterButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(exitButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-                                                .addContainerGap())
-                                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                                .addComponent(textPane2, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(textPane3, GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(textPane4, GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(textPane5, GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
-                                                .addContainerGap(20, Short.MAX_VALUE))))
+                                                .addComponent(filterButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(contentPaneLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(textPane5)
+                                        .addComponent(exitButton, GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE))
+                                .addContainerGap())
         );
-        setSize(620, 565);
+        setSize(620, 580);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     // Generated using JFormDesigner non-commercial license
+    private JMenuBar menuBar1;
+    private JMenu menu1;
+    private JMenuItem helpTopicsMenuItem;
+    private JMenuItem aboutMenuItem;
+    private JCheckBoxMenuItem debugMenuItem;
     private JButton mzTabButton;
     private JButton filterButton;
     private JButton exitButton;
@@ -428,6 +532,9 @@ public class ConverterApplicationSelector extends JFrame {
 
         public static void main(String[] args) {
             NavigationPanel panel = NavigationPanel.getInstance();
+            if (args.length > 0 && "-debug".equals(args[0])) {
+                panel.setDebug(true);
+            }
             panel.registerForm(new DataTypeForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_XML));
             panel.registerForm(new ExperimentDetailForm());
@@ -450,6 +557,9 @@ public class ConverterApplicationSelector extends JFrame {
 
         public static void main(String[] args) {
             NavigationPanel panel = NavigationPanel.getInstance();
+            if (args.length > 0 && "-debug".equals(args[0])) {
+                panel.setDebug(true);
+            }
             DataTypeForm form = new DataTypeForm();
             form.setSpectrumOnlyFormatsEnabled(false);
             panel.registerForm(form);
@@ -465,6 +575,9 @@ public class ConverterApplicationSelector extends JFrame {
 
         public static void main(String[] args) {
             NavigationPanel panel = NavigationPanel.getInstance();
+            if (args.length > 0 && "-debug".equals(args[0])) {
+                panel.setDebug(true);
+            }
             panel.registerForm(new MergerInformationForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_MERGED_XML));
             panel.registerForm(new MergerSelectMasterFileForm());
@@ -479,6 +592,9 @@ public class ConverterApplicationSelector extends JFrame {
 
         public static void main(String[] args) {
             NavigationPanel panel = NavigationPanel.getInstance();
+            if (args.length > 0 && "-debug".equals(args[0])) {
+                panel.setDebug(true);
+            }
             panel.registerForm(new FilterInformationForm());
             panel.registerForm(new FileSelectionForm(OutputFormat.PRIDE_FILTERED_XML));
             panel.registerForm(new FileExportForm(true));
