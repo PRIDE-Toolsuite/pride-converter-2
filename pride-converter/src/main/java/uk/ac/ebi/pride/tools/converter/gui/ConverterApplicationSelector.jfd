@@ -4,8 +4,8 @@ new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq l {space :::p, par l {comp label1::l::596:x, seq l {par t {comp textPane1::::355:x:1, comp textPane5::t::355:x:1, comp textPane4::l:0:0:x:1, comp textPane3::l:0:0:x:1, comp textPane2::l::355:x:1}, space :::p, par l:::p {comp mergerButton:::::x:1, comp converterButton::t:::x:1, comp mzTabButton::t::234:x:1, comp filterButton::t:::x:1, comp exitButton::l:p:235:p:1}}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p:315:p, space :::p, par l:::p {comp textPane1::l:::x:1, comp converterButton::l::35:x:1}, space :::p, par l {seq l {comp mzTabButton:::p:35:p:1, space :::p, comp mergerButton:::p:35:p:1, space :::p, comp filterButton:::p:35:p:1, space :::p, comp exitButton:::p:35:p:1, space :::p}, seq {comp textPane2::::36:x:1, space :::p, comp textPane3::::36:x:1, space :::p, comp textPane4::::38:x:1, space :::p, comp textPane5::::23:x:1, space ::20:x}}}}"
+			"$horizontalGroup": "par l {seq l {space :::p, par l {comp label1::l::596:x, seq l {par l {comp textPane4:::0:0:x:1, comp textPane1::t::355:x:1, comp textPane2::l::355:x:1, comp textPane3::l:0:0:x:1, comp textPane5::t::355:x:1}, space :::p, par l {comp exitButton:::p:235:p:1, par l:l::p {comp mergerButton:::::x:1, comp converterButton::t:::x:1, comp mzTabButton::t::234:x:1, comp filterButton::t:::x:1}}}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, comp label1:::p:315:p, space :::p, par l:::p {comp textPane1:::::x:1, comp converterButton::l::35:x:1}, space :::p, par l:::p {comp textPane2:::::x:1, comp mzTabButton::l::35:x:1}, space :::p, par l {seq {comp textPane3:::p:36:p:1, space :::p, comp textPane4::::35:x:1}, seq l {comp mergerButton:::p:35:p:1, space :::p, comp filterButton:::p:35:p:1}}, space :::p, par l:::p {comp textPane5:::::x:1, comp exitButton::l::35:x:1}, space :::p}}"
 		} ) {
 			name: "this"
 			"resizable": false
@@ -46,7 +46,7 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JTextPane" ) {
 				name: "textPane3"
 				"background": #SwingColor0
-				"text": "Combines multiple PRIDE XML files into one single PRIDE XML file, while maintaing the links between peptides and spectra."
+				"text": "Combines multiple PRIDE XML files into a single one one, while maintaing the links between peptides and spectra."
 				"font": #Font0
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
@@ -71,9 +71,43 @@ new FormModel {
 				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/splash-logo.png" )
 				"horizontalAlignment": 0
 			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				auxiliary() {
+					"JavaCodeGenerator.postCreateCode": "${field}.add(Box.createHorizontalGlue());"
+				}
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu1"
+					"text": "Help"
+					"mnemonic": 72
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "helpTopicsMenuItem"
+						"text": "Help Topics"
+						"mnemonic": 69
+						"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem2ActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "aboutMenuItem"
+						"text": "About"
+						"mnemonic": 65
+						"icon": sfield com.jformdesigner.model.FormObject NULL_VALUE
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem1ActionPerformed", true ) )
+					} )
+					add( new FormComponent( "javax.swing.JPopupMenu$Separator" ) {
+						name: "separator1"
+					} )
+					add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
+						name: "debugMenuItem"
+						"text": "Show Debug Information"
+						"mnemonic": 83
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxMenuItem1ActionPerformed", true ) )
+					} )
+				} )
+			}
 		}, new FormLayoutConstraints( null ) {
-			"location": new java.awt.Point( 30, 0 )
-			"size": new java.awt.Dimension( 620, 565 )
+			"location": new java.awt.Point( 5, 145 )
+			"size": new java.awt.Dimension( 620, 580 )
 		} )
 	}
 }

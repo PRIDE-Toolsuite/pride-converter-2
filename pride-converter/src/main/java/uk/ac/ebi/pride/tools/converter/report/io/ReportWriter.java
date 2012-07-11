@@ -109,6 +109,8 @@ public class ReportWriter {
                 }
             }
 
+            logger.warn("Writing report file: " + outputFile.getAbsolutePath());
+
             out = new PrintWriter(new FileWriter(outputFile));
 
             //write xml header
