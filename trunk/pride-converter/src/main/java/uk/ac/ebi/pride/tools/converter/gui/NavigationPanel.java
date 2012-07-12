@@ -308,7 +308,7 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
             processValidatorMessages();
         } catch (ValidatorException e) {
             logger.error("Validation error: " + e.getMessage(), e);
-            ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error validating form", "An wrror occurred validating the data in the form: " + form.getFormName(), "NAVIGATOR_PANEL", e);
+            ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error validating form", "An error occurred validating the data in the form: " + form.getFormName(), "NAVIGATOR_PANEL", e);
         }
 
         if (errorMessageCount == 0) {
@@ -416,12 +416,12 @@ public class NavigationPanel extends JFrame implements ValidationListener, Windo
                                         ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.SEVERE, e.getShortMessage(), e.getDetailedMessage(), e.getComponent(), e);
                                     } else {
                                         logger.error("Execution error: " + value.getMessage(), value);
-                                        ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An wrror occurred while processing the conversion", "NAVIGATOR_PANEL", value);
+                                        ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An error occurred while processing the conversion", "NAVIGATOR_PANEL", value);
                                     }
                                 }
                             } catch (Exception e) {
                                 logger.error("Execution error: " + e.getMessage(), e);
-                                ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An wrror occurred while processing the conversion", "NAVIGATOR_PANEL", e);
+                                ErrorDialogHandler.showErrorDialog(instance, ErrorLevel.FATAL, "Error executing background job", "An error occurred while processing the conversion", "NAVIGATOR_PANEL", e);
                             }
                         }
 
