@@ -212,18 +212,21 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                                 if (value == null) {
                                     //add back options
                                     nameField.setModel(new DefaultComboBoxModel(olsResults.keySet().toArray()));
+                                    //this is to try and avoid the following exception that has been seen:
+                                    //  component must be showing on the screen to determine its location
+                                    nameField.setVisible(true);
+                                    nameField.getEditor().setItem(queryString);
                                     nameField.setSelectedIndex(-1);
                                     nameField.setPopupVisible(true);
-                                    nameField.getEditor().setItem(queryString);
                                     working = false;
                                     setLoadingIcon(false);
                                 } else {
                                     logger.error("Execution error: " + value.getMessage(), value);
-                                    ErrorDialogHandler.showErrorDialog(NavigationPanel.getInstance(), ErrorLevel.FATAL, "Error executing background job", "An wrror occurred while processing the conversion", "NAVIGATOR_PANEL", value);
+                                    ErrorDialogHandler.showErrorDialog(NavigationPanel.getInstance(), ErrorLevel.FATAL, "Error executing background job", "An error occurred while processing the conversion", "NAVIGATOR_PANEL", value);
                                 }
                             } catch (Exception e) {
                                 logger.error("Execution error: " + e.getMessage(), e);
-                                ErrorDialogHandler.showErrorDialog(NavigationPanel.getInstance(), ErrorLevel.FATAL, "Error executing background job", "An wrror occurred while processing the conversion", "NAVIGATOR_PANEL", e);
+                                ErrorDialogHandler.showErrorDialog(NavigationPanel.getInstance(), ErrorLevel.FATAL, "Error executing background job", "An error occurred while processing the conversion", "NAVIGATOR_PANEL", e);
                             }
                         }
 
