@@ -183,6 +183,10 @@ public class ConverterApplicationSelector extends JFrame {
         String proxyPassword = properties.getProperty(ConverterProperties.PROXYPASSWORD.getValue());
 
         // create the command
+        if (isWindowsPlatform()) {
+            cmdBuffer.append("\"");
+        }
+
         if (javaHome != null && !"".equals(javaHome.trim())) {
             cmdBuffer.append(javaHome.trim()).append(File.separatorChar);
         } else if (systemJREHome != null) {
@@ -193,7 +197,7 @@ public class ConverterApplicationSelector extends JFrame {
         cmdBuffer.append("java");
 
         if (isWindowsPlatform()) {
-            cmdBuffer.append(".exe ");
+            cmdBuffer.append(".exe\" ");
         }
 
         //memory settings
