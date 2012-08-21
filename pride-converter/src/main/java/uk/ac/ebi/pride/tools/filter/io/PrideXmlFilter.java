@@ -241,6 +241,14 @@ public class PrideXmlFilter {
 
                     ident = updateObject(ident, identificationUpdatingFilters);
                     if (ident != null) {
+
+                        //sanity check
+                        //if identification has no supporting peptides, it will be ignored
+                        if (ident.getPeptideItem() == null || ident.getPeptideItem().isEmpty()) {
+                            logger.error("Identification " + ident.getAccession() + " has no supporting peptides, skipping!");
+                            continue;
+                        }
+
                         marshallPrideObject(out, ident);
                         filteredIdentCount++;
                         out.println();
@@ -256,7 +264,7 @@ public class PrideXmlFilter {
             }
 
             logger.warn("Total number of identifications: " + identCount);
-            logger.warn("Filtered number of identifications: " + filteredIdentCount);
+            logger.warn("Number of identifications after filtering: " + filteredIdentCount);
 
             //close experiment
             marshallPrideObject(out, reader.getAdditionalParams());
