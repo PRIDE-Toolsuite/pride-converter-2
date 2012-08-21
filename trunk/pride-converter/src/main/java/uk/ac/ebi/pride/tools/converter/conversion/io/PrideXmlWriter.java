@@ -238,6 +238,14 @@ public class PrideXmlWriter {
 
                 uk.ac.ebi.pride.jaxb.model.Identification id = finalizeIdentification(daoId, readerId);
                 if (id != null) {
+
+                    //sanity check
+                    //if identification has no supporting peptides, it will be ignored
+                    if (id.getPeptideItem() == null || id.getPeptideItem().isEmpty()) {
+                        logger.error("Identification " + id.getAccession() + " has no supporting peptides, skipping!");
+                        continue;
+                    }
+
                     identCount++;
                     prideJaxbMarshaller.marshall(id, out);
                     out.println();

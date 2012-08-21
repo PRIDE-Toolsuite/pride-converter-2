@@ -37,7 +37,7 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {
 				name: "piLabelButton"
-				"text": "Start PRIDE Inspector"
+				"text": "Get PRIDE Inspector"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "openWebsite", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JButton" ) {

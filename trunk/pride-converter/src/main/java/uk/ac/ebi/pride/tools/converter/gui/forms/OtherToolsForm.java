@@ -8,6 +8,7 @@ import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.BrowserLauncher;
+import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
 import uk.ac.ebi.pride.tools.converter.gui.model.GUIException;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 
@@ -166,7 +167,7 @@ public class OtherToolsForm extends AbstractForm {
         });
 
         //---- piLabelButton ----
-        piLabelButton.setText("Start PRIDE Inspector");
+        piLabelButton.setText("Get PRIDE Inspector");
         piLabelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -252,7 +253,7 @@ public class OtherToolsForm extends AbstractForm {
 
     @Override
     public String getFormName() {
-        return "Helpful Tools";
+        return "Preparing Submissions";
     }
 
     @Override
@@ -273,6 +274,18 @@ public class OtherToolsForm extends AbstractForm {
 
     @Override
     public void start() {
+
+        try {
+            //update form content based on DAO format
+            if (ConverterData.getInstance().getDaoFormat().isSpectrumOnly()) {
+                editorPane.setPage(getClass().getClassLoader().getResource("help/html/usage/ui/OtherToolsFormIncompleteSubmission.html"));
+            } else {
+                editorPane.setPage(getClass().getClassLoader().getResource("help/html/usage/ui/OtherToolsForm.html"));
+            }
+        } catch (IOException e) {
+            logger.error("Could not load page content: " + e.getMessage(), e);
+        }
+
         NavigationPanel.getInstance().hideValidationIcon();
         //validate form and fire validationListener - required for back & forth when no changes occur
         validationListerner.fireValidationListener(true);
