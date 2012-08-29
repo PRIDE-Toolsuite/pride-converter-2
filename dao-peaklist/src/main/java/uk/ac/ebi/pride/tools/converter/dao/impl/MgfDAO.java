@@ -70,9 +70,9 @@ public class MgfDAO extends AbstractPeakListDAO implements DAO {
     @Override
     public List<String> getSpectraIds() {
         // just return an array containing indexes 0..n-1
-        ArrayList<String> ids = new ArrayList<String>(mgfFile.getMs2QueryCount());
+        ArrayList<String> ids = new ArrayList<String>(mgfFile.getSpectraCount());
 
-        for (Integer i = 0; i < mgfFile.getMs2QueryCount(); i++)
+        for (Integer i = 0; i < mgfFile.getSpectraCount(); i++)
             ids.add(i.toString());
 
         return ids;
