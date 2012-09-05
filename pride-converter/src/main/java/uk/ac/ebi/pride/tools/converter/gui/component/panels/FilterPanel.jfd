@@ -34,7 +34,7 @@
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq l {par b {comp pathField::b:p:25:p, comp selectPathButton::b:p::p}, space u:::p, comp gzipCheckBox:::p::p, space :::p, comp includeOnlyIdentifiedSpectraBox:::p::p, space :::p, comp removeWorkfilesBox:::p::p, space :::p, comp intactSubmissionBox:::p::p, space ::13:x}}</string>
+          <string>par l {seq l {par b {comp pathField::b:p:25:p, comp selectPathButton::b:p::p}, space u:::p, comp gzipCheckBox:::p::p, space :::p, comp includeOnlyIdentifiedSpectraBox:::p::p, space :::p, comp removeWorkfilesBox:::p::p, space :::p, comp intactSubmissionBox:::p::p, space ::11:x}}</string>
          </void>
         </object>
         <void method="setProperty">
@@ -158,13 +158,14 @@ will be deleted when PRIDE Converter exits.</string>
           <string>javax.swing.JCheckBox</string>
           <void method="setProperty">
            <string>text</string>
-           <string>Experiment contains interactions data</string>
+           <string>Experiment contains molecular interaction data</string>
           </void>
           <void method="setProperty">
            <string>toolTipText</string>
-           <string>Select this option if your data set contains interaction
-data and you would like to be contacted by a curator for
-inclusion into the EBI IntAct database.</string>
+           <string>Select this option if your data set contains molecular
+interaction data (ex: an AP-MS study) and you would like
+to be contacted by a curator for inclusion into the EBI
+IntAct database.</string>
           </void>
           <void property="name">
            <string>intactSubmissionBox</string>
@@ -180,11 +181,11 @@ inclusion into the EBI IntAct database.</string>
          <class>org.jdesktop.layout.GroupLayout</class>
          <void method="setProperty">
           <string>$horizontalGroup</string>
-          <string>par l {seq {space :::p, par l {seq {comp removeEmptySpectraBox:::p::p, space :p:255:p}, seq l {par l {seq l {space ::1:p, comp filterIdentsWIthNbPepBox:::p::p:1, space :::p, comp nbPeptideFilterTextField::::21:x, space :::p, comp label1:::p::p, space ::62:x}, comp blacklistCheckbox::l:p::p, comp whitelistCheckbox::l:p::p, seq t {space :20:20:p, par t {comp whitelistTextfield::l::293:x, comp blacklistTextfield::t::293:x}, space :::p, par l {comp whitelistButton:::p:123:p, comp blacklistButton::l:p:123:p}}}, space :::p}}}}</string>
+          <string>par l {seq {space :::p, par l {seq {comp removeEmptySpectraBox:::p::p, space :p:255:p}, seq l {par l {seq l {space ::1:p, comp filterIdentsWIthNbPepBox:::p::p:1, space :::p, comp nbPeptideFilterTextField:::::x, space :::p, comp label1:::p::p}, comp blacklistCheckbox::l:p::p, comp whitelistCheckbox::l:p::p, seq t {space :20:20:p, par t {comp whitelistTextfield::l:::x, comp blacklistTextfield::t:::x}, space :::p, par l {comp whitelistButton:::p:123:p, comp blacklistButton::l:p:123:p}}}, space :::p}}}}</string>
          </void>
          <void method="setProperty">
           <string>$verticalGroup</string>
-          <string>par l {seq l {space :p:15:p, comp removeEmptySpectraBox:::p::p, space s:::p, par b {comp filterIdentsWIthNbPepBox::b:p::p, comp nbPeptideFilterTextField::b:p::p, comp label1::b:p::p}, space s:::p, comp blacklistCheckbox:::p::p, space :::p, par b {comp blacklistTextfield::b:p::p, comp blacklistButton::b:p::p}, space u:::p, comp whitelistCheckbox:::p::p, space :::p, par b {comp whitelistTextfield::b:p::p, comp whitelistButton::b:p::p}, space ::19:x}}</string>
+          <string>par l {seq l {space :p:15:p, comp removeEmptySpectraBox:::p::p, space s:::p, par b {comp filterIdentsWIthNbPepBox::b:p::p, comp nbPeptideFilterTextField::b:p::p, comp label1::b:p::p}, space s:::p, comp blacklistCheckbox:::p::p, space :::p, par b {comp blacklistTextfield::b:p::p, comp blacklistButton::b:p::p}, space u:::p, comp whitelistCheckbox:::p::p, space :::p, par b {comp whitelistTextfield::b:p::p, comp whitelistButton::b:p::p}, space ::21:x}}</string>
          </void>
         </object>
         <void method="setProperty">
