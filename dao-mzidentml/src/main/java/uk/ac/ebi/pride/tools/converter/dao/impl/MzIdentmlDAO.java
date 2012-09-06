@@ -186,12 +186,13 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      * Directory where the spectra files can be found.
      */
     private String specFileDirectory;
+
     /**
      * Creates a new MzIdentmlDAO based on the passed
      * mzIdentML file.
      *
      * @param sourcefile The mzIdentML file to process.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     public MzIdentmlDAO(File sourcefile) throws InvalidFormatException {
         this.sourcefile = sourcefile;
@@ -218,6 +219,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      * as the file formats. If multiple spectra files are used, all
      * of these files must be in the same format and use
      * the same id format.
+     *
      * @throws InvalidFormatException In case there are different file types provided or different id formats used.
      */
     private void parseSpectraFiles() throws InvalidFormatException {
@@ -266,7 +268,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      *
      * @param specIdFormat A cvParam specifying the spec id format.
      * @return The associated SpecIdFormat
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      * @throws InvalidFormatException Thrown in case the spectrum id format is not supported.
      */
     private SpecIdFormat getSpecFileType(uk.ac.ebi.jmzidml.model.mzidml.CvParam specIdFormat) throws InvalidFormatException {
@@ -290,7 +292,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      *
      * @param specFileFormat A cvParam specifying the spectrum file format.
      * @return The corresponding SpecFileFormat
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      * @throws InvalidFormatException In case the format is not recognized / supported.
      */
     private SpecFileFormat getSpecFileFormat(uk.ac.ebi.jmzidml.model.mzidml.CvParam specFileFormat) throws InvalidFormatException {
@@ -332,7 +334,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      *
      * @param specFile The spectra file to find.
      * @return The found spectra file as a File object or null if allowIdentificationsOnly is set to true.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      * @throws InvalidFormatException Thrown if the file could not be found.
      */
     private File getExistingSpecFile(File specFile) throws InvalidFormatException {
@@ -341,13 +343,13 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
             return specFile;
         // if the spec file directory is set, check there
         if (specFileDirectory != null && specFileDirectory.length() > 0) {
-        	File specFileDir = new File(specFileDirectory);
-        	if (!specFileDir.isDirectory())
-        		throw new InvalidFormatException("The spectrum location must only be specified as a directory. The original filenames must not be changed.");
-        	
-        	specFile = new File(specFileDir.getAbsolutePath() + File.separator + specFile.getName());
-        	if (specFile.exists())
-        		return specFile;
+            File specFileDir = new File(specFileDirectory);
+            if (!specFileDir.isDirectory())
+                throw new InvalidFormatException("The spectrum location must only be specified as a directory. The original filenames must not be changed.");
+
+            specFile = new File(specFileDir.getAbsolutePath() + File.separator + specFile.getName());
+            if (specFile.exists())
+                return specFile;
         }
         // if it doesn't exist check in the current directory
         specFile = new File(specFile.getName());
@@ -372,7 +374,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      *
      * @param specFileId The spectra file's id.
      * @return The respective DAO - null in case the spectra file cannot be found.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     private AbstractPeakListDAO getSpectraDAO(String specFileId) throws InvalidFormatException {
         // make sure the right file format is set
@@ -421,7 +423,8 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      * Parses all SpectrumIdentificationItems and creates the
      * referencedSpectraIds HashSet, the sIIspecIdMapping and
      * the proteinSIIMapping HashMaps.
-     * @throws InvalidFormatException 
+     *
+     * @throws InvalidFormatException
      */
     private void prescanFile() throws InvalidFormatException {
         referencedSpectraIds.clear();
@@ -522,7 +525,8 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      * HashMap.
      * In case the HashMap was already created the function
      * returns.
-     * @throws InvalidFormatException 
+     *
+     * @throws InvalidFormatException
      */
     private void createSpectraIdIndexes() throws InvalidFormatException {
         // only create a new index if it hasn't been created yet
@@ -641,7 +645,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      * @param fileId  The spectrum file's id.
      * @param localId The local id (either the 0-based index of the spectrum in the file, the spectrum file name or the mzML id).
      * @return The spectrum id.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     private String getSpectrumFileId(String fileId, String localId) throws InvalidFormatException {
         switch (specIdFormat) {
@@ -731,11 +735,11 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
     }
 
     @Override
-	public void setExternalSpectrumFile(String filename) {	
-    	this.specFileDirectory = filename;
-	}
+    public void setExternalSpectrumFile(String filename) {
+        this.specFileDirectory = filename;
+    }
 
-	@Override
+    @Override
     public String getExperimentTitle() {
         // get the attributes
         Map<String, String> attributes = unmarshaller.getElementAttributes(unmarshaller.getMzIdentMLId(), MzIdentML.class);
@@ -932,11 +936,11 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
         // get the first (and only) spec file id
         String specFileId = specFileIds.get(0);
         DAO specDAO;
-		try {
-			specDAO = getSpectraDAO(specFileId);
-		} catch (InvalidFormatException e) {
-			return null;
-		}
+        try {
+            specDAO = getSpectraDAO(specFileId);
+        } catch (InvalidFormatException e) {
+            return null;
+        }
 
         if (specDAO == null)
             return null;
@@ -982,11 +986,11 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
 
         String specFileId = specFileIds.get(0);
         DAO specDao;
-		try {
-			specDao = getSpectraDAO(specFileId);
-		} catch (InvalidFormatException e) {
-			return null;
-		}
+        try {
+            specDao = getSpectraDAO(specFileId);
+        } catch (InvalidFormatException e) {
+            return null;
+        }
 
         if (specDao == null)
             return null;
@@ -1188,7 +1192,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
         ptm.setSearchEnginePTMLabel(modParam.getAccession());
         // only use PSI-MOD accessions
         if (modParam.getAccession().startsWith("MOD:"))
-        	ptm.setModAccession(modParam.getAccession());
+            ptm.setModAccession(modParam.getAccession());
 
         // get the params cv
         Cv cv = cvs.get(modParam.getCvRef());
@@ -1197,14 +1201,14 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
             throw new InvalidFormatException("Missing Cv object for " + modParam.getCvRef());
 
         if (modParam.getAccession().startsWith("MOD:")) {
-        	ptm.setModDatabase(cv.getFullName());
-        	ptm.setModDatabaseVersion((cv.getVersion() != null) ? cv.getVersion() : "");
+            ptm.setModDatabase(cv.getFullName());
+            ptm.setModDatabaseVersion((cv.getVersion() != null) ? cv.getVersion() : "");
         }
-        
+
         if (mod.getMonoisotopicMassDelta() != null)
-        	ptm.getModMonoDelta().add(mod.getMonoisotopicMassDelta().toString());
+            ptm.getModMonoDelta().add(mod.getMonoisotopicMassDelta().toString());
         if (mod.getAvgMassDelta() != null)
-        	ptm.getModAvgDelta().add(mod.getAvgMassDelta().toString());
+            ptm.getModAvgDelta().add(mod.getAvgMassDelta().toString());
 
         return ptm;
     }
@@ -1317,7 +1321,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
          * Creates a new MzIdentmlSpectrumIterator
          *
          * @param onlyIdentified Indicates whether only identified spectra should be reported.
-         * @throws InvalidFormatException 
+         * @throws InvalidFormatException
          */
         private MzIdentmlSpectrumIterator(boolean onlyIdentified) throws InvalidFormatException {
             super();
@@ -1338,61 +1342,61 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
 
         @Override
         public Spectrum next() {
-        	try {
-	            // check if the iterator was already created and if the iterator
-	            // still has spectra left
-	            if (currentDaoIt == null || !currentDaoIt.hasNext()) {
-	                // get the next iterator
-	                if (currentSpecFileIndex >= specFileIds.size())
-	                    throw new ConverterException("Failed to retrieve all spectra from spectra file.");
-	
-	                currentSpecFileId = specFileIds.get(currentSpecFileIndex++);
-	                
-					currentSpecIds = getSpectraDAO(currentSpecFileId).getSpectraIds();
-					currentDaoIt = getSpectraDAO(currentSpecFileId).getSpectrumIterator(false);
-	            }
-	
-	            // get the next spectrum
-	            Spectrum spec = currentDaoIt.next();
-	            spectraParsed++;
-	            // the spec id used in the various Hashes
-	            String localSpecId = null;
-	
-	            // set the correct spectrum id
-	            if (specIdFormat == SpecIdFormat.MZML_ID || specIdFormat == SpecIdFormat.SINGLE_PEAK_LIST_NATIVE_ID) {
-	                // get the spec ids
-	                String nativeId = currentSpecIds.get(currentSpecFileIndex);
-	
-	                // create the local id
-	                localSpecId = getSpectrumFileId(currentSpecFileId, nativeId);
-	                // set the new id
-	                Integer newId = spectrumIndexMapping.get(localSpecId);
-	
-	                if (newId == null)
-	                    throw new ConverterException("Failed to retrieve mapped mzData id for spectrum " + localSpecId);
-	
-	                spec.setId(newId);
-	            } else {
-	                // all DAOs return 1-based ids in the sequence the spectra were found in the file.
-	                localSpecId = getSpectrumFileId(currentSpecFileId, new Integer(spec.getId() - 1).toString());
-	                // set the new id
-	                Integer newId = spectrumIndexMapping.get(localSpecId);
-	
-	                if (newId == null)
-	                    throw new ConverterException("Failed to retrieve mapped mzData id for spectrum " + localSpecId);
-	
-	                spec.setId(newId);
-	            }
-	
-	            // if only identified spectra should be returned, make sure this
-	            // one was identified
-	            if (onlyIdentified && !referencedSpectraIds.contains(localSpecId))
-	                return next();
-	            else
-	                return spec;
-        	} catch (InvalidFormatException e) {
-				throw new ConverterException(e);
-			}
+            try {
+                // check if the iterator was already created and if the iterator
+                // still has spectra left
+                if (currentDaoIt == null || !currentDaoIt.hasNext()) {
+                    // get the next iterator
+                    if (currentSpecFileIndex >= specFileIds.size())
+                        throw new ConverterException("Failed to retrieve all spectra from spectra file.");
+
+                    currentSpecFileId = specFileIds.get(currentSpecFileIndex++);
+
+                    currentSpecIds = getSpectraDAO(currentSpecFileId).getSpectraIds();
+                    currentDaoIt = getSpectraDAO(currentSpecFileId).getSpectrumIterator(false);
+                }
+
+                // get the next spectrum
+                Spectrum spec = currentDaoIt.next();
+                spectraParsed++;
+                // the spec id used in the various Hashes
+                String localSpecId = null;
+
+                // set the correct spectrum id
+                if (specIdFormat == SpecIdFormat.MZML_ID || specIdFormat == SpecIdFormat.SINGLE_PEAK_LIST_NATIVE_ID) {
+                    // get the spec ids
+                    String nativeId = currentSpecIds.get(currentSpecFileIndex);
+
+                    // create the local id
+                    localSpecId = getSpectrumFileId(currentSpecFileId, nativeId);
+                    // set the new id
+                    Integer newId = spectrumIndexMapping.get(localSpecId);
+
+                    if (newId == null)
+                        throw new ConverterException("Failed to retrieve mapped mzData id for spectrum " + localSpecId);
+
+                    spec.setId(newId);
+                } else {
+                    // all DAOs return 1-based ids in the sequence the spectra were found in the file.
+                    localSpecId = getSpectrumFileId(currentSpecFileId, new Integer(spec.getId() - 1).toString());
+                    // set the new id
+                    Integer newId = spectrumIndexMapping.get(localSpecId);
+
+                    if (newId == null)
+                        throw new ConverterException("Failed to retrieve mapped mzData id for spectrum " + localSpecId);
+
+                    spec.setId(newId);
+                }
+
+                // if only identified spectra should be returned, make sure this
+                // one was identified
+                if (onlyIdentified && !referencedSpectraIds.contains(localSpecId))
+                    return next();
+                else
+                    return spec;
+            } catch (InvalidFormatException e) {
+                throw new ConverterException(e);
+            }
         }
 
         @Override
@@ -1433,7 +1437,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
         } catch (JAXBException e) {
             throw new InvalidFormatException("Failed to retrieve SpectrumIdentificationItem from mzIdentML file.", e);
         } catch (IllegalArgumentException e) {
-        	throw new InvalidFormatException("Failed to retrieve SpectrumIdentificationItem from mzIdentML file.", e);
+            throw new InvalidFormatException("Failed to retrieve SpectrumIdentificationItem from mzIdentML file.", e);
         }
     }
 
@@ -1507,7 +1511,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      * @param dbsequence  The dbsequence object to convert.
      * @param prescanMode Indiciates whether in prescan mode.
      * @return The report model Identification object.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     private Identification convertIdentification(DBSequence dbsequence, boolean prescanMode) throws InvalidFormatException {
         String dbsequenceId = dbsequence.getId();
@@ -1577,7 +1581,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      * @param combinedId  A SpectrumIdentificationItem id and a PeptideEvidence id separated by the ID_SEPARATOR.
      * @param prescanMode Indicates whether a prescan object or a scan object should be created.
      * @return The Peptide object.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     private Peptide createPeptide(String combinedId, boolean prescanMode) throws InvalidFormatException {
         try {
@@ -1655,7 +1659,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
      *
      * @param peptide The mzIdentML peptide which modification's should be converted.
      * @return A List of PeptidePTMs.
-     * @throws InvalidFormatException 
+     * @throws InvalidFormatException
      */
     private List<PeptidePTM> createPeptideModifications(uk.ac.ebi.jmzidml.model.mzidml.Peptide peptide) throws InvalidFormatException {
         // create the list of PeptidePTMs
@@ -1764,22 +1768,12 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
 
         // iterate over the ion types - only parse a-c, x-z ions
         for (IonType iontype : fragmentation.getIonType()) {
+
             // ignore not supported iontypes
-            // TODO: Once the MS ontology is adapted for the new fragment ion params, adapt this code
-            //String ionTypeChar = iontype.getCvParam().getAccession();
-            String ionTypeChar = null;
+            CvParam ionTypeCvParam = getIonTypeParam(iontype.getCvParam().getName());
 
-            // TODO DOC - only a-c, x-z ions are reported
-            if (iontype.getCvParam().getName().contains("a ion")) ionTypeChar = "a";
-            if (iontype.getCvParam().getName().contains("b ion")) ionTypeChar = "b";
-            if (iontype.getCvParam().getName().contains("c ion")) ionTypeChar = "c";
-            if (iontype.getCvParam().getName().contains("x ion")) ionTypeChar = "x";
-            if (iontype.getCvParam().getName().contains("y ion")) ionTypeChar = "y";
-            if (iontype.getCvParam().getName().contains("z ion")) ionTypeChar = "z";
-
-            if (ionTypeChar == null)
+            if (ionTypeCvParam == null)
                 continue;
-
 
             // ignore IonTypes with no index set
             if (iontype.getIndex() == null)
@@ -1793,14 +1787,14 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
                 // charge
                 fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_CHARGE.getParam(iontype.getCharge()));
                 // ion type - the ion index is set as value of the name param
-                fragmentIon.getCvParam().add(new CvParam(iontype.getCvParam().getCvRef(),
-                        iontype.getCvParam().getAccession(),
-                        iontype.getCvParam().getName(),
+                fragmentIon.getCvParam().add(new CvParam(ionTypeCvParam.getCvLabel(),
+                        ionTypeCvParam.getAccession(),
+                        ionTypeCvParam.getName(),
                         ionIndex.toString()));
 
                 // check if there are measures to add
                 boolean hasMz = false, hasIntensity = false, hasMassError = false;
-                
+
                 for (FragmentArray fragArr : iontype.getFragmentArray()) {
                     // m/z
                     if (productIonMZMeasureRef.contains(fragArr.getMeasureRef())) {
@@ -1809,7 +1803,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
                     }
                     // intensity
                     if (productIonIntensityMeasureRef.contains(fragArr.getMeasureRef())) {
-                        fragmentIon.getCvParam().add(DAOCvParams.PRECURSOR_INTENSITY.getParam(fragArr.getValues().get(index)));
+                        fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(fragArr.getValues().get(index)));
                         hasIntensity = true;
                     }
                     // error
@@ -1821,19 +1815,90 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
                     if (productIonMZDeltaMeasureRef.contains(fragArr.getMeasureRef()))
                         fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_DELTA.getParam(fragArr.getValues().get(index)));
                 }
-                
+
                 if (!hasMz)
-                	continue;
+                    continue;
                 if (!hasMassError)
-                	fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MASS_ERROR.getParam(0));
+                    fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_MASS_ERROR.getParam(0));
                 if (!hasIntensity)
-                	fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(0));
+                    fragmentIon.getCvParam().add(DAOCvParams.PRODUCT_ION_INTENSITY.getParam(0));
 
                 fragmentIons.add(fragmentIon);
             }
         }
 
         return fragmentIons;
+    }
+
+    // TODO: Once the MS ontology is adapted for the new fragment ion params, adapt this code
+    // TODO DOC - only a-c, x-z ions are reported
+    private CvParam getIonTypeParam(String ion) {
+
+        if (ion == null) {
+            return null;
+        } else {
+            ion = ion.trim();
+            if (ion.length() == 0) {
+                return null;
+            }
+        }
+
+        // y-ions
+        if (ion.equals("frag: y ion - H2O"))
+            return new CvParam("PRIDE", "PRIDE:0000197", "y ion -H2O", null);
+        if (ion.equals("frag: y ion - NH3"))
+            return new CvParam("PRIDE", "PRIDE:0000198", "y ion -NH3", null);
+        if (ion.equals("frag: y ion"))
+            return new CvParam("PRIDE", "PRIDE:0000193", "y ion", null);
+
+        // b-ions
+        if (ion.equals("frag: b ion - H2O"))
+            return new CvParam("PRIDE", "PRIDE:0000196", "b ion -H2O", null);
+        if (ion.equals("frag: b ion - NH3"))
+            return new CvParam("PRIDE", "PRIDE:0000195", "b ion -NH3", null);
+        if (ion.equals("frag: b ion"))
+            return new CvParam("PRIDE", "PRIDE:0000194", "b ion", null);
+
+        // c-ions
+        if (ion.equals("frag: c ion - H2O"))
+            return new CvParam("PRIDE", "PRIDE:0000237", "c ion -H2O", null);
+        if (ion.equals("frag: c ion - NH3"))
+            return new CvParam("PRIDE", "PRIDE:0000238", "c ion -NH3", null);
+        if (ion.equals("frag: c ion"))
+            return new CvParam("PRIDE", "PRIDE:0000236", "c ion", null);
+
+        // a-ions
+        if (ion.equals("frag: a ion - H2O"))
+            return new CvParam("PRIDE", "PRIDE:0000234", "a ion -H2O", null);
+        if (ion.equals("frag: a ion - NH3"))
+            return new CvParam("PRIDE", "PRIDE:0000235", "a ion -NH3", null);
+        if (ion.equals("frag: a ion"))
+            return new CvParam("PRIDE", "PRIDE:0000233", "a ion", null);
+
+        // x-ions
+        if (ion.equals("frag: x ion - H2O"))
+            return new CvParam("PRIDE", "PRIDE:0000228", "x ion -H2O", null);
+        if (ion.equals("frag: x ion - NH3"))
+            return new CvParam("PRIDE", "PRIDE:0000229", "x ion -NH3", null);
+        if (ion.equals("frag: x ion"))
+            return new CvParam("PRIDE", "PRIDE:0000227", "x ion", null);
+
+        // z-ions
+        if (ion.equals("frag: z ion - H2O"))
+            return new CvParam("PRIDE", "PRIDE:0000231", "z ion -H2O", null);
+        if (ion.equals("frag: z ion - NH3"))
+            return new CvParam("PRIDE", "PRIDE:0000232", "z ion -NH3", null);
+        if (ion.equals("frag: z+2 ion"))
+            return new CvParam("PRIDE", "PRIDE:0000281", "zHH ion", null);
+        if (ion.equals("frag: z+1"))
+            return new CvParam("PRIDE", "PRIDE:0000280", "zH ion", null);
+        if (ion.equals("frag: z ion"))
+            return new CvParam("PRIDE", "PRIDE:0000230", "z ion", null);
+
+        logger.warn("Unrecognized ion type: " + ion);
+
+        return null;
+
     }
 
     /**
