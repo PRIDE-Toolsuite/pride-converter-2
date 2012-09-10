@@ -236,6 +236,8 @@ public class ConverterApplicationSelector extends JFrame {
 
         if (debug) {
             cmdBuffer.append(" -debug ");
+            //also useful for recording console output to logs!
+            logger.setLevel(Level.DEBUG);
         }
 
         System.err.println("Bootstrap command: " + cmdBuffer.toString());
@@ -249,11 +251,22 @@ public class ConverterApplicationSelector extends JFrame {
             StreamProxy outStreamProxy = new StreamProxy(process.getInputStream(), System.out);
             errorStreamProxy.start();
             outStreamProxy.start();
+
+            //wait until process terminates
+            process.waitFor();
+            if (process.exitValue() != 0) {
+                System.err.println("The JVM exited with an error code. Please check the log for more details");
+                logger.error("The JVM exited with an error code. This probably means that your application did not start correctly.");
+                logger.error("Please select the 'Show Debug Information' from the help menu or try running the boostrap command from a console.");
+            }
+
         } catch (IOException ioe) {
             System.err.println("Error while bootstrapping the PRIDE Converter");
             ioe.printStackTrace();
             logger.fatal("Error while bootstrapping PRIDE Converter", ioe);
             System.exit(1);
+        } catch (InterruptedException ie) {
+            logger.warn("Interrupted process: ", ie);
         }
     }
 
@@ -637,10 +650,14 @@ public class ConverterApplicationSelector extends JFrame {
                 BufferedReader br = new BufferedReader(isr);
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug(line);
+                    }
                     os.println(line);
                 }
             } catch (IOException ex) {
                 ex.printStackTrace();
+                logger.error(ex);
                 throw new RuntimeException(ex.getMessage(), ex);
             }
         }
