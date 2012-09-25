@@ -15,6 +15,7 @@ import java.util.*;
  * Parses Omssa TXT file.
  * Note: Omssa text file reports multiple hits of one peptide identification and different proteins repeating the
  * identification line with a different DEFINE_HEADER value (the protein accession column)
+ *
  * @author Jose A. Dianes
  * @version $Id$
  */
@@ -51,6 +52,7 @@ public class OmssaIdentificationsParser {
 
     /**
      * Parses just the header
+     *
      * @param targetFile
      * @return A map containing the header keys and their positions (column number)
      * @throws ConverterException
@@ -62,7 +64,7 @@ public class OmssaIdentificationsParser {
         try {
             br = new CSVReader(new InputStreamReader(new FileInputStream(targetFile)));
             Map<String, Integer> header = null;
-            String [] line;
+            String[] line;
             // read the header
             if ((line = br.readNext()) != null) {
                 header = parseHeader(line);
@@ -80,9 +82,10 @@ public class OmssaIdentificationsParser {
             throw new ConverterException("Failed to read from input file.", e);
         }
     }
-    
+
     /**
      * Parses the whole file.
+     *
      * @param identificationsFile
      * @return A Map of proteins to peptides (1 to n) obtained from the file
      * @throws ConverterException
@@ -92,51 +95,52 @@ public class OmssaIdentificationsParser {
             throw new ConverterException("Input identifications file was not set.");
 
         OmssaIdentificationsParserResult res = new OmssaIdentificationsParserResult();
-        res.proteins = new LinkedHashMap<String, OmssaProtein>();
-        res.identifiedSpectraTitles = new LinkedList<Integer>();
-        res.fileIndex = new ArrayList<String[]>();
-        res.ptms = new HashMap<String, PTM>();
-        res.peptideCount = 0;
+        res.setProteins(new LinkedHashMap<String, OmssaProtein>());
+        res.setIdentifiedSpectraTitles(new LinkedList<Integer>());
+        res.setFileIndex(new ArrayList<String[]>());
+        res.setPtms(new HashMap<String, PTM>());
+        res.setPeptideCount(0);
 
         try {
 
             br = new CSVReader(new InputStreamReader(new FileInputStream(identificationsFile)));
-            String [] line;
+            String[] line;
 
             // read the header (will throw exception if not found)
-            if ( (line = br.readNext()) != null ) {
-                res.header = parseHeader(line);
+            if ((line = br.readNext()) != null) {
+                res.setHeader(parseHeader(line));
             }
 
             // read the identifications
             // Omssa text file reports multiple hits of one peptide identification and different proteins repeating the
             // identification line with a different DEFINE_HEADER value (the protein accession column)
-            while ( (line = br.readNext()) != null ) {
+            while ((line = br.readNext()) != null) {
 
                 // check the number of columns
-                if ( line.length !=  res.header.size() ) throw new ConverterException("Identification line doesn't match header columns");
+                if (line.length != res.getHeader().size())
+                    throw new ConverterException("Identification line doesn't match header columns");
 
 
-                addPTMs(line[res.header.get(PEPTIDE_HEADER)], fixedPtms, variablePtms, res.ptms);
+                addPTMs(line[res.getHeader().get(PEPTIDE_HEADER)], fixedPtms, variablePtms, res.getPtms());
 
                 // for the protein accession (key), create an entry and add the peptide string to the peptide list (value)
                 // if the protein doesn't exist add it for the first time
-                String accession = line[res.header.get(DEFLINE_HEADER)];
-                if (!res.proteins.containsKey(accession)) {
-                    res.proteins.put(accession, new OmssaProtein(accession));
+                String accession = line[res.getHeader().get(DEFLINE_HEADER)];
+                if (!res.getProteins().containsKey(accession)) {
+                    res.getProteins().put(accession, new OmssaProtein(accession));
                 }
 
                 // finally associate the peptide string index
-                res.fileIndex.add(res.peptideCount, line); // add the line to the index
-                res.proteins.get(accession).addPeptide(res.peptideCount); // reference the line from the protein
+                res.getFileIndex().add(res.getPeptideCount(), line); // add the line to the index
+                res.getProteins().get(accession).addPeptide(res.getPeptideCount()); // reference the line from the protein
 
                 // Add the identified spectra if not done already
-                int scanTitle = Integer.parseInt(line[res.header.get(SPECTRUM_NUMBER_HEADER)]);
-                if ( !( (res.identifiedSpectraTitles.size() > 0) && (scanTitle == (res.identifiedSpectraTitles.get(res.identifiedSpectraTitles.size() - 1))) ) ) {
-                    res.identifiedSpectraTitles.add(scanTitle);
+                int scanTitle = Integer.parseInt(line[res.getHeader().get(SPECTRUM_NUMBER_HEADER)]);
+                if (!((res.getIdentifiedSpectraTitles().size() > 0) && (scanTitle == (res.getIdentifiedSpectraTitles().get(res.getIdentifiedSpectraTitles().size() - 1))))) {
+                    res.getIdentifiedSpectraTitles().add(scanTitle);
                 }
 
-                res.peptideCount++;
+                res.setPeptideCount(res.getPeptideCount() + 1);
 
             }
 
@@ -160,24 +164,23 @@ public class OmssaIdentificationsParser {
         Collection<PeptidePTM> mods = OmssaPeptide.getPTMs(sequence, fixedPtms, variablePtms);
 
         // Put them in the main PTMs list
-        for (PeptidePTM mod: mods) {
+        for (PeptidePTM mod : mods) {
             if (!allPtms.containsKey(mod.getSearchEnginePTMLabel())) {
                 allPtms.put(mod.getSearchEnginePTMLabel(), mod);
             }
         }
 
-        
+
     }
 
     /**
-     *
      * @param br
      * @return the next line that is not a comment or an empty line
      */
     private static String readLine(BufferedReader br) throws IOException {
         String newLine = br.readLine();
-        while ( newLine != null &&
-                (newLine.compareTo("") == 0) ) {
+        while (newLine != null &&
+                (newLine.compareTo("") == 0)) {
             newLine = br.readLine();
         }
         return newLine;
@@ -186,17 +189,18 @@ public class OmssaIdentificationsParser {
     /**
      * This is the private method where the real header parsing is done. Will throw a ConverterException if the header
      * doesn't contain certain "mandatory" fields.
+     *
      * @param line
      * @return A map representing the header keys mapped to their column numbers
      */
-    private static Map<String, Integer> parseHeader(String [] line) {
+    private static Map<String, Integer> parseHeader(String[] line) {
 
         Map<String, Integer> header = new HashMap<String, Integer>();
         for (int i = 0; i < line.length; i++)
             header.put(line[i].trim(), i);
 
         // Check for "mandatory" column names
-        if ( !header.containsKey(SPECTRUM_NUMBER_HEADER) || !header.containsKey(PEPTIDE_HEADER) )
+        if (!header.containsKey(SPECTRUM_NUMBER_HEADER) || !header.containsKey(PEPTIDE_HEADER))
             throw new ConverterException("Header file not present or mandatory fields are missing");
 
         return header;
@@ -206,9 +210,10 @@ public class OmssaIdentificationsParser {
     /**
      * Creates a new OmssaPeptide object from the passed
      * fields and header.
+     *
      * @param fields The fields of the line representing the peptide.
      * @param header A Map mapping a given column name to its 0-based index.
-     * @return The OmssaPeptide object representing the line.
+     * @return The OmssaPeptidecr object representing the line.
      */
     public static OmssaPeptide createOmssaPeptide(String[] fields,
                                                   Map<String, Integer> header) {
