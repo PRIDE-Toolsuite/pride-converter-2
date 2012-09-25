@@ -31,10 +31,11 @@ public class OmssaIdentificationParserTest {
     public void setUp() throws Exception {
         // add mods
         fixedPtms = new HashMap<Character, Double>();
-        fixedPtms.put('C',57.02);
+        fixedPtms.put('C', 57.02);
         variablePtms = new HashMap<Character, Double>();
-        variablePtms.put('M',15.99);
+        variablePtms.put('M', 15.99);
     }
+
     @Test
     public void testParseHeader() throws Exception {
         header = OmssaIdentificationsParser.parseHeader(new File(targetFilePath));
@@ -65,9 +66,9 @@ public class OmssaIdentificationParserTest {
     public void testParse() throws Exception {
         parserResults = OmssaIdentificationsParser.parse(new File(targetFilePath), fixedPtms, variablePtms);
 
-        assertThat(parserResults.proteins.size(), is(692));
+        assertThat(parserResults.getProteins().size(), is(692));
 
-        assertThat(parserResults.peptideCount, is(1001));
+        assertThat(parserResults.getPeptideCount(), is(1001));
 
     }
 

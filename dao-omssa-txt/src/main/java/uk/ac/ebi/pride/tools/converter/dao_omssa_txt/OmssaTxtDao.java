@@ -24,12 +24,11 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- *
  * NOTE (something to keep in mind):
  * Using an internal file index the DAO stores number lines for each identification in the passed result file. Doing so,
  * it doesn't keep the whole thing in memory (something that can be really big). The positions are used in the very last
  * moment to built the identifications in the convertIdentification method.
- *
+ * <p/>
  * About score criteria valid for Omssa DAO: right now we support eValue for threshold based filtering.
  *
  * @author Jose A. Dianes
@@ -50,14 +49,14 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
     }
 
     /**
-	 * Logger used by this class
-	 */
-	private static final Logger logger = Logger.getLogger(OmssaTxtDao.class);
+     * Logger used by this class
+     */
+    private static final Logger logger = Logger.getLogger(OmssaTxtDao.class);
 
     /**
-	 * The input target Crux-txt file.
-	 */
-	private final File targetFile;
+     * The input target OMSSA-txt file.
+     */
+    private final File targetFile;
 
     /**
      * File header
@@ -70,11 +69,11 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
      * built the identifications in the convertIdentification method.
      */
     private ArrayList<String[]> targetFileIndex;
-    
-	/**
-	 * The proteins found in the Crux-txt target file
-	 */
-	private Map<String, OmssaProtein> proteins;
+
+    /**
+     * The proteins found in the OMSSA-txt target file
+     */
+    private Map<String, OmssaProtein> proteins;
 
     /**
      * All PTMs found in the target file peptide sequences
@@ -87,25 +86,25 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
     private Map<Character, Double> fixedPtms;
     private Map<Character, Double> variablePtms;
 
-	/**
-	 * The spectra file
-	 */
-	private File spectraFile;
+    /**
+     * The spectra file
+     */
+    private File spectraFile;
 
     /**
      * The spectra file type
      */
     private SpectraType spectraFileType;
-    
+
     /**
      * DAO used to parse the corresponding peak list file.
      */
     private AbstractPeakListDAO spectraDAO;
 
     /**
-	 * List of spectra ids that were identified
-	 */
-	private List<Integer> identifiedSpecIds;
+     * List of spectra ids that were identified
+     */
+    private List<Integer> identifiedSpecIds;
 
     /**
      * Spectra by Omssa accession (Peptide UID) map
@@ -113,14 +112,14 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
     private Map<String, Integer> peptideUIDToSpectraMap;
 
     /**
-	 * The search engine reported for the proteins
-	 */
-	private String searchEngine = "Omssa";
+     * The search engine reported for the proteins
+     */
+    private String searchEngine = "Omssa";
 
     /**
      * Contains all the supportedProperties of this DAO (get/setConfiguration)
      */
-	private Properties supportedProperties;
+    private Properties supportedProperties;
 
     /**
      * Threshold property value: allows ignoring all identifications under/over the value (depending on scoreCriteria)
@@ -142,34 +141,33 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
      *
      * @param resultFile
      */
-	public OmssaTxtDao(File resultFile) {
-		this.targetFile = resultFile;
+    public OmssaTxtDao(File resultFile) {
+        this.targetFile = resultFile;
 
         // add default PTMs
         fixedPtms = new HashMap<Character, Double>();
-        fixedPtms.put('C',57.02);
+        fixedPtms.put('C', 57.02);
         variablePtms = new HashMap<Character, Double>();
-        variablePtms.put('M',15.99);
+        variablePtms.put('M', 15.99);
 
-		// parse the csv file
+        // parse the csv file
         OmssaIdentificationsParser parser = new OmssaIdentificationsParser();
         OmssaIdentificationsParserResult parsingResult = parser.parse(targetFile, fixedPtms, variablePtms);
-        header = parsingResult.header;
-        proteins = parsingResult.proteins;
-        identifiedSpecIds = parsingResult.identifiedSpectraTitles;
-        targetFileIndex = parsingResult.fileIndex;
-        allPTMs = parsingResult.ptms.values();
+        header = parsingResult.getHeader();
+        proteins = parsingResult.getProteins();
+        identifiedSpecIds = parsingResult.getIdentifiedSpectraTitles();
+        targetFileIndex = parsingResult.getFileIndex();
+        allPTMs = parsingResult.getPtms().values();
 
         setDefaultConfiguration();
-	}
-
+    }
 
 
     @SuppressWarnings("rawtypes")
     public static Collection<DAOProperty> getSupportedProperties() {
 
         List<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
-        
+
         // Threshold
         DAOProperty<String> threshold = new DAOProperty<String>(SupportedProperty.THRESHOLD.getName(), null);
         threshold.setDescription("Allows filtering identifications.");
@@ -195,6 +193,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 
     /**
      * Sets the supportedProperties associated to this DAO
+     *
      * @param props The supportedProperties to be associated with the DAO
      */
     public void setConfiguration(Properties props) {
@@ -220,9 +219,9 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         // process fixed PTMs
         String fixedPtmsProperty = props.getProperty(SupportedProperty.FIXED_PTMS.getName());
         if (fixedPtmsProperty != null) {
-            String [] fixedPtms = fixedPtmsProperty.split(",");
-            for (String fixedPtm: fixedPtms) {
-                String [] ptmTokens = fixedPtm.trim().split("@");
+            String[] fixedPtms = fixedPtmsProperty.split(",");
+            for (String fixedPtm : fixedPtms) {
+                String[] ptmTokens = fixedPtm.trim().split("@");
                 this.fixedPtms.put(ptmTokens[1].charAt(0), Double.parseDouble(ptmTokens[0]));
             }
         }
@@ -230,9 +229,9 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         // process variable PTMs
         String variablePtmsProperty = props.getProperty(SupportedProperty.VARIABLE_PTMS.getName());
         if (variablePtmsProperty != null) {
-            String [] variablePtms = variablePtmsProperty.split(",");
-            for (String variablePtm: variablePtms) {
-                String [] ptmTokens = variablePtm.trim().split("@");
+            String[] variablePtms = variablePtmsProperty.split(",");
+            for (String variablePtm : variablePtms) {
+                String[] ptmTokens = variablePtm.trim().split("@");
                 this.variablePtms.put(ptmTokens[1].charAt(0), Double.parseDouble(ptmTokens[0]));
             }
         }
@@ -252,9 +251,10 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         properties.setProperty(SupportedProperty.VARIABLE_PTMS.getName(), "15.99@M");
         this.setConfiguration(properties);
     }
-    
+
     /**
      * Gets the supportedProperties associated with this DAO
+     *
      * @return The supportedProperties associated with the DAO
      */
     public Properties getConfiguration() {
@@ -263,6 +263,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 
     /**
      * Sets the spectra file associated with this set of files.
+     *
      * @throws ConverterException if file does not exist or not MGF format
      */
     public void setExternalSpectrumFile(String s) {
@@ -293,84 +294,75 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         }
 
 
-
     }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-    public Collection<PTM> getPTMs() throws InvalidFormatException { 
+    public Collection<PTM> getPTMs() throws InvalidFormatException {
         return allPTMs;
     }
 
 
     /**
-     *
      * @return Not defined
      * @throws InvalidFormatException
      */
-	public String getExperimentTitle() throws InvalidFormatException {
-		return "Unknown Omssa based experiment";
-	}
+    public String getExperimentTitle() throws InvalidFormatException {
+        return "Unknown Omssa based experiment";
+    }
 
     /**
-     *
      * @return
      */
-	public String getExperimentShortLabel() {
-		return null;
-	}
+    public String getExperimentShortLabel() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Param getExperimentParams() throws InvalidFormatException {
-		// initialize the collection to hold the params
+    public Param getExperimentParams() throws InvalidFormatException {
+        // initialize the collection to hold the params
         Param params = new Param();
 
         // original MS format param
         params.getCvParam().add(DAOCvParams.ORIGINAL_MS_FORMAT.getParam("Omssa .csv file"));
-       	params.getCvParam().add(DAOCvParams.MS_MS_SEARCH.getParam());
+        params.getCvParam().add(DAOCvParams.MS_MS_SEARCH.getParam());
 
         return params;
-	}
+    }
 
     /**
-     *
      * @return
      */
-	public String getSampleName() {
-		return null;
-	}
+    public String getSampleName() {
+        return null;
+    }
 
     /**
-     *
      * @return
      */
-	public String getSampleComment() {
-		return null;
-	}
+    public String getSampleComment() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Param getSampleParams() throws InvalidFormatException {
-		return new Param();
-	}
+    public Param getSampleParams() throws InvalidFormatException {
+        return new Param();
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public SourceFile getSourceFile() throws InvalidFormatException {
-		// initialize the return variable
+    public SourceFile getSourceFile() throws InvalidFormatException {
+        // initialize the return variable
         SourceFile file = new SourceFile();
 
         file.setPathToFile(targetFile.getAbsolutePath());
@@ -378,106 +370,96 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         file.setFileType("Omssa .csv file");
 
         return file;
-	}
+    }
 
     /**
-     *
      * @return
      */
-	public Collection<Contact> getContacts() {
-		return null;
-	}
+    public Collection<Contact> getContacts() {
+        return null;
+    }
 
     /**
-     *
      * @return
      */
-	public InstrumentDescription getInstrument() {
-		return null;
-	}
+    public InstrumentDescription getInstrument() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Software getSoftware() throws InvalidFormatException {
+    public Software getSoftware() throws InvalidFormatException {
         Software s = new Software();
         s.setName("Omssa");
         s.setVersion("");
-		return s;
-	}
+        return s;
+    }
 
     /**
-     *
      * @return
      */
-	public Param getProcessingMethod() {
+    public Param getProcessingMethod() {
         Param param = new Param();
-		return param;
-	}
+        return param;
+    }
 
     /**
-     *
      * @return null for this DAO
      */
-	public Protocol getProtocol() {
-		return null;
-	}
+    public Protocol getProtocol() {
+        return null;
+    }
 
     /**
-     *
      * @return
      */
-	public Collection<Reference> getReferences() {
-		return null;
-	}
+    public Collection<Reference> getReferences() {
+        return null;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public String getSearchDatabaseName() throws InvalidFormatException {
-		return "Unknown database";
-	}
+    public String getSearchDatabaseName() throws InvalidFormatException {
+        return "Unknown database";
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public String getSearchDatabaseVersion() throws InvalidFormatException {
-		return "Unknown";
-	}
+    public String getSearchDatabaseVersion() throws InvalidFormatException {
+        return "Unknown";
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Collection<DatabaseMapping> getDatabaseMappings()
-			throws InvalidFormatException {
-		ArrayList<DatabaseMapping> mappings = new ArrayList<DatabaseMapping>(1);
+    public Collection<DatabaseMapping> getDatabaseMappings()
+            throws InvalidFormatException {
+        ArrayList<DatabaseMapping> mappings = new ArrayList<DatabaseMapping>(1);
 
-		DatabaseMapping mapping = new DatabaseMapping();
+        DatabaseMapping mapping = new DatabaseMapping();
 
-		mapping.setSearchEngineDatabaseName("Unknown database");
-		mapping.setSearchEngineDatabaseVersion("Unknown");
+        mapping.setSearchEngineDatabaseName("Unknown database");
+        mapping.setSearchEngineDatabaseVersion("Unknown");
 
-		mappings.add(mapping);
+        mappings.add(mapping);
 
-		return mappings;
-	}
+        return mappings;
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public SearchResultIdentifier getSearchResultIdentifier()
-			throws InvalidFormatException {
-		// intialize the search result identifier
+    public SearchResultIdentifier getSearchResultIdentifier()
+            throws InvalidFormatException {
+        // intialize the search result identifier
         SearchResultIdentifier identifier = new SearchResultIdentifier();
 
         // format the current time
@@ -488,32 +470,30 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         identifier.setHash(FileUtils.MD5Hash(targetFile.getAbsolutePath()));
 
         return identifier;
-	}
+    }
 
     /**
-     *
      * @return
      * @throws InvalidFormatException
      */
-	public Collection<CV> getCvLookup() throws InvalidFormatException {
-		// just create a set containing the 2 cvLookups used here
+    public Collection<CV> getCvLookup() throws InvalidFormatException {
+        // just create a set containing the 2 cvLookups used here
         ArrayList<CV> cvs = new ArrayList<CV>();
 
         cvs.add(new CV("MS", "PSI Mass Spectrometry Ontology", "1.2", "http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo"));
         cvs.add(new CV("PRIDE", "PRIDE Controlled Vocabulary", "1.101", "http://ebi-pride.googlecode.com/svn/trunk/pride-core/schema/pride_cv.obo"));
 
         return cvs;
-	}
+    }
 
     /**
-     *
      * @param onlyIdentified
      * @return
      * @throws InvalidFormatException
      */
     @Override
-	public int getSpectrumCount(boolean onlyIdentified)
-			throws InvalidFormatException {
+    public int getSpectrumCount(boolean onlyIdentified)
+            throws InvalidFormatException {
         if (spectraFileType == null)
             guessSpectraSourceType();
 
@@ -523,16 +503,15 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 
         // return the spectra dao's spec count
         return this.identifiedSpecIds.size();
-	}
+    }
 
     /**
-     *
      * @param onlyIdentified
      * @return
      * @throws InvalidFormatException
      */
-	public Iterator<Spectrum> getSpectrumIterator(boolean onlyIdentified)
-			throws InvalidFormatException {
+    public Iterator<Spectrum> getSpectrumIterator(boolean onlyIdentified)
+            throws InvalidFormatException {
         if (spectraFileType == null)
             guessSpectraSourceType();
 
@@ -541,28 +520,26 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
 
         // use the special identified DAO iterator
         return new OnlyIdentifiedSpectrumIterator();
-	}
+    }
 
     /**
-     *
      * @param peptideUID
      * @return
      * @throws InvalidFormatException
      */
-	public int getSpectrumReferenceForPeptideUID(String peptideUID)
-			throws InvalidFormatException {
-        String [] items = peptideUID.split("_");
-		return Integer.parseInt(items[0]);
-	}
+    public int getSpectrumReferenceForPeptideUID(String peptideUID)
+            throws InvalidFormatException {
+        String[] items = peptideUID.split("_");
+        return Integer.parseInt(items[0]);
+    }
 
     /**
-     *
      * @param identificationUID
      * @return
      * @throws InvalidFormatException
      */
-	public Identification getIdentificationByUID(String identificationUID)
-			throws InvalidFormatException {
+    public Identification getIdentificationByUID(String identificationUID)
+            throws InvalidFormatException {
         OmssaProtein protein;
         protein = proteins.get(identificationUID);
         if (protein == null)
@@ -571,25 +548,24 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
     }
 
     /**
-     *
      * @param prescanMode
      * @return
      * @throws InvalidFormatException
      */
-	public Iterator<Identification> getIdentificationIterator(
-			boolean prescanMode) throws InvalidFormatException {
-		return new OmssaIdentificationIterator(prescanMode);
-	}
+    public Iterator<Identification> getIdentificationIterator(
+            boolean prescanMode) throws InvalidFormatException {
+        return new OmssaIdentificationIterator(prescanMode);
+    }
 
 
     /**
      * Redefine the iterator in order to not to keep all the Identification objects in memory (there are quite heavy
      * and can be quite a lot)
-     * Because we have two different target files (target and decoy), and because we don't want to mix them due to the 
+     * Because we have two different target files (target and decoy), and because we don't want to mix them due to the
      * last-moment prefixing system we use, we need here two iterators that we made appear as one.
      */
-	private class OmssaIdentificationIterator implements Iterator<Identification> {
-		private final Iterator<String> accessionIterator = proteins.keySet().iterator();
+    private class OmssaIdentificationIterator implements Iterator<Identification> {
+        private final Iterator<String> accessionIterator = proteins.keySet().iterator();
 
         private boolean prescanMode;
 
@@ -597,45 +573,46 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
             this.prescanMode = prescanMode;
         }
 
-		public boolean hasNext() {
-			return accessionIterator.hasNext();
-		}
+        public boolean hasNext() {
+            return accessionIterator.hasNext();
+        }
 
-		public Identification next() {
+        public Identification next() {
             return convertIdentification(proteins.get(accessionIterator.next()), prescanMode);
-		}
+        }
 
-		public void remove() {
-			// not supported
-		}
-	}
+        public void remove() {
+            // not supported
+        }
+    }
 
     /**
      * Converts from our internal OmssaProtein to the DAO representation
+     *
      * @param protein
      * @return
      */
-	private Identification convertIdentification(OmssaProtein protein, boolean prescanMode) {
+    private Identification convertIdentification(OmssaProtein protein, boolean prescanMode) {
 
-		Identification identification = new Identification();
-		
-		identification.setAccession(protein.getAccession());
-		identification.setScore(0.0);
-		identification.setThreshold(0.0);
-		identification.setDatabase("Unknown database");
-		identification.setDatabaseVersion("Unknown");
-		identification.setUniqueIdentifier(protein.getAccession());
-		
-		identification.setSearchEngine(searchEngine);
+        Identification identification = new Identification();
 
-		// process the peptides
-		for (Integer cruxPeptideStringIndex : protein.getPeptides()) {
-            String[] fields;
+        identification.setAccession(protein.getAccession());
+        identification.setScore(0.0);
+        identification.setThreshold(0.0);
+        identification.setDatabase("Unknown database");
+        identification.setDatabaseVersion("Unknown");
+        identification.setUniqueIdentifier(protein.getAccession());
 
-            fields = this.targetFileIndex.get(cruxPeptideStringIndex);  // split the columns
-            
+        identification.setSearchEngine(searchEngine);
+
+        // process the peptides
+        String[] fields;
+        for (Integer omssaPeptideStringIndex : protein.getPeptides()) {
+
+            fields = this.targetFileIndex.get(omssaPeptideStringIndex);  // split the columns
+
             // Check if the entry pass the filter. Otherwise, go for the next line
-            if ( (this.filter == null) || filter.passFilter(this.header,fields) ) {
+            if ((this.filter == null) || filter.passFilter(this.header, fields)) {
                 // process the peptide
                 OmssaPeptide omssaPeptide = OmssaIdentificationsParser.createOmssaPeptide(fields, this.header);
 
@@ -647,79 +624,84 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
                 if (peptideSpectraindex == -1)
                     throw new ConverterException("Spectrum reference does not exist or is ambiguous for peptide " + peptide.getSequence());
                 else {
-                    peptide.setSpectrumReference(peptideSpectraindex);
-                    peptide.setUniqueIdentifier(peptideSpectraindex + "_" + omssaPeptide.getAccession());
-                    peptide.setStart(0);
-                    peptide.setEnd(0);
+                    //TODO the spectrum offsets returned by jmzreader are off wrt those returned by omssa
+                    //TODO - RC added the +1!!!
+                    peptide.setSpectrumReference(peptideSpectraindex + 1);
+                    //TODO - RC added the +1!!!
+                    peptide.setUniqueIdentifier((peptideSpectraindex + 1) + "_" + omssaPeptide.getAccession());
+                    peptide.setStart(omssaPeptide.getStart());
+                    peptide.setEnd(omssaPeptide.getStop());
 
                     if (prescanMode) {
                         // add the additional info
                         Param additional = new Param();
 
-                        additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(omssaPeptide.getCharge()));
-                        additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(omssaPeptide.getMass()));
-                        additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(omssaPeptide.getCharge()));
+                        if (omssaPeptide.getCharge() > 0) {
+                            additional.getCvParam().add(DAOCvParams.CHARGE_STATE.getParam(omssaPeptide.getCharge()));
+                            additional.getCvParam().add(DAOCvParams.PRECURSOR_MZ.getParam(omssaPeptide.getMass() / omssaPeptide.getCharge()));
+                        }
                         additional.getCvParam().add(DAOCvParams.OMSSA_E_VALUE.getParam(omssaPeptide.geteValue()));
                         additional.getCvParam().add(DAOCvParams.OMSSA_P_VALUE.getParam(omssaPeptide.getpValue()));
 
                         peptide.setAdditional(additional);
 
                         // add the PTMs
-                        peptide.getPTM().addAll(omssaPeptide.getPTMs(omssaPeptide.getPeptide(),fixedPtms,variablePtms));
+                        peptide.getPTM().addAll(omssaPeptide.getPTMs(omssaPeptide.getPeptide(), fixedPtms, variablePtms));
 
                     }
 
                     identification.getPeptide().add(peptide);
                 }
             }
-		}
+        }
 
         if (identification.getPeptide() == null || identification.getPeptide().size() <= 0)
             return null;
         else
             return identification;
 
-	}
+    }
 
     /**
      *
      */
-	private class OnlyIdentifiedSpectrumIterator implements Iterator<Spectrum> {
-		private Iterator<Integer> specIdIterator;
-		private Iterator<Spectrum> specIterator;
-		
-		public OnlyIdentifiedSpectrumIterator() throws InvalidFormatException {
-			specIterator = spectraDAO.getSpectrumIterator(false);
+    private class OnlyIdentifiedSpectrumIterator implements Iterator<Spectrum> {
+        private Iterator<Integer> specIdIterator;
+        private Iterator<Spectrum> specIterator;
+
+        public OnlyIdentifiedSpectrumIterator() throws InvalidFormatException {
+            specIterator = spectraDAO.getSpectrumIterator(false);
             Collections.sort(identifiedSpecIds);
-			specIdIterator = identifiedSpecIds.iterator();
-		}
+            specIdIterator = identifiedSpecIds.iterator();
+        }
 
-		public boolean hasNext() {
-			return specIdIterator.hasNext();
-		}
+        public boolean hasNext() {
+            return specIdIterator.hasNext();
+        }
 
-		public Spectrum next() {
-			Integer id = specIdIterator.next();
-			
-			Spectrum s = specIterator.next();
-			
-			while (s.getId() != id) {
-				s = specIterator.next();
-			}
-			
-			return s;
-		}
+        public Spectrum next() {
+            Integer id = specIdIterator.next();
 
-		public void remove() {
-			// not supported			
-		}
-	}
+            Spectrum s = specIterator.next();
+
+            while (s.getId() != id) {
+                s = specIterator.next();
+            }
+
+            return s;
+        }
+
+        public void remove() {
+            // not supported
+        }
+    }
 
     /**
      * Returns the spectraDAO to be used for the
      * given spectrum file. Makes sure only one
      * instance of the DAO is created and only
      * when it's needed.
+     *
      * @return The spectra DAO to be used to retrieve the spectra information.
      * @throws InvalidFormatException
      */
@@ -755,6 +737,7 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
     /**
      * Guesses the type of spectra file used
      * and sets spectrFileType accordingly.
+     *
      * @throws InvalidFormatException
      */
     private void guessSpectraSourceType() throws InvalidFormatException {
@@ -785,6 +768,41 @@ public class OmssaTxtDao extends AbstractDAOImpl implements DAO {
         // make sure the type was set correctly
         if (spectraFileType == null)
             throw new InvalidFormatException("Unsupported spectra file type used (" + filename + ")");
+    }
+
+    public static void main(String[] args) {
+
+        try {
+            Map<Character, Double> fixedPtms;
+            Map<Character, Double> variablePtms;
+            String SCORE_CRITERIA = ScoreCriteria.E_VALUE.getName();
+            String THRESHOLD = "0.0";
+
+            OmssaTxtDao omssaTxtDao;
+
+            omssaTxtDao = new OmssaTxtDao(new File("/home/rcote/Desktop/omssa_search/PRIDE_Exp_2780_results.csv"));
+
+            // add PTMs
+            fixedPtms = new HashMap<Character, Double>();
+            fixedPtms.put('C', 57.02);
+            variablePtms = new HashMap<Character, Double>();
+            variablePtms.put('M', 15.99);
+
+            Properties props = new Properties();
+            props.setProperty(SupportedProperty.SCORE_CRITERIA.getName(), SCORE_CRITERIA);
+            props.setProperty(SupportedProperty.THRESHOLD.getName(), THRESHOLD);
+
+            omssaTxtDao.setConfiguration(props);
+            omssaTxtDao.setExternalSpectrumFile("/home/rcote/Desktop/omssa_search/PRIDE_Experiment_2780_spectrum.mgf");
+
+            Iterator<Identification> iter = omssaTxtDao.getIdentificationIterator(true);
+            if (iter.hasNext()) {
+                System.out.println(iter.next());
+            }
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
