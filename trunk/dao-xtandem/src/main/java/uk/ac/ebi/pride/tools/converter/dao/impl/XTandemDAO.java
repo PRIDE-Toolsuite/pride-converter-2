@@ -1280,7 +1280,7 @@ public class XTandemDAO extends AbstractDAOImpl implements DAO {
      * Returns an ArrayList of PeptidePTMs for the given
      * domain Id.
      *
-     * @param peptide The peptide to convert the modifications for.
+     * @param domain The peptide to convert the modifications for.
      * @return An ArrayList of PTMs
      */
     private ArrayList<PeptidePTM> getPeptidePTMs(Domain domain) {
