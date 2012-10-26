@@ -8,7 +8,8 @@ public enum SupportedProperty {
     THRESHOLD("threshold"),
     SCORE_CRITERIA("score_criteria"),
     FIXED_PTMS("fixed_ptms"),
-    VARIABLE_PTMS("variable_ptms");
+    MOD_FILE("mod_file"),
+    USERMOD_FILE("usermod_file");
 
     private String name;
 

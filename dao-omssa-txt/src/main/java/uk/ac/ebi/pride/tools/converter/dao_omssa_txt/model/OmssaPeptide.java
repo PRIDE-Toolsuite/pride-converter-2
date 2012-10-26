@@ -1,30 +1,23 @@
 package uk.ac.ebi.pride.tools.converter.dao_omssa_txt.model;
 
-import uk.ac.ebi.pride.tools.converter.report.model.PTM;
-import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
-
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
-
 /**
  * It's pretty much a POJO representing an Omssa peptide
  * File headers are (in a csv Omssa output file):
- *  Spectrum number: uniquely identifies the analised spectrum
- *  Filename/id
- *  Peptide: the AA sequence
- *  E-value: the Omssa score
- *  Mass: peptide mass
- *  gi
- *  Accession: it looks like some kind of internal Omssa accession. We don't pay too much attention to it.
- *  Start: of the peptide inside of the protein sequence.
- *  Stop: of the peptide inside of the protein sequence.
- *  Define: the protein accession
- *  Mods: modifcations, in natural language (!)
- *  Charge: precursor charge
- *  Theo Mass
- *  P-value
- *  NIST score
+ * Spectrum number: uniquely identifies the analised spectrum
+ * Filename/id
+ * Peptide: the AA sequence
+ * E-value: the Omssa score
+ * Mass: peptide mass
+ * gi
+ * Accession: it looks like some kind of internal Omssa accession. We don't pay too much attention to it.
+ * Start: of the peptide inside of the protein sequence.
+ * Stop: of the peptide inside of the protein sequence.
+ * Define: the protein accession
+ * Mods: modifcations, in natural language (!)
+ * Charge: precursor charge
+ * Theo Mass
+ * P-value
+ * NIST score
  *
  * @author Jose A. Dianes
  * @version $Id$
@@ -133,8 +126,8 @@ public class OmssaPeptide {
 
     @Override
     public int hashCode() {
-		final int prime = 31;
-		int result = 1;
+        final int prime = 31;
+        int result = 1;
 
         result = prime * result + spectrumNumber;
 
@@ -174,16 +167,16 @@ public class OmssaPeptide {
         result = prime * result + (int) (temp ^ (temp >>> 32));
 
         return result;
-	}
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
 
         OmssaPeptide other = (OmssaPeptide) obj;
 
@@ -194,7 +187,7 @@ public class OmssaPeptide {
         else if (!peptide.equals(other.peptide))
             return false;
         else if (Double.doubleToLongBits(eValue) != Double.doubleToLongBits(other.eValue))
-			return false;
+            return false;
         else if (Double.doubleToLongBits(mass) != Double.doubleToLongBits(other.mass))
             return false;
         else if (Double.doubleToLongBits(gi) != Double.doubleToLongBits(other.gi))
@@ -218,62 +211,7 @@ public class OmssaPeptide {
         else if (Double.doubleToLongBits(nistScore) != Double.doubleToLongBits(other.nistScore))
             return false;
 
-		return true;
-	}
-
-    /**
-     *
-     * @return A Collection of PeptidePTM associated with this Crux peptide.
-     */
-    public static Collection<PeptidePTM> getPTMs(String peptideSequence, Map<Character, Double> fixedPtms, Map<Character, Double> variablePtms) {
-
-        LinkedList<PeptidePTM> result = new LinkedList<PeptidePTM>();
-
-        char[] aaSequence = peptideSequence.toCharArray();
-        for (int i=0; i< aaSequence.length; i++) {
-            char aa = aaSequence[i];
-            // check for fixed PTMs
-            if (fixedPtms.containsKey(aa)) {
-                PTM ptm = new PTM();
-                ptm.setFixedModification(true);
-                ptm.setResidues(""+aa);
-                ptm.setSearchEnginePTMLabel(fixedPtms.get(aa) + "@" + aa);
-                ptm.getModMonoDelta().add(""+fixedPtms.get(aa));
-                PeptidePTM newPeptidePtm = newPeptidePtm(ptm, i);
-                result.add(newPeptidePtm);
-            }
-            // check for variable PTMs
-            if ( Character.isLowerCase(aa)
-                    && variablePtms.containsKey(Character.toUpperCase(aa))
-                ) {
-                char AA = Character.toUpperCase(aa);
-                PTM ptm = new PTM();
-                ptm.setFixedModification(false);
-                ptm.setResidues(""+AA);
-                ptm.setSearchEnginePTMLabel(
-                        variablePtms.get(AA) +"@"+ AA
-                );
-                ptm.getModMonoDelta().add(""+variablePtms.get(AA));
-                PeptidePTM newPeptidePtm = newPeptidePtm(ptm, i);
-                result.add(newPeptidePtm);
-            }
-        }
-
-
-        return result;
+        return true;
     }
-
-    private static PeptidePTM newPeptidePtm(PTM ptm, long location) {
-        PeptidePTM newPeptidePtm = new PeptidePTM();
-        newPeptidePtm.setSearchEnginePTMLabel(ptm.getSearchEnginePTMLabel());
-        newPeptidePtm.setFixedModification(ptm.isFixedModification());
-        newPeptidePtm.setResidues(ptm.getResidues());
-        newPeptidePtm.setModLocation(location);
-        for (String monoDelta: ptm.getModMonoDelta()) {
-            newPeptidePtm.getModMonoDelta().add(monoDelta);
-        }
-        return newPeptidePtm;
-    }
-
 
 }
