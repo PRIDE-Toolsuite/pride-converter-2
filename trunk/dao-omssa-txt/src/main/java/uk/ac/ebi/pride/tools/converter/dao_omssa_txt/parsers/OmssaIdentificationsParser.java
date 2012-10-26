@@ -2,10 +2,11 @@ package uk.ac.ebi.pride.tools.converter.dao_omssa_txt.parsers;
 
 import au.com.bytecode.opencsv.CSVReader;
 import org.apache.log4j.Logger;
+import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.model.OmssaPTM;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.model.OmssaPeptide;
 import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.model.OmssaProtein;
+import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
-import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 
 import java.io.*;
@@ -45,54 +46,35 @@ public class OmssaIdentificationsParser {
     public static final String NIST_SCORE_HEADER = "NIST score";
 
 
-    /**
-     * Reader
-     */
-    private static CSVReader br;
+    private File identificationsFile;
+    private Map<String, OmssaPTM> definedOmssaPTMs;
+    private Map<String, PTM> fixedPtms;
 
-    /**
-     * Parses just the header
-     *
-     * @param targetFile
-     * @return A map containing the header keys and their positions (column number)
-     * @throws ConverterException
-     */
-    public static Map<String, Integer> parseHeader(File targetFile) throws ConverterException {
 
-        if (targetFile == null)
-            throw new ConverterException("Input target file was not set.");
-        try {
-            br = new CSVReader(new InputStreamReader(new FileInputStream(targetFile)));
-            Map<String, Integer> header = null;
-            String[] line;
-            // read the header
-            if ((line = br.readNext()) != null) {
-                header = parseHeader(line);
-            }
+    public OmssaIdentificationsParser(File identificationsFile, File modsFile, File usermodsFile, Map<Character, Double> fixedPtms) {
+        if (identificationsFile == null)
+            throw new ConverterException("Input identifications file was not set.");
 
-            br.close();
+        if (modsFile == null)
+            throw new ConverterException("OMSSA ptm file was not set.");
 
-            return header;
-
-        } catch (FileNotFoundException e) {
-            logger.error("Failed to open input file: " + e.getMessage());
-            throw new ConverterException("Could not find input file.", e);
-        } catch (IOException e) {
-            logger.error("Failed to read from input file: " + e.getMessage());
-            throw new ConverterException("Failed to read from input file.", e);
+        this.identificationsFile = identificationsFile;
+        definedOmssaPTMs = new OmssaPTMFileParser(modsFile).getOmssaPTMs();
+        if (usermodsFile != null) {
+            definedOmssaPTMs.putAll(new OmssaPTMFileParser(usermodsFile).getOmssaPTMs());
         }
+
+        this.fixedPtms = OmssaPTMFileParser.createFixedPTMs(fixedPtms);
+
     }
 
     /**
      * Parses the whole file.
      *
-     * @param identificationsFile
      * @return A Map of proteins to peptides (1 to n) obtained from the file
      * @throws ConverterException
      */
-    public static OmssaIdentificationsParserResult parse(File identificationsFile, Map<Character, Double> fixedPtms, Map<Character, Double> variablePtms) throws ConverterException {
-        if (identificationsFile == null)
-            throw new ConverterException("Input identifications file was not set.");
+    public OmssaIdentificationsParserResult parse() throws ConverterException {
 
         OmssaIdentificationsParserResult res = new OmssaIdentificationsParserResult();
         res.setProteins(new LinkedHashMap<String, OmssaProtein>());
@@ -103,7 +85,7 @@ public class OmssaIdentificationsParser {
 
         try {
 
-            br = new CSVReader(new InputStreamReader(new FileInputStream(identificationsFile)));
+            CSVReader br = new CSVReader(new InputStreamReader(new FileInputStream(identificationsFile)));
             String[] line;
 
             // read the header (will throw exception if not found)
@@ -120,8 +102,7 @@ public class OmssaIdentificationsParser {
                 if (line.length != res.getHeader().size())
                     throw new ConverterException("Identification line doesn't match header columns");
 
-
-                addPTMs(line[res.getHeader().get(PEPTIDE_HEADER)], fixedPtms, variablePtms, res.getPtms());
+                addPTMs(res.getPtms(), line[res.getHeader().get(MODS_HEADER)], line[res.getHeader().get(PEPTIDE_HEADER)]);
 
                 // for the protein accession (key), create an entry and add the peptide string to the peptide list (value)
                 // if the protein doesn't exist add it for the first time
@@ -140,7 +121,11 @@ public class OmssaIdentificationsParser {
                     res.getIdentifiedSpectraTitles().add(scanTitle);
                 }
 
+                //update peptide count
                 res.setPeptideCount(res.getPeptideCount() + 1);
+
+                //update result to include fixed PTMs
+                res.getPtms().putAll(this.fixedPtms);
 
             }
 
@@ -157,33 +142,82 @@ public class OmssaIdentificationsParser {
 
     }
 
-    private static void addPTMs(String sequence, Map<Character, Double> fixedPtms, Map<Character, Double> variablePtms, Map<String, PTM> allPtms) {
+    private void addPTMs(Map<String, PTM> observedPTMs, String modString, String peptide) {
 
+        //check for variable mods
+        if (modString != null && !"".equals(modString.trim())) {
 
-        // get all PTMs associated with the sequence
-        Collection<PeptidePTM> mods = OmssaPeptide.getPTMs(sequence, fixedPtms, variablePtms);
+            //oxidation of M:1 ,oxidation of M:10
+            //phosphorylation of Y:7
 
-        // Put them in the main PTMs list
-        for (PeptidePTM mod : mods) {
-            if (!allPtms.containsKey(mod.getSearchEnginePTMLabel())) {
-                allPtms.put(mod.getSearchEnginePTMLabel(), mod);
+            String[] mods = modString.split(",");
+            for (String modStr : mods) {
+
+                String modName = modStr.substring(0, modStr.indexOf(":")).trim();
+                String modPositionStr = modStr.substring(modStr.indexOf(":") + 1).trim();
+                int modPosition = -1;
+                if (!"".equals(modPositionStr)) {
+                    modPosition = Integer.parseInt(modPositionStr);
+                }
+
+                //look to see if mod is defined
+                OmssaPTM ptm = definedOmssaPTMs.get(modName);
+                if (ptm != null) {
+                    //create a new PTM and add it to the observed map if not already present
+                    if (!observedPTMs.containsKey(modName)) {
+
+                        //create PTM
+                        PTM reportPTM = new PTM();
+                        reportPTM.setFixedModification(false);
+                        reportPTM.setSearchEnginePTMLabel(modName);
+                        if (ptm.getPsiModName() != null) {
+                            reportPTM.setModName(ptm.getPsiModName());
+                        }
+                        if (ptm.getUnimodAc() != null) {
+                            reportPTM.getAdditional().getCvParam().add(new CvParam("Unimod", ptm.getUnimodAc(), modName, null));
+                        }
+                        if (ptm.getModMonoMass() != null) {
+                            reportPTM.getModMonoDelta().add("" + ptm.getModMonoMass());
+                        }
+
+                        //add
+                        observedPTMs.put(modName, reportPTM);
+
+                    }
+
+                    //update residue information for identified PTM
+                    if (modPosition > 0 && peptide != null) {
+                        PTM reportPTM = observedPTMs.get(modName);
+                        reportPTM.setResidues(updatePTMResidues(reportPTM.getResidues(), "" + peptide.charAt(modPosition - 1)));
+                    }
+                }
+
             }
-        }
 
+        }
 
     }
 
-    /**
-     * @param br
-     * @return the next line that is not a comment or an empty line
-     */
-    private static String readLine(BufferedReader br) throws IOException {
-        String newLine = br.readLine();
-        while (newLine != null &&
-                (newLine.compareTo("") == 0)) {
-            newLine = br.readLine();
+    private String updatePTMResidues(String residues, String c) {
+
+        //alpha sort
+        TreeSet<String> observedResidues = new TreeSet<String>();
+        if (residues != null) {
+            residues = residues.toUpperCase();
+            for (int i = 0; i < residues.length(); i++) {
+                observedResidues.add("" + residues.charAt(i));
+            }
         }
-        return newLine;
+        observedResidues.add(c.toUpperCase());
+
+        //return string
+        StringBuilder sb = new StringBuilder();
+        for (String s : observedResidues) {
+            sb.append(s);
+        }
+
+        return sb.toString().toUpperCase();
+
     }
 
     /**
@@ -193,7 +227,7 @@ public class OmssaIdentificationsParser {
      * @param line
      * @return A map representing the header keys mapped to their column numbers
      */
-    private static Map<String, Integer> parseHeader(String[] line) {
+    private Map<String, Integer> parseHeader(String[] line) {
 
         Map<String, Integer> header = new HashMap<String, Integer>();
         for (int i = 0; i < line.length; i++)
@@ -239,6 +273,5 @@ public class OmssaIdentificationsParser {
         return peptide;
 
     }
-
 
 }
