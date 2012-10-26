@@ -51,6 +51,11 @@ public class DAOProperty<TYPE> {
     private Class clz = Object.class;
 
     /**
+     * indicates if a property must be set for the DAO
+     */
+    private boolean isRequired = false;
+
+    /**
      * The default constructor.
      *
      * @param name         The property's name.
@@ -141,19 +146,27 @@ public class DAOProperty<TYPE> {
         return clz;
     }
 
-	public boolean isAdvanced() {
-		return isAdvanced;
-	}
+    public boolean isAdvanced() {
+        return isAdvanced;
+    }
 
-	public void setAdvanced(boolean isAdvanced) {
-		this.isAdvanced = isAdvanced;
-	}
+    public void setAdvanced(boolean isAdvanced) {
+        this.isAdvanced = isAdvanced;
+    }
 
-	public String getShortDescription() {
-		return shortDescription;
-	}
+    public String getShortDescription() {
+        return shortDescription;
+    }
 
-	public void setShortDescription(String shortDescription) {
-		this.shortDescription = shortDescription;
-	}
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
+    }
+
+    public boolean isRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(boolean required) {
+        isRequired = required;
+    }
 }
