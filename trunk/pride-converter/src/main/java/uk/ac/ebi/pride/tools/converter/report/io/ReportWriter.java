@@ -179,6 +179,7 @@ public class ReportWriter {
                         logger.info(MemoryUsage.getMessage());
                     }
                 }
+                identCount++;
 
             }
             out.println("</Identifications>");
