@@ -18,7 +18,6 @@ import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.FastaFileFilter
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.MzTabFileFilter;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.FileTable;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParserOptionTable;
-import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionCellEditor;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionTableModel;
 import uk.ac.ebi.pride.tools.converter.gui.dialogs.MultipleFormEditingWarningDialog;
 import uk.ac.ebi.pride.tools.converter.gui.model.ConverterData;
@@ -60,6 +59,7 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
 
     private ParserOptionTable allOptionTable = new ParserOptionTable();
     private ParserOptionTable noAdvancedOptionTable = new ParserOptionTable();
+
 
     public FileSelectionForm(OutputFormat format) {
         initComponents();
@@ -311,20 +311,38 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     }
 
     private void browseDataFileButtonActionPerformed() {
+
         Collection<File> files = chooseFiles(false, ConverterData.getInstance().getDaoFormat().isAllowDirectory(), ConverterData.getInstance().getDaoFormat().isAllowDirectoryOnly(), ConverterData.getInstance().getDaoFormat().getFilter());
         if (!files.isEmpty()) {
             singleSourceFile.setText(files.iterator().next().getAbsolutePath());
-            validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()));
+            validationListerner.fireValidationListener(validateParserOptions() && singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()));
         }
     }
 
     private void singleSourceFileActionPerformed() {
-        validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
+        validationListerner.fireValidationListener(validateParserOptions() && singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
     }
 
     private void singleSourceFileFocusLost() {
-        validationListerner.fireValidationListener(singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
+        validationListerner.fireValidationListener(validateParserOptions() && singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()) && new File(singleSourceFile.getText().trim()).exists());
     }
+
+    private boolean validateParserOptions() {
+
+        //determine which table is visible
+        //get current state
+        boolean isVisible = advancedOptionPanel.isVisible();
+        ParserOptionTable table;
+        if (isVisible) {
+            table = allOptionTable;
+        } else {
+            table = noAdvancedOptionTable;
+        }
+
+        return ((ParserOptionTableModel) table.getModel()).isAllPropertiesValid();
+
+    }
+
 
     private void fastaFormatListItemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -1126,8 +1144,6 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     @Override
     public Collection<ValidatorMessage> validateForm() {
 
-//        System.err.println(getOptions());
-
         //if we're running the merger
         if (format.equals(OutputFormat.PRIDE_MERGED_XML)) {
             //check to see that we have at least two files
@@ -1489,9 +1505,15 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
     @Override
     public void tableChanged(TableModelEvent e) {
         //will be called by each file table but we only care about the data files for now
-        if (e.getSource().equals(dataFileTable.getModel())) {
-            validationListerner.fireValidationListener(dataFileTable.getFiles().size() > 0);
+        //and the parser options
+        if (e.getSource().equals(dataFileTable.getModel()) || e.getSource() instanceof ParserOptionTableModel) {
+
+            boolean optionTableValid = validateParserOptions();
+            boolean dataFilePresent = (dataFileTable.getFiles().size() > 0) || (singleSourceFile.getText() != null && !"".equals(singleSourceFile.getText().trim()));
+
+            validationListerner.fireValidationListener(dataFilePresent && optionTableValid);
         }
+
     }
 
     private void updateOptionTable() {
@@ -1536,13 +1558,13 @@ public class FileSelectionForm extends AbstractForm implements TableModelListene
         allOptionTable = new ParserOptionTable(props, true);
         noAdvancedOptionTable = new ParserOptionTable(props, false);
 
-        //update cell editor
-        allOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
-        noAdvancedOptionTable.getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
-
         //don't show table headers
         allOptionTable.setTableHeader(null);
         noAdvancedOptionTable.setTableHeader(null);
+
+        //setup validation listener
+        allOptionTable.getModel().addTableModelListener(this);
+        noAdvancedOptionTable.getModel().addTableModelListener(this);
 
         //backend will now have same value map so that the values will be consistently shared across both tables
         ParserOptionTableModel allOptionTableModel = (ParserOptionTableModel) allOptionTable.getModel();

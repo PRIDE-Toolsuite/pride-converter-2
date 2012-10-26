@@ -1,6 +1,7 @@
 package uk.ac.ebi.pride.tools.converter.gui.component.table;
 
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
+import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionCellEditor;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.model.ParserOptionTableModel;
 
 import javax.swing.*;
@@ -16,15 +17,22 @@ import java.util.Collection;
  */
 public class ParserOptionTable extends JTable {
 
+    private void initTable() {
+        //update cell editor
+        getColumn("Property Value").setCellEditor(new ParserOptionCellEditor());
+        putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+    }
+
     public ParserOptionTable() {
         super(new ParserOptionTableModel(null, false));
-        putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+        initTable();
     }
 
     public ParserOptionTable(Collection<DAOProperty> props, boolean showAdvancedProperties) {
         super(new ParserOptionTableModel(props, showAdvancedProperties));
-        putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+        initTable();
     }
+
 
     public TableCellRenderer getCellRenderer(int row, int column) {
         Object value = getValueAt(row, column);
@@ -37,6 +45,7 @@ public class ParserOptionTable extends JTable {
         }
         return super.getCellRenderer(row, column);
     }
+
 
     @Override
     public String getToolTipText(MouseEvent event) {
