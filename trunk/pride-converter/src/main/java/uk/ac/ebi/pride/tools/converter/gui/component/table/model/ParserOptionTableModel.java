@@ -3,6 +3,7 @@ package uk.ac.ebi.pride.tools.converter.gui.component.table.model;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.File;
 import java.util.*;
 
 /**
@@ -20,7 +21,9 @@ public class ParserOptionTableModel extends AbstractTableModel {
     private Map<String, Object> values = new HashMap<String, Object>();
     private boolean showAdvancedProperties = false;
 
+
     public ParserOptionTableModel(Collection<DAOProperty> props, boolean showAdvancedProperties) {
+        this.showAdvancedProperties = showAdvancedProperties;
         if (props != null) {
             allProperties.addAll(props);
             for (DAOProperty property : props) {
@@ -30,13 +33,18 @@ public class ParserOptionTableModel extends AbstractTableModel {
             }
             initValues(allProperties);
         }
-        this.showAdvancedProperties = showAdvancedProperties;
     }
 
     private void initValues(List<DAOProperty> props) {
         for (DAOProperty prop : props) {
             if (prop.getValueClass().equals(Boolean.class)) {
                 values.put(prop.getName(), prop.getDefaultValue());
+            } else if (prop.getValueClass().equals(File.class)) {
+                if (prop.getDefaultValue() != null) {
+                    values.put(prop.getName(), prop.getDefaultValue());
+                } else {
+                    values.put(prop.getName(), new File("."));
+                }
             } else {
                 if (prop.getAllowedValues() != null && !prop.getAllowedValues().isEmpty()) {
                     values.put(prop.getName(), prop.getAllowedValues());
@@ -147,7 +155,7 @@ public class ParserOptionTableModel extends AbstractTableModel {
         }
         if (columnIndex == 0) {
             //return name
-            return cleanup(prop.getName());
+            return cleanup(prop.getName(), prop.isRequired());
         } else {
             //return value
             return values.get(prop.getName());
@@ -175,6 +183,7 @@ public class ParserOptionTableModel extends AbstractTableModel {
                 prop = propertiesNoAdvanced.get(rowIndex);
             }
             values.put(prop.getName(), aValue);
+            fireTableDataChanged();
         }
     }
 
@@ -190,12 +199,12 @@ public class ParserOptionTableModel extends AbstractTableModel {
 
 
     //replace "a_property_name" with "A Property Name"
-    private String cleanup(String propertyName) {
+    private String cleanup(String propertyName, boolean isRequired) {
 
         if (propertyName == null) {
             throw new IllegalArgumentException("Property name cannot be null");
         }
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("<html>");
         String[] words = propertyName.replace('_', ' ').split("\\s");
         for (String word : words) {
             //uppercase first letter
@@ -203,6 +212,9 @@ public class ParserOptionTableModel extends AbstractTableModel {
             sb.append(s.toUpperCase());
             sb.append(word.substring(1));
             sb.append(" ");
+        }
+        if (isRequired) {
+            sb.append("<font color=\"red\">(*)</font>");
         }
         return sb.toString();
 
@@ -232,6 +244,36 @@ public class ParserOptionTableModel extends AbstractTableModel {
 
     public void setValues(Map<String, Object> values) {
         this.values = values;
+    }
+
+    public boolean isAllPropertiesValid() {
+
+        boolean allPropsValid = true;
+
+        for (DAOProperty prop : allProperties) {
+            //only check the required properties!
+            if (prop.isRequired()) {
+                String value = values.get(prop.getName()).toString();
+                //value must be set for required properties
+                if (value == null) {
+                    allPropsValid = false;
+                }
+                //if the property is a file, file must exist
+                if (prop.getValueClass().equals(File.class)) {
+                    try {
+                        //file properties *must* have a default value!
+                        File testFile = (File) values.get(prop.getName());
+                        if (!testFile.exists()) {
+                            allPropsValid = false;
+                        }
+                    } catch (Exception e1) {
+                        allPropsValid = false;
+                    }
+                }
+            }
+        }
+        return allPropsValid;
+
     }
 
 }
