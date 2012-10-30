@@ -22,9 +22,9 @@ import java.util.ResourceBundle;
  */
 public class DatabaseMappingDialog extends AbstractDialog {
 
-    public DatabaseMappingDialog(Frame owner, BaseTable<DatabaseMapping> paramTable) {
+    public DatabaseMappingDialog(Frame owner, BaseTable<DatabaseMapping> databaseMappingBaseTable) {
         super(owner);
-        callback = paramTable;
+        callback = databaseMappingBaseTable;
         initComponents();
         initDatabaseNames();
     }

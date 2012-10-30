@@ -101,10 +101,12 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
 
             if (enableRowValidation) {
                 //get object at row
-                modelSelectedRow = convertRowIndexToModel(rowIndex);
+                //use local var to not change state of modelSelectedRow, as was
+                //previously the case
+                int row = convertRowIndexToModel(rowIndex);
                 //get object
                 BaseTableModel<T> tableModel = (BaseTableModel<T>) getModel();
-                T objToValidate = tableModel.get(modelSelectedRow);
+                T objToValidate = tableModel.get(row);
                 if (objToValidate instanceof ReportObject) {
 
                     //validate object
