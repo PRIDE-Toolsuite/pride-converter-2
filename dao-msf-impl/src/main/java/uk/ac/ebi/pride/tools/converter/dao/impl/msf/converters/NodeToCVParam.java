@@ -39,7 +39,7 @@ public class NodeToCVParam {
                 case NODE_NON_FRAGMENT_FILTER:
                     methodParameterPrefix = "Non-Fragment Filter:";
                     break;
-                case NODE_PTM_SCORER:
+                case NODE_PERCOLATOR:
                     methodParameterPrefix = "Percolator:";
                     result.add(new CvParam("MS", "MS:1001490", "Percolator", "VERSION")); //@TODO: extract version information
                     break;
@@ -48,7 +48,8 @@ public class NodeToCVParam {
                 case NODE_TOP_N_PEAKS_FILTER:
                 case NODE_SPECTRUM_NORMALIZATION:
                 case NODE_PEPTIDE_VALIDATOR:
-                case NODE_PERCOLATOR:
+                case NODE_PTM_SCORER:
+                case NODE_PTM_SCORER2:
                 default:
             }
             result.addAll(convertParameters(node, methodParameterPrefix));

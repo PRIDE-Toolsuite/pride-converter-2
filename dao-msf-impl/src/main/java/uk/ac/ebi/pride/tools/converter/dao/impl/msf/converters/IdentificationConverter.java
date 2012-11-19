@@ -5,6 +5,7 @@
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
 import com.compomics.thermo_msf_parser.Parser;
+import com.compomics.thermo_msf_parser.msf.MsfVersion;
 import com.compomics.thermo_msf_parser.msf.Peptide;
 import com.compomics.thermo_msf_parser.msf.Protein;
 import com.compomics.thermo_msf_parser.msf.ProteinGroup;
@@ -40,7 +41,11 @@ public class IdentificationConverter {
 
         Identification identification = new Identification();
         identification.setAccession(protein.getUtilAccession());
-        identification.setScore(protein.getScores().firstElement().getScore());
+        if (!protein.getScores().isEmpty()) { // PD 1.2 may not give protein scores.
+            identification.setScore(protein.getScores().firstElement().getScore());
+        } else {
+            identification.setScore(0.0);
+        }
         identification.setUniqueIdentifier(protein.getProteinId() + "");
         identification.setDatabase(databaseName);
         identification.setDatabaseVersion(databaseVersion);
@@ -50,37 +55,39 @@ public class IdentificationConverter {
                 identification.getPeptide().add(PeptideConverter.convertWithCoordinatesInProtein(peptide, protein));
             }
         }
+        
+        /**
+         * Only use the following part is the version is greater than 1.2
+         */
+        if (!parser.getWorkFlowInfo().getMsfVersionInfo().equals(MsfVersion.VERSION1_2)) {
+            ProteinGroup proteinGroup = parser.getProteinGroupsMap().get(protein.getProteinGroupId());
 
-        ProteinGroup proteinGroup = parser.getProteinGroupsMap().get(protein.getProteinGroupId());
+            List<CvParam> params = new ArrayList<CvParam>();
 
-        List<CvParam> params = new ArrayList<CvParam>();
-
-        // Is the protein the "anchor/reference protein"?
-        if (protein.getMasterProtein() == 1) {
-            CvParam anchorProtein = new CvParam();
-            anchorProtein.setAccession("MS:1001591");
-            anchorProtein.setCvLabel("MS");
-            anchorProtein.setName("anchor protein");
-            anchorProtein.setValue(protein.getUtilAccession()); //TODO: I hope this is correct behavior
-            params.add(anchorProtein);
-        }
-
-        // A set to collect all peptide sequences of the 'other' proteins in the same group
-        Set<String> allOtherPeptideSequences = new HashSet<String>();
-
-
-        // Go through the 'other' proteins in the group and establish group relationships
-        for (Protein groupProtein : proteinGroup.getProteins()) {
-
-            if (groupProtein.equals(protein)) {
-                continue;
+            // Is the protein the "anchor/reference protein"?
+            if (protein.getMasterProtein() == 1) {
+                CvParam anchorProtein = new CvParam();
+                anchorProtein.setAccession("MS:1001591");
+                anchorProtein.setCvLabel("MS");
+                anchorProtein.setName("anchor protein");
+                anchorProtein.setValue(protein.getUtilAccession());
+                params.add(anchorProtein);
             }
 
-            params.add(MsfCvTermReference.PRIDE_GROUP_MEMBER.getCvParam(groupProtein.getUtilAccession()));
+            if (proteinGroup != null) {
+                // Go through the 'other' proteins in the group and establish group relationships
+                for (Protein groupProtein : proteinGroup.getProteins()) {
+
+                    if (!groupProtein.equals(protein)) {
+                        params.add(MsfCvTermReference.PRIDE_GROUP_MEMBER.getCvParam(groupProtein.getUtilAccession()));
+                    }
+
+                    
+                }
+            }
+
+            identification.getAdditional().getCvParam().addAll(params);
         }
-
-        identification.getAdditional().getCvParam().addAll(params);
-
         return identification;
     }
 

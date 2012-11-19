@@ -388,22 +388,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @throws InvalidFormatException
      */
     public Iterator<Identification> getIdentificationIterator(final boolean preScanMode) {
-        Iterator<Identification> it = new Iterator<Identification>() {
-
-            Iterator<Protein> proteinIterator = parser.getProteins().iterator();
-
-            public boolean hasNext() {
-                return proteinIterator.hasNext();
-            }
-
-            public Identification next() {
-                return IdentificationConverter.convert(parser, proteinIterator.next(), getSearchDatabaseName(), getSearchDatabaseVersion(), preScanMode, confidenceLevel);
-            }
-
-            public void remove() {
-                throw new UnsupportedOperationException("Don't try to remove.");
-            }
-        };
+        IdentificationIterator it = new IdentificationIterator(parser, getSearchDatabaseName(), getSearchDatabaseVersion(), preScanMode, confidenceLevel);
         return it;
     }
 
