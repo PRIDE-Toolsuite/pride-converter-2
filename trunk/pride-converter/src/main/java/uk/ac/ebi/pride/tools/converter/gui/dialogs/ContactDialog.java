@@ -36,7 +36,7 @@ public class ContactDialog extends AbstractDialog {
         if (!isEditing) {
             callback.add(c);
         } else {
-            callback.update(c);
+            callback.update(c, modelRowIndex);
         }
         setVisible(false);
         dispose();
@@ -70,7 +70,10 @@ public class ContactDialog extends AbstractDialog {
     }
 
     @Override
-    public void edit(ReportObject object) {
+    public void edit(ReportObject object, int modelRowIndex) {
+
+        this.modelRowIndex = modelRowIndex;
+
         Contact c = (Contact) object;
         nameField.setText(c.getName());
         validateRequiredField(nameField, null);
@@ -102,7 +105,7 @@ public class ContactDialog extends AbstractDialog {
 
     @Override
     public void loadTemplate(String templateName) {
-        edit(loadTemplate(templateName, TemplateType.CONTACT));
+        edit(loadTemplate(templateName, TemplateType.CONTACT), modelRowIndex);
     }
 
     private void initComponents() {

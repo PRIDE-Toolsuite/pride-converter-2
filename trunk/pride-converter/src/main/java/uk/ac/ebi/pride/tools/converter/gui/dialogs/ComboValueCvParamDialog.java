@@ -104,14 +104,17 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
                 callback.add(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueComboBox.getSelectedItem().toString()));
             }
         } else {
-            callback.update(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueComboBox.getSelectedItem().toString()));
+            callback.update(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueComboBox.getSelectedItem().toString()), modelRowIndex);
         }
         setVisible(false);
         dispose();
     }
 
     @Override
-    public void edit(ReportObject object) {
+    public void edit(ReportObject object, int modelRowIndex) {
+
+        this.modelRowIndex = modelRowIndex;
+
         CvParam c = (CvParam) object;
         cvField.setText(c.getCvLabel());
         accessionField.setText(c.getAccession());
@@ -122,6 +125,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         validateRequiredField(accessionField, null);
         validateRequiredField(valueComboBox, null);
         okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
+
     }
 
     private void nameFieldKeyTyped(KeyEvent e) {

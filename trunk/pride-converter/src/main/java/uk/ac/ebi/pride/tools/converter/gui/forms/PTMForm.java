@@ -57,7 +57,7 @@ public class PTMForm extends AbstractForm {
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
             AbstractDialog dialog = AbstractDialog.getInstance(ptmTable, clazz);
-            dialog.edit(objToEdit);
+            dialog.edit(objToEdit, modelSelectedRow);
             dialog.setVisible(true);
         }
 

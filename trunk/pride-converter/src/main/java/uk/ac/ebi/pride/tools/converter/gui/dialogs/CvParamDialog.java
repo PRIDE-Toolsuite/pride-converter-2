@@ -104,14 +104,17 @@ public class CvParamDialog extends AbstractDialog implements OLSInputable, KeyLi
         if (!isEditing) {
             callback.add(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueField.getText()));
         } else {
-            callback.update(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueField.getText()));
+            callback.update(new CvParam(cvField.getText(), accessionField.getText(), (nameField.getSelectedItem() != null) ? nameField.getSelectedItem().toString() : null, valueField.getText()), modelRowIndex);
         }
         setVisible(false);
         dispose();
     }
 
     @Override
-    public void edit(ReportObject object) {
+    public void edit(ReportObject object, int modelRowIndex) {
+
+        this.modelRowIndex = modelRowIndex;
+
         CvParam c = (CvParam) object;
         cvField.setText(c.getCvLabel());
         accessionField.setText(c.getAccession());

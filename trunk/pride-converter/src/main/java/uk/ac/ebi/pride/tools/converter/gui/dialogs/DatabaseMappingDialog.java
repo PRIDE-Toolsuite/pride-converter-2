@@ -64,13 +64,15 @@ public class DatabaseMappingDialog extends AbstractDialog {
             db.setCuratedDatabaseName(null);
         }
         db.setCuratedDatabaseVersion(cDbVersion.getText());
-        callback.update(db);
+        callback.update(db, modelRowIndex);
         setVisible(false);
         dispose();
     }
 
     @Override
-    public void edit(ReportObject object) {
+    public void edit(ReportObject object, int modelRowIndex) {
+        this.modelRowIndex = modelRowIndex;
+
         DatabaseMapping db = (DatabaseMapping) object;
         seDbName.setText(db.getSearchEngineDatabaseName());
         seDbVersion.setText(db.getSearchEngineDatabaseVersion());

@@ -83,7 +83,7 @@ public class SimplePTMDialog extends AbstractDialog implements OLSInputable {
                 JOptionPane.showMessageDialog(this, msg.toString(), "ERROR!", JOptionPane.ERROR_MESSAGE);
             } else {
                 //everything is ok
-                callback.update(updatePTM());
+                callback.update(updatePTM(), modelRowIndex);
                 setVisible(false);
                 dispose();
             }
@@ -96,7 +96,7 @@ public class SimplePTMDialog extends AbstractDialog implements OLSInputable {
             modMonoDelta = mod.getDeltaMass();
 
             //todo - do we need to check origin at this point?
-            callback.update(updatePTM());
+            callback.update(updatePTM(), modelRowIndex);
             setVisible(false);
             dispose();
         }
@@ -260,7 +260,10 @@ public class SimplePTMDialog extends AbstractDialog implements OLSInputable {
 
 
     @Override
-    public void edit(ReportObject object) {
+    public void edit(ReportObject object, int modelRowIndex) {
+
+        //store index
+        this.modelRowIndex = modelRowIndex;
 
         //store PTM to edit
         ptm = (PTM) object;

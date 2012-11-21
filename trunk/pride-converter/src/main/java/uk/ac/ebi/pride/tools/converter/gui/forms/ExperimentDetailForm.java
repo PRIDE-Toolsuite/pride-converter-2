@@ -107,7 +107,7 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
             AbstractDialog dialog = AbstractDialog.getInstance(contactTable, clazz);
-            dialog.edit(objToEdit);
+            dialog.edit(objToEdit, modelSelectedRow);
             dialog.setVisible(true);
         }
     }
@@ -121,7 +121,7 @@ public class ExperimentDetailForm extends AbstractForm implements TableModelList
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
             AbstractDialog dialog = AbstractDialog.getInstance(referenceTable, clazz);
-            dialog.edit(objToEdit);
+            dialog.edit(objToEdit, modelSelectedRow);
             dialog.setVisible(true);
         }
 
