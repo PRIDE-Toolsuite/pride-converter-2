@@ -12,6 +12,6 @@ public interface CvUpdatable<T extends ReportObject> {
 
     public void add(T objectToAdd);
 
-    public void update(T objectToUpdate);
+    public void update(T objectToUpdate, int objectIndex);
 
 }

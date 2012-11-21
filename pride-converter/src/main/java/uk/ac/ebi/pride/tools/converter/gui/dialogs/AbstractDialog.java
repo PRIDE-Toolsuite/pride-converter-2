@@ -31,6 +31,13 @@ public abstract class AbstractDialog extends JDialog {
     private static HashMap<Class, Class> REPORT_OBJECT_TO_DIALOG = new HashMap<Class, Class>();
     public static final String TEMPLATE_EXTENSION = ".xml";
 
+    //this will keep track of which object of the table model is being edited.
+    //so that the correct object can be updated when editing is done
+    protected int modelRowIndex;
+
+    protected CvUpdatable callback;
+    protected boolean isEditing = false;
+
     static {
         REPORT_OBJECT_TO_DIALOG.put(Contact.class, ContactDialog.class);
         REPORT_OBJECT_TO_DIALOG.put(CvParam.class, CvParamDialog.class);
@@ -58,8 +65,6 @@ public abstract class AbstractDialog extends JDialog {
         }
     }
 
-    protected CvUpdatable callback;
-    protected boolean isEditing = false;
 
     protected AbstractDialog(Frame owner) {
         super(owner);
@@ -98,7 +103,7 @@ public abstract class AbstractDialog extends JDialog {
         return text != null && text.trim().length() > 0;
     }
 
-    abstract public void edit(ReportObject object);
+    abstract public void edit(ReportObject object, int modelRowIndex);
 
     protected void saveTemplate(String templateName, TemplateType type, ReportObject templateObject) {
         //get base path

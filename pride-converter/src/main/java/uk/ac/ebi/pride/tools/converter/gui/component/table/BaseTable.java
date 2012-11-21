@@ -31,7 +31,6 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
     private static final int DOUBLE_CLICK_COUNT = 2;
 
     private BaseTable<T> _this;
-    protected int modelSelectedRow;
     protected boolean enableRowValidation = false;
     private boolean useAlternateRowColor = true;
 
@@ -47,7 +46,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
                 if (mouseEvent.getClickCount() == DOUBLE_CLICK_COUNT) {
 
                     //convert table selected row to underlying model row
-                    modelSelectedRow = convertRowIndexToModel(getSelectedRow());
+                    int modelSelectedRow = convertRowIndexToModel(getSelectedRow());
                     //get object
                     BaseTableModel<T> tableModel = (BaseTableModel<T>) getModel();
                     if (!tableModel.isRowProtected(modelSelectedRow)) {
@@ -55,7 +54,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
                         Class clazz = objToEdit.getClass();
                         //show editing dialog for object
                         AbstractDialog dialog = AbstractDialog.getInstance(_this, clazz);
-                        dialog.edit(objToEdit);
+                        dialog.edit(objToEdit, modelSelectedRow);
                         dialog.setVisible(true);
                     }
                 }
@@ -69,7 +68,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
         ((BaseTableModel) model).addRecord(t);
     }
 
-    public void update(T t) {
+    public void update(T t, int modelSelectedRow) {
         BaseTableModel<T> tableModel = (BaseTableModel<T>) getModel();
         tableModel.edit(modelSelectedRow, t);
     }

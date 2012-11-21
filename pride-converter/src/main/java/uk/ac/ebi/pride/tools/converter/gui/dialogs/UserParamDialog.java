@@ -40,14 +40,15 @@ public class UserParamDialog extends AbstractDialog {
         if (!isEditing) {
             callback.add(new UserParam(nameTextField.getText(), valueTextField.getText()));
         } else {
-            callback.update(new UserParam(nameTextField.getText(), valueTextField.getText()));
+            callback.update(new UserParam(nameTextField.getText(), valueTextField.getText()), modelRowIndex);
         }
         setVisible(false);
         dispose();
     }
 
     @Override
-    public void edit(ReportObject object) {
+    public void edit(ReportObject object, int modelRowIndex) {
+        this.modelRowIndex = modelRowIndex;
         UserParam c = (UserParam) object;
         nameTextField.setText(c.getName());
         valueTextField.setText(c.getValue());

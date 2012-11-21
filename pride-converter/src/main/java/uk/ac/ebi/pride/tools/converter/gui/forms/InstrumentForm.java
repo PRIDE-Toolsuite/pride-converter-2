@@ -164,7 +164,7 @@ public class InstrumentForm extends AbstractForm {
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
             AbstractDialog dialog = AbstractDialog.getInstance(table, clazz);
-            dialog.edit(objToEdit);
+            dialog.edit(objToEdit, modelSelectedRow);
             dialog.setVisible(true);
         }
     }

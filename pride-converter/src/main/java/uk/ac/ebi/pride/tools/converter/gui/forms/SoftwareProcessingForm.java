@@ -81,7 +81,7 @@ public class SoftwareProcessingForm extends AbstractForm {
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
             AbstractDialog dialog = AbstractDialog.getInstance(processingTable, clazz);
-            dialog.edit(objToEdit);
+            dialog.edit(objToEdit, modelSelectedRow);
             dialog.setVisible(true);
         }
 
@@ -96,7 +96,7 @@ public class SoftwareProcessingForm extends AbstractForm {
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
             AbstractDialog dialog = AbstractDialog.getInstance(databaseTable, clazz);
-            dialog.edit(objToEdit);
+            dialog.edit(objToEdit, modelSelectedRow);
             dialog.setVisible(true);
         }
 

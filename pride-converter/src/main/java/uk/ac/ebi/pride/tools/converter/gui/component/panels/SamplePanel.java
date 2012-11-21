@@ -190,10 +190,10 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                 add(cv);
             } else {
                 ComboValueCvParamDialog cvParamDialog = new ComboValueCvParamDialog(NavigationPanel.getInstance(), this, getSuggestedOntologies(resourceKey), subsamples);
-                cvParamDialog.edit(cv);
+                //we can put -1 here because we'll always be adding objects, not editing them
+                cvParamDialog.edit(cv, -1);
                 cvParamDialog.setVisible(true);
             }
-
 
         }
 
@@ -214,7 +214,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             Class clazz = objToEdit.getClass();
             //show editing dialog for object
             AbstractDialog dialog = AbstractDialog.getInstance(paramTable1, clazz);
-            dialog.edit(objToEdit);
+            dialog.edit(objToEdit, modelSelectedRow);
             dialog.setVisible(true);
         }
     }
@@ -561,7 +561,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     }
 
     @Override
-    public void update(CvParam objectToUpdate) {
+    public void update(CvParam objectToUpdate, int modelRowIndex) {
         //no op
     }
 

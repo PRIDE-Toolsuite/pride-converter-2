@@ -138,7 +138,7 @@ public class ReferenceDialog extends AbstractDialog {
         if (!isEditing) {
             callback.add(ref);
         } else {
-            callback.update(ref);
+            callback.update(ref, modelRowIndex);
         }
         setVisible(false);
         dispose();
@@ -151,7 +151,10 @@ public class ReferenceDialog extends AbstractDialog {
     }
 
     @Override
-    public void edit(ReportObject object) {
+    public void edit(ReportObject object, int modelRowIndex) {
+
+        this.modelRowIndex = modelRowIndex;
+
         Reference r = (Reference) object;
         referenceArea.setText(r.getRefLine());
         Param p = r.getAdditional();
