@@ -122,7 +122,7 @@ public class BaseTable<T extends ReportObject> extends JTable implements CvUpdat
                                 DecoratedReportObject decoratedReportObject = (DecoratedReportObject) objToValidate;
                                 bgCol = decoratedReportObject.getBackground();
                             }
-                            //no errors and no predeficed color - use alternate colors
+                            //no errors and no predefined color - use alternate colors
                             if (bgCol == null) {
                                 if (rowIndex % 2 == 0 && useAlternateRowColor) {
                                     bgCol = Colours.grey;
