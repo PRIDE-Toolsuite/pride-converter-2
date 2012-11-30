@@ -12,7 +12,6 @@ import uk.ac.ebi.pride.jaxb.xml.marshaller.PrideXmlMarshaller;
 import uk.ac.ebi.pride.jaxb.xml.marshaller.PrideXmlMarshallerFactory;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
-import uk.ac.ebi.pride.tools.converter.dao.DAOFactory;
 import uk.ac.ebi.pride.tools.converter.report.io.ReportReader;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshaller;
 import uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller.ReportMarshallerFactory;
@@ -50,11 +49,14 @@ public class PrideXmlWriter {
         // allocate the memory for the bytes to store
         ByteBuffer bytes = ByteBuffer.allocate(8);
         bytes.order(ByteOrder.LITTLE_ENDIAN); // save everything in LITTLE ENDIAN format as it's the standard
-        // convert the ByteBuffer to a byte[]
-        byte[] byteArray = new byte[8]; // allocate the memory for the byte[] array
-        bytes.get(byteArray);
 
-        // create the intensity array
+        //put value in buffer
+        bytes.putDouble(0.0);
+
+        // convert the ByteBuffer to a byte[]
+        byte[] byteArray = bytes.array();
+
+        // create the data array
         Data arrayData = new Data();
         arrayData.setEndian("little");
         arrayData.setLength(byteArray.length);
@@ -199,11 +201,11 @@ public class PrideXmlWriter {
             while (spectrumIter.hasNext()) {
                 Spectrum spectrum = spectrumIter.next();
                 //if the spectrum has no intensity array, set one properly
-                if (spectrum.getIntenArrayBinary() == null || spectrum.getIntentArray() == null) {
+                if (spectrum.getIntenArrayBinary() == null || spectrum.getIntentArray() == null || spectrum.getIntentArray().length == 0) {
                     spectrum.setIntenArrayBinary(EMPTY_INTEN_ARRAY);
                 }
                 //if the spectrum has no mz array, set one properly
-                if (spectrum.getMzArrayBinary() == null || spectrum.getMzNumberArray() == null) {
+                if (spectrum.getMzArrayBinary() == null || spectrum.getMzNumberArray() == null || spectrum.getMzNumberArray().length == 0) {
                     spectrum.setMzArrayBinary(EMPTY_MZ_ARRAY);
                 }
                 prideJaxbMarshaller.marshall(spectrum, out);
@@ -802,14 +804,49 @@ public class PrideXmlWriter {
 
     public static void main(String[] args) {
 
-        try {
-            DAO mascot = DAOFactory.getInstance().getDAO("/home/rcote/dev/cvs/pride-converter/src/test/resources/F001240.dat", DAOFactory.DAO_FORMAT.MASCOT);
-            ReportReader reader = new ReportReader(new File("/home/rcote/dev/cvs/pride-converter/src/test/resources/F001240.dat-report.xml"));
-            PrideXmlWriter out = new PrideXmlWriter("/home/rcote/dev/cvs/pride-converter/out.xml.gz", reader, mascot, false, false);
-            out.writeXml();
-        } catch (InvalidFormatException e) {
-            e.printStackTrace();
+        ByteBuffer bytes = ByteBuffer.allocate(8);
+        bytes.order(ByteOrder.LITTLE_ENDIAN); // save everything in LITTLE ENDIAN format as it's the standard
+
+        //put value in buffer
+        bytes.putDouble(0.0);
+
+        // convert the ByteBuffer to a byte[]
+        byte[] byteArray = bytes.array();
+        for (int i = 0; i < byteArray.length; i++) {
+            System.out.println(byteArray[i]);
         }
+
+        byte[] bits = new byte[]{0, 0, 0, 0, 0, 0, 0, 0};
+        bytes = ByteBuffer.wrap(bits);
+        bytes.order(ByteOrder.LITTLE_ENDIAN); // save everything in LITTLE ENDIAN format as it's the standard
+        System.out.println("bytes = " + bytes.getDouble());
+
+        byte[] bits2 = new byte[]{0, 0, 0, 0, 0, 0, 0, 0};
+
+        System.out.println("Arrays.equals(bits, bits2) = " + Arrays.equals(bits, bits2));
+
+        // create the data array
+        Data arrayData = new Data();
+        arrayData.setEndian("little");
+        arrayData.setLength(byteArray.length);
+        arrayData.setPrecision("64");
+        arrayData.setValue(byteArray);
+
+        EMPTY_INTEN_ARRAY = new IntenArrayBinary();
+        EMPTY_INTEN_ARRAY.setData(arrayData);
+
+        PrideXmlMarshaller prideJaxbMarshaller = PrideXmlMarshallerFactory.getInstance().initializeMarshaller();
+        System.out.println(prideJaxbMarshaller.marshall(EMPTY_INTEN_ARRAY));
+
+
+//        try {
+//            DAO mascot = DAOFactory.getInstance().getDAO("/home/rcote/dev/cvs/pride-converter/src/test/resources/F001240.dat", DAOFactory.DAO_FORMAT.MASCOT);
+//            ReportReader reader = new ReportReader(new File("/home/rcote/dev/cvs/pride-converter/src/test/resources/F001240.dat-report.xml"));
+//            PrideXmlWriter out = new PrideXmlWriter("/home/rcote/dev/cvs/pride-converter/out.xml.gz", reader, mascot, false, false);
+//            out.writeXml();
+//        } catch (InvalidFormatException e) {
+//            e.printStackTrace();
+//        }
     }
 
 

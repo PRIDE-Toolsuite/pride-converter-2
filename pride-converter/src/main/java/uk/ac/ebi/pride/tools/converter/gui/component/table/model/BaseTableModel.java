@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 public abstract class BaseTableModel<T extends ReportObject> extends DefaultTableModel {
 
     // Resouce bundle to get messages, and internalization
-    protected static ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
+    protected static final ResourceBundle resourceBundle = ResourceBundle.getBundle("messages");
 
     public static final int SMALL_WIDTH = 25;
 
