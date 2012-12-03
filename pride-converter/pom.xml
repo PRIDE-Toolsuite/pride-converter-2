@@ -9,6 +9,11 @@
     <name>PRIDE Converter</name>
     <description>This produces PRIDE XML files for submission from various source file formats</description>
 
+    <!--this will be used to build the assembly for the google code repo -->
+    <properties>
+        <releaseNumber>2.0.12</releaseNumber>
+    </properties>
+
     <build>
 
         <resources>
@@ -133,22 +138,7 @@
             <properties>
                 <jarName>pride-converter-${project.version}</jarName>
                 <classToExecute>uk.ac.ebi.pride.tools.converter.gui.ConverterApplicationSelector</classToExecute>
-                <assemblyName>pride-converter-${buildNumber}</assemblyName>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>cellzome</id>
-            <activation>
-                <property>
-                    <name>cellzome</name>
-                </property>
-            </activation>
-
-            <properties>
-                <jarName>pride-cellzome-${project.version}</jarName>
-                <classToExecute>uk.ac.ebi.pride.tools.cellzome.MzTabReader</classToExecute>
-                <assemblyName>pride-cellzome-${buildNumber}</assemblyName>
+                <assemblyName>pride-converter-${releaseNumber}</assemblyName>
             </properties>
         </profile>
 
