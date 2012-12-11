@@ -1493,7 +1493,7 @@ public class MzIdentmlDAO extends AbstractDAOImpl implements DAO {
 
                 return convertIdentification(dbSequence, inPrescanMode);
             } catch (Exception e) {
-                throw new ConverterException("Failed to unmarshall DBSequence object " + dbSequenceIds.get(currentIndex - 1));
+                throw new ConverterException("Failed to unmarshall DBSequence object " + dbSequenceIds.get(currentIndex - 1), e);
             }
 
         }
