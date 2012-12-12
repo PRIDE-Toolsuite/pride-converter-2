@@ -29,6 +29,7 @@ public class ConverterData {
     public static final String DEFAULT_OUTPUT_LOCATION = System.getProperty("java.io.tmpdir") + File.separator + "prideconverter";
 
     private boolean useHybridSearchDatabase = true;
+    private boolean disableAccessionResolver = false;
     private TreeSet<FileBean> dataFiles = new TreeSet<FileBean>();
     private List<String> mzTabFiles = new ArrayList<String>();
     private List<String> spectrumFiles = new ArrayList<String>();
@@ -284,11 +285,20 @@ public class ConverterData {
         return fragmentationMethod;
     }
 
+    public boolean isDisableAccessionResolver() {
+        return disableAccessionResolver;
+    }
+
+    public void setDisableAccessionResolver(boolean disableAccessionResolver) {
+        this.disableAccessionResolver = disableAccessionResolver;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
         sb.append("ConverterData");
         sb.append("{useHybridSearchDatabase=").append(useHybridSearchDatabase);
+        sb.append(", disableAccessionResolver=").append(disableAccessionResolver);
         sb.append(", dataFiles=").append(dataFiles);
         sb.append(", mzTabFiles=").append(mzTabFiles);
         sb.append(", spectrumFiles=").append(spectrumFiles);
@@ -302,6 +312,7 @@ public class ConverterData {
         sb.append(", databaseMappings=").append(databaseMappings);
         sb.append(", masterDAO=").append(masterDAO);
         sb.append(", filesToDelete=").append(filesToDelete);
+        sb.append(", fragmentationMethod=").append(fragmentationMethod);
         sb.append(", customeReportFields=").append(customeReportFields);
         sb.append(", mergedOutputFile='").append(mergedOutputFile).append('\'');
         sb.append('}');
