@@ -146,17 +146,20 @@ public class ReportWriter {
                     continue;
                 }
 
-                //try and fix weirdo accessions
-                AccessionResolver acr = new AccessionResolver(id.getAccession(), id.getAccessionVersion(), id.getDatabase(), ConverterData.getInstance().isUseHybridSearchDatabase());
-                //if we can parse a valid accession
-                if (acr.isValidAccession()) {
-                    //if the curated accession is different than the submitted accession, make note of it
-                    if (!acr.getAccession().equals(id.getAccession())) {
-                        id.setCuratedAccession(acr.getAccession());
-                        id.setAccessionVersion(acr.getVersion());//todo - should we need a curationVersion?
+                //unless the accession resolver is specifically turned off
+                if (!ConverterData.getInstance().isDisableAccessionResolver()) {
+                    //try and fix weirdo accessions
+                    AccessionResolver acr = new AccessionResolver(id.getAccession(), id.getAccessionVersion(), id.getDatabase(), ConverterData.getInstance().isUseHybridSearchDatabase());
+                    //if we can parse a valid accession
+                    if (acr.isValidAccession()) {
+                        //if the curated accession is different than the submitted accession, make note of it
+                        if (!acr.getAccession().equals(id.getAccession())) {
+                            id.setCuratedAccession(acr.getAccession());
+                            id.setAccessionVersion(acr.getVersion());//todo - should we need a curationVersion?
+                        }
+                    } else {
+                        logger.warn("Found invalid submitted protein accession: " + id.getAccession());
                     }
-                } else {
-                    logger.warn("Found invalid submitted protein accession: " + id.getAccession());
                 }
 
                 //call fasta handler - this will update the sequence information for the identification object
