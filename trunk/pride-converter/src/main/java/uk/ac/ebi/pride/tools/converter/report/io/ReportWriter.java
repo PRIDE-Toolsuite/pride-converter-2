@@ -19,10 +19,7 @@ import uk.ac.ebi.pride.tools.converter.utils.config.Configurator;
 import uk.ac.ebi.pride.tools.converter.utils.memory.MemoryUsage;
 import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -111,7 +108,7 @@ public class ReportWriter {
 
             logger.warn("Writing report file: " + outputFile.getAbsolutePath());
 
-            out = new PrintWriter(new FileWriter(outputFile));
+            out = new PrintWriter(new OutputStreamWriter(new FileOutputStream(outputFile), "UTF-8"));
 
             //write xml header
             out.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
