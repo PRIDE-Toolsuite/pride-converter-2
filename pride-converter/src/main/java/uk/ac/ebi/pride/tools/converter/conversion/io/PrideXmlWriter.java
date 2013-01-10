@@ -148,13 +148,13 @@ public class PrideXmlWriter {
             //create xml file
             File xmlFile = new File(outputFilePath);
 
+            FileOutputStream fos = new FileOutputStream(xmlFile);
             if (gzipCompress) {
-                FileOutputStream fos = new FileOutputStream(xmlFile);
                 GZIPOutputStream gzipOutputStream = new GZIPOutputStream(fos);
-                OutputStreamWriter outWriter = new OutputStreamWriter(gzipOutputStream);
+                OutputStreamWriter outWriter = new OutputStreamWriter(gzipOutputStream, "UTF-8");
                 out = new PrintWriter(outWriter);
             } else {
-                out = new PrintWriter(new FileWriter(xmlFile));
+                out = new PrintWriter(new OutputStreamWriter(fos, "UTF-8"));
             }
 
             if (logger.isInfoEnabled()) {
