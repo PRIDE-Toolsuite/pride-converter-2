@@ -2,6 +2,7 @@
                 xsi:noNamespaceSchemaLocation="http://www.psidev.info/files/validator/object-rule.xsd">
     <!-- List of rules that this specific validator should use (Provide class names)-->
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.TaxonCheck"/>
+    <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.TissueCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.SubsampleCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.InstrumentCheck"/>
     <rule class="uk.ac.ebi.pride.tools.converter.report.validator.objectrules.ContactCheck"/>
