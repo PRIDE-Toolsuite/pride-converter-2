@@ -217,8 +217,8 @@ public class CvParamDialog extends AbstractDialog implements OLSInputable, KeyLi
                                     //this is to try and avoid the following exception that has been seen:
                                     //  component must be showing on the screen to determine its location
                                     nameField.setVisible(true);
+                                    nameField.setSelectedItem(queryString);
                                     nameField.getEditor().setItem(queryString);
-                                    nameField.setSelectedIndex(-1);
                                     nameField.setPopupVisible(true);
                                     working = false;
                                     setLoadingIcon(false);
