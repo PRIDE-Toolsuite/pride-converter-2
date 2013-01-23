@@ -8,6 +8,7 @@ import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.OmssaTxtDao;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.SpectraSTXlsDao;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+import uk.ac.lifesci.dundee.tools.converter.GrePrideConverterDAO;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
@@ -41,7 +42,8 @@ public class DAOFactory {
         CRUX("crux_txt", "CRUX", false, "help.ui.dao.crux", true, true, true, false, new CruxFileFilter()),
         SPECTRAST("spectrast", "SpectraST", false, "help.ui.dao.spectrast", false, false, true, false, new SpectrastFileFilter()),
         OMSSA("OMSSA", "OMSSA", false, "help.ui.dao.omssa", false, false, true, false, new OMSSAFileFilter()),
-        MSF("MSF", "Proteome Discoverer", false, "help.ui.dao.proteomediscoverer", false, false, false, false, new ProteomeDiscoveryFileFilter()),;
+        MSF("MSF", "Proteome Discoverer", false, "help.ui.dao.proteomediscoverer", false, false, false, false, new ProteomeDiscoveryFileFilter()),
+        DUNDEE("gre-proteomics", "Dundee GRE Proteomics Group", false, "help.ui.dao.pride", false, false, true, false, new MzMLFileFilter()),;
 
         private String commandLineName;
         private String niceName;
@@ -176,6 +178,9 @@ public class DAOFactory {
             case MSF:
                 dao = new MsfDao(new File(sourcePath));
                 break;
+            case DUNDEE:
+                dao = new GrePrideConverterDAO(new File(sourcePath));
+                break;
             case PRIDE:
                 //todo
                 throw new UnsupportedOperationException("No DAO defined for " + format);
@@ -224,6 +229,8 @@ public class DAOFactory {
                 return OmssaTxtDao.getSupportedProperties();
             case MSF:
                 return MsfDao.getSupportedProperties();
+            case DUNDEE:
+                return GrePrideConverterDAO.getSupportedProperties();
             case PRIDE:
                 //todo
                 return Collections.emptyList();
