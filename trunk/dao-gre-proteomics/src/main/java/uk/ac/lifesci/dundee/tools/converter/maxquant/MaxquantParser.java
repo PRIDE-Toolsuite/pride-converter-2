@@ -50,23 +50,6 @@ public class MaxquantParser {
     private LinkedHashMap<String, Integer> msIdtoScanNumber = new LinkedHashMap<String, Integer>();
 
 
-/*
-     * _evidence_file = DelimitedFileValidator([
-     * ['Gel Slice', 'Fraction'],
-     * ['Type'],
-     * ['Charge'],
-     * ['Uncalibrated - Calibrated m/z [ppm]'],
-     * ['Uncalibrated Mass Error [ppm]'],
-     * ['MS/MS Scan Number'],
-     * ['Mod. Peptide ID'],
-     * ['Contaminant'],
-     * ['PEP'],
-     * ['Reverse']
-     * ]).include(_mod_peptides_file)
-     * <p/>
-     * <p/>
-     */
-
     private String maxquantFilePath;
 
     public MaxquantParser(String maxquantFilePath) {
@@ -74,6 +57,7 @@ public class MaxquantParser {
         parseParameterFile();
         parseProteinGroupFile();
         parsePeptideFile();
+        parseEvidenceFile();
         parseMsMsFile();
     }
 
@@ -215,6 +199,32 @@ public class MaxquantParser {
 
     }
 
+    private void parseEvidenceFile() {
+        File evidence = new File(new File(maxquantFilePath), "evidence.txt");
+        if (!evidence.exists()) {
+            throw new ConverterException("Maxquant evidence.txt file not found in directory: " + maxquantFilePath);
+        }
+
+        try {
+            //read all params
+            BufferedReader in = new BufferedReader(new FileReader(evidence));
+            //skip header row
+            String oneLine = in.readLine();
+            EvidenceFieldMapper mapper = new EvidenceFieldMapper(oneLine);
+            while ((oneLine = in.readLine()) != null) {
+                processEvidenceLine(oneLine, mapper);
+            }
+        } catch (Exception e) {
+            throw new ConverterException("Error parsing parameters.txt file");
+        }
+    }
+
+    private void processEvidenceLine(String line, EvidenceFieldMapper mapper) {
+
+        //todo update modifications
+        //todo get msms IDs - if multiple IDs, clone peptides
+
+    }
 
     public Param getProcessingMethod() {
         Param param = new Param();
