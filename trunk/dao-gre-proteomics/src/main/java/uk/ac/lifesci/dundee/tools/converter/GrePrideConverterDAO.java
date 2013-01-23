@@ -1,43 +1,52 @@
 package uk.ac.lifesci.dundee.tools.converter;
 
-import org.xml.sax.InputSource;
+import org.apache.commons.codec.binary.Base64;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
 import uk.ac.ebi.pride.tools.converter.dao.impl.AbstractDAOImpl;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MgfDAO;
+import uk.ac.ebi.pride.tools.converter.dao.impl.MzXmlDAO;
 import uk.ac.ebi.pride.tools.converter.dao.impl.MzmlDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+import uk.ac.lifesci.dundee.tools.converter.maxquant.MaxquantParser;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.sax.SAXSource;
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 
 public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
+    //constants
     public static final String CONFIGURATION_FILE_PROP = "configurationfile";
     public static final String MAXQUANT_FILES_PROP = "maxquantfiles";
+    public static final String ENDPOINT_PROPERTY = "endpoint";
+    public static final String SAMPLE_IDENTIFIER_PROPERTY = "sample.identifier";
+    public static final String USERNAME_PROPERTY = "username";
+    public static final String PASSWORD_PROPERTY = "password";
+    public static final String SPECTRA_FILE_FORMAT_PROPERTY = "spectra.file.format";
+    public static final String ENDPOINT_METHOD = "/experiment_metadata";
+    private static final String searchEngineString = "MaxQuant";
+    private static final String searchEngineVersion = "0.1";
 
-    private final String searchEngineString = "MaxQuant";
-    private final String searchEngineVersion = "0.1";
+    //configuration and properties
     private static Collection<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
+    private Properties configProperties;
 
-    protected AbstractDAOImpl spectraDAO = null;
+    //spectrum file handling and delegation
+    private AbstractDAOImpl spectraDAO = null;
+    private File spectraFile = null;
 
-    protected Report metadataReport = null;
+    //metadata holder from Peptracker
+    private Report metadataReport = null;
 
-    protected AbstractDAOImpl identificationDAO = null;
+    //maxquant parser
+    private MaxquantParser maxquantParser = null;
 
-    protected static Utils<String> str_util = new Utils<String>();
-
-    protected File spectraFile = null;
+    private static Utils<String> str_util = new Utils<String>();
 
     public GrePrideConverterDAO(File spectra) {
         spectraFile = spectra;
@@ -57,8 +66,12 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
         maxquantFiles.setShortDescription("Path to folder containing maxquant files");
         supportedProperties.add(maxquantFiles);
 
-        //todo - need to support spectra dao properties
-//        supportedProperties.addAll(spectraDAO.getSupportedProperties());
+        //todo - need to support spectra dao properties for all future supported spectra formats
+        //todo - note that mzXML and peaklist DAOs do not currently support any properties
+        for (DAOProperty property : MzmlDAO.getSupportedProperties()) {
+            property.setDescription(property.getDescription() + " ONLY APPLIES IF USING MZML SPECTRA FILES");
+            supportedProperties.add(property);
+        }
 
         return supportedProperties;
 
@@ -74,9 +87,10 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
     public void setConfiguration(Properties props) {
         //connect to Peptracker
         initMetadata(props);
-//todo fix
-//        identificationDAO.setConfiguration(props);
+        //initMetadata will initialize the spectra dao to avoid a NPE
         spectraDAO.setConfiguration(props);
+        //keep track of properties
+        configProperties = props;
     }
 
     private void initMetadata(Properties props) {
@@ -98,34 +112,45 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
             throw new ConverterException("Error reading peptracker property file", e);
         }
 
-        String endPoint = peptrackerProps.getProperty("endpoint");
-        String sampleId = peptrackerProps.getProperty("sample.identifier");
-        String username = peptrackerProps.getProperty("username");
-        String password = peptrackerProps.getProperty("password");
-        String spectraFormat = peptrackerProps.getProperty("spectra.file.format");
+        String endPoint = peptrackerProps.getProperty(ENDPOINT_PROPERTY);
+        String sampleId = peptrackerProps.getProperty(SAMPLE_IDENTIFIER_PROPERTY);
+        String username = peptrackerProps.getProperty(USERNAME_PROPERTY);
+        String password = peptrackerProps.getProperty(PASSWORD_PROPERTY);
+        String spectraFormat = peptrackerProps.getProperty(SPECTRA_FILE_FORMAT_PROPERTY);
 
         URL url = null;
         try {
-            StringBuilder sb = new StringBuilder(endPoint).append(sampleId).append("/experiment_metadata");
+            //build url
+            StringBuilder sb = new StringBuilder(endPoint).append(sampleId).append(ENDPOINT_METHOD);
             url = new URL(sb.toString());
-            URLConnection uc = url.openConnection();
-//            String val = (new StringBuffer(username).append(":").append(password)).toString();
-//            byte[] base = val.getBytes();
-//            String authorizationString = "Basic " + new String(new Base64().encode(base));
-//            uc.setRequestProperty ("Authorization", authorizationString);
+            // stuff the Authorization request header
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            String authString = new StringBuffer(username).append(":").append(password).toString();
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+            byte[] bytes = authString.getBytes();
+            String encodedString = new String(new Base64().encode(bytes));
+            con.setRequestProperty("Authorization", "Basic " + encodedString);
+
+            //read XML response
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
             sb = new StringBuilder();
             String oneLine;
             while ((oneLine = br.readLine()) != null) {
                 sb.append(oneLine);
             }
+
+            //build report object
             metadataReport = new MetadataExtractor(sb.toString()).getMetadataReport();
-            System.out.println("metadataReport = " + metadataReport);
 
             //select proper spectra dao
             if ("mzml".equalsIgnoreCase(spectraFormat)) {
                 spectraDAO = new MzmlDAO(spectraFile);
+            } else if ("mzxml".equalsIgnoreCase(spectraFormat)) {
+                spectraDAO = new MzXmlDAO(spectraFile);
+            } else if ("mgf".equalsIgnoreCase(spectraFormat)) {
+                spectraDAO = new MgfDAO(spectraFile);
+            } else {
+                throw new ConverterException("Unsupported spectra file format: " + spectraFormat);
             }
 
         } catch (Exception e) {
@@ -136,8 +161,7 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public Properties getConfiguration() {
-        //todo update with current config
-        return identificationDAO.getConfiguration();
+        return configProperties;
     }
 
     @Override
@@ -170,7 +194,6 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
         return metadataReport.getMetadata().getMzDataDescription().getAdmin().getSampleDescription();
     }
 
-
     @Override
     public Collection<Contact> getContacts() {
         return metadataReport.getMetadata().getMzDataDescription().getAdmin().getContact();
@@ -191,7 +214,7 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public Param getProcessingMethod() {
-        return identificationDAO.getProcessingMethod();
+        return maxquantParser.getProcessingMethod();
     }
 
     @Override
@@ -206,17 +229,17 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
     @Override
     public String getSearchDatabaseName() throws InvalidFormatException {
-        return identificationDAO.getSearchDatabaseName();
+        return maxquantParser.getSearchDatabaseName();
     }
 
     @Override
     public String getSearchDatabaseVersion() throws InvalidFormatException {
-        return identificationDAO.getSearchDatabaseVersion();
+        return maxquantParser.getSearchDatabaseVersion();
     }
 
     @Override
     public Collection<PTM> getPTMs() throws InvalidFormatException {
-        return identificationDAO.getPTMs();
+        return maxquantParser.getPTMs();
     }
 
     @Override
@@ -256,65 +279,32 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
     @Override
     public int getSpectrumReferenceForPeptideUID(String peptideUID)
             throws InvalidFormatException {
-        return identificationDAO.getSpectrumReferenceForPeptideUID(peptideUID);
+        return maxquantParser.getSpectrumReferenceForPeptideUID(peptideUID);
     }
 
     @Override
     public Identification getIdentificationByUID(String identificationUID)
             throws InvalidFormatException {
-        return identificationDAO.getIdentificationByUID(identificationUID);
+        return maxquantParser.getIdentificationByUID(identificationUID);
     }
 
     @Override
     public Iterator<Identification> getIdentificationIterator(
             boolean prescanMode) throws InvalidFormatException {
-        return identificationDAO.getIdentificationIterator(prescanMode);
+        return maxquantParser.getIdentificationIterator(prescanMode);
     }
 
     @Override
     public void setExternalSpectrumFile(String filename) {
         spectraDAO.setExternalSpectrumFile(filename);
-
     }
 
+    public static void main(String[] args) {
 
-    private static class MetadataExtractor {
+        GrePrideConverterDAO dao = new GrePrideConverterDAO(new File(""));
+        Properties props = new Properties();
+        props.put(CONFIGURATION_FILE_PROP, "C:/Users/rcote/IdeaProjects/pride-converter-2/pride-converter/target/pride-converter-2.0.13-bin/test.properties");
+        dao.setConfiguration(props);
 
-        private JAXBContext jc = null;
-        private Unmarshaller unmarshaller = null;
-        private Report metadataReport;
-
-        private MetadataExtractor(String reportXML) {
-            try {
-                jc = JAXBContext.newInstance(ModelConstants.MODEL_PKG);
-                unmarshaller = jc.createUnmarshaller();
-                metadataReport = unmarshal(reportXML);
-            } catch (JAXBException e) {
-                throw new ConverterException("Error initializing metadata reader", e);
-            }
-        }
-
-        private Report unmarshal(String xmlSnippet) throws ConverterException {
-
-            try {
-
-                if (xmlSnippet == null) {
-                    return null;
-                }
-
-                @SuppressWarnings("unchecked")
-                JAXBElement<Report> holder = unmarshaller.unmarshal(new SAXSource(new InputSource(new StringReader(xmlSnippet))), Report.class);
-                return holder.getValue();
-
-            } catch (JAXBException e) {
-                throw new ConverterException("Error unmarshalling object: " + e.getMessage(), e);
-            }
-
-        }
-
-        public Report getMetadataReport() {
-            return metadataReport;
-        }
     }
-
 }
