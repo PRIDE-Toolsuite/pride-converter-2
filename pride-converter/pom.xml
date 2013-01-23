@@ -12,6 +12,7 @@
     <!--this will be used to build the assembly for the google code repo -->
     <properties>
         <releaseNumber>2.0.13</releaseNumber>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
@@ -211,6 +212,13 @@
             <groupId>uk.ac.ebi.pride.tools.converter</groupId>
             <artifactId>report-api</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <!--Dundee DAO-->
+        <dependency>
+            <groupId>uk.ac.lifesci.dundee</groupId>
+            <artifactId>gre-proteomics</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!--validator -->
