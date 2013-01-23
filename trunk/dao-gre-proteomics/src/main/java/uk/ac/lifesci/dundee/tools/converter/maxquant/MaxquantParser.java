@@ -25,6 +25,7 @@ public class MaxquantParser {
     public static final String VARIABLE_MOD_PARAM = "Variable modifications";
     public static final String FIXED_MOD_PARAM = "Fixed modifications";
     public static final String SEPARATOR = "/";
+    public static final String COLUMN_DELIM = "\\t";
 
     //parameters parsed from file
     private Map<String, String> parameters = new HashMap<String, String>();
@@ -224,6 +225,41 @@ public class MaxquantParser {
         //todo update modifications
         //todo get msms IDs - if multiple IDs, clone peptides
 
+    }
+
+    // MSMS SECTION
+    private void parseMsMsFile() {
+        File msmsFile = new File(new File(maxquantFilePath), "msms.txt");
+        if (!msmsFile.exists()) {
+            throw new ConverterException("Maxquant parameters.txt file not found in directory: " + maxquantFilePath);
+        }
+
+        try {
+            BufferedReader in = new BufferedReader(new FileReader(msmsFile));
+            String[] headers = in.readLine().split(COLUMN_DELIM);
+            int colIndexRowId = columnIndex(headers, new String[]{"id"});
+            int colIndexScanNo = columnIndex(headers, new String[]{"Scan number"});
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                String[] rowSections = line.split(COLUMN_DELIM);
+                String rowId = rowSections[colIndexRowId];
+                int scanNo = Integer.parseInt(rowSections[colIndexScanNo]);
+                msIdtoScanNumber.put(rowId, scanNo);
+            }
+        } catch (Exception e) {
+            throw new ConverterException("Error parsing parameters.txt file");
+        }
+    }
+
+    private int columnIndex(String[] headers, String[] columnSearchNames) {
+        for (int i = 0; i < headers.length; i++) {
+            for (String name : columnSearchNames) {
+                if (name.equalsIgnoreCase(headers[i]))
+                    return i;
+            }
+        }
+        return -1;
     }
 
     public Param getProcessingMethod() {
