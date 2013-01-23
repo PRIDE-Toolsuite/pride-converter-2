@@ -146,23 +146,30 @@ public class MaxquantParser {
             BufferedReader in = new BufferedReader(new FileReader(proteinGroupFile));
             //skip header row
             String oneLine = in.readLine();
+            ProteinGroupFieldMapper mapper = new ProteinGroupFieldMapper(oneLine);
             while ((oneLine = in.readLine()) != null) {
-                processProteinGroupLine(oneLine);
+                processProteinGroupLine(oneLine, mapper);
             }
         } catch (Exception e) {
             throw new ConverterException("Error parsing parameters.txt file");
         }
     }
 
-    private void processProteinGroupLine(String line) {
+    private void processProteinGroupLine(String line, ProteinGroupFieldMapper mapper) {
 
-        Identification identification = new Identification();
-        identification.setUniqueIdentifier();
-        identification.setAccession();
-        identification.setDatabase(getSearchDatabaseName());
-        identification.setScore();
-        identification.setSequenceCoverage();
-        identification.setDatabaseVersion(getSearchDatabaseVersion());
+        try {
+            String[] tokens = line.split("\\t");
+            Identification identification = new Identification();
+            identification.setUniqueIdentifier(tokens[mapper.getProteinIdColumn()]);
+            identification.setAccession(tokens[mapper.getUniprotColumn()]);
+            identification.setDatabase(getSearchDatabaseName());
+            identification.setScore(Double.valueOf(tokens[mapper.getPepScoreColumn()]));
+            identification.setSequenceCoverage(Double.valueOf(mapper.getSequenceCoverageColumn()));
+            identification.setDatabaseVersion(getSearchDatabaseVersion());
+            identifications.put(identification.getUniqueIdentifier(), identification);
+        } catch (Exception e) {
+            throw new ConverterException("Improperly formatted proteinGroup line: " + line);
+        }
 
     }
 
@@ -212,6 +219,79 @@ public class MaxquantParser {
 
     public Iterator<Identification> getIdentificationIterator(boolean prescanMode) {
         return identifications.values().iterator();
+    }
+
+    private static class ProteinGroupFieldMapper {
+
+//        * ['Protein IDs'],
+//        * ['Sequence Coverage [%]'],
+//        * ['Uniprot'],
+//        * ['Protein Descriptions','Fasta headers'],
+//        * ['Contaminant'],
+//        * ['PEP'],
+//        * ['Reverse']
+
+        private String headerLine;
+        private int proteinIdColumn = -1;
+        private int sequenceCoverageColumn = -1;
+        private int uniprotColumn = -1;
+        private int proteinDescriptionColumn = -1;
+        private int contaminantColumn = -1;
+        private int pepScoreColumn = -1;
+        private int reverseColumn = -1;
+
+
+        private ProteinGroupFieldMapper(String headerLine) {
+            this.headerLine = headerLine;
+            String[] headers = headerLine.split("\\t");
+            for (int i = 0; i < headers.length; i++) {
+                if ("Protein IDs".equals(headers[i])) {
+                    proteinIdColumn = i;
+                } else if ("Sequence Coverage [%]".equals(headers[i])) {
+                    sequenceCoverageColumn = i;
+                } else if ("Protein Descriptions".equals(headers[i])) {
+                    proteinDescriptionColumn = i;
+                } else if ("Fasta headers".equals(headers[i])) {
+                    proteinDescriptionColumn = i;
+                } else if ("Uniprot".equals(headers[i])) {
+                    uniprotColumn = i;
+                } else if ("Contaminant".equals(headers[i])) {
+                    contaminantColumn = i;
+                } else if ("PEP".equals(headers[i])) {
+                    pepScoreColumn = i;
+                } else if ("Reverse".equals(headers[i])) {
+                    reverseColumn = i;
+                }
+            }
+        }
+
+        public int getProteinIdColumn() {
+            return proteinIdColumn;
+        }
+
+        public int getSequenceCoverageColumn() {
+            return sequenceCoverageColumn;
+        }
+
+        public int getUniprotColumn() {
+            return uniprotColumn;
+        }
+
+        public int getProteinDescriptionColumn() {
+            return proteinDescriptionColumn;
+        }
+
+        public int getContaminantColumn() {
+            return contaminantColumn;
+        }
+
+        public int getPepScoreColumn() {
+            return pepScoreColumn;
+        }
+
+        public int getReverseColumn() {
+            return reverseColumn;
+        }
     }
 
 }
