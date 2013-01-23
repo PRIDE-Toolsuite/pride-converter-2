@@ -30,7 +30,6 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
     public static final String SPECTRA_FILE_FORMAT_PROPERTY = "spectra.file.format";
     public static final String ENDPOINT_METHOD = "/experiment_metadata";
     private static final String searchEngineString = "MaxQuant";
-    private static final String searchEngineVersion = "0.1";
 
     //configuration and properties
     private static Collection<DAOProperty> supportedProperties = new ArrayList<DAOProperty>();
@@ -208,7 +207,7 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
     public Software getSoftware() throws InvalidFormatException {
         Software software = new Software();
         software.setName(searchEngineString);
-        software.setVersion(searchEngineVersion);
+        software.setVersion(maxquantParser.getVersion());
         return software;
     }
 
