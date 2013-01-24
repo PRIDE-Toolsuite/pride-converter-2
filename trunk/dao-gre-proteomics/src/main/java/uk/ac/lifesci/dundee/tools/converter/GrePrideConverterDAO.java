@@ -313,7 +313,8 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
         GrePrideConverterDAO dao = new GrePrideConverterDAO(new File("c:\\Users\\rcote\\Desktop\\coilin_test_dataset\\16AILL3Nuc05.mzXML"));
         Properties props = new Properties();
         props.put(CONFIGURATION_FILE_PROP, "C:/Users/rcote/IdeaProjects/pride-converter-2/pride-converter/target/pride-converter-2.0.13-bin/test.properties");
-        props.put(MAXQUANT_FILES_PROP, "c:\\Users\\rcote\\Desktop\\coilin_test_dataset");
+        props.put(MAXQUANT_FILES_PROP, "c:\\Users\\rcote\\Desktop\\maxquant-ds");
+//        props.put(MAXQUANT_FILES_PROP, "c:\\Users\\rcote\\Desktop\\coilin_test_dataset");
         dao.setConfiguration(props);
 
     }
