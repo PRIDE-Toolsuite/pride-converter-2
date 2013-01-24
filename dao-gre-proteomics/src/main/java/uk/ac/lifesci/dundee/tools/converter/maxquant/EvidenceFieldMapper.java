@@ -8,22 +8,70 @@ package uk.ac.lifesci.dundee.tools.converter.maxquant;
  */
 public class EvidenceFieldMapper {
 
-//    * ['Gel Slice', 'Fraction'],
-//    * ['Type'],
-//    * ['Charge'],
-//    * ['Uncalibrated - Calibrated m/z [ppm]'],
-//    * ['Uncalibrated Mass Error [ppm]'],
-//    * ['MS/MS Scan Number'],
-//    * ['Mod. Peptide ID'],
-//    * ['Contaminant'],
-//    * ['PEP'],
-//    * ['Reverse']
-
     private String headerLine;
+    private int peptideIdColumn = -1;
+    private int msIDColumn = -1;
+    private int proteinGroupIdColumn = -1;
+    private int modificationsColumn = -1;
+    private int modifiedSequenceColumn = -1;
+    private int contaminantColumn = -1;
+    private int pepScoreColumn = -1;
+    private int reverseColumn = -1;
 
     public EvidenceFieldMapper(String headerLine) {
         this.headerLine = headerLine;
+        String[] headers = headerLine.split("\\t");
+        for (int i = 0; i < headers.length; i++) {
+            if ("Peptide ID".equals(headers[i])) {
+                peptideIdColumn = i;
+            } else if ("MS/MS IDs".equals(headers[i])) {
+                msIDColumn = i;
+            } else if ("Protein Group IDs".equals(headers[i])) {
+                proteinGroupIdColumn = i;
+            } else if ("Modifications".equals(headers[i])) {
+                modificationsColumn = i;
+            } else if ("Modified Sequence".equals(headers[i])) {
+                modifiedSequenceColumn = i;
+            } else if ("Contaminant".equals(headers[i])) {
+                contaminantColumn = i;
+            } else if ("PEP".equals(headers[i])) {
+                pepScoreColumn = i;
+            } else if ("Reverse".equals(headers[i])) {
+                reverseColumn = i;
+            }
+        }
+
     }
 
-    //todo
+    public int getPeptideIdColumn() {
+        return peptideIdColumn;
+    }
+
+    public int getMsIDColumn() {
+        return msIDColumn;
+    }
+
+    public int getProteinGroupIdColumn() {
+        return proteinGroupIdColumn;
+    }
+
+    public int getModificationsColumn() {
+        return modificationsColumn;
+    }
+
+    public int getModifiedSequenceColumn() {
+        return modifiedSequenceColumn;
+    }
+
+    public int getContaminantColumn() {
+        return contaminantColumn;
+    }
+
+    public int getPepScoreColumn() {
+        return pepScoreColumn;
+    }
+
+    public int getReverseColumn() {
+        return reverseColumn;
+    }
 }
