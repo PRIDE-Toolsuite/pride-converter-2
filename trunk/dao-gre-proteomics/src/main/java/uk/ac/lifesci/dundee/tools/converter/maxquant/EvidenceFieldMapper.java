@@ -17,6 +17,9 @@ public class EvidenceFieldMapper {
     private int contaminantColumn = -1;
     private int pepScoreColumn = -1;
     private int reverseColumn = -1;
+    private int sequenceColumn = -1;
+    private int proteinDescriptionColumn = -1;
+    private int uniprotColumn = -1;
 
     public EvidenceFieldMapper(String headerLine) {
         this.headerLine = headerLine;
@@ -32,12 +35,20 @@ public class EvidenceFieldMapper {
                 modificationsColumn = i;
             } else if ("Modified Sequence".equals(headers[i])) {
                 modifiedSequenceColumn = i;
+            } else if ("Sequence".equals(headers[i])) {
+                sequenceColumn = i;
             } else if ("Contaminant".equals(headers[i])) {
                 contaminantColumn = i;
             } else if ("PEP".equals(headers[i])) {
                 pepScoreColumn = i;
             } else if ("Reverse".equals(headers[i])) {
                 reverseColumn = i;
+            } else if ("Protein Descriptions".equals(headers[i])) {
+                proteinDescriptionColumn = i;
+            } else if ("Fasta headers".equals(headers[i])) {
+                proteinDescriptionColumn = i;
+            } else if ("Uniprot".equals(headers[i])) {
+                uniprotColumn = i;
             }
         }
 
@@ -73,5 +84,17 @@ public class EvidenceFieldMapper {
 
     public int getReverseColumn() {
         return reverseColumn;
+    }
+
+    public int getSequenceColumn() {
+        return sequenceColumn;
+    }
+
+    public int getProteinDescriptionColumn() {
+        return proteinDescriptionColumn;
+    }
+
+    public int getUniprotColumn() {
+        return uniprotColumn;
     }
 }

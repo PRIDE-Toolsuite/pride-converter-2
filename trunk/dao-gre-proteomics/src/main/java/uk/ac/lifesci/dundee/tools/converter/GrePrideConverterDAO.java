@@ -1,6 +1,7 @@
 package uk.ac.lifesci.dundee.tools.converter;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
@@ -20,6 +21,7 @@ import java.util.*;
 
 public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
+    private static final Logger logger = Logger.getLogger(GrePrideConverterDAO.class);
     //constants
     public static final String CONFIGURATION_FILE_PROP = "configurationfile";
     public static final String MAXQUANT_FILES_PROP = "maxquantfiles";
@@ -123,6 +125,7 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
         String password = peptrackerProps.getProperty(PASSWORD_PROPERTY);
         String spectraFormat = peptrackerProps.getProperty(SPECTRA_FILE_FORMAT_PROPERTY);
 
+        logger.debug("Connecting to Peptracker");
         URL url = null;
         try {
             //build url
@@ -146,6 +149,7 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
             //build report object
             metadataReport = new MetadataExtractor(sb.toString()).getMetadataReport();
+            logger.warn("Metadata retrieved");
 
             //select proper spectra dao
             if ("mzml".equalsIgnoreCase(spectraFormat)) {
@@ -306,9 +310,10 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
     public static void main(String[] args) {
 
-        GrePrideConverterDAO dao = new GrePrideConverterDAO(new File(""));
+        GrePrideConverterDAO dao = new GrePrideConverterDAO(new File("c:\\Users\\rcote\\Desktop\\coilin_test_dataset\\16AILL3Nuc05.mzXML"));
         Properties props = new Properties();
         props.put(CONFIGURATION_FILE_PROP, "C:/Users/rcote/IdeaProjects/pride-converter-2/pride-converter/target/pride-converter-2.0.13-bin/test.properties");
+        props.put(MAXQUANT_FILES_PROP, "c:\\Users\\rcote\\Desktop\\coilin_test_dataset");
         dao.setConfiguration(props);
 
     }

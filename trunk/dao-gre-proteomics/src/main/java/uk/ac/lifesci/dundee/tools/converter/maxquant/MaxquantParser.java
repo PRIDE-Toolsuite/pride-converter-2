@@ -51,6 +51,14 @@ public class MaxquantParser {
     //the key will be the MS Id and the value will be the scan number
     private LinkedHashMap<String, Integer> msIdtoScanNumber = new LinkedHashMap<String, Integer>();
 
+    //keep track of peptideID uniqueness
+    private LinkedHashMap<String, String> peptideUniqueness = new LinkedHashMap<String, String>();
+
+    //keep track of proteinGroup sequence coverage
+    private LinkedHashMap<String, String> proteinGroupSequenceCoverage = new LinkedHashMap<String, String>();
+
+    //keep track of proteinGroup PEP score
+    private LinkedHashMap<String, String> proteinGroupPEPScore = new LinkedHashMap<String, String>();
 
     private String maxquantFilePath;
 
@@ -75,6 +83,7 @@ public class MaxquantParser {
             throw new ConverterException("Maxquant parameters.txt file not found in directory: " + maxquantFilePath);
         }
 
+        int lineCount = 1;
         try {
             //read all params
             BufferedReader in = new BufferedReader(new FileReader(paramFile));
@@ -82,9 +91,10 @@ public class MaxquantParser {
             String oneLine = in.readLine();
             while ((oneLine = in.readLine()) != null) {
                 processParameterLine(oneLine);
+                lineCount++;
             }
         } catch (Exception e) {
-            throw new ConverterException("Error parsing parameters.txt file");
+            throw new ConverterException("Error parsing parameters.txt file at line " + lineCount, e);
         }
 
     }
@@ -110,6 +120,7 @@ public class MaxquantParser {
             throw new ConverterException("Maxquant proteinGroups.txt file not found in directory: " + maxquantFilePath);
         }
 
+        int lineCount = 1;
         try {
             //read all params
             BufferedReader in = new BufferedReader(new FileReader(proteinGroupFile));
@@ -118,9 +129,10 @@ public class MaxquantParser {
             ProteinGroupFieldMapper mapper = new ProteinGroupFieldMapper(oneLine);
             while ((oneLine = in.readLine()) != null) {
                 processProteinGroupLine(oneLine, mapper);
+                lineCount++;
             }
         } catch (Exception e) {
-            throw new ConverterException("Error parsing parameters.txt file");
+            throw new ConverterException("Error parsing proteinGroups.txt file at line " + lineCount, e);
         }
     }
 
@@ -128,26 +140,16 @@ public class MaxquantParser {
     private void processProteinGroupLine(String line, ProteinGroupFieldMapper mapper) {
 
         try {
+
             String[] tokens = line.split(COLUMN_DELIM);
-            Identification identification = new Identification();
-            identification.setUniqueIdentifier(tokens[mapper.getProteinIdColumn()]);
-            identification.setAccession(tokens[mapper.getUniprotColumn()]);
-            //check to see if there are more than 1 uniprot accesions
-            int ndx = identification.getAccession().indexOf(";");
-            if (ndx > 0) {
-                String uniprotAc = identification.getAccession();
-                identification.setCuratedAccession(uniprotAc.substring(0, ndx));
-            }
-            identification.setDatabase(getSearchDatabaseName());
-            identification.setScore(Double.valueOf(tokens[mapper.getPepScoreColumn()]));
-            identification.setSequenceCoverage(Double.valueOf(mapper.getSequenceCoverageColumn()));
-            identification.setDatabaseVersion(getSearchDatabaseVersion());
-            Param param = new Param();
-            param.getCvParam().add(new CvParam("PRIDE", "PRIDE:0000063", "Protein description line", tokens[mapper.getProteinDescriptionColumn()]));
-            identification.setAdditional(param);
-            identifications.put(identification.getUniqueIdentifier(), identification);
+            String peptideGroupId = tokens[mapper.getProteinIdColumn()];
+            String pepScore = tokens[mapper.getPepScoreColumn()];
+            String coverage = tokens[mapper.getSequenceCoverageColumn()];
+            proteinGroupPEPScore.put(peptideGroupId, pepScore);
+            proteinGroupSequenceCoverage.put(peptideGroupId, coverage);
+
         } catch (Exception e) {
-            throw new ConverterException("Improperly formatted proteinGroup line: " + line);
+            throw new ConverterException("Improperly formatted proteinGroup line: " + line, e);
         }
 
     }
@@ -158,6 +160,7 @@ public class MaxquantParser {
             throw new ConverterException("Maxquant peptides.txt file not found in directory: " + maxquantFilePath);
         }
 
+        int lineCount = 1;
         try {
             //read all params
             BufferedReader in = new BufferedReader(new FileReader(peptideFile));
@@ -166,9 +169,10 @@ public class MaxquantParser {
             PeptideFieldMapper mapper = new PeptideFieldMapper(oneLine);
             while ((oneLine = in.readLine()) != null) {
                 processPeptideLine(oneLine, mapper);
+                lineCount++;
             }
         } catch (Exception e) {
-            throw new ConverterException("Error parsing parameters.txt file");
+            throw new ConverterException("Error parsing peptide.txt file at line " + lineCount, e);
         }
 
     }
@@ -178,34 +182,9 @@ public class MaxquantParser {
 
         String[] tokens = line.split(COLUMN_DELIM);
 
-        String proteinGroupIds = tokens[mapper.getProteinGroupsColumn()];
-        String[] proteinGroups = proteinGroupIds.split(";");
-        for (String proteinGroup : proteinGroups) {
-
-            Peptide peptide = new Peptide();
-            peptide.setUniqueIdentifier(makePeptideUID(proteinGroup, tokens[mapper.getPeptideIdColumn()]));
-            //will be done later
-            //peptide.setSpectrumReference();
-            //todo
-            peptide.setStart(-1);
-            //todo
-            peptide.setEnd(-1);
-            peptide.setIsSpecific("yes".equals(tokens[mapper.getUniqueColumn()]));
-            peptide.setSequence(tokens[mapper.getSequenceColumn()]);
-            peptide.setCuratedSequence(tokens[mapper.getSequenceColumn()]);
-            Param param = new Param();
-            param.getCvParam().add(new CvParam("MS", "MS:1001901", "MaxQuant:PEP", tokens[mapper.getPepScoreColumn()]));
-            peptide.setAdditional(param);
-
-            //store peptide
-            Identification identification = identifications.get(proteinGroup);
-            if (identification != null) {
-                identification.getPeptide().add(peptide);
-            } else {
-                throw new ConverterException("Peptide assigned to unknown protein group. Peptide ID is: " + peptide.getUniqueIdentifier());
-            }
-
-        }
+        String peptideId = tokens[mapper.getPeptideIdColumn()];
+        String unique = tokens[mapper.getUniqueColumn()];
+        peptideUniqueness.put(peptideId, unique);
 
     }
 
@@ -216,6 +195,7 @@ public class MaxquantParser {
             throw new ConverterException("Maxquant evidence.txt file not found in directory: " + maxquantFilePath);
         }
 
+        int lineCount = 1;
         try {
             //read all params
             BufferedReader in = new BufferedReader(new FileReader(evidence));
@@ -224,9 +204,10 @@ public class MaxquantParser {
             EvidenceFieldMapper mapper = new EvidenceFieldMapper(oneLine);
             while ((oneLine = in.readLine()) != null) {
                 processEvidenceLine(oneLine, mapper);
+                lineCount++;
             }
         } catch (Exception e) {
-            throw new ConverterException("Error parsing parameters.txt file");
+            throw new ConverterException("Error parsing evidence.txt file at line " + lineCount, e);
         }
     }
 
@@ -235,105 +216,81 @@ public class MaxquantParser {
 
         String[] tokens = line.split(COLUMN_DELIM);
 
-        String proteinGroupId = tokens[mapper.getProteinGroupIdColumn()];
+        String proteinGroupIds = tokens[mapper.getProteinGroupIdColumn()];
         String peptideId = tokens[mapper.getPeptideIdColumn()];
         String msmsIds = tokens[mapper.getMsIDColumn()];
         String modifications = tokens[mapper.getModificationsColumn()];
         String modifiedSequence = tokens[mapper.getModifiedSequenceColumn()];
+        String sequence = tokens[mapper.getSequenceColumn()];
 
-        //find right identification
-        Identification identification = identifications.get(proteinGroupId);
-        if (identification != null) {
+        //check sample raw file
+        boolean ok = true;
+        //todo logic goes here
+        if (!ok) {
+            return;
+        }
 
-            //find right peptide
-            Peptide peptide = null;
-            for (Peptide pep : identification.getPeptide()) {
-                if (pep.getUniqueIdentifier().equals(makePeptideUID(proteinGroupId, peptideId))) {
-                    peptide = pep;
-                    break;
+
+        String[] proteinGroups = proteinGroupIds.split(";");
+        for (String proteinGroupId : proteinGroups) {
+
+            //find or create protein group
+            Identification identification = identifications.get(proteinGroupId);
+            if (identification == null) {
+
+                //create identification
+                identification = new Identification();
+                identification.setUniqueIdentifier(proteinGroupId);
+                identification.setAccession(tokens[mapper.getUniprotColumn()]);
+                //check to see if there are more than 1 uniprot accesions
+                int ndx = identification.getAccession().indexOf(";");
+                if (ndx > 0) {
+                    String uniprotAc = identification.getAccession();
+                    identification.setCuratedAccession(uniprotAc.substring(0, ndx));
                 }
-            }
-            if (peptide == null) {
-                throw new ConverterException("Evidence assigned to unknown peptide. Peptide ID is: " + makePeptideUID(proteinGroupId, peptideId));
+                identification.setDatabase(getSearchDatabaseName());
+                identification.setScore(Double.valueOf(proteinGroupPEPScore.get(proteinGroupId)));
+                identification.setSequenceCoverage(Double.valueOf(proteinGroupSequenceCoverage.get(proteinGroupId)));
+                identification.setDatabaseVersion(getSearchDatabaseVersion());
+                Param param = new Param();
+                param.getCvParam().add(new CvParam("PRIDE", "PRIDE:0000063", "Protein description line", tokens[mapper.getProteinDescriptionColumn()]));
+                identification.setAdditional(param);
+                identifications.put(identification.getUniqueIdentifier(), identification);
+
             }
 
-            //now we need t update the peptide with the msms scan ID
-            //as well as any modifications
-            if (!UNMODIFIED_PEPTIDE.equals(modifications)) {
-                //there are modifications
-                peptide.getPTM().addAll(createModifications(modifications, modifiedSequence));
-                //set modified sequence, remove __ characters at either end
-                peptide.setSequence(modifiedSequence.replace('_', ' ').trim());
-            }
-            //check scan ID
             String[] msIDs = msmsIds.split(";");
-            if (msIDs.length > 1) {
-                //we have more than 1 scan for this peptide, we need to duplicate
-                //end peptide and set the right peptideUID
-                peptide.setUniqueIdentifier(makePeptideUID(proteinGroupId, peptideId, msIDs[0]));
-                for (int i = 1; i < msIDs.length; i++) {
-                    identification.getPeptide().add(copyPeptide(peptide, makePeptideUID(proteinGroupId, peptideId, msIDs[0])));
+            for (String msId : msIDs) {
+
+                Peptide peptide = new Peptide();
+                peptide.setUniqueIdentifier(makePeptideUID(proteinGroupId, peptideId, msId));
+                //will be done later
+                //peptide.setSpectrumReference();
+                //todo
+                peptide.setStart(-1);
+                //todo
+                peptide.setEnd(-1);
+                peptide.setIsSpecific("yes".equals(peptideUniqueness.get(peptideId)));
+                peptide.setSequence(sequence);
+                peptide.setCuratedSequence(modifiedSequence);
+                Param param = new Param();
+                param.getCvParam().add(new CvParam("MS", "MS:1001901", "MaxQuant:PEP", tokens[mapper.getPepScoreColumn()]));
+                peptide.setAdditional(param);
+
+                //now we need to update the peptide with the msms scan ID
+                //as well as any modifications
+                if (!UNMODIFIED_PEPTIDE.equals(modifications)) {
+                    //there are modifications
+                    peptide.getPTM().addAll(createModifications(modifications, modifiedSequence));
+                    //set modified sequence, remove __ characters at either end
+                    peptide.setSequence(modifiedSequence.replace('_', ' ').trim());
                 }
-            } else {
-                peptide.setUniqueIdentifier(makePeptideUID(proteinGroupId, peptideId, msIDs[0]));
+
+                identification.getPeptide().add(peptide);
             }
 
-        } else {
-            throw new ConverterException("Evidence assigned to unknown protein group. ProteinGroup ID is: " + proteinGroupId);
         }
 
-    }
-
-    //helper method to deep copy all of the content of a Peptide - this is required
-    //to prevent unexpected behaviour if updating params/ptms for a specific peptide
-    private Peptide copyPeptide(Peptide peptide, String newPeptideId) {
-
-        Peptide newPeptide = new Peptide();
-        newPeptide.setUniqueIdentifier(newPeptideId);
-        newPeptide.setSequence(peptide.getSequence());
-        newPeptide.setCuratedSequence(peptide.getCuratedSequence());
-        newPeptide.setStart(peptide.getStart());
-        newPeptide.setEnd(peptide.getEnd());
-        newPeptide.setAdditional(copyParam(peptide.getAdditional()));
-        newPeptide.getPTM().addAll(copyPTMs(peptide.getPTM()));
-        newPeptide.setIsSpecific(peptide.isIsSpecific());
-        return newPeptide;
-
-    }
-
-    //helper method to deep copy PTM
-    private Collection<PeptidePTM> copyPTMs(List<PeptidePTM> ptmList) {
-        ArrayList<PeptidePTM> ptms = new ArrayList<PeptidePTM>();
-        for (PeptidePTM ptm : ptmList) {
-            PeptidePTM newPtm = new PeptidePTM();
-            newPtm.setModLocation(ptm.getModLocation());
-            newPtm.setFixedModification(ptm.isFixedModification());
-            newPtm.setAdditional(copyParam(ptm.getAdditional()));
-            newPtm.setModAccession(ptm.getModAccession());
-            newPtm.setModDatabase(ptm.getModDatabase());
-            newPtm.setModDatabaseVersion(ptm.getModDatabaseVersion());
-            newPtm.setModName(ptm.getModName());
-            newPtm.setResidues(ptm.getResidues());
-            newPtm.setSearchEnginePTMLabel(ptm.getSearchEnginePTMLabel());
-            newPtm.getModAvgDelta().addAll(newPtm.getModAvgDelta());
-            newPtm.getModMonoDelta().addAll(newPtm.getModMonoDelta());
-            ptms.add(newPtm);
-        }
-        return ptms;
-
-    }
-
-    //helper method to deep copy params
-    private Param copyParam(Param param) {
-
-        Param newParam = new Param();
-        for (CvParam cv : param.getCvParam()) {
-            newParam.getCvParam().add(new CvParam(cv.getCvLabel(), cv.getAccession(), cv.getName(), cv.getValue()));
-        }
-        for (UserParam up : param.getUserParam()) {
-            newParam.getUserParam().add(new UserParam(up.getName(), up.getValue()));
-        }
-        return newParam;
     }
 
     private Collection<? extends PeptidePTM> createModifications(String modifications, String modifiedSequence) {
@@ -350,7 +307,7 @@ public class MaxquantParser {
     private void parseMsMsFile() {
         File msmsFile = new File(new File(maxquantFilePath), "msms.txt");
         if (!msmsFile.exists()) {
-            throw new ConverterException("Maxquant parameters.txt file not found in directory: " + maxquantFilePath);
+            throw new ConverterException("Maxquant msms.txt file not found in directory: " + maxquantFilePath);
         }
 
         try {
@@ -367,7 +324,7 @@ public class MaxquantParser {
                 msIdtoScanNumber.put(rowId, scanNo);
             }
         } catch (Exception e) {
-            throw new ConverterException("Error parsing parameters.txt file");
+            throw new ConverterException("Error parsing msms.txt file", e);
         }
     }
 
