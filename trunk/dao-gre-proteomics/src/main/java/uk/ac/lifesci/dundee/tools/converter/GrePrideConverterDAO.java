@@ -90,6 +90,12 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
         spectraDAO.setConfiguration(props);
         //keep track of properties
         configProperties = props;
+
+        String maxquantPath = props.getProperty(MAXQUANT_FILES_PROP);
+        if (maxquantPath == null) {
+            throw new ConverterException("Please specify a path for the maxquant files");
+        }
+        maxquantParser = new MaxquantParser(maxquantPath);
     }
 
     private void initMetadata(Properties props) {

@@ -26,6 +26,7 @@ public class MaxquantParser {
     public static final String FIXED_MOD_PARAM = "Fixed modifications";
     public static final String SEPARATOR = "/";
     public static final String COLUMN_DELIM = "\\t";
+    public static final String UNMODIFIED_PEPTIDE = "Unmodified";
 
     //parameters parsed from file
     private Map<String, String> parameters = new HashMap<String, String>();
@@ -55,10 +56,15 @@ public class MaxquantParser {
 
     public MaxquantParser(String maxquantFilePath) {
         this.maxquantFilePath = maxquantFilePath;
+        logger.warn("Parsing parameter file");
         parseParameterFile();
+        logger.warn("Parsing proteingroup file");
         parseProteinGroupFile();
+        logger.warn("Parsing peptide file");
         parsePeptideFile();
+        logger.warn("Parsing evidence file");
         parseEvidenceFile();
+        logger.warn("Parsing ms/ms file");
         parseMsMsFile();
     }
 
@@ -83,10 +89,11 @@ public class MaxquantParser {
 
     }
 
+    //store key/values for the parameters
     private void processParameterLine(String line) {
 
         if (line != null && line.trim().length() > 0) {
-            String[] tokens = line.split("\\t");
+            String[] tokens = line.split(COLUMN_DELIM);
             if (tokens.length != 2) {
                 logger.warn("Ignoring invalid parameter line: " + line);
             }
@@ -117,10 +124,11 @@ public class MaxquantParser {
         }
     }
 
+    //create identifications
     private void processProteinGroupLine(String line, ProteinGroupFieldMapper mapper) {
 
         try {
-            String[] tokens = line.split("\\t");
+            String[] tokens = line.split(COLUMN_DELIM);
             Identification identification = new Identification();
             identification.setUniqueIdentifier(tokens[mapper.getProteinIdColumn()]);
             identification.setAccession(tokens[mapper.getUniprotColumn()]);
@@ -165,16 +173,17 @@ public class MaxquantParser {
 
     }
 
+    //update exisiting identifications and create peptides for them
     private void processPeptideLine(String line, PeptideFieldMapper mapper) {
 
-        String[] tokens = line.split("\\t");
+        String[] tokens = line.split(COLUMN_DELIM);
 
         String proteinGroupIds = tokens[mapper.getProteinGroupsColumn()];
         String[] proteinGroups = proteinGroupIds.split(";");
         for (String proteinGroup : proteinGroups) {
 
             Peptide peptide = new Peptide();
-            peptide.setUniqueIdentifier(proteinGroup + SEPARATOR + tokens[mapper.getPeptideIdColumn()]);
+            peptide.setUniqueIdentifier(makePeptideUID(proteinGroup, tokens[mapper.getPeptideIdColumn()]));
             //will be done later
             //peptide.setSpectrumReference();
             //todo
@@ -200,6 +209,7 @@ public class MaxquantParser {
 
     }
 
+
     private void parseEvidenceFile() {
         File evidence = new File(new File(maxquantFilePath), "evidence.txt");
         if (!evidence.exists()) {
@@ -220,11 +230,120 @@ public class MaxquantParser {
         }
     }
 
+    //the evidence file will provide the msmsID as well as all of the PTM information
     private void processEvidenceLine(String line, EvidenceFieldMapper mapper) {
 
-        //todo update modifications
-        //todo get msms IDs - if multiple IDs, clone peptides
+        String[] tokens = line.split(COLUMN_DELIM);
 
+        String proteinGroupId = tokens[mapper.getProteinGroupIdColumn()];
+        String peptideId = tokens[mapper.getPeptideIdColumn()];
+        String msmsIds = tokens[mapper.getMsIDColumn()];
+        String modifications = tokens[mapper.getModificationsColumn()];
+        String modifiedSequence = tokens[mapper.getModifiedSequenceColumn()];
+
+        //find right identification
+        Identification identification = identifications.get(proteinGroupId);
+        if (identification != null) {
+
+            //find right peptide
+            Peptide peptide = null;
+            for (Peptide pep : identification.getPeptide()) {
+                if (pep.getUniqueIdentifier().equals(makePeptideUID(proteinGroupId, peptideId))) {
+                    peptide = pep;
+                    break;
+                }
+            }
+            if (peptide == null) {
+                throw new ConverterException("Evidence assigned to unknown peptide. Peptide ID is: " + makePeptideUID(proteinGroupId, peptideId));
+            }
+
+            //now we need t update the peptide with the msms scan ID
+            //as well as any modifications
+            if (!UNMODIFIED_PEPTIDE.equals(modifications)) {
+                //there are modifications
+                peptide.getPTM().addAll(createModifications(modifications, modifiedSequence));
+                //set modified sequence, remove __ characters at either end
+                peptide.setSequence(modifiedSequence.replace('_', ' ').trim());
+            }
+            //check scan ID
+            String[] msIDs = msmsIds.split(";");
+            if (msIDs.length > 1) {
+                //we have more than 1 scan for this peptide, we need to duplicate
+                //end peptide and set the right peptideUID
+                peptide.setUniqueIdentifier(makePeptideUID(proteinGroupId, peptideId, msIDs[0]));
+                for (int i = 1; i < msIDs.length; i++) {
+                    identification.getPeptide().add(copyPeptide(peptide, makePeptideUID(proteinGroupId, peptideId, msIDs[0])));
+                }
+            } else {
+                peptide.setUniqueIdentifier(makePeptideUID(proteinGroupId, peptideId, msIDs[0]));
+            }
+
+        } else {
+            throw new ConverterException("Evidence assigned to unknown protein group. ProteinGroup ID is: " + proteinGroupId);
+        }
+
+    }
+
+    //helper method to deep copy all of the content of a Peptide - this is required
+    //to prevent unexpected behaviour if updating params/ptms for a specific peptide
+    private Peptide copyPeptide(Peptide peptide, String newPeptideId) {
+
+        Peptide newPeptide = new Peptide();
+        newPeptide.setUniqueIdentifier(newPeptideId);
+        newPeptide.setSequence(peptide.getSequence());
+        newPeptide.setCuratedSequence(peptide.getCuratedSequence());
+        newPeptide.setStart(peptide.getStart());
+        newPeptide.setEnd(peptide.getEnd());
+        newPeptide.setAdditional(copyParam(peptide.getAdditional()));
+        newPeptide.getPTM().addAll(copyPTMs(peptide.getPTM()));
+        newPeptide.setIsSpecific(peptide.isIsSpecific());
+        return newPeptide;
+
+    }
+
+    //helper method to deep copy PTM
+    private Collection<PeptidePTM> copyPTMs(List<PeptidePTM> ptmList) {
+        ArrayList<PeptidePTM> ptms = new ArrayList<PeptidePTM>();
+        for (PeptidePTM ptm : ptmList) {
+            PeptidePTM newPtm = new PeptidePTM();
+            newPtm.setModLocation(ptm.getModLocation());
+            newPtm.setFixedModification(ptm.isFixedModification());
+            newPtm.setAdditional(copyParam(ptm.getAdditional()));
+            newPtm.setModAccession(ptm.getModAccession());
+            newPtm.setModDatabase(ptm.getModDatabase());
+            newPtm.setModDatabaseVersion(ptm.getModDatabaseVersion());
+            newPtm.setModName(ptm.getModName());
+            newPtm.setResidues(ptm.getResidues());
+            newPtm.setSearchEnginePTMLabel(ptm.getSearchEnginePTMLabel());
+            newPtm.getModAvgDelta().addAll(newPtm.getModAvgDelta());
+            newPtm.getModMonoDelta().addAll(newPtm.getModMonoDelta());
+            ptms.add(newPtm);
+        }
+        return ptms;
+
+    }
+
+    //helper method to deep copy params
+    private Param copyParam(Param param) {
+
+        Param newParam = new Param();
+        for (CvParam cv : param.getCvParam()) {
+            newParam.getCvParam().add(new CvParam(cv.getCvLabel(), cv.getAccession(), cv.getName(), cv.getValue()));
+        }
+        for (UserParam up : param.getUserParam()) {
+            newParam.getUserParam().add(new UserParam(up.getName(), up.getValue()));
+        }
+        return newParam;
+    }
+
+    private Collection<? extends PeptidePTM> createModifications(String modifications, String modifiedSequence) {
+        //parse the modifications to create the PTMs
+        //parse the modified sequence to assign positions
+        //modifications are abbreviated with (XX), where XX is the lowercase first 2 letters of the modification name
+        //modificatino positions are 1-based from the N-terminus of the peptide. N-Term mods are 0. C-term mods are
+        //length+1;
+        //todo - THIS NEEDS TO BE DONE ONCE THE PTMs ARE PROPERLY PARSED FROM THE ANDROMEDA FILE
+        return Collections.emptyList();
     }
 
     // MSMS SECTION
@@ -308,6 +427,15 @@ public class MaxquantParser {
 
     public Iterator<Identification> getIdentificationIterator(boolean prescanMode) {
         return identifications.values().iterator();
+    }
+
+    //craete peptideUIDs based on what step of the parsing we're on
+    private String makePeptideUID(String proteinGroup, String peptideId) {
+        return new StringBuilder().append(proteinGroup).append(SEPARATOR).append(peptideId).toString();
+    }
+
+    private String makePeptideUID(String proteinGroupId, String peptideId, String msID) {
+        return new StringBuilder().append(proteinGroupId).append(SEPARATOR).append(peptideId).append(SEPARATOR).append(msID).toString();
     }
 
 }
