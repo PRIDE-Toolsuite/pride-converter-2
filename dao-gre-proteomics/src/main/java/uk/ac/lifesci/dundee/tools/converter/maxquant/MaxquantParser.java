@@ -61,9 +61,12 @@ public class MaxquantParser {
     private LinkedHashMap<String, String> proteinGroupPEPScore = new LinkedHashMap<String, String>();
 
     private String maxquantFilePath;
+    private String sampleId;
 
-    public MaxquantParser(String maxquantFilePath) {
+    public MaxquantParser(String maxquantFilePath, String sampleId) {
         this.maxquantFilePath = maxquantFilePath;
+        this.sampleId = sampleId;
+        
         logger.warn("Parsing parameter file");
         parseParameterFile();
         logger.warn("Parsing proteingroup file");
@@ -74,6 +77,7 @@ public class MaxquantParser {
         parseEvidenceFile();
         logger.warn("Parsing ms/ms file");
         parseMsMsFile();
+        logger.warn("Parsing complete");
     }
 
     private void parseParameterFile() {
@@ -222,12 +226,12 @@ public class MaxquantParser {
         String modifications = tokens[mapper.getModificationsColumn()];
         String modifiedSequence = tokens[mapper.getModifiedSequenceColumn()];
         String sequence = tokens[mapper.getSequenceColumn()];
+        String filename = tokens[mapper.getRawFileColumn()];
 
-        //check sample raw file
-        boolean ok = true;
-        //todo logic goes here
-        if (!ok) {
-            return;
+        //check this is for this sample
+        boolean ok =  (filename.equals(sampleId));
+        if (!ok){
+           return;
         }
 
 
