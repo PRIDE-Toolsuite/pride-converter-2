@@ -20,6 +20,7 @@ public class EvidenceFieldMapper {
     private int sequenceColumn = -1;
     private int proteinDescriptionColumn = -1;
     private int uniprotColumn = -1;
+    private int rawFileColumn = -1;
 
     public EvidenceFieldMapper(String headerLine) {
         this.headerLine = headerLine;
@@ -49,7 +50,10 @@ public class EvidenceFieldMapper {
                 proteinDescriptionColumn = i;
             } else if ("Uniprot".equals(headers[i])) {
                 uniprotColumn = i;
+            } else if ("Raw File".equals(headers[i])) {
+                rawFileColumn = i;
             }
+            
         }
 
     }
@@ -97,4 +101,10 @@ public class EvidenceFieldMapper {
     public int getUniprotColumn() {
         return uniprotColumn;
     }
+    
+    public int getRawFileColumn() {
+        return rawFileColumn;
+    }
+    
+    
 }
