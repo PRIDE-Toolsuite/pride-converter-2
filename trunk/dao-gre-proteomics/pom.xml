@@ -19,7 +19,7 @@
             </testResource>
         </testResources>
 
-        <resources>
+        <resources> 
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
