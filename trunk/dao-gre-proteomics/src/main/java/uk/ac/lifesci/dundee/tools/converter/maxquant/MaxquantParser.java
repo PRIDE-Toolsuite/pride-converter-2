@@ -25,7 +25,6 @@ public class MaxquantParser {
     public static final String VARIABLE_MOD_PARAM = "Variable modifications";
     public static final String FIXED_MOD_PARAM = "Fixed modifications";
     public static final String SEPARATOR = "/";
-    public static final String COLUMN_DELIM = "\\t";
     public static final String UNMODIFIED_PEPTIDE = "Unmodified";
 
     //parameters parsed from file
@@ -107,7 +106,7 @@ public class MaxquantParser {
     private void processParameterLine(String line) {
 
         if (line != null && line.trim().length() > 0) {
-            String[] tokens = line.split(COLUMN_DELIM);
+            String[] tokens = line.split(BaseFieldMapper.COLUMN_DELIM);
             if (tokens.length != 2) {
                 logger.warn("Ignoring invalid parameter line: " + line);
             }
@@ -145,7 +144,7 @@ public class MaxquantParser {
 
         try {
 
-            String[] tokens = line.split(COLUMN_DELIM);
+            String[] tokens = mapper.rowSections(line);
             String peptideGroupId = tokens[mapper.getProteinIdColumn()];
             String pepScore = tokens[mapper.getPepScoreColumn()];
             String coverage = tokens[mapper.getSequenceCoverageColumn()];
@@ -184,8 +183,7 @@ public class MaxquantParser {
     //update exisiting identifications and create peptides for them
     private void processPeptideLine(String line, PeptideFieldMapper mapper) {
 
-        String[] tokens = line.split(COLUMN_DELIM);
-
+        String[] tokens = mapper.rowSections(line);
         String peptideId = tokens[mapper.getPeptideIdColumn()];
         String unique = tokens[mapper.getUniqueColumn()];
         peptideUniqueness.put(peptideId, unique);
@@ -218,7 +216,7 @@ public class MaxquantParser {
     //the evidence file will provide the msmsID as well as all of the PTM information
     private void processEvidenceLine(String line, EvidenceFieldMapper mapper) {
 
-        String[] tokens = line.split(COLUMN_DELIM);
+        String[] tokens = mapper.rowSections(line);
 
         String proteinGroupIds = tokens[mapper.getProteinGroupIdColumn()];
         String peptideId = tokens[mapper.getPeptideIdColumn()];
@@ -316,30 +314,18 @@ public class MaxquantParser {
 
         try {
             BufferedReader in = new BufferedReader(new FileReader(msmsFile));
-            String[] headers = in.readLine().split(COLUMN_DELIM);
-            int colIndexRowId = columnIndex(headers, new String[]{"id"});
-            int colIndexScanNo = columnIndex(headers, new String[]{"Scan number"});
-
+            MSMSFieldMapper mapper = new MSMSFieldMapper(in.readLine()); 
+          
             String line;
             while ((line = in.readLine()) != null) {
-                String[] rowSections = line.split(COLUMN_DELIM);
-                String rowId = rowSections[colIndexRowId];
-                int scanNo = Integer.parseInt(rowSections[colIndexScanNo]);
+                String[] tokens = mapper.rowSections(line);
+                String rowId = tokens[mapper.getIdColumn()];
+                int scanNo = Integer.parseInt(tokens[mapper.getScanNoColumn()]);
                 msIdtoScanNumber.put(rowId, scanNo);
             }
         } catch (Exception e) {
             throw new ConverterException("Error parsing msms.txt file", e);
         }
-    }
-
-    private int columnIndex(String[] headers, String[] columnSearchNames) {
-        for (int i = 0; i < headers.length; i++) {
-            for (String name : columnSearchNames) {
-                if (name.equalsIgnoreCase(headers[i]))
-                    return i;
-            }
-        }
-        return -1;
     }
 
     public Param getProcessingMethod() {

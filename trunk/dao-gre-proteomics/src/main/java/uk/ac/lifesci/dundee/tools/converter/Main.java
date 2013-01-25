@@ -31,7 +31,6 @@ public class Main {
         int count = 0;
         while (iter.hasNext()){
         	Identification id = iter.next();
-        	
         	count+=id.getPeptide().size();
         }
         System.out.println(count);
