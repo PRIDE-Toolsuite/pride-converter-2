@@ -6,9 +6,8 @@ package uk.ac.lifesci.dundee.tools.converter.maxquant;
  * Date: 23/01/13
  * Time: 17:35
  */
-public class EvidenceFieldMapper {
+public class EvidenceFieldMapper extends BaseFieldMapper {
 
-    private String headerLine;
     private int peptideIdColumn = -1;
     private int msIDColumn = -1;
     private int proteinGroupIdColumn = -1;
@@ -23,39 +22,19 @@ public class EvidenceFieldMapper {
     private int rawFileColumn = -1;
 
     public EvidenceFieldMapper(String headerLine) {
-        this.headerLine = headerLine;
-        String[] headers = headerLine.split("\\t");
-        for (int i = 0; i < headers.length; i++) {
-            if ("Peptide ID".equals(headers[i])) {
-                peptideIdColumn = i;
-            } else if ("MS/MS IDs".equals(headers[i])) {
-                msIDColumn = i;
-            } else if ("Protein Group IDs".equals(headers[i])) {
-                proteinGroupIdColumn = i;
-            } else if ("Modifications".equals(headers[i])) {
-                modificationsColumn = i;
-            } else if ("Modified Sequence".equals(headers[i])) {
-                modifiedSequenceColumn = i;
-            } else if ("Sequence".equals(headers[i])) {
-                sequenceColumn = i;
-            } else if ("Contaminant".equals(headers[i])) {
-                contaminantColumn = i;
-            } else if ("PEP".equals(headers[i])) {
-                pepScoreColumn = i;
-            } else if ("Reverse".equals(headers[i])) {
-                reverseColumn = i;
-            } else if ("Protein Descriptions".equals(headers[i])) {
-                proteinDescriptionColumn = i;
-            } else if ("Fasta headers".equals(headers[i])) {
-                proteinDescriptionColumn = i;
-            } else if ("Uniprot".equals(headers[i])) {
-                uniprotColumn = i;
-            } else if ("Raw File".equals(headers[i])) {
-                rawFileColumn = i;
-            }
-            
-        }
-
+        super(headerLine);
+        peptideIdColumn = columnIndex(headers, new String [] {"Peptide ID"});
+        msIDColumn = columnIndex(headers, new String [] {"MS/MS IDs"});
+        proteinGroupIdColumn = columnIndex(headers, new String [] {"Protein Group IDs"});
+        modificationsColumn = columnIndex(headers, new String [] {"Modifications"});
+        modifiedSequenceColumn = columnIndex(headers, new String [] {"Modified Sequence"});
+        contaminantColumn = columnIndex(headers, new String [] {"Contaminant"});
+        pepScoreColumn = columnIndex(headers, new String [] {"PEP"});
+        reverseColumn = columnIndex(headers, new String [] {"Reverse"});
+        sequenceColumn = columnIndex(headers, new String [] {"Sequence"});
+        proteinDescriptionColumn = columnIndex(headers, new String [] {"Protein Descriptions", "Fasta headers"});
+        uniprotColumn = columnIndex(headers, new String [] {"Uniprot"});
+        rawFileColumn = columnIndex(headers, new String [] {"Raw File"});
     }
 
     public int getPeptideIdColumn() {

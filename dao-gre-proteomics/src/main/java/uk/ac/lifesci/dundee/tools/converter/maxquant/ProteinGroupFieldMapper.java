@@ -6,30 +6,22 @@ package uk.ac.lifesci.dundee.tools.converter.maxquant;
  * Date: 23/01/13
  * Time: 17:17
  */
-public class ProteinGroupFieldMapper {
+public class ProteinGroupFieldMapper extends BaseFieldMapper{
 
 //        * ['id'],
 //        * ['Sequence Coverage [%]'],
 //        * ['PEP'],
 
-    private String headerLine;
     private int proteinIdColumn = -1;
     private int sequenceCoverageColumn = -1;
     private int pepScoreColumn = -1;
 
 
     public ProteinGroupFieldMapper(String headerLine) {
-        this.headerLine = headerLine;
-        String[] headers = headerLine.split("\\t");
-        for (int i = 0; i < headers.length; i++) {
-            if ("id".equals(headers[i])) {
-                proteinIdColumn = i;
-            } else if ("Sequence Coverage [%]".equals(headers[i])) {
-                sequenceCoverageColumn = i;
-            } else if ("PEP".equals(headers[i])) {
-                pepScoreColumn = i;
-            }
-        }
+    	super(headerLine);
+    	proteinIdColumn = columnIndex(headers, new String [] {"id"});
+    	sequenceCoverageColumn = columnIndex(headers, new String [] {"Sequence Coverage [%]"});
+    	pepScoreColumn = columnIndex(headers, new String [] {"PEP"});
     }
 
     public int getProteinIdColumn() {

@@ -6,11 +6,10 @@ package uk.ac.lifesci.dundee.tools.converter.maxquant;
  * Date: 23/01/13
  * Time: 17:18
  */
-public class PeptideFieldMapper {
+public class PeptideFieldMapper extends BaseFieldMapper{
 //        * ['id'],
 //        * ['Unique', 'Unique (Groups)'],
 
-    private String headerLine;
     private int peptideIdColumn;
     private int uniqueColumn;
 
@@ -23,18 +22,9 @@ public class PeptideFieldMapper {
     }
 
     public PeptideFieldMapper(String headerLine) {
-        this.headerLine = headerLine;
-        String[] headers = headerLine.split("\\t");
-        for (int i = 0; i < headers.length; i++) {
-            if ("id".equals(headers[i])) {
-                peptideIdColumn = i;
-            } else if ("Unique".equals(headers[i])) {
-                uniqueColumn = i;
-            } else if ("Unique (Groups)".equals(headers[i])) {
-                uniqueColumn = i;
-            }
-
-        }
+    	super(headerLine);
+        peptideIdColumn = columnIndex(headers, new String [] {"id"});
+        uniqueColumn = columnIndex(headers, new String [] {"Unique", "Unique (Groups)"});
     }
 
 }
