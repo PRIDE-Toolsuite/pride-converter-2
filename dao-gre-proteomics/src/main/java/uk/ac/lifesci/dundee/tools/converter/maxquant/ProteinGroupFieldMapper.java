@@ -19,9 +19,9 @@ public class ProteinGroupFieldMapper extends BaseFieldMapper{
 
     public ProteinGroupFieldMapper(String headerLine) {
     	super(headerLine);
-    	proteinIdColumn = columnIndex(headers, new String [] {"id"});
-    	sequenceCoverageColumn = columnIndex(headers, new String [] {"Sequence Coverage [%]"});
-    	pepScoreColumn = columnIndex(headers, new String [] {"PEP"});
+    	proteinIdColumn = columnIndex(new String [] {"id"});
+    	sequenceCoverageColumn = columnIndex(new String [] {"Sequence Coverage [%]"});
+    	pepScoreColumn = columnIndex(new String [] {"PEP"});
     }
 
     public int getProteinIdColumn() {

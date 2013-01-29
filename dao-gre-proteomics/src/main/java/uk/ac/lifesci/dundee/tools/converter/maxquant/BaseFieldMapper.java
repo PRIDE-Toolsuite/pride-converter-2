@@ -16,7 +16,7 @@ public class BaseFieldMapper {
 		return line.split(COLUMN_DELIM);
 	}
 
-	protected int columnIndex(String[] headers, String[] columnSearchNames) {
+	protected int columnIndex(String[] columnSearchNames) {
         for (int i = 0; i < headers.length; i++) {
             for (String name : columnSearchNames) {
                 if (name.equalsIgnoreCase(headers[i]))

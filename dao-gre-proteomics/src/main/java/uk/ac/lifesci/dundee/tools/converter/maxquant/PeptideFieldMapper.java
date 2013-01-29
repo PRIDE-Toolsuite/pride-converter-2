@@ -23,8 +23,8 @@ public class PeptideFieldMapper extends BaseFieldMapper{
 
     public PeptideFieldMapper(String headerLine) {
     	super(headerLine);
-        peptideIdColumn = columnIndex(headers, new String [] {"id"});
-        uniqueColumn = columnIndex(headers, new String [] {"Unique", "Unique (Groups)"});
+        peptideIdColumn = columnIndex(new String [] {"id"});
+        uniqueColumn = columnIndex(new String [] {"Unique", "Unique (Groups)"});
     }
 
 }

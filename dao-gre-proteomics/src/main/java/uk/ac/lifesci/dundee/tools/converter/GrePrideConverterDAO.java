@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.axis.encoding.Base64;
 import org.apache.log4j.Logger;
 
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
+import uk.ac.ebi.pride.tools.converter.dao.handler.FastaHandler;
 import uk.ac.ebi.pride.tools.converter.dao.impl.AbstractDAOImpl;
 import uk.ac.ebi.pride.tools.converter.dao.impl.MgfDAO;
 import uk.ac.ebi.pride.tools.converter.dao.impl.MzXmlDAO;
@@ -39,7 +39,9 @@ import uk.ac.ebi.pride.tools.converter.report.model.Software;
 import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 import uk.ac.lifesci.dundee.tools.converter.maxquant.MaxquantParser;
+
 
 public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
 
@@ -70,9 +72,17 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
     private MaxquantParser maxquantParser = null;
 
     private static Utils<String> str_util = new Utils<String>();
-
+    
+    
+    /**
+     * Default Contructor
+     * 
+     * @param spectra
+     */
     public GrePrideConverterDAO(File spectra) {
         spectraFile = spectra;
+        FastaHandler fileHandler;
+        AccessionResolver r;
     }
 
     public static Collection<DAOProperty> getSupportedProperties() {
@@ -154,12 +164,11 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
             //build url
             StringBuilder sb = new StringBuilder(endPoint).append(sampleId).append(ENDPOINT_METHOD);
             url = new URL(sb.toString());
+            
             // stuff the Authorization request header
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             String authString = new StringBuffer(username).append(":").append(password).toString();
-
-            byte[] bytes = authString.getBytes();
-            String encodedString = new String(new Base64().encode(bytes));
+            String encodedString = new String(Base64.encode(authString.getBytes()));
             con.setRequestProperty("Authorization", "Basic " + encodedString);
 
             //read XML response
