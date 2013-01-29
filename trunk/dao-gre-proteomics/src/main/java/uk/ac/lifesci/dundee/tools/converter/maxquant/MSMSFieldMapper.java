@@ -13,8 +13,8 @@ public class MSMSFieldMapper extends BaseFieldMapper {
 
     public MSMSFieldMapper(String headerLine) {
         super(headerLine);
-        idColumn = columnIndex(headers, new String [] {"id"});
-        scanNoColumn = columnIndex(headers, new String [] {"Scan number"});
+        idColumn = columnIndex(new String [] {"id"});
+        scanNoColumn = columnIndex(new String [] {"Scan number"});
     }
 
 	public int getIdColumn() {

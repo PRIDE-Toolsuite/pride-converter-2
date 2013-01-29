@@ -23,18 +23,18 @@ public class EvidenceFieldMapper extends BaseFieldMapper {
 
     public EvidenceFieldMapper(String headerLine) {
         super(headerLine);
-        peptideIdColumn = columnIndex(headers, new String [] {"Peptide ID"});
-        msIDColumn = columnIndex(headers, new String [] {"MS/MS IDs"});
-        proteinGroupIdColumn = columnIndex(headers, new String [] {"Protein Group IDs"});
-        modificationsColumn = columnIndex(headers, new String [] {"Modifications"});
-        modifiedSequenceColumn = columnIndex(headers, new String [] {"Modified Sequence"});
-        contaminantColumn = columnIndex(headers, new String [] {"Contaminant"});
-        pepScoreColumn = columnIndex(headers, new String [] {"PEP"});
-        reverseColumn = columnIndex(headers, new String [] {"Reverse"});
-        sequenceColumn = columnIndex(headers, new String [] {"Sequence"});
-        proteinDescriptionColumn = columnIndex(headers, new String [] {"Protein Descriptions", "Fasta headers"});
-        uniprotColumn = columnIndex(headers, new String [] {"Uniprot"});
-        rawFileColumn = columnIndex(headers, new String [] {"Raw File"});
+        peptideIdColumn = columnIndex(new String [] {"Peptide ID"});
+        msIDColumn = columnIndex(new String [] {"MS/MS IDs"});
+        proteinGroupIdColumn = columnIndex(new String [] {"Protein Group IDs"});
+        modificationsColumn = columnIndex(new String [] {"Modifications"});
+        modifiedSequenceColumn = columnIndex(new String [] {"Modified Sequence"});
+        contaminantColumn = columnIndex(new String [] {"Contaminant"});
+        pepScoreColumn = columnIndex(new String [] {"PEP"});
+        reverseColumn = columnIndex(new String [] {"Reverse"});
+        sequenceColumn = columnIndex(new String [] {"Sequence"});
+        proteinDescriptionColumn = columnIndex(new String [] {"Protein Descriptions", "Fasta headers"});
+        uniprotColumn = columnIndex(new String [] {"Uniprot"});
+        rawFileColumn = columnIndex(new String [] {"Raw File"});
     }
 
     public int getPeptideIdColumn() {
