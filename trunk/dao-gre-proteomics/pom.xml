@@ -19,7 +19,7 @@
             </testResource>
         </testResources>
 
-        <resources> 
+        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -110,6 +110,18 @@
             <groupId>uk.ac.ebi.pride.tools.converter</groupId>
             <artifactId>dao-peaklist-impl</artifactId>
             <version>1.0.2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.ebi.pride.tools</groupId>
+            <artifactId>accession-resolver</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.3</version>
         </dependency>
 
     </dependencies>
