@@ -88,7 +88,8 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         cellCache = TemplateUtilities.initMapCache("cell.txt");
         cellComboBox.setModel(new CvComboBoxModel("CL", true, cellCache.values().toArray()));
         tissueCache = TemplateUtilities.initMapCache("tissue.txt");
-        tissueComboBox.setModel(new CvComboBoxModel("BTO", true, tissueCache.values().toArray()));
+        //the tissue templates have more than 1 cv label
+        tissueComboBox.setModel(new CvComboBoxModel("BTO/PRIDE", true, tissueCache.values().toArray()));
     }
 
     public void addValidationListener(ValidationListener validationListerner) {
@@ -170,7 +171,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
 
             //update table - create new cvparam
             CvParam cv = new CvParam();
-            cv.setCvLabel(((CvComboBoxModel) comboBox.getModel()).getCV());
+
             String accession = null;
             for (Map.Entry<String, String> entry : cache.entrySet()) {
                 if (entry.getValue().equals(comboBox.getSelectedItem())) {
@@ -183,6 +184,20 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             } else {
                 throw new IllegalStateException("No accession found for value: " + comboBox.getSelectedItem());
             }
+
+            //check to see if the cvlabel has multiple values
+            String cvLabel = ((CvComboBoxModel) comboBox.getModel()).getCV();
+            if (cvLabel.indexOf("/") > 0) {
+                String[] cvLabels = cvLabel.split("/");
+                for (String aLabel : cvLabels) {
+                    if (accession.startsWith(aLabel)) {
+                        cvLabel = aLabel;
+                        break;
+                    }
+                }
+            }
+            cv.setCvLabel(cvLabel);
+
             cv.setName(comboBox.getSelectedItem().toString());
 
             if (subsamples.isEmpty()) {
@@ -241,6 +256,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
         panel1 = new JPanel();
         masterInformationLabel = new JLabel();
         editButton = new JButton();
+        label9 = new JLabel();
 
         //======== this ========
 
@@ -341,6 +357,10 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
             }
         });
 
+        //---- label9 ----
+        label9.setText("*");
+        label9.setForeground(Color.red);
+
         GroupLayout layout = new GroupLayout(this);
         setLayout(layout);
         layout.setHorizontalGroup(
@@ -362,21 +382,23 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(label2, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
                                                         .addGroup(layout.createSequentialGroup()
-                                                                .addComponent(speciesComboBox, 0, 138, Short.MAX_VALUE)
-                                                                .addGap(10, 10, 10)
+                                                                .addComponent(speciesComboBox, GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(label8, GroupLayout.PREFERRED_SIZE, 12, GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(label4)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(tissueComboBox, 0, 123, Short.MAX_VALUE)
-                                                                .addGap(18, 18, 18)
+                                                                .addComponent(tissueComboBox, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(label9)
+                                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                                 .addComponent(label7)
                                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(cellComboBox, 0, 122, Short.MAX_VALUE))
-                                                        .addComponent(sampleCommentField, GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)))
+                                                                .addComponent(cellComboBox, GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                                                        .addComponent(sampleCommentField, GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(label5)
-                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 389, Short.MAX_VALUE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 424, Short.MAX_VALUE)
                                                 .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(editButton)))
@@ -398,18 +420,19 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(cellComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label7)
-                                        .addComponent(tissueComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(label4)
                                         .addComponent(speciesComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label3)
-                                        .addComponent(label8))
+                                        .addComponent(label8)
+                                        .addComponent(label4)
+                                        .addComponent(tissueComboBox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(label9))
                                 .addGap(14, 14, 14)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
                                         .addComponent(addTermButton1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(label5)
                                         .addComponent(editButton))
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 326, Short.MAX_VALUE)
+                                .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
                                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap())
@@ -438,6 +461,7 @@ public class SamplePanel extends JPanel implements CvUpdatable<CvParam> {
     private JPanel panel1;
     private JLabel masterInformationLabel;
     private JButton editButton;
+    private JLabel label9;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     public String getSampleName() {

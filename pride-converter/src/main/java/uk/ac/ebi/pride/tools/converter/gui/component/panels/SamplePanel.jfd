@@ -1,11 +1,11 @@
-JFDML JFormDesigner: "5.1.0.0.11" Java: "1.7.0_03" encoding: "UTF-8"
+JFDML JFormDesigner: "5.1.0.2.64" Java: "1.7.0_11" encoding: "UTF-8"
 
 new FormModel {
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
-			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::653:x, comp panel1::l::653:x, seq l {par t {comp label3:::p::p, comp label1::t:p::p:1, comp label6::t:p::p}, space :::p, par l {seq {comp sampleNameField:::p:187:p:1, space :::p, comp label2:::p:28:p}, seq l {comp speciesComboBox::::138:x, space :p:10:p, comp label8:::p:12:p, space :::p, comp label4:::p::p, space :::p, comp tissueComboBox::::123:x, space s:::p, comp label7:::p::p, space :::p, comp cellComboBox::::122:x}, comp sampleCommentField::l::551:x:1}}, seq t {comp label5:::p::p, space ::389:x, comp addTermButton1:::p::p, space :::p, comp editButton:::p::p}}, space :::p}}"
-			"$verticalGroup": "par l {seq l {space :::p, par b {comp label1::b:p::p, comp sampleNameField::b:p::p, comp label2::b:p::p}, space :::p, par b {comp label6::b:p::p, comp sampleCommentField::b:p::p}, space :::p, par b {comp cellComboBox::b:p::p, comp label7::b:p::p, comp tissueComboBox::b:p::p, comp label4::b:p::p, comp speciesComboBox::b:p::p, comp label3::b:p::p, comp label8::b:p::p}, space :p:14:p, par t {comp addTermButton1:::p::p, comp label5::t:p::p, comp editButton:::p::p}, space :::p, comp scrollPane1::::326:x, space :::p, comp panel1:::p::p, space :::p}}"
+			"$horizontalGroup": "par l {seq t {space :::p, par t {comp scrollPane1::l::653:x, comp panel1::l::653:x, seq l {par t {comp label3:::p::p, comp label1::t:p::p:1, comp label6::t:p::p}, space :::p, par l {seq {comp sampleNameField:::p:187:p:1, space :::p, comp label2:::p:28:p}, seq l {comp speciesComboBox::::136:x, space :::p, comp label8:::p:12:p, space :::p, comp label4:::p::p, space :::p, comp tissueComboBox::::121:x, space :::p, comp label9:::p::p, space :::p, comp label7:::p::p, space :::p, comp cellComboBox::::121:x}, comp sampleCommentField::l::557:x:1}}, seq t {comp label5:::p::p, space ::424:x, comp addTermButton1:::p::p, space :::p, comp editButton:::p::p}}, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par b {comp label1::b:p::p, comp sampleNameField::b:p::p, comp label2::b:p::p}, space :::p, par b {comp label6::b:p::p, comp sampleCommentField::b:p::p}, space :::p, par b {comp cellComboBox::b:p::p, comp label7::b:p::p, comp speciesComboBox::b:p::p, comp label3::b:p::p, comp label8::b:p::p, comp label4::b:p::p, comp tissueComboBox::b:p::p, comp label9::b:p::p}, space :p:14:p, par t {comp addTermButton1:::p::p, comp label5::t:p::p, comp editButton:::p::p}, space :::p, comp scrollPane1::::322:x, space :::p, comp panel1:::p::p, space :::p}}"
 		} ) {
 			name: "this"
 			add( new FormComponent( "javax.swing.JLabel" ) {
@@ -91,6 +91,11 @@ new FormModel {
 				"icon": new com.jformdesigner.model.SwingIcon( 0, "/images/edit.png" )
 				"toolTipText": "Edit"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "editButtonActionPerformed", false ) )
+			} )
+			add( new FormComponent( "javax.swing.JLabel" ) {
+				name: "label9"
+				"text": "*"
+				"foreground": sfield java.awt.Color red
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 15, 0 )

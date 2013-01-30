@@ -96,7 +96,8 @@ public class TissueCheck<ReportObject> extends ObjectRule<ReportObject> {
         } else {
             boolean tissueFound = false;
             for (CvParam cvParam : sampleDesc.getCvParam()) {
-                if (cvParam.getCvLabel().equalsIgnoreCase("BTO")) {
+                //check for a BTO annotation, or the PRIDE term that indicates that tissue annotation not applicable
+                if (cvParam.getCvLabel().equalsIgnoreCase("BTO") || cvParam.getAccession().equalsIgnoreCase("PRIDE:0000442")) {
                     tissueFound = true;
                     break;
                 }
