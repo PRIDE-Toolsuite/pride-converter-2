@@ -1,46 +1,24 @@
 package uk.ac.lifesci.dundee.tools.converter;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Properties;
-
-import org.apache.axis.encoding.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.dao.handler.FastaHandler;
 import uk.ac.ebi.pride.tools.converter.dao.impl.AbstractDAOImpl;
 import uk.ac.ebi.pride.tools.converter.dao.impl.MgfDAO;
 import uk.ac.ebi.pride.tools.converter.dao.impl.MzXmlDAO;
 import uk.ac.ebi.pride.tools.converter.dao.impl.MzmlDAO;
-import uk.ac.ebi.pride.tools.converter.report.model.CV;
-import uk.ac.ebi.pride.tools.converter.report.model.Contact;
-import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
-import uk.ac.ebi.pride.tools.converter.report.model.Identification;
-import uk.ac.ebi.pride.tools.converter.report.model.InstrumentDescription;
-import uk.ac.ebi.pride.tools.converter.report.model.PTM;
-import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.Protocol;
-import uk.ac.ebi.pride.tools.converter.report.model.Reference;
-import uk.ac.ebi.pride.tools.converter.report.model.Report;
-import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
-import uk.ac.ebi.pride.tools.converter.report.model.Software;
-import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
 import uk.ac.ebi.pride.tools.utils.AccessionResolver;
 import uk.ac.lifesci.dundee.tools.converter.maxquant.MaxquantParser;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.*;
 
 
 public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
@@ -72,16 +50,15 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
     private MaxquantParser maxquantParser = null;
 
     private static Utils<String> str_util = new Utils<String>();
-    
-    
+
+
     /**
      * Default Contructor
-     * 
+     *
      * @param spectra
      */
     public GrePrideConverterDAO(File spectra) {
         spectraFile = spectra;
-        FastaHandler fileHandler;
         AccessionResolver r;
     }
 
@@ -164,11 +141,11 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
             //build url
             StringBuilder sb = new StringBuilder(endPoint).append(sampleId).append(ENDPOINT_METHOD);
             url = new URL(sb.toString());
-            
+
             // stuff the Authorization request header
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             String authString = new StringBuffer(username).append(":").append(password).toString();
-            String encodedString = new String(Base64.encode(authString.getBytes()));
+            String encodedString = new String(Base64.encodeBase64(authString.getBytes()));
             con.setRequestProperty("Authorization", "Basic " + encodedString);
 
             //read XML response
@@ -197,7 +174,7 @@ public class GrePrideConverterDAO extends AbstractDAOImpl implements DAO {
         } catch (Exception e) {
             throw new ConverterException("Error obtaining metadata from Peptracker", e);
         }
-        
+
         return peptrackerProps;
 
     }
