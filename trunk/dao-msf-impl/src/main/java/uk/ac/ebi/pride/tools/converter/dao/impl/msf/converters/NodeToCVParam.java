@@ -4,7 +4,6 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
-import com.compomics.thermo_msf_parser.Parser;
 import com.compomics.thermo_msf_parser.msf.ProcessingNode;
 import com.compomics.thermo_msf_parser.msf.ProcessingNodeParameter;
 import org.apache.log4j.Logger;
@@ -23,7 +22,7 @@ public class NodeToCVParam {
 
     private static final Logger logger = Logger.getLogger(NodeToCVParam.class);
 
-    public static List<CvParam> convert(ProcessingNode node, Parser parser) {
+    public static List<CvParam> convert(ProcessingNode node) {
         List<CvParam> result = new ArrayList<CvParam>();
         String methodParameterPrefix = "";
         if (node.getNodeGUID() != null) {
