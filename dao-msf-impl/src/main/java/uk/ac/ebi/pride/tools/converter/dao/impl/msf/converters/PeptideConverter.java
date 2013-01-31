@@ -6,7 +6,10 @@ package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
 import com.compomics.thermo_msf_parser.msf.Modification;
 import com.compomics.thermo_msf_parser.msf.ModificationPosition;
-import java.sql.SQLException;
+import com.compomics.thermo_msf_parser.msf.PeptideLowMem;
+import com.compomics.thermo_msf_parser.msf.ProteinLowMem;
+import com.compomics.thermo_msf_parser.msf.ProteinLowMemController;
+import java.sql.Connection;
 import java.util.Iterator;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
@@ -17,13 +20,15 @@ import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
  * @author toorn101
  */
 public class PeptideConverter {
+    
+    private static ProteinLowMemController proteins = new ProteinLowMemController();
 
     /**
      *
      * @param originalPeptide
      * @return
      */
-    public static Peptide convert(com.compomics.thermo_msf_parser.msf.Peptide originalPeptide) {
+    public static Peptide convert(PeptideLowMem originalPeptide) {
         Peptide converted = new Peptide();
         converted.setSequence(originalPeptide.getSequence());
         converted.setSpectrumReference(originalPeptide.getSpectrumId());
@@ -62,13 +67,10 @@ public class PeptideConverter {
         return converted;
     }
 
-    public static Peptide convertWithCoordinatesInProtein(com.compomics.thermo_msf_parser.msf.Peptide originalPeptide, com.compomics.thermo_msf_parser.msf.Protein protein) {
+    public static Peptide convertWithCoordinatesInProtein(PeptideLowMem originalPeptide, ProteinLowMem protein, Connection msfFileConnection) {
         Peptide converted = convert(originalPeptide);
         String proteinSequence = "";
-        try {
-            proteinSequence = protein.getSequence();
-        } catch (SQLException ex) {
-        }
+            proteinSequence = proteins.getSequenceForProteinID(protein.getProteinID(), msfFileConnection);
 
         int startInProtein = proteinSequence.indexOf(originalPeptide.getSequence());
         int endInProtein = startInProtein + originalPeptide.getSequence().length();

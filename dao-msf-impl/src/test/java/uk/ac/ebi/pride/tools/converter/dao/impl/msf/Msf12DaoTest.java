@@ -7,12 +7,9 @@ import java.io.File;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Properties;
 
 import junit.framework.TestCase;
 
@@ -57,7 +54,8 @@ public class Msf12DaoTest extends TestCase {
          */
         // create the mascot dao
         try {
-            URL testFile = getClass().getClassLoader().getResource("MJ_1_10.msf");
+            URL testFile = getClass().getClassLoader().getResource("Hanna_2011jun20_5-of-15ul-inj_15min-grad_UnTag6_uniprot_Spombe.msf");
+            //URL testFile = getClass().getClassLoader().getResource("MJ_1_10.msf");
             assertNotNull("Error loading msf test file", testFile);
             sourceFile = new File(testFile.toURI());
             msfDao = new MsfDao(sourceFile);
@@ -76,7 +74,7 @@ public class Msf12DaoTest extends TestCase {
             try {
                 title = msfDao.getExperimentTitle();
                 //assertEquals("2780 PRIDE exepriment", title);
-                assertEquals("Precursor tolerance 20 ppm", title);
+                assertEquals("", title);
             } catch (InvalidFormatException e) {
                 e.printStackTrace();
                 fail(e.getMessage());
@@ -92,7 +90,7 @@ public class Msf12DaoTest extends TestCase {
     @Test
     public void testGetExperimentShortLabel() {
         // test the function - always returns null
-        assertEquals("MJ_1_10", msfDao.getExperimentShortLabel());
+        assertEquals("Hanna_2011jun20_5-of-15ul-inj_15min-grad_UnTag6_uniprot_Spombe", msfDao.getExperimentShortLabel());
     }
 
     /**
@@ -176,7 +174,7 @@ public class Msf12DaoTest extends TestCase {
         SourceFile file = msfDao.getSourceFile();
 
         assertEquals(sourceFile.getAbsolutePath(), file.getPathToFile());
-        assertEquals("MJ_1_10.msf", file.getNameOfFile());
+        assertEquals("Hanna_2011jun20_5-of-15ul-inj_15min-grad_UnTag6_uniprot_Spombe.msf", file.getNameOfFile());
         assertEquals(MsfDao.MSF_FILE_STRING, file.getFileType());
     }
 
@@ -223,7 +221,7 @@ public class Msf12DaoTest extends TestCase {
      */
     @Test
     public void testGetSearchDatabaseName() {
-        assertEquals("human-HIV-1.fasta", msfDao.getSearchDatabaseName()); 
+        assertEquals("Mascot5_uniprot_Spombe_All entries", msfDao.getSearchDatabaseName()); 
     }
 
     /**
@@ -231,7 +229,7 @@ public class Msf12DaoTest extends TestCase {
      */
     @Test
     public void testGetSearchDatabaseVersion() {
-        assertEquals("human-HIV-1.fasta", msfDao.getSearchDatabaseVersion());
+        assertEquals("Mascot5_uniprot_Spombe_All entries", msfDao.getSearchDatabaseVersion());
     }
 
     @Test
@@ -241,8 +239,8 @@ public class Msf12DaoTest extends TestCase {
         assertEquals(1, mappings.size());
 
         for (DatabaseMapping mapping : mappings) {
-            assertEquals("human-HIV-1.fasta", mapping.getSearchEngineDatabaseName());
-            assertEquals("human-HIV-1.fasta", mapping.getSearchEngineDatabaseVersion());
+            assertEquals("Mascot5_uniprot_Spombe_All entries", mapping.getSearchEngineDatabaseName());
+            assertEquals("Mascot5_uniprot_Spombe_All entries", mapping.getSearchEngineDatabaseVersion());
         }
     }
 
@@ -279,11 +277,11 @@ public class Msf12DaoTest extends TestCase {
         }
 
         // Check number of modifications
-        assertEquals(2, ptms.size());
+        assertEquals(1, ptms.size());
 
         // make sure both modifications were found
-//        assertEquals(true, fixed);
-        assertEquals(true, var);
+        assertEquals(true, fixed);
+//       assertEquals(true, var);
     }
 
     /**
@@ -294,7 +292,7 @@ public class Msf12DaoTest extends TestCase {
         // get the identifier
         SearchResultIdentifier identifier = msfDao.getSearchResultIdentifier();
 
-        assertEquals("be213282f43cf71b12245b30d9747e83", identifier.getHash());
+        assertEquals("7cf1cb1284277f8dde339b9870fcd979", identifier.getHash());
         assertEquals(sourceFile.getAbsolutePath(), identifier.getSourceFilePath());
     }
 
@@ -317,7 +315,7 @@ public class Msf12DaoTest extends TestCase {
             nSpectra++;
         }
 
-        assertEquals(1389, nSpectra);
+        assertEquals(2238, nSpectra);
     }
 
     /**
@@ -350,7 +348,7 @@ public class Msf12DaoTest extends TestCase {
             specIds.add(s.getId());
 
             // get the masses and intensities of the 1st spectrum
-            if (s.getId() == 1092) {
+            if (s.getId() == 1221) {
                 intensities = s.getIntenArrayBinary().getData().getValue();
                 masses = s.getMzArrayBinary().getData().getValue();
             }
@@ -359,7 +357,7 @@ public class Msf12DaoTest extends TestCase {
         }
 
         // check the number of spectra
-        assertEquals(237, nSpectra);
+        assertEquals(36, nSpectra);
 
         // convert the intensBytes to a byte buffer
         ByteBuffer intensBuffer = ByteBuffer.wrap(intensities);
@@ -369,8 +367,8 @@ public class Msf12DaoTest extends TestCase {
         mzBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
         // check a number
-        assertEquals(127.5322, mzBuffer.getDouble(0), 0.0000001);
-        assertEquals(1714.438, intensBuffer.getDouble(0), 0.0000001);
+        assertEquals(97.18478, mzBuffer.getDouble(0), 0.0000001);
+        assertEquals(2.785628, intensBuffer.getDouble(0), 0.0000001);
 
     }
 
@@ -379,8 +377,8 @@ public class Msf12DaoTest extends TestCase {
      */
     @Test
     public void testGetSpectrumCount() {
-        assertEquals(1389, msfDao.getSpectrumCount(false));
-        assertEquals(371, msfDao.getSpectrumCount(true));
+        assertEquals(2238, msfDao.getSpectrumCount(false));
+        assertEquals(280, msfDao.getSpectrumCount(true));
     }
 
     /**
@@ -395,7 +393,7 @@ public class Msf12DaoTest extends TestCase {
 
         Peptide pep = firstIdentification.getPeptide().get(0);
 
-        assertEquals(48, msfDao.getSpectrumReferenceForPeptideUID(pep.getUniqueIdentifier()));
+        assertEquals(1495, msfDao.getSpectrumReferenceForPeptideUID(pep.getUniqueIdentifier()));
     }
 
     /**
@@ -425,7 +423,7 @@ public class Msf12DaoTest extends TestCase {
             nIds++;
         }
 
-        assertEquals(292, nIds);
+        assertEquals(20, nIds);
     }
 
     @Test
@@ -460,7 +458,7 @@ public class Msf12DaoTest extends TestCase {
             nIds++;
         }
 
-        assertEquals(292, nIds); // 250 hits with a ignore_below_thresh of 0.99 | 432 hits including non-significant hits (same as the Mascot result)
+        assertEquals(20, nIds);
     }
 
     /**

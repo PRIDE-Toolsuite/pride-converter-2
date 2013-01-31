@@ -4,8 +4,10 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf;
 
-import com.compomics.thermo_msf_parser.Parser;
-import com.compomics.thermo_msf_parser.msf.Protein;
+import com.compomics.thermo_msf_parser.gui.MsfFile;
+import com.compomics.thermo_msf_parser.msf.PeptideLowMemController;
+import com.compomics.thermo_msf_parser.msf.ProteinLowMem;
+import com.compomics.thermo_msf_parser.msf.ProteinLowMemController;
 import java.util.Iterator;
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters.IdentificationConverter;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
@@ -16,22 +18,25 @@ import uk.ac.ebi.pride.tools.converter.report.model.Identification;
  */
 public class IdentificationIterator implements Iterator<Identification> {
 
-    private Parser parser;
     private String searchDatabaseName;
     private String searchDatabaseVersion;
     private boolean preScanMode;
     private Integer confidenceLevel;
-    private Iterator<Protein> proteinIterator;
+    private Iterator<ProteinLowMem> proteinIterator;
     private boolean hasNext = false;
-    Identification next;
+    private Identification next;
+    private ProteinLowMemController proteins = new ProteinLowMemController();
+    private PeptideLowMemController peptides = new PeptideLowMemController();
+    private MsfFile msfFile;
 
-    public IdentificationIterator(Parser parser, String searchDatabaseName, String searchDatabaseVersion, boolean preScanMode, Integer confidenceLevel) {
-        this.parser = parser;
+    public IdentificationIterator(MsfFile msfFile, String searchDatabaseName, String searchDatabaseVersion, boolean preScanMode, Integer confidenceLevel) {
         this.searchDatabaseName = searchDatabaseName;
         this.searchDatabaseVersion = searchDatabaseVersion;
         this.preScanMode = preScanMode;
         this.confidenceLevel = confidenceLevel;
-        this.proteinIterator = parser.getProteins().iterator();
+        //TODO switch to just proteinslist
+        this.msfFile = msfFile;
+        this.proteinIterator = proteins.getAllProteins(msfFile.getConnection());
         prepareNext();
     }
 
@@ -55,9 +60,9 @@ public class IdentificationIterator implements Iterator<Identification> {
     private void prepareNext() {
         hasNext = false;
         while (proteinIterator.hasNext()) {
-            Protein nextProtein = proteinIterator.next();
-            if (nextProtein != null && nextProtein.getPeptides().size() > 0) {
-                next = IdentificationConverter.convert(parser, nextProtein, searchDatabaseName, searchDatabaseVersion, preScanMode, confidenceLevel);
+            ProteinLowMem nextProtein = proteinIterator.next();
+            if (nextProtein != null && peptides.getPeptidesForProtein(nextProtein,msfFile.getVersion(),msfFile.getAminoAcids()).size() > 0) {
+                next = IdentificationConverter.convert(nextProtein, searchDatabaseName, searchDatabaseVersion, preScanMode, confidenceLevel, msfFile);
                 hasNext = true;
                 break;
             }
