@@ -50,7 +50,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     private static WorkFlowLowMemController workflowController = new WorkFlowLowMemController();
     private static ProcessingNodeLowMemController processingNodeController = new ProcessingNodeLowMemController();
     private static FastaLowMemController fasta = new FastaLowMemController();
-    private static ModificationLowMemController mods =new ModificationLowMemController();
+    private static ModificationLowMemController mods = new ModificationLowMemController();
     private static PeptideLowMemController peptides = new PeptideLowMemController();
     private static SpectrumLowMemController spectra = new SpectrumLowMemController();
     private static ProteinLowMemController proteins = new ProteinLowMemController();
@@ -96,10 +96,10 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     }
 
     public String getExperimentTitle() throws InvalidFormatException {
-         WorkflowInfo temp = workflowController.getWorkFlowInfo(msfFile.getConnection());
-         String experimentTitle = temp.getWorkflowDescription();
+        WorkflowInfo temp = workflowController.getWorkFlowInfo(msfFile.getConnection());
+        String experimentTitle = temp.getWorkflowDescription();
         return experimentTitle;
-                
+
         //return parser.getWorkFlowInfo().getWorkflowDescription();
     }
 
@@ -259,7 +259,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      */
     public Collection<PTM> getPTMs() {
         Collection<PTM> ptms = new ArrayList<PTM>();
-        ArrayList<Modification> allmods = mods.getAllModifications(msfFile.getConnection(), msfFile.getVersion(),msfFile.getAminoAcids());
+        ArrayList<Modification> allmods = mods.getAllModifications(msfFile.getConnection(), msfFile.getVersion(), msfFile.getAminoAcids());
         for (Modification mod : allmods) {
             ptms.add(PTMConverter.convert(mod));
         }

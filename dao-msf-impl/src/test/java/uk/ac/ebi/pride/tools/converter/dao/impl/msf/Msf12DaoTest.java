@@ -367,8 +367,8 @@ public class Msf12DaoTest extends TestCase {
         mzBuffer.order(ByteOrder.LITTLE_ENDIAN);
 
         // check a number
-        assertEquals(97.18478, mzBuffer.getDouble(0), 0.0000001);
-        assertEquals(2.785628, intensBuffer.getDouble(0), 0.0000001);
+        assertEquals(100.11228, mzBuffer.getDouble(0), 0.0000001);
+        assertEquals(1148.003, intensBuffer.getDouble(0), 0.0000001);
 
     }
 
