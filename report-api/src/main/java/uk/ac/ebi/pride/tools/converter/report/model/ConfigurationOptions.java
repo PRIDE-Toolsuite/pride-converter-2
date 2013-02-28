@@ -36,7 +36,7 @@ public class ConfigurationOptions
         implements Serializable, ReportObject {
 
     private final static long serialVersionUID = 100L;
-    @XmlElement(name = "Option", required = true)
+    @XmlElement(name = "Option")
     protected List<Option> options;
 
     public ConfigurationOptions() {

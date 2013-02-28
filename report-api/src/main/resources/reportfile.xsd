@@ -65,7 +65,7 @@
                 </xsd:element>
                 <xsd:element name="ConfigurationOptions"
                              type="ConfigurationOptionsType" maxOccurs="1"
-                             minOccurs="0">
+                             minOccurs="1">
                 </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
@@ -981,7 +981,7 @@
 
     <xsd:complexType name="ConfigurationOptionsType">
         <xsd:sequence>
-            <xsd:element name="Option" type="OptionType" maxOccurs="unbounded" minOccurs="1"></xsd:element>
+            <xsd:element name="Option" type="OptionType" maxOccurs="unbounded" minOccurs="0"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 
