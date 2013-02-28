@@ -3,6 +3,15 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf;
 
+import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
+import uk.ac.ebi.pride.jaxb.model.Spectrum;
+import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
+import uk.ac.ebi.pride.tools.converter.report.model.*;
+import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
+import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+
 import java.io.File;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -10,27 +19,7 @@ import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import junit.framework.TestCase;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import uk.ac.ebi.pride.jaxb.model.Spectrum;
-import uk.ac.ebi.pride.tools.converter.dao.DAOProperty;
-import uk.ac.ebi.pride.tools.converter.report.model.CV;
-import uk.ac.ebi.pride.tools.converter.report.model.Contact;
-import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
-import uk.ac.ebi.pride.tools.converter.report.model.DatabaseMapping;
-import uk.ac.ebi.pride.tools.converter.report.model.Identification;
-import uk.ac.ebi.pride.tools.converter.report.model.PTM;
-import uk.ac.ebi.pride.tools.converter.report.model.Param;
-import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
-import uk.ac.ebi.pride.tools.converter.report.model.SearchResultIdentifier;
-import uk.ac.ebi.pride.tools.converter.report.model.Software;
-import uk.ac.ebi.pride.tools.converter.report.model.SourceFile;
-import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
-import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
+import java.util.Properties;
 
 /**
  * @author jg
@@ -58,6 +47,9 @@ public class MsfDaoTest extends TestCase {
             assertNotNull("Error loading msf test file", testFile);
             sourceFile = new File(testFile.toURI());
             msfDao = new MsfDao(sourceFile);
+            Properties props = new Properties();
+            props.setProperty("confidence_level", "1");
+            msfDao.setConfiguration(props);
         } catch (ConverterException ex) {
             fail(ex.getMessage());
         }
@@ -220,7 +212,7 @@ public class MsfDaoTest extends TestCase {
      */
     @Test
     public void testGetSearchDatabaseName() {
-        assertEquals("Mascot5_BSA_All entries", msfDao.getSearchDatabaseName()); 
+        assertEquals("Mascot5_BSA_All entries", msfDao.getSearchDatabaseName());
     }
 
     /**
@@ -265,7 +257,7 @@ public class MsfDaoTest extends TestCase {
                 if (count++ == 1) {
                     assertEquals("Oxidation (M)", ptm.getSearchEnginePTMLabel());
                     assertEquals("M", ptm.getResidues());
-                } else if (count == 3){
+                } else if (count == 3) {
                     assertEquals("phospho_beta_elim (ST)", ptm.getSearchEnginePTMLabel());
                     assertEquals("ST", ptm.getResidues());
                 } else if (count == 2) {
@@ -341,7 +333,7 @@ public class MsfDaoTest extends TestCase {
             }
 
             if (specIds.contains(s.getId())) {
-                fail("Spectrum returned twice " + s.getId() );
+                fail("Spectrum returned twice " + s.getId());
             }
 
             specIds.add(s.getId());
