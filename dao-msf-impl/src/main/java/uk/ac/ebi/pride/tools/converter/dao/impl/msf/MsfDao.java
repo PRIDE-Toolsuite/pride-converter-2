@@ -5,21 +5,7 @@
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf;
 
 import com.compomics.thermo_msf_parser.gui.MsfFile;
-import com.compomics.thermo_msf_parser.msf.FastaLowMemController;
-import com.compomics.thermo_msf_parser.msf.Modification;
-import com.compomics.thermo_msf_parser.msf.ModificationLowMemController;
-import com.compomics.thermo_msf_parser.msf.PeptideLowMem;
-import com.compomics.thermo_msf_parser.msf.PeptideLowMemController;
-import com.compomics.thermo_msf_parser.msf.ProcessingNode;
-import com.compomics.thermo_msf_parser.msf.ProcessingNodeLowMemController;
-import com.compomics.thermo_msf_parser.msf.ProcessingNodeParameter;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMemController;
-import com.compomics.thermo_msf_parser.msf.RawFileLowMemController;
-import com.compomics.thermo_msf_parser.msf.SpectrumLowMemController;
-import com.compomics.thermo_msf_parser.msf.WorkFlowLowMemController;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMem;
-import com.compomics.thermo_msf_parser.msf.SpectrumLowMem;
-import com.compomics.thermo_msf_parser.msf.WorkflowInfo;
+import com.compomics.thermo_msf_parser.msf.*;
 import com.compomics.thermo_msf_parser.msf.util.Joiner;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
@@ -43,8 +29,9 @@ import java.util.*;
  */
 public class MsfDao extends AbstractDAOImpl implements DAO {
 
-    private Properties configuration;
-    private Integer confidenceLevel = 1;
+    private Properties configuration = new Properties();
+    //default value
+    private Integer confidenceLevel = 3;
     public static String MSF_FILE_STRING = "Proteome Discoverer .msf file";
     private static MsfFile msfFile;
     private static WorkFlowLowMemController workflowController = new WorkFlowLowMemController();
@@ -55,8 +42,8 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     private static SpectrumLowMemController spectra = new SpectrumLowMemController();
     private static ProteinLowMemController proteins = new ProteinLowMemController();
     private static RawFileLowMemController rawFiles = new RawFileLowMemController();
-    
-    
+
+
     /**
      * formatter to be used in several parts of the DAO
      */
@@ -87,8 +74,15 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     }
 
     public void setConfiguration(Properties properties) {
-        configuration = properties;
-        confidenceLevel = Integer.parseInt(configuration.getProperty("confidence_level"));
+        if (properties != null) {
+            configuration = properties;
+            try {
+                confidenceLevel = Integer.parseInt(configuration.getProperty("confidence_level"));
+            } catch (NumberFormatException e) {
+                throw new ConverterException("Invalid DAO configuration: bad value for confidence_level -> " + configuration.getProperty("confidence_level"));
+            }
+        }
+
     }
 
     public Properties getConfiguration() {
@@ -350,7 +344,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
             SpectrumLowMem spectrum = spectra.getSpectrumForSpectrumID(spectrumIdIterator.next(), msfFile.getConnection());
             Spectrum result;
             try {
-                result = SpectrumConverter.convert(spectrum,msfFile.getConnection());
+                result = SpectrumConverter.convert(spectrum, msfFile.getConnection());
             } catch (Exception ex) {
                 throw new ConverterException("While converting spectrum " + rawFiles.getRawFileNameForFileID(spectrum.getFileId(), msfFile.getConnection()) + " (id=" + spectrum.getSpectrumId() + ")", ex);
             }
