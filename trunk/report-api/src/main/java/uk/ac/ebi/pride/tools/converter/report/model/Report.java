@@ -86,7 +86,7 @@ public class Report
     protected uk.ac.ebi.pride.tools.converter.report.model.Report.PTMs ptMs;
     @XmlElement(name = "DatabaseMappings", required = true)
     protected uk.ac.ebi.pride.tools.converter.report.model.Report.DatabaseMappings databaseMappings;
-    @XmlElement(name = "ConfigurationOptions")
+    @XmlElement(name = "ConfigurationOptions", required = true)
     protected ConfigurationOptions configurationOptions;
 
     /**
