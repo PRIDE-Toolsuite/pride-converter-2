@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Report>
+    <SearchResultIdentifier>
+        <hash>f938131b5abb2f8602b7e37dc0e90900</hash>
+        <sourceFilePath>/home/rcote/Desktop/example_files/mascot/Spot 4.dat</sourceFilePath>
+        <timeCreated>2013-02-28T16:07:39Z</timeCreated>
+    </SearchResultIdentifier>
+    <Metadata>
+        <Title></Title>
+        <ShortLabel></ShortLabel>
+        <Protocol>
+            <ProtocolName>sdf</ProtocolName>
+            <ProtocolSteps/>
+        </Protocol>
+        <MzDataDescription>
+            <cvLookup cvLabel="MS" fullName="PSI Mass Spectrometry Ontology" version="1.2"
+                      address="http://psidev.cvs.sourceforge.net/viewvc/*checkout*/psidev/psi/psi-ms/mzML/controlledVocabulary/psi-ms.obo"/>
+            <cvLookup cvLabel="PRIDE" fullName="PRIDE Controlled Vocabulary" version="1.101"
+                      address="http://ebi-pride.googlecode.com/svn/trunk/pride-core/schema/pride_cv.obo"/>
+            <admin>
+                <sampleName>sdf</sampleName>
+                <sampleDescription comment=""></sampleDescription>
+                <sourceFile>
+                    <nameOfFile>Spot 4.dat</nameOfFile>
+                    <pathToFile>/home/rcote/Desktop/example_files/mascot/Spot 4.dat</pathToFile>
+                    <fileType>Mascot dat file</fileType>
+                </sourceFile>
+                <contact>
+                    <name></name>
+                    <institution></institution>
+                    <contactInfo></contactInfo>
+                </contact>
+            </admin>
+            <instrument>
+                <instrumentName>sdf</instrumentName>
+                <source/>
+                <analyzerList count="1">
+                    <analyzer/>
+                </analyzerList>
+                <detector/>
+                <additional/>
+            </instrument>
+            <dataProcessing>
+                <software>
+                    <name>Matrix Science Mascot</name>
+                    <version>2.2.04</version>
+                </software>
+                <processingMethod></processingMethod>
+            </dataProcessing>
+        </MzDataDescription>
+        <ExperimentAdditional>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000218" name="Original MS data file format"
+                     value="Mascot dat file"/>
+            <cvParam cvLabel="PRIDE" accession="PRIDE:0000175" name="XML generation software"
+                     value="PRIDE Converter Toolsuite 2.0.16"/>
+        </ExperimentAdditional>
+    </Metadata>
+    <Identifications>
+    </Identifications>
+    <Fasta sourceDb="" sourceDbVersion="">
+    </Fasta>
+    <PTMs>
+    </PTMs>
+    <DatabaseMappings>
+    </DatabaseMappings>
+    <ConfigurationOptions>
+    </ConfigurationOptions>
+</Report>
