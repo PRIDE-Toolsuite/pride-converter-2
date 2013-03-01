@@ -238,16 +238,30 @@ public class IOUtilities {
                     //try and load existing report file
                     NavigationPanel.getInstance().setWorkingMessage("Attemping to load existing report file: " + reportFile);
                     File repFile = new File(reportFile);
-                    //check to see if file exists and is a valid report file
-                    if (!repFile.exists() || !ReportXMLUtilities.isUnmodifiedSourceForReportFile(repFile, fileBean.getInputFile())) {
-                        logger.warn("Source file modified since report generation, will recreate report file");
-                        generateReportFile(fileBean, options, automaticallyMapPreferredPTMs);
-                    } else {
-
-                        if (logger.isInfoEnabled()) {
-                            logger.info("Reading existing report file: " + repFile.getAbsolutePath());
+                    //check to see if file exists
+                    if (repFile.exists()) {
+                        //check to see if file is valid
+                        if (ReportXMLUtilities.isValidNewReportFile(repFile)) {
+                            //check to see if source file has changed
+                            if (ReportXMLUtilities.isUnmodifiedSourceForReportFile(repFile, fileBean.getInputFile())) {
+                                //source file hasn't changed
+                                if (logger.isInfoEnabled()) {
+                                    logger.info("Reading existing report file: " + repFile.getAbsolutePath());
+                                }
+                            } else {
+                                NavigationPanel.getInstance().setWorkingMessage("Source file modified since report generation, will recreate report file: " + reportFile);
+                                logger.warn("Source file modified since report generation, will recreate report file");
+                                generateReportFile(fileBean, options, automaticallyMapPreferredPTMs);
+                            }
+                        } else {
+                            NavigationPanel.getInstance().setWorkingMessage("Invalid report file, will need to regenerate: " + reportFile);
+                            logger.warn("Invalid report file, will need to regenerate: " + reportFile);
+                            generateReportFile(fileBean, options, automaticallyMapPreferredPTMs);
                         }
 
+                    } else {
+                        //generate new
+                        generateReportFile(fileBean, options, automaticallyMapPreferredPTMs);
                     }
 
                 }
