@@ -73,6 +73,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         return properties;
     }
 
+    @Override
     public void setConfiguration(Properties properties) {
         if (properties != null) {
             configuration = properties;
@@ -85,10 +86,12 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
 
     }
 
+    @Override
     public Properties getConfiguration() {
         return configuration;
     }
 
+    @Override
     public String getExperimentTitle() throws InvalidFormatException {
         WorkflowInfo temp = workflowController.getWorkFlowInfo(msfFile.getConnection());
         String experimentTitle = temp.getWorkflowDescription();
@@ -97,11 +100,13 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         //return parser.getWorkFlowInfo().getWorkflowDescription();
     }
 
+    @Override
     public String getExperimentShortLabel() {
         return workflowController.getWorkFlowInfo(msfFile.getConnection()).getWorkflowName();
         //return parser.getWorkFlowInfo().getWorkflowName();
     }
 
+    @Override
     public Param getExperimentParams() {
         Param experimentParam = new Param();
         File inputFile = msfFile.getMsfFile();
@@ -116,18 +121,22 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         return experimentParam;
     }
 
+    @Override
     public String getSampleName() {
         return null; // Let users fill it in themselves
     }
 
+    @Override
     public String getSampleComment() {
         return null;
     }
 
+    @Override
     public Param getSampleParams() {
         return new Param();
     }
 
+    @Override
     public SourceFile getSourceFile() {
         SourceFile source = new SourceFile();
         source.setFileType(MSF_FILE_STRING);
@@ -137,11 +146,13 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         return source;
     }
 
+    @Override
     public Collection<Contact> getContacts() {
         ArrayList<Contact> contacts = new ArrayList<Contact>();
         return contacts;
     }
 
+    @Override
     public InstrumentDescription getInstrument() {
         InstrumentDescription i = new InstrumentDescription();
         // We can't find the machine name from the msf
@@ -154,6 +165,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @return Proteome Discoverer, with version.
      * @throws InvalidFormatException
      */
+    @Override
     public Software getSoftware() {
         Software s = new Software();
         s.setName("Proteome Discoverer");
@@ -170,6 +182,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      *
      * @return
      */
+    @Override
     public Param getProcessingMethod() {
         Param result = new Param(); //TODO: go from the processingnodes to a sensible conversion
 
@@ -209,6 +222,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      *
      * @return
      */
+    @Override
     public Protocol getProtocol() {
         return null; // User has to supply
     }
@@ -218,6 +232,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      *
      * @return
      */
+    @Override
     public Collection<Reference> getReferences() {
         return null; // User has to supply
     }
@@ -229,6 +244,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @return
      * @throws InvalidFormatException
      */
+    @Override
     public String getSearchDatabaseName() {
         String fastafiles = Joiner.join(fasta.getFastaFileNames(msfFile.getConnection()), ",");
         return fastafiles;
@@ -241,6 +257,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @return
      * @throws InvalidFormatException
      */
+    @Override
     public String getSearchDatabaseVersion() {
         return getSearchDatabaseName();
     }
@@ -263,6 +280,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     /**
      * @return @throws InvalidFormatException
      */
+    @Override
     public Collection<DatabaseMapping> getDatabaseMappings() {
         Collection<DatabaseMapping> result = new ArrayList<DatabaseMapping>();
         ArrayList<String> allFastaFileNames = fasta.getFastaFileNames(msfFile.getConnection());
@@ -284,6 +302,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @return
      * @throws InvalidFormatException
      */
+    @Override
     public SearchResultIdentifier getSearchResultIdentifier() {
         SearchResultIdentifier identifier = new SearchResultIdentifier();
         File inputFile = new File(msfFile.getMsfFile().getAbsolutePath());
@@ -295,6 +314,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         return identifier;
     }
 
+    @Override
     public Collection<CV> getCvLookup() {
         ArrayList<CV> cvs = new ArrayList<CV>();
 
@@ -305,6 +325,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     }
 
     // Get the number of spectra
+    @Override
     public int getSpectrumCount(boolean identifiedOnly) {
         int result;
         if (identifiedOnly) {
@@ -333,6 +354,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
             }
         }
 
+        @Override
         public boolean hasNext() {
             if (spectrumIdIterator == null) {
                 spectrumIdIterator = spectrumIds.iterator();
@@ -340,6 +362,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
             return spectrumIdIterator.hasNext();
         }
 
+        @Override
         public Spectrum next() {
             SpectrumLowMem spectrum = spectra.getSpectrumForSpectrumID(spectrumIdIterator.next(), msfFile.getConnection());
             Spectrum result;
@@ -351,26 +374,30 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
             return result;
         }
 
+        @Override
         public void remove() {
             throw new UnsupportedOperationException("Don't call remove...");
         }
     }
 
+    @Override
     public Iterator<Spectrum> getSpectrumIterator(final boolean identifiedOnly) {
         Iterator<Spectrum> i;
 
         if (identifiedOnly) {
             i = new IdentifiedOnlySpectrumIterator(proteins.getAllProteins(msfFile.getConnection()));
         } else {
-            final Iterator<com.compomics.thermo_msf_parser.msf.SpectrumLowMem> spectraIter = spectra.getAllSpectra(msfFile.getConnection()).iterator();
+            final Iterator<Integer> spectraIter = spectra.getAllSpectraIds(msfFile.getConnection()).iterator();
             i = new Iterator<Spectrum>() {
+                @Override
                 public boolean hasNext() {
                     return spectraIter.hasNext();
                 }
 
+                @Override
                 public Spectrum next() {
                     Spectrum result = null;
-                    com.compomics.thermo_msf_parser.msf.SpectrumLowMem msfSpectrum = spectraIter.next();
+                    com.compomics.thermo_msf_parser.msf.SpectrumLowMem msfSpectrum = spectra.getSpectrumForSpectrumID(spectraIter.next(), msfFile.getConnection());
                     try {
                         result = SpectrumConverter.convert(msfSpectrum, msfFile.getConnection());
                     } catch (Exception ex) {
@@ -379,6 +406,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
                     return result;
                 }
 
+                @Override
                 public void remove() {
                     throw new UnsupportedOperationException("Don't call remove..");
                 }
@@ -388,6 +416,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         return i;
     }
 
+    @Override
     public int getSpectrumReferenceForPeptideUID(String peptideUID) {
         return spectra.getSpectrumForPeptideID(Integer.parseInt(peptideUID), msfFile.getConnection()).getSpectrumId();
     }
@@ -399,6 +428,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @return
      * @throws InvalidFormatException
      */
+    @Override
     public Identification getIdentificationByUID(String identificationUID) {
         ProteinLowMem p = proteins.getProteinForProteinId(msfFile.getConnection(), Integer.parseInt(identificationUID));
         return IdentificationConverter.convert(p, getSearchDatabaseName(), getSearchDatabaseVersion(), true, confidenceLevel, msfFile);
@@ -409,11 +439,13 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @return
      * @throws InvalidFormatException
      */
+    @Override
     public Iterator<Identification> getIdentificationIterator(final boolean preScanMode) {
         IdentificationIterator it = new IdentificationIterator(msfFile, getSearchDatabaseName(), getSearchDatabaseVersion(), preScanMode, confidenceLevel);
         return it;
     }
 
+    @Override
     public void setExternalSpectrumFile(String filename) {
         throw new UnsupportedOperationException("Not supported.");
     }
