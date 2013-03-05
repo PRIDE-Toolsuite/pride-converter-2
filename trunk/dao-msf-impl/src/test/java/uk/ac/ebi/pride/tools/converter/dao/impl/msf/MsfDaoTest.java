@@ -33,6 +33,7 @@ public class MsfDaoTest extends TestCase {
      * @throws java.lang.Exception
      */
     @Before
+    @Override
     public void setUp() throws Exception {
         if (msfDao != null) {
             return;
