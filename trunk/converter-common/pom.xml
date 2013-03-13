@@ -4,14 +4,14 @@
     <groupId>uk.ac.ebi.pride.tools.converter</groupId>
     <artifactId>converter-common</artifactId>
     <packaging>jar</packaging>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <name>PRIDE Converter Common Utilities</name>
     <description>Common utilities for PRIDE Converter 2</description>
 
     <scm>
-        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride-converter/tags/converter-common-1.0</connection>
-        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride-converter/tags/converter-common-1.0</developerConnection>
-        <url>https://svn.ebi.ac.uk/pride-repo/pride-converter/tags/converter-common-1.0</url>
+        <connection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride-converter/trunk/dependencies/converter-common</connection>
+        <developerConnection>scm:svn:https://svn.ebi.ac.uk/pride-repo/pride-converter/trunk/dependencies/converter-common</developerConnection>
+        <url>https://svn.ebi.ac.uk/pride-repo/pride-converter/trunk/dependencies/converter-common</url>
     </scm>
 
     <build>
