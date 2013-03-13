@@ -47,7 +47,7 @@ public enum DAOCvParams {
     CENTROIDED_SPECTRUM("MS", "MS:1000127", "centroided spectrum", "", "MS:1000525"),
     EXPERIMENT_DESCRIPTION("PRIDE", "PRIDE:0000040", "Experiment description", "", "PRIDE:0000006"),
     REFERENCE_DOI("PRIDE", "PRIDE:0000042", "DOI", "", "PRIDE:0000028"),
-    REFERENCE_PUBMED("PRIDE", "PRIDE:0000029", "DOI", "", "PRIDE:0000028"),
+    REFERENCE_PUBMED("PRIDE", "PRIDE:0000029", "PubMed", "", "PRIDE:0000028"),
     PMF_SEARCH("MS", "MS:1001081", "pmf search", "", "MS:1001080"),
     MS_MS_SEARCH("MS", "MS:1001083", "ms/ms search", "", "MS:1001080"),
     TAG_SEARCH("MS", "MS:1001082", "tag search", "", "MS:1001080"),
