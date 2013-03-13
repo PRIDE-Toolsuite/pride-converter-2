@@ -32,6 +32,7 @@
                 <configuration>
                     <remoteTagging>true</remoteTagging>
                     <goals>deploy</goals>
+                    <tagBase>https://svn.ebi.ac.uk/pride-repo/pride-converter/tags/</tagBase>
                 </configuration>
             </plugin>
 
