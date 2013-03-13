@@ -32,7 +32,6 @@
                 <configuration>
                     <remoteTagging>true</remoteTagging>
                     <goals>deploy</goals>
-                    <!--<tagBase></tagBase>-->
                 </configuration>
             </plugin>
 
