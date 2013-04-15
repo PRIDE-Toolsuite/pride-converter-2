@@ -1,6 +1,8 @@
 package uk.ac.ebi.pride.tools.converter.report.io.xml.marshaller;
 
+import com.sun.xml.txw2.output.IndentingXMLStreamWriter;
 import org.apache.log4j.Logger;
+import uk.ac.ebi.pride.tools.converter.report.io.xml.util.EscapingXMLStreamWriter;
 import uk.ac.ebi.pride.tools.converter.report.model.ModelConstants;
 import uk.ac.ebi.pride.tools.converter.report.model.Report;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
@@ -10,6 +12,9 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
@@ -93,9 +98,18 @@ public class ReportMarshallerFactory {
                 }
 
                 QName aQName = ModelConstants.getQNameForClass(object.getClass());
-                marshaller.marshal(new JAXBElement(aQName, object.getClass(), object), out);
+
+                // before marshalling out, wrap in a Custom XMLStreamWriter
+                // to fix a JAXB bug: http://java.net/jira/browse/JAXB-614
+                // also wrapping in IndentingXMLStreamWriter to generate formatted XML
+                XMLStreamWriter xmlStreamWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(out);
+                IndentingXMLStreamWriter writer = new IndentingXMLStreamWriter(new EscapingXMLStreamWriter(xmlStreamWriter));
+                marshaller.marshal(new JAXBElement(aQName, object.getClass(), object), writer);
 
             } catch (JAXBException e) {
+                logger.error("ReportMarshaller.marshall", e);
+                throw new IllegalStateException("Error while marshalling object:" + object.toString());
+            } catch (XMLStreamException e) {
                 logger.error("ReportMarshaller.marshall", e);
                 throw new IllegalStateException("Error while marshalling object:" + object.toString());
             }

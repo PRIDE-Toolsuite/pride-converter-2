@@ -2,6 +2,7 @@ package uk.ac.ebi.pride.tools.converter.report.io.xml.unmarshaller;
 
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
+import uk.ac.ebi.pride.tools.converter.report.io.xml.util.EscapingXMLUtilities;
 import uk.ac.ebi.pride.tools.converter.report.model.ModelConstants;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.utils.ConverterException;
@@ -77,8 +78,10 @@ public class ReportUnmarshallerFactory {
                     return null;
                 }
 
+                String cleanXML = EscapingXMLUtilities.escapeCharacters(xmlSnippet);
+
                 @SuppressWarnings("unchecked")
-                JAXBElement<T> holder = unmarshaller.unmarshal(new SAXSource(new InputSource(new StringReader(xmlSnippet))), cls);
+                JAXBElement<T> holder = unmarshaller.unmarshal(new SAXSource(new InputSource(new StringReader(cleanXML))), cls);
                 retval = holder.getValue();
 
             } catch (JAXBException e) {
