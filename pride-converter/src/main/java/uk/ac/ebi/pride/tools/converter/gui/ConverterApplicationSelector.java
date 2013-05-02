@@ -146,9 +146,6 @@ public class ConverterApplicationSelector extends JFrame {
 
     private void launchTool(ActionEvent e) {
 
-        selector.setVisible(false);
-        selector.dispose();
-
         //read user properties
         Properties properties = readUserProperties();
         //launch new process
@@ -200,6 +197,15 @@ public class ConverterApplicationSelector extends JFrame {
             cmdBuffer.append(".exe\" ");
         }
 
+        String javaExecutableFilePath = cmdBuffer.toString().replaceAll("\"", "").trim();
+        File javaExecutable = new File(javaExecutableFilePath);
+        if (!javaExecutable.exists()){
+            logger.error("Java executable file not found: " + javaExecutableFilePath);
+            System.err.println("Java executable file not found: " + javaExecutableFilePath);
+            JOptionPane.showMessageDialog(selector, "Java executable not found! Please update the configuration in the converter.properties file and try again!", "Error!", JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        }
+
         //memory settings
         if (jvmArgs != null) {
             cmdBuffer.append(" ").append(jvmArgs);
@@ -239,6 +245,9 @@ public class ConverterApplicationSelector extends JFrame {
             //also useful for recording console output to logs!
             logger.setLevel(Level.DEBUG);
         }
+
+        selector.setVisible(false);
+        selector.dispose();
 
         System.err.println("Bootstrap command: " + cmdBuffer.toString());
         logger.info("Bootstrap command: " + cmdBuffer.toString());
