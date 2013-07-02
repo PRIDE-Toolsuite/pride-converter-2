@@ -162,32 +162,38 @@ public class SlimModification {
     }
 
     /**
-     * Seach if the modification contains in the list of possible specificities the specificity
-     * passed by paramters.
+     * Check if a given AminoAcid is part of the specificity of this SlimModification.
      *
-     * @param specificity
-     * @return
+     * @param specificity the AminoAcid to check the specificity against.
+     * @return true if the provided AminoAcid is part of the specificity of this SlimModification
      */
     public boolean isSpecificity(Specificity.AminoAcid specificity) {
-        for (int i = 0; i < specificityCollection.size(); i++) {
-            return (this.specificityCollection.get(i).getName() == specificity) ? true : false;
+        for (Specificity aSpecificityCollection : specificityCollection) {
+            if (aSpecificityCollection.getName() == specificity) {
+                return true;
+            }
         }
         return false;
     }
 
     /**
-     * Seach if the modification contains in the list of possible specificities the specificity
-     * passed by paramters and also filter by the delta mass of the modification.
+     * Check if a given AminoAcid is part of the specificity of this SlimModification,
+     * but only perform this check if the delta mass of this SlimModification is with
+     * the specified difference of the specified mass.
      *
-     * @param specificity
-     * @param mass
-     * @param difference
-     * @return
+     * @param specificity the AminoAcid to check the specificity against.
+     * @param mass the mass to compare against.
+     * @param difference the difference between the specified mass and this SliModification's delta mass.
+     * @return true if the provided AminoAcid is part of the specificity of this SlimModification and
+     *         the delta mass differs less than the provided difference.
+     * @see #isSpecificity(uk.ac.ebi.pridemod.slimmod.model.Specificity.AminoAcid)
      */
     public boolean isSpecificity(Specificity.AminoAcid specificity, double mass, double difference) {
         if (Math.abs(this.deltaMass - mass) < difference) {
-            for (int i = 0; i < specificityCollection.size(); i++) {
-                return (this.specificityCollection.get(i).getName() == specificity) ? true : false;
+            for (Specificity aSpecificityCollection : specificityCollection) {
+                if (this.isSpecificity(specificity)) {
+                    return true;
+                }
             }
         }
         return false;
