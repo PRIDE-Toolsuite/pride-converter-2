@@ -4,12 +4,12 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
-import com.compomics.thermo_msf_parser.msf.Modification;
-import com.compomics.thermo_msf_parser.msf.ModificationPosition;
-import com.compomics.thermo_msf_parser.msf.PeptideLowMem;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMem;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMemController;
-import java.sql.Connection;
+import com.compomics.thermo_msf_parser_API.highmeminstance.Modification;
+import com.compomics.thermo_msf_parser_API.highmeminstance.ModificationPosition;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ProteinLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.MsfFile;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.PeptideLowMem;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.ProteinLowMem;
 import java.util.Iterator;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.Peptide;
@@ -67,10 +67,10 @@ public class PeptideConverter {
         return converted;
     }
 
-    public static Peptide convertWithCoordinatesInProtein(PeptideLowMem originalPeptide, ProteinLowMem protein, Connection msfFileConnection) {
+    public static Peptide convertWithCoordinatesInProtein(PeptideLowMem originalPeptide, ProteinLowMem protein, MsfFile msfFile) {
         Peptide converted = convert(originalPeptide);
         String proteinSequence = "";
-            proteinSequence = proteins.getSequenceForProteinID(protein.getProteinID(), msfFileConnection);
+            proteinSequence = proteins.getSequenceForProteinID(protein.getProteinID(), msfFile);
 
         int startInProtein = proteinSequence.indexOf(originalPeptide.getSequence());
         int endInProtein = startInProtein + originalPeptide.getSequence().length();

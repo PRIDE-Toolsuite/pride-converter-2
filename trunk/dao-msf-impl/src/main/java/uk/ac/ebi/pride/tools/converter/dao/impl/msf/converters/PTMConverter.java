@@ -4,9 +4,11 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
+import com.compomics.thermo_msf_parser_API.highmeminstance.Modification;
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.terms.MsfCvTermReference;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.PTM;
+
 import uk.ac.ebi.pride.tools.converter.report.model.PeptidePTM;
 
 /**
@@ -21,7 +23,7 @@ public class PTMConverter {
      * @param originalPTM
      * @return
      */
-    public static PTM convert(com.compomics.thermo_msf_parser.msf.Modification originalPTM) {
+    public static PTM convert(Modification originalPTM) {
         PTM converted = new PTM();
         convert(originalPTM, converted);
         return converted;
@@ -34,7 +36,7 @@ public class PTMConverter {
      * @param position
      * @return
      */
-    public static PeptidePTM convertToPeptidePTM(com.compomics.thermo_msf_parser.msf.Modification originalPTM, long position) {
+    public static PeptidePTM convertToPeptidePTM(Modification originalPTM, long position) {
         PeptidePTM converted = new PeptidePTM();
         convert(originalPTM, converted);
         converted.setModLocation(position);
@@ -51,7 +53,7 @@ public class PTMConverter {
      * @param siteProbability
      * @return
      */
-    public static PeptidePTM convertToPeptidePTM(com.compomics.thermo_msf_parser.msf.Modification originalPTM, long position, Float siteProbability) {
+    public static PeptidePTM convertToPeptidePTM(Modification originalPTM, long position, Float siteProbability) {
         PeptidePTM converted = convertToPeptidePTM(originalPTM, position);
 
         converted.setModLocation(position);
@@ -72,22 +74,22 @@ public class PTMConverter {
      * @param originalPTM
      * @param converted
      */
-    private static void convert(com.compomics.thermo_msf_parser.msf.Modification originalPTM, PTM converted) {
+    private static void convert(Modification originalPTM, PTM converted) {
         converted.setFixedModification(originalPTM.isFixedModification());
         converted.setModAccession(originalPTM.getUnimodAccession() + "");
         converted.setModDatabase("UniMod");
         converted.setModDatabaseVersion(""); //Unknown
-        converted.setModName(originalPTM.getModificationName());
+        converted.setSearchEnginePTMLabel(originalPTM.getModificationName());
 
         StringBuilder rsb = new StringBuilder();
 
-        for (com.compomics.thermo_msf_parser.msf.AminoAcid aa : originalPTM.getSelectedAminoAcids()) {
+        for (com.compomics.thermo_msf_parser_API.highmeminstance.AminoAcid aa : originalPTM.getSelectedAminoAcids()) {
             rsb.append(aa.getOneLetterCode().toUpperCase());
         }
         converted.setResidues(rsb.toString());
         converted.getModMonoDelta().add(originalPTM.getDeltaMass() + "");
         converted.getModAvgDelta().add(originalPTM.getDeltaAverageMass() + "");
 
-        converted.setSearchEnginePTMLabel(converted.getModName() + " (" + converted.getResidues() + ")");
+        converted.setSearchEnginePTMLabel(converted.getSearchEnginePTMLabel()+ " (" + converted.getResidues() + ")");
     }
 }

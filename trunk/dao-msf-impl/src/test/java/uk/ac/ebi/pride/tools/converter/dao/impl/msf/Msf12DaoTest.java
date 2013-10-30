@@ -273,7 +273,7 @@ public class Msf12DaoTest extends TestCase {
 
         // make sure both modifications were found
         assertEquals(true, fixed);
-//       assertEquals(true, var);
+//        assertEquals(true, var);
     }
 
     /**

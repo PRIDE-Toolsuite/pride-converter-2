@@ -4,9 +4,23 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf;
 
-import com.compomics.thermo_msf_parser.gui.MsfFile;
-import com.compomics.thermo_msf_parser.msf.*;
-import com.compomics.thermo_msf_parser.msf.util.Joiner;
+import com.compomics.thermo_msf_parser_API.highmeminstance.Modification;
+import com.compomics.thermo_msf_parser_API.highmeminstance.ProcessingNode;
+import com.compomics.thermo_msf_parser_API.highmeminstance.ProcessingNodeParameter;
+import com.compomics.thermo_msf_parser_API.highmeminstance.WorkflowInfo;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.FastaLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ModificationLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.PeptideLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ProcessingNodeLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ProteinLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.RawFileLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.SpectrumLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.WorkFlowLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.MsfFile;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.PeptideLowMem;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.ProteinLowMem;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.SpectrumLowMem;
+import com.compomics.thermo_msf_parser_API.util.Joiner;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 import uk.ac.ebi.pride.tools.converter.dao.DAO;
 import uk.ac.ebi.pride.tools.converter.dao.DAOCvParams;
@@ -93,7 +107,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
 
     @Override
     public String getExperimentTitle() throws InvalidFormatException {
-        WorkflowInfo temp = workflowController.getWorkFlowInfo(msfFile.getConnection());
+        WorkflowInfo temp = workflowController.getWorkFlowInfo(msfFile);
         String experimentTitle = temp.getWorkflowDescription();
         return experimentTitle;
 
@@ -102,7 +116,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
 
     @Override
     public String getExperimentShortLabel() {
-        return workflowController.getWorkFlowInfo(msfFile.getConnection()).getWorkflowName();
+        return workflowController.getWorkFlowInfo(msfFile).getWorkflowName();
         //return parser.getWorkFlowInfo().getWorkflowName();
     }
 
@@ -169,8 +183,8 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     public Software getSoftware() {
         Software s = new Software();
         s.setName("Proteome Discoverer");
-        s.setVersion(workflowController.getWorkFlowInfo(msfFile.getConnection()).getMsfVersionInfo().getSoftwareVersion());
-        s.setCompletionTime(formatter.format(workflowController.getWorkFlowInfo(msfFile.getConnection()).getWorkflowMessages().lastElement().getUnixTime() * 1000));
+        s.setVersion(workflowController.getWorkFlowInfo(msfFile).getMsfVersionInfo().getSoftwareVersion());
+        s.setCompletionTime(formatter.format(workflowController.getWorkFlowInfo(msfFile).getWorkflowMessages().get(workflowController.getWorkFlowInfo(msfFile).getWorkflowMessages().size()-1).getUnixTime() * 1000));
 
         return s;
     }
@@ -190,7 +204,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         // Convert the node parameters into user params
 
         StringBuilder dotEdges = new StringBuilder();
-        ArrayList<ProcessingNode> allProcessingNodes = processingNodeController.getAllProcessingNodes(msfFile.getConnection(), msfFile.getVersion());
+        List<ProcessingNode> allProcessingNodes = processingNodeController.getAllProcessingNodes(msfFile);
         for (ProcessingNode node : allProcessingNodes) {
             for (ProcessingNodeParameter nodeParameter : node.getProcessingNodeParameters()) {
                 UserParam param = new UserParam();
@@ -203,7 +217,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
             String parentNumbers = node.getProcessingNodeParentNumber();
             if (!parentNumbers.equals("")) {
                 for (String parentNumber : parentNumbers.split(";")) {
-                    ProcessingNode parentNode = processingNodeController.getProcessingNodeByNumber(msfFile.getConnection(), Integer.parseInt(parentNumber), msfFile.getVersion());
+                    ProcessingNode parentNode = processingNodeController.getProcessingNodeByNumber(Integer.parseInt(parentNumber),msfFile);
                     dotEdges.append(parentNode.getNodeName()).append("_").append(parentNode.getProcessingNodeNumber()).append("->").append(node.getNodeName()).append("_").append(node.getProcessingNodeNumber()).append(";");
                 }
             }
@@ -246,7 +260,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      */
     @Override
     public String getSearchDatabaseName() {
-        String fastafiles = Joiner.join(fasta.getFastaFileNames(msfFile.getConnection()), ",");
+        String fastafiles = Joiner.join(fasta.getVirtualFastaFileNames(msfFile), ",");
         return fastafiles;
     }
 
@@ -268,9 +282,10 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      * @return
      * @throws InvalidFormatException
      */
+    @Override
     public Collection<PTM> getPTMs() {
         Collection<PTM> ptms = new ArrayList<PTM>();
-        ArrayList<Modification> allmods = mods.getAllModifications(msfFile.getConnection(), msfFile.getVersion(), msfFile.getAminoAcids());
+        List<Modification> allmods = mods.getAllModifications(msfFile);
         for (Modification mod : allmods) {
             ptms.add(PTMConverter.convert(mod));
         }
@@ -283,7 +298,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     @Override
     public Collection<DatabaseMapping> getDatabaseMappings() {
         Collection<DatabaseMapping> result = new ArrayList<DatabaseMapping>();
-        ArrayList<String> allFastaFileNames = fasta.getFastaFileNames(msfFile.getConnection());
+        List<String> allFastaFileNames = fasta.getVirtualFastaFileNames(msfFile);
         for (String fastafile : allFastaFileNames) {
             DatabaseMapping mapping = new DatabaseMapping();
             mapping.setSearchEngineDatabaseName(fastafile);
@@ -329,9 +344,9 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
     public int getSpectrumCount(boolean identifiedOnly) {
         int result;
         if (identifiedOnly) {
-            result = peptides.returnNumberOfPeptides(msfFile.getConnection());
+            result = peptides.returnNumberOfPeptides(msfFile);
         } else {
-            result = spectra.getNumberOfSpectra(msfFile.getConnection());
+            result = spectra.getNumberOfSpectra(msfFile);
         }
         return result;
     }
@@ -343,11 +358,11 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
 
         private Set<Integer> spectrumIds = new HashSet<Integer>();
         private Iterator<Integer> spectrumIdIterator = null;
-        private Vector<PeptideLowMem> peptidesForProtein;
+        private List<PeptideLowMem> peptidesForProtein;
 
-        public IdentifiedOnlySpectrumIterator(Iterator<com.compomics.thermo_msf_parser.msf.ProteinLowMem> proteinIterator) {
+        public IdentifiedOnlySpectrumIterator(Iterator<ProteinLowMem> proteinIterator) {
             while (proteinIterator.hasNext()) {
-                peptidesForProtein = peptides.getPeptidesForProtein(proteinIterator.next(), msfFile.getVersion(), msfFile.getAminoAcids());
+                peptidesForProtein = peptides.getPeptidesForProtein(proteinIterator.next(), msfFile);
                 for (PeptideLowMem peptide : peptidesForProtein) {
                     spectrumIds.add(peptide.getSpectrumId());
                 }
@@ -364,12 +379,12 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
 
         @Override
         public Spectrum next() {
-            SpectrumLowMem spectrum = spectra.getSpectrumForSpectrumID(spectrumIdIterator.next(), msfFile.getConnection());
+            SpectrumLowMem spectrum = spectra.getSpectrumForSpectrumID(spectrumIdIterator.next(), msfFile);
             Spectrum result;
             try {
-                result = SpectrumConverter.convert(spectrum, msfFile.getConnection());
+                result = SpectrumConverter.convert(spectrum, msfFile);
             } catch (Exception ex) {
-                throw new ConverterException("While converting spectrum " + rawFiles.getRawFileNameForFileID(spectrum.getFileId(), msfFile.getConnection()) + " (id=" + spectrum.getSpectrumId() + ")", ex);
+                throw new ConverterException("While converting spectrum " + rawFiles.getRawFileNameForFileID(spectrum.getFileId(), msfFile) + " (id=" + spectrum.getSpectrumId() + ")", ex);
             }
             return result;
         }
@@ -385,9 +400,9 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
         Iterator<Spectrum> i;
 
         if (identifiedOnly) {
-            i = new IdentifiedOnlySpectrumIterator(proteins.getAllProteins(msfFile.getConnection()));
+            i = new IdentifiedOnlySpectrumIterator(proteins.getAllProteins(msfFile).iterator());
         } else {
-            final Iterator<Integer> spectraIter = spectra.getAllSpectraIds(msfFile.getConnection()).iterator();
+            final Iterator<Integer> spectraIter = spectra.getAllSpectraIds(msfFile).iterator();
             i = new Iterator<Spectrum>() {
                 @Override
                 public boolean hasNext() {
@@ -397,11 +412,11 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
                 @Override
                 public Spectrum next() {
                     Spectrum result = null;
-                    com.compomics.thermo_msf_parser.msf.SpectrumLowMem msfSpectrum = spectra.getSpectrumForSpectrumID(spectraIter.next(), msfFile.getConnection());
+                    SpectrumLowMem msfSpectrum = spectra.getSpectrumForSpectrumID(spectraIter.next(), msfFile);
                     try {
-                        result = SpectrumConverter.convert(msfSpectrum, msfFile.getConnection());
+                        result = SpectrumConverter.convert(msfSpectrum, msfFile);
                     } catch (Exception ex) {
-                        throw new RuntimeException("While converting spectrum " + rawFiles.getRawFileNameForFileID(msfSpectrum.getFileId(), msfFile.getConnection()), ex);
+                        throw new RuntimeException("While converting spectrum " + rawFiles.getRawFileNameForFileID(msfSpectrum.getFileId(), msfFile), ex);
                     }
                     return result;
                 }
@@ -418,7 +433,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
 
     @Override
     public int getSpectrumReferenceForPeptideUID(String peptideUID) {
-        return spectra.getSpectrumForPeptideID(Integer.parseInt(peptideUID), msfFile.getConnection()).getSpectrumId();
+        return spectra.getSpectrumForPeptideID(Integer.parseInt(peptideUID), msfFile).getSpectrumId();
     }
 
     /**
@@ -430,7 +445,7 @@ public class MsfDao extends AbstractDAOImpl implements DAO {
      */
     @Override
     public Identification getIdentificationByUID(String identificationUID) {
-        ProteinLowMem p = proteins.getProteinForProteinId(msfFile.getConnection(), Integer.parseInt(identificationUID));
+        ProteinLowMem p = proteins.getProteinForProteinId(Integer.parseInt(identificationUID),msfFile);
         return IdentificationConverter.convert(p, getSearchDatabaseName(), getSearchDatabaseVersion(), true, confidenceLevel, msfFile);
     }
 

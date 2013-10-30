@@ -4,8 +4,8 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
-import com.compomics.thermo_msf_parser.msf.ProcessingNode;
-import com.compomics.thermo_msf_parser.msf.ProcessingNodeParameter;
+import com.compomics.thermo_msf_parser_API.highmeminstance.ProcessingNode;
+import com.compomics.thermo_msf_parser_API.highmeminstance.ProcessingNodeParameter;
 import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.terms.MsfCvTermReference;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;

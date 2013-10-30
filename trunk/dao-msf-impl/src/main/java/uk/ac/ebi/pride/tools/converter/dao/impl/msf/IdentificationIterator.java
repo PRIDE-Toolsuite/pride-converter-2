@@ -4,10 +4,10 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf;
 
-import com.compomics.thermo_msf_parser.gui.MsfFile;
-import com.compomics.thermo_msf_parser.msf.PeptideLowMemController;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMem;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.PeptideLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ProteinLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.MsfFile;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.ProteinLowMem;
 import java.util.Iterator;
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters.IdentificationConverter;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
@@ -36,7 +36,7 @@ public class IdentificationIterator implements Iterator<Identification> {
         this.confidenceLevel = confidenceLevel;
         //TODO switch to just proteinslist
         this.msfFile = msfFile;
-        this.proteinIterator = proteins.getAllProteins(msfFile.getConnection());
+        this.proteinIterator = proteins.getAllProteins(msfFile).iterator();
         prepareNext();
     }
 
@@ -61,7 +61,7 @@ public class IdentificationIterator implements Iterator<Identification> {
         hasNext = false;
         while (proteinIterator.hasNext()) {
             ProteinLowMem nextProtein = proteinIterator.next();
-            if (nextProtein != null && peptides.getPeptidesForProtein(nextProtein,msfFile.getVersion(),msfFile.getAminoAcids()).size() > 0) {
+            if (nextProtein != null && peptides.getPeptidesForProtein(nextProtein,msfFile).size() > 0) {
                 next = IdentificationConverter.convert(nextProtein, searchDatabaseName, searchDatabaseVersion, preScanMode, confidenceLevel, msfFile);
                 hasNext = true;
                 break;

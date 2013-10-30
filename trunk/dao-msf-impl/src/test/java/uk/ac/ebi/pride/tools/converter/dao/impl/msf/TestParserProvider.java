@@ -4,7 +4,7 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf;
 
-import com.compomics.thermo_msf_parser.Parser;
+import com.compomics.thermo_msf_parser_API.highmeminstance.Parser;
 import junit.framework.TestCase;
 
 import java.io.File;
