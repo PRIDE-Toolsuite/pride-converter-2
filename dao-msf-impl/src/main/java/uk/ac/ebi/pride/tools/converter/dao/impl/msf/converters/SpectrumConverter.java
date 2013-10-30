@@ -4,14 +4,14 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
-import com.compomics.thermo_msf_parser.msf.Peak;
-import com.compomics.thermo_msf_parser.msf.SpectrumLowMem;
-import com.compomics.thermo_msf_parser.msf.SpectrumLowMemController;
-import com.compomics.thermo_msf_parser.msf.ScanEventLowMemController;
-import com.compomics.thermo_msf_parser.msf.enums.ActivationType;
-import java.sql.Connection;
+import com.compomics.thermo_msf_parser_API.enums.ActivationType;
+import com.compomics.thermo_msf_parser_API.highmeminstance.Peak;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ScanEventLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.SpectrumLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.MsfFile;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.SpectrumLowMem;
+import java.util.List;
 import java.util.TreeMap;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import uk.ac.ebi.pride.jaxb.model.*;
@@ -27,7 +27,7 @@ import uk.ac.ebi.pride.tools.converter.dao.impl.msf.terms.MsfCvTermReference;
 public class SpectrumConverter {
     
     private static SpectrumLowMemController spectra = new SpectrumLowMemController();
-    private static Vector<Peak> peaks;
+    private static List<Peak> peaks;
     private static ScanEventLowMemController scanEvents = new ScanEventLowMemController();
     /**
      * Make the conversion of a spectrum found in the msf parser and the PRIDE
@@ -37,10 +37,10 @@ public class SpectrumConverter {
      * @return
      * @throws an exception when there is a problem with the connection
      */
-    public static Spectrum convert(SpectrumLowMem msfSpectrum, Connection msfFileConnection) throws Exception {
+    public static Spectrum convert(SpectrumLowMem msfSpectrum, MsfFile msfFile) throws Exception {
         Spectrum prideConverterSpectrum = new Spectrum();
         prideConverterSpectrum.setId(msfSpectrum.getSpectrumId());
-        spectra.createSpectrumXMLForSpectrum(msfSpectrum);
+        spectra.createSpectrumXMLForSpectrum(msfSpectrum,msfFile);
         // TreeMap is sorted by keys, usable for getting the range. Assumption is, no two m/z in the list are the same.
         TreeMap<Double, Double> mzint = new TreeMap<Double, Double>();
         // Read peak by peak, fill treemap
@@ -82,7 +82,7 @@ public class SpectrumConverter {
         prideConverterSpectrum.setMzArrayBinary(massArrayBinary);
 
         // add the spectrum description
-        prideConverterSpectrum.setSpectrumDesc(compileSpectrumDescription(msfSpectrum, lowMz, highMz, msfFileConnection));
+        prideConverterSpectrum.setSpectrumDesc(compileSpectrumDescription(msfSpectrum, lowMz, highMz, msfFile));
 
         return prideConverterSpectrum;
     }
@@ -96,14 +96,14 @@ public class SpectrumConverter {
      * @param highMz predetermined upper mz value
      * @return The SpectrumDesc object for the given spectrum
      */
-    public static SpectrumDesc compileSpectrumDescription(com.compomics.thermo_msf_parser.msf.SpectrumLowMem msfSpectrum, Double lowMz, Double highMz, Connection msfFileConnection) {
+    public static SpectrumDesc compileSpectrumDescription(SpectrumLowMem msfSpectrum, Double lowMz, Double highMz, MsfFile msfFile) {
         // initialize the spectrum description
         SpectrumDesc description = new SpectrumDesc();
 
         // create the spectrumSettings/spectrumInstrument (mzRangeStop, mzRangeStart, msLevel)
         SpectrumSettings settings = new SpectrumSettings();
         SpectrumInstrument instrument = new SpectrumInstrument();
-        int msLevel = scanEvents.getScanEventForSpectrum(msfSpectrum,msfFileConnection).getMSLevel();
+        int msLevel = scanEvents.getScanEventForSpectrum(msfSpectrum,msfFile).getMSLevel();
         instrument.setMsLevel(msLevel);
 
         // Use pre-determined range
@@ -161,7 +161,7 @@ public class SpectrumConverter {
 
         // Activation method
         uk.ac.ebi.pride.jaxb.model.Param activation = new uk.ac.ebi.pride.jaxb.model.Param();
-        for (ActivationType activationType : scanEvents.getScanEventForSpectrum(msfSpectrum, msfFileConnection).getActivationTypeSet()) {
+        for (ActivationType activationType : scanEvents.getScanEventForSpectrum(msfSpectrum, msfFile).getActivationTypeSet()) {
             activation.getCvParam().add(MsfCvTermReference.valueOf("ACTIVATION_" + activationType.toString().toUpperCase()).getJaxbParam(""));
         }
         

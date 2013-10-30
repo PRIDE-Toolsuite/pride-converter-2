@@ -4,22 +4,21 @@
  */
 package uk.ac.ebi.pride.tools.converter.dao.impl.msf.converters;
 
-import com.compomics.thermo_msf_parser.gui.MsfFile;
-import com.compomics.thermo_msf_parser.msf.MsfVersion;
-import com.compomics.thermo_msf_parser.msf.Peptide;
-import com.compomics.thermo_msf_parser.msf.PeptideLowMem;
-import com.compomics.thermo_msf_parser.msf.PeptideLowMemController;
-import com.compomics.thermo_msf_parser.msf.Protein;
-import com.compomics.thermo_msf_parser.msf.ProteinGroupLowMem;
-import com.compomics.thermo_msf_parser.msf.ProteinGroupLowMemController;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMem;
-import com.compomics.thermo_msf_parser.msf.ProteinLowMemController;
-import com.compomics.thermo_msf_parser.msf.ProteinScoreLowMemController;
+import com.compomics.thermo_msf_parser_API.enums.MsfVersion;
+import com.compomics.thermo_msf_parser_API.highmeminstance.Peptide;
+import com.compomics.thermo_msf_parser_API.highmeminstance.Protein;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.PeptideLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ProteinGroupLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ProteinLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.controllers.ProteinScoreLowMemController;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.MsfFile;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.PeptideLowMem;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.ProteinGroupLowMem;
+import com.compomics.thermo_msf_parser_API.lowmeminstance.model.ProteinLowMem;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 import uk.ac.ebi.pride.tools.converter.dao.impl.msf.terms.MsfCvTermReference;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.Identification;
@@ -54,9 +53,9 @@ public class IdentificationConverter {
             MsfFile msfFile) {
 
         Identification identification = new Identification();
-        identification.setAccession(proteins.getAccessionFromProteinID(protein.getProteinID(), msfFile.getConnection()));
-        if (!proteinScores.getScoresForProteinId(protein.getProteinID(), msfFile.getConnection()).isEmpty()) { // PD 1.2 may not give protein scores.
-            identification.setScore(proteinScores.getScoresForProteinId(protein.getProteinID(), msfFile.getConnection()).firstElement().getScore());
+        identification.setAccession(proteins.getAccessionFromProteinID(protein.getProteinID(), msfFile));
+        if (!proteinScores.getScoresForProteinId(protein.getProteinID(), msfFile).isEmpty()) { // PD 1.2 may not give protein scores.
+            identification.setScore(proteinScores.getScoresForProteinId(protein.getProteinID(), msfFile).get(0).getScore());
         } else {
             identification.setScore(0.0);
         }
@@ -64,11 +63,11 @@ public class IdentificationConverter {
         identification.setDatabase(databaseName);
         identification.setDatabaseVersion(databaseVersion);
 
-        Vector<PeptideLowMem> peptidesOfProtein = peptides.getPeptidesForProtein(protein, msfFile.getVersion(), msfFile.getAminoAcids());
+        List<PeptideLowMem> peptidesOfProtein = peptides.getPeptidesForProtein(protein, msfFile);
         
         for (PeptideLowMem peptide : peptidesOfProtein) {
             if (peptide.getConfidenceLevel() >= confidenceLevel) {
-                identification.getPeptide().add(PeptideConverter.convertWithCoordinatesInProtein(peptide, protein, msfFile.getConnection()));
+                identification.getPeptide().add(PeptideConverter.convertWithCoordinatesInProtein(peptide, protein, msfFile));
             }
         }
         
@@ -78,17 +77,17 @@ public class IdentificationConverter {
         //TODO pass on version
         if (!msfFile.getVersion().equals(MsfVersion.VERSION1_2)) {
             //TODO check how this works
-            ProteinGroupLowMem proteinGroup = proteinGroups.getProteinGroupForProteinID(protein.getProteinID(), msfFile.getConnection());
+            ProteinGroupLowMem proteinGroup = proteinGroups.getProteinGroupForProteinID(protein.getProteinID(), msfFile);
 
             List<CvParam> params = new ArrayList<CvParam>();
 
             // Is the protein the "anchor/reference protein"?
-            if (proteins.isMasterProtein(protein.getProteinID(),msfFile.getConnection())) {
+            if (proteins.isMasterProtein(protein.getProteinID(),msfFile)) {
                 CvParam anchorProtein = new CvParam();
                 anchorProtein.setAccession("MS:1001591");
                 anchorProtein.setCvLabel("MS");
                 anchorProtein.setName("anchor protein");
-                anchorProtein.setValue(proteins.getAccessionFromProteinID(protein.getProteinID(), msfFile.getConnection()));
+                anchorProtein.setValue(proteins.getAccessionFromProteinID(protein.getProteinID(), msfFile));
                 params.add(anchorProtein);
             }
 
@@ -97,7 +96,7 @@ public class IdentificationConverter {
                 for (ProteinLowMem groupProtein : proteinGroup.getProteins()) {
 
                     if (!groupProtein.equals(protein)) {
-                        params.add(MsfCvTermReference.PRIDE_GROUP_MEMBER.getCvParam(proteins.getAccessionFromProteinID(groupProtein.getProteinID(),msfFile.getConnection())));
+                        params.add(MsfCvTermReference.PRIDE_GROUP_MEMBER.getCvParam(proteins.getAccessionFromProteinID(groupProtein.getProteinID(),msfFile)));
                     }
 
                     
