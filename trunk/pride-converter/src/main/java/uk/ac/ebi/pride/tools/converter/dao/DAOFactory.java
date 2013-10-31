@@ -8,7 +8,6 @@ import uk.ac.ebi.pride.tools.converter.dao_omssa_txt.OmssaTxtDao;
 import uk.ac.ebi.pride.tools.converter.dao_spectrast_xls.SpectraSTXlsDao;
 import uk.ac.ebi.pride.tools.converter.gui.component.filefilters.*;
 import uk.ac.ebi.pride.tools.converter.utils.InvalidFormatException;
-import uk.ac.lifesci.dundee.tools.converter.GrePrideConverterDAO;
 
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
@@ -178,9 +177,6 @@ public class DAOFactory {
             case MSF:
                 dao = new MsfDao(new File(sourcePath));
                 break;
-            case DUNDEE:
-                dao = new GrePrideConverterDAO(new File(sourcePath));
-                break;
             case PRIDE:
                 //todo
                 throw new UnsupportedOperationException("No DAO defined for " + format);
@@ -229,8 +225,6 @@ public class DAOFactory {
                 return OmssaTxtDao.getSupportedProperties();
             case MSF:
                 return MsfDao.getSupportedProperties();
-            case DUNDEE:
-                return GrePrideConverterDAO.getSupportedProperties();
             case PRIDE:
                 //todo
                 return Collections.emptyList();

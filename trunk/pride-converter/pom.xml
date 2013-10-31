@@ -11,7 +11,7 @@
 
     <!--this will be used to build the assembly for the google code repo -->
     <properties>
-        <releaseNumber>2.0.18</releaseNumber>
+        <releaseNumber>2.0.19</releaseNumber>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -201,7 +201,7 @@
         <dependency>
             <groupId>nl.uu.chem.bioinformatics</groupId>
             <artifactId>dao-msf-impl</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.3</version>
         </dependency>
         <dependency>
             <groupId>uk.ac.ebi.pride.</groupId>
@@ -212,13 +212,6 @@
             <groupId>uk.ac.ebi.pride.tools.converter</groupId>
             <artifactId>report-api</artifactId>
             <version>1.1-SNAPSHOT</version>
-        </dependency>
-
-        <!--Dundee DAO-->
-        <dependency>
-            <groupId>uk.ac.lifesci.dundee</groupId>
-            <artifactId>gre-proteomics</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!--validator -->
