@@ -105,6 +105,8 @@ public class ReportMarshallerFactory {
                 XMLStreamWriter xmlStreamWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(out);
                 IndentingXMLStreamWriter writer = new IndentingXMLStreamWriter(new EscapingXMLStreamWriter(xmlStreamWriter));
                 marshaller.marshal(new JAXBElement(aQName, object.getClass(), object), writer);
+                writer.close();
+                xmlStreamWriter.close();
 
             } catch (JAXBException e) {
                 logger.error("ReportMarshaller.marshall", e);
