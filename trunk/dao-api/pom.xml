@@ -5,7 +5,7 @@
     <groupId>uk.ac.ebi.pride.tools.converter</groupId>
     <artifactId>dao-api</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.1</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>PRIDE Converter DAO API</name>
     <description>The DAO interface for PRIDE Converter 2</description>
 
