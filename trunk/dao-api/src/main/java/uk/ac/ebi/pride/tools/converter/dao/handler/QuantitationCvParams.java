@@ -382,6 +382,7 @@ public enum QuantitationCvParams {
     /**
      * Checks whether the passed quantification method
      * contains peptide quantification values
+     * @param accession
      * @return
      */
     public static boolean containsPeptideQuantification(String accession) {
@@ -411,6 +412,7 @@ public enum QuantitationCvParams {
     /**
      * Checks whether the passed quantification method
      * contains protein quantification values
+     * @param accession
      * @return
      */
     public static boolean containsProteinQuantification(String accession) {

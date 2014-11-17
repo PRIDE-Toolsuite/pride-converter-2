@@ -9,6 +9,7 @@ import java.util.Collection;
  * DAO's setConfiguration method.
  *
  * @author jg
+ * @param <TYPE>
  */
 public class DAOProperty<TYPE> {
     /**
@@ -92,6 +93,7 @@ public class DAOProperty<TYPE> {
 
     /**
      * Getter and setter functions. The returned Objects should by type cast to the respective
+     * @return 
      */
 
     public String getName() {
