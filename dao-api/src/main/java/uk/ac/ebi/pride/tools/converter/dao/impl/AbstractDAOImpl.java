@@ -12,22 +12,22 @@ import java.util.Collection;
  * User: rcote
  * Date: 04/02/11
  * Time: 14:08
- * <p/>
+ * <br>
  * This is the main interface for format-specific parsing. Each implementation is responsible to support as much of
  * desired functionality as possible. It is appreciated that not all formats will make the requested data items
  * available. In such cases, the methods should return null primitives and empty collections.
- * <p/>
+ * <br>
  * If information is available and the methods are expected to return Param types, it is valid that the implementations
  * return UserParam objects for terms where the CvParam cannot be explicitely set at runtime. It will be the
  * responsibility of the user to inspect the report file generated and make certain that the information is correct
  * and, if possible, convert the UserParam data into the appropriate CvParams. In any case, the report formats will
  * undergo a validation step where missing or incorrect information will be flagged to the user before the full
  * parsing into PRIDE XML is executed.
- * </p>
+ * <br>
  * The DAO must report all possible protein-to-peptide assignments. External tools will be available to update
  * the report file based on specific protein inference algorithms.
- * </p
- * >Note to all DAO implementers: DAO Implementing classes must extend the AbstractDAOImpl class and override all
+ * <br>
+ * Note to all DAO implementers: DAO Implementing classes must extend the AbstractDAOImpl class and override all
  * methods defined in that class. All methods declared in AbstractDAOImpl will throw an UnsupportedOperationException,
  * unless documented otherwise.
  */
