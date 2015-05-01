@@ -1,0 +1,43 @@
+# Introduction #
+
+Proteome Discoverer by Thermo Fisher Scientific is an analysis platform for proteomics mass spectrometry data, optimized for Thermo instruments.
+
+Analyses include MS-MS searching with Sequest, Mascot and ZCore, for which the results may be combined in a single analysis. Two different methods of determining false discovery rate, based on simple target-decoy counting or the percolator algorithm are available. Quantitative analyses, both on labeled and unlabeled experiments can be performed by the program.
+
+Proteome Discoverer writes its results into the .msf file format. Since many analyses are combined, the relevant subset of the data is extracted by Pride Converter 2.
+
+
+# Details #
+
+
+## conversion parameter ##
+
+Currently, there is only one parameter for the .msf converter, the minimally accepted confidence value.
+
+Proteome Discoverer has three levels of identification confidence, confidence level 3 being the most confident. Confidence thresholds on PSM (peptide to spectrum match) score such as FDR (false discovery rate) can be set manually  to classify all PSMs.
+
+Although choosing a lower confidence level will increase the number of PSMs, potentially altering peptide-to-protein mapping, no protein inference is performed by the converter (see below)
+
+
+## workflows ##
+
+Proteome Discoverer implements the idea of 'workflows', linking together different _processing nodes_. A processing node represents a specific step, such as the use of a search engine.
+
+On each node, the user has to select a number of parameters. Pride Converter 2 will store a representation of the workflow, with all node parameters in the experiment description section of the PRIDE XML file. In order to visualize the workflow, the 'dot' file format is used. The contents of this field written to a file can be imported into [GraphViz](http://www.graphviz.org) for visualization.
+
+## protein groups ##
+
+Proteome Discoverer has an algorithm for assigning peptides to proteins or protein groups. These protein groups consist of proteins that share a number of peptides. Since at present, the PRIDE database does not support the concept of protein groups, we've settled on a compromise. For any protein identification, a list of supplied parameters with the id's of the "other" proteins of the same protein group (ontology term: [PRIDE:0000418]) is supplied. A 'representative' protein for the protein group is assigned by Protein Discoverer, and is marked with the annotation 'anchor protein' [MS:1001591] by the converter.
+
+Protein groups are taken 'as is' from the Proteome Discoverer .msf file, i.e. any peptide filtering does not influence the protein groups.
+
+## Phosphorylation scores ##
+
+Proteome Discoverer includes the possibility to score different variants of phosphopeptides based on specific fragment peaks, using the PhosphoRS algorithm ([Taus et al: J Proteome Res. 2011 Dec 2;10(12):5354-62](http://dx.doi.org/10.1021/pr200611n)). For every phosphopeptide PSM, a pRS score and pRS sequence probability is calculated, which is represented by specific terms in the converted PRIDE XML file (ProteomeDiscoverer:phosphoRS score, [MS:1001969] and ProteomeDiscoverer:phosphoRS sequence probability [MS:1001970]).
+
+Additionally, a probability for every individual phosphorylated site is calculated. This value is stored in the phosphoriation site annotation itself and is represented by ontology term 'ProteomeDiscoverer:phosphoRS site probability' [MS:1001971].
+
+# Future work #
+
+  * This converter is based on an updated 'msf parser' ([Colaert et al: J Proteome Res. 2011 Aug 5;10(8):3840-3](http://pubs.acs.org/doi/abs/10.1021/pr2005154)). Optimizations will be made to be able to open larger files.
+  * Since Proteome Discoverer does create quantitative data, this should be stored in the PRIDE XML file.

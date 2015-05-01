@@ -1,0 +1,21 @@
+# Introduction #
+
+Crux is a software toolkit for tandem mass spectrometry analysis, with a focus on peptide identification. Crux implements the Sequest algorithm and accelerates the search using a regenerated index file.
+
+More information can be found at http://noble.gs.washington.edu/proj/crux/
+
+Currently, the **Crux-txt DAO** supports spectra in _MS2 format_ only.
+
+# Parameters #
+
+  * **Threshold**: The maximum expect value a peptide may have to still be included in the PRIDE XML file. All peptides with an expect value greater than the set threshold will be ignored. Default value is _0.0_.
+
+  * **Decoy Prefix**: allows adding a prefix to decoy hits that will be included in the Pride XML file.
+
+  * **Score Criteria**: the score criteria used to apply the Threshold filter. Default value is _xcorr\_rank_.
+
+  * **Get Highest Score Item**: if true, only the highest scored peptide for a given spectrum will be included in the Pride XML file. Default value is _true_.
+
+# Details #
+
+  * **PTMs**: Post-translational modifications are specified in the peptide sequence (variable modifications) and in the parameter file (variable modifications, fixed modifications, and terminal modifications).

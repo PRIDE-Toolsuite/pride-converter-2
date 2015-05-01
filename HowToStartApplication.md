@@ -1,0 +1,63 @@
+# Introduction #
+
+This page will explain how to obtain and start the PRIDE Converter 2 Tool Suite
+
+# Details #
+
+## Download ##
+
+Please download the latest release of the PRIDE Converter toolsuite from the [Downloads](http://code.google.com/p/pride-converter-2/downloads/list) section.
+
+## Unpack ##
+
+The downloaded file will be a gzipped tarball that can be extracted using various tools (Winzip, Winrar, Stuffit Expander, tar, etc). When the archive is extracted, 2 files and one directory will be created:
+
+```
+lib/
+pride-converter-2.0-SNAPSHOT.jar
+converter.properties
+```
+
+## Start ##
+
+The PRIDE Converter 2 tools can work in both a command-line mode or in a full graphical user interface mode.
+
+To start in command-line mode and display the CLI usage, you will need to open a shell/console/terminal and type the following command:
+
+```
+rcote@bobble:~/pride-converter$ java -jar pride-converter-2.0-SNAPSHOT.jar -help
+```
+
+This will result in the following information being displayed:
+
+```
+Usage: java -jar pride_converter.jar [mode]
+
+PRIDE Converter 2
+PRIDE Converter can operate in several different modes.
+To launch the graphical mode simply specify no parameters.
+
+The following modes are supported by PRIDE Converter:
+   -converter    Launches the PRIDE Converter in convert mode.
+                 This mode allows one to convert several search
+                 engine result files into the PRIDE XML format.
+   -filter       Launches the PRIDE Converter in filter mode.
+                 This mode allows one to remove f.e. unidentified
+                 spectra or a given set of proteins from an existing
+                 PRIDE XML file.
+   -merger       Launches PRIDE Converter in merger mode.
+                 This mode allows one to merge several PRIDE XML files
+                 into a single file.
+
+For mode specific help please use java -jar pride_converter.jar [mode] -help
+```
+
+**Please note that this assumes that the java executable is installed and in your application path.** If this is not the case, please refer to the [JAVA Help documentation](http://java.com/en/download/help/index_installing.xml) on how to install Java on your computer.
+
+To start in graphical, you will need to open a shell/console/terminal and type the following command:
+
+```
+rcote@bobble:~/pride-converter$ java -jar pride-converter-2.0-SNAPSHOT.jar
+```
+
+or simply double-click on the pride-converter-2.0-SNAPSHOT.jar file (assuming that jar files are associated with the java executable in your OS).

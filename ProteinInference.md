@@ -1,0 +1,58 @@
+# Introduction #
+
+Protein inference as well as modification ambiguity cannot be modeled correctly in PRIDE XML files. PRIDE Converter 2 still tries to preserve this vital information of a proteomics result set following the here explained convention:
+
+  * PRIDE Converter reports all possible peptide-to-protein assignments
+  * Peptide items are duplicated in PRIDE XML files but reference the same spectrum in the mzData section of the file
+  * Peptide items are duplicated to report ambiguous modification positions (again referencing the same spectrum)
+
+# Multiple peptide assignments #
+
+One problem in bottom-up proteomics approaches is the assignment of peptide identifications to proteins. Often, because of sequence homologies a given peptide sequence cannot be unambiguously assigned to a single protein but to multiple proteins.
+
+In PRIDE XML file every peptide item references a given spectrum in the mzData section of the PRIDE XML file:
+```
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+...
+<PeptideItem>
+   <SpectrumReference>10</SpectrumReference>
+   ...
+```
+
+This feature is used by PRIDE Converter to report peptides that can be assigned to multiple proteins.
+
+Given the following example where the peptide ABC can be assigned to two proteins: P12345 and P12346. To represent this ambiguous assignment PRIDE Converter creates two PeptideItems (one for each protein) which both reference the same spectrum:
+```
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+...
+<GelFreeIdentification>
+   <Accession>P12345</Accession>
+   ...
+   <PeptideItem>
+      <Sequence>ABC</Sequence>
+      <SpectrumReference>10</SpectrumReference>
+      ...
+</GelFreeIdentification>
+<GelFreeIdentification>
+   <Accession>P12346</Accession>
+   ...
+   <PeptideItem>
+      <Sequence>ABC</Sequence>
+      <SpectrumReference>10</SpectrumReference>
+...
+</GelFreeIdentification>
+```
+
+As a default setting, PRIDE Converter reports every possible peptide-to-protein assignment and does not use any specific protein inference algorithm.
+
+# Ambiguous peptide modifications #
+
+Some search engines are able to report ambiguous modification positions in peptides. This feature also cannot be modeled correctly in PRIDE XML files. Therefore, PRIDE Converter uses the same approach as with ambiguous protein assignments to report ambiguous peptide modification positions.
+
+Given the following example where the peptide MCM has on oxidized methionine - either the 1st or the last. In this case PRIDE Converter again will generate two PeptideItems both referencing the same spectrum in the mzData section of the PRIDE XML file but with a methionine oxidation once on the first and once on the last methionine.
+
+# Adding protein inference algorithms to PRIDE Converter #
+
+During the conversion process PRIDE Converter generates a report file for every input file (for details see [Integrating PRIDE Converter](IntegratingPrideConverter.md)). These report files contain every possible peptide-to-protein assignment. Any change made to these assignments in the report file (i.e. removing a peptide from a protein) will be reflected in the generated PRIDE XML file.
+
+Therefore, it is possible to plug-in protein inference algorithms that simply process the generated report files.
