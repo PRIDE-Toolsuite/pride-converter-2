@@ -1,7 +1,5 @@
 pride-converter-2
 ===============
-Automatically exported from code.google.com/p/pride-converter-2
-
 #About PRIDE Converter 2
 The PRIDE Converter 2 tool suite is a composed of 4 independent applications:
 
@@ -17,3 +15,5 @@ The PRIDE XML Merger will combine several PRIDE XML files into a single one.
 [<img src="https://raw.githubusercontent.com/PRIDE-Toolsuite/pride-inspector/master/wiki/download.png">](http://www.ebi.ac.uk/pride/resources/tools/converter-2/latest/pride-converter-2.zip)
 
 All tools have both a Graphical User Interface (GUI) and a Command-Line Interface (CLI). The GUIs have been designed to provide a rich, user-friendly interface while the CLIs have been developed mainly for tool and pipeline developers to be able to integrate the PRIDE Converter 2 tools in their own software to provide an efficient way to generate PRIDE XML from their own resources. 
+
+Automatically exported from code.google.com/p/pride-converter-2
