@@ -13,6 +13,6 @@ The PRIDE XML Filter will remove identifications or spectra from PRIDE XML files
 The PRIDE XML Merger will combine several PRIDE XML files into a single one. 
 
 # Quick Download
-[<img src="https://raw.githubusercontent.com/PRIDE-Toolsuite/pride-inspector/master/wiki/download.png">](ftp://ftp.pride.ebi.ac.uk/pride/resources/tools/converter-2/latest/pride-converter-2.zip)
+[<img src="https://raw.githubusercontent.com/PRIDE-Toolsuite/pride-inspector/master/wiki/download.png">](http://www.ebi.ac.uk/pride/resources/tools/converter-2/latest/pride-converter-2.zip)
 
 All tools have both a Graphical User Interface (GUI) and a Command-Line Interface (CLI). The GUIs have been designed to provide a rich, user-friendly interface while the CLIs have been developed mainly for tool and pipeline developers to be able to integrate the PRIDE Converter 2 tools in their own software to provide an efficient way to generate PRIDE XML from their own resources. 
