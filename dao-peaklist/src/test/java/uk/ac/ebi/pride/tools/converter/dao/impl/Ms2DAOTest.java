@@ -45,7 +45,7 @@ public class Ms2DAOTest extends TestCase {
 
 		assertEquals(10, params.getUserParam().size());
 		assertEquals(
-				"[UserParam{name='ScanType', value='MS2'}, UserParam{name='IsolationWindow', value=''}, UserParam{name='Comments', value='RawXtract written by John Venable, 2003'}, UserParam{name='DataType', value='Centroid'}, UserParam{name='LastScan', value='32808'}, UserParam{name='InstrumentType', value='ITMS'}, UserParam{name='AcquisitionMethod', value='Data-Dependent'}, UserParam{name='FirstScan', value='1'}, UserParam{name='MinimumNpeaks', value='30'}, UserParam{name='MinimumMass', value='700'}]",
+				"[UserParam{name='AcquisitionMethod', value='Data-Dependent'}, UserParam{name='MinimumNpeaks', value='30'}, UserParam{name='Comments', value='RawXtract written by John Venable, 2003'}, UserParam{name='InstrumentType', value='ITMS'}, UserParam{name='IsolationWindow', value=''}, UserParam{name='LastScan', value='32808'}, UserParam{name='ScanType', value='MS2'}, UserParam{name='FirstScan', value='1'}, UserParam{name='DataType', value='Centroid'}, UserParam{name='MinimumMass', value='700'}]",
 				params.getUserParam().toString());
 	}
 

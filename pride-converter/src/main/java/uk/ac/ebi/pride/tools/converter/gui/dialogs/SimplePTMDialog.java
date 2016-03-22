@@ -4,8 +4,10 @@
 
 package uk.ac.ebi.pride.tools.converter.gui.dialogs;
 
-import no.uib.olsdialog.OLSDialog;
-import no.uib.olsdialog.OLSInputable;
+import org.apache.commons.collections.ListUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import uk.ac.ebi.pride.toolsuite.ols.dialog.OLSDialog;;
+import uk.ac.ebi.pride.toolsuite.ols.dialog.OLSInputable;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.BaseTable;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
@@ -13,6 +15,7 @@ import uk.ac.ebi.pride.tools.converter.report.model.PTM;
 import uk.ac.ebi.pride.tools.converter.report.model.Param;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
 import uk.ac.ebi.pride.tools.converter.utils.ModUtils;
+import uk.ac.ebi.pride.utilities.ols.web.service.model.Term;
 import uk.ac.ebi.pridemod.slimmod.model.SlimModCollection;
 import uk.ac.ebi.pridemod.slimmod.model.SlimModification;
 
@@ -22,10 +25,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 /**
  * @author User #3
@@ -497,7 +500,7 @@ public class SimplePTMDialog extends AbstractDialog implements OLSInputable {
 
     }
 
-    @Override
+/*    @Override
     public void insertOLSResult(String field, String selectedValue, String accession,
                                 String ontologyShort, String ontologyLong, int modifiedRow, String mappedTerm, Map<String, String> metadata) {
         this.olsSearchDone = true;
@@ -509,6 +512,41 @@ public class SimplePTMDialog extends AbstractDialog implements OLSInputable {
 
         //if using OLS, override existing list data
         ptmList.setListData(new String[]{accession + " [" + name + "]"});
+        ptmList.setSelectedIndex(0);
+    }*/
+
+
+    /**
+     * Inserts the selected cv term into the parent frame or dialog. If the
+     * frame (or dialog) contains more than one OLS term, the field label can be
+     * used to separate between the two. Modified row is used if the cv terms
+     * are in a table and one of them are altered.
+     *
+     * @param field the name of the field where the CV term will be inserted
+     * @param selectedValue the value to search for
+     * @param accession the accession number to search for
+     * @param ontologyShort short name of the ontology to search in, e.g., GO or
+     * MOD
+     * @param ontologyLong long ontology name, e.g., Gene Ontology [GO]
+     * @param modifiedRow if the CV terms is going to be inserted into a table,
+     * the row number can be provided here, use -1 if inserting a new row
+     * @param mappedTerm the name of the previously mapped term, can be null
+     * @param metadata the metadata associated with the current term (can be
+     * null or empty)
+     */
+    @Override
+    public void insertOLSResult(String field, Term selectedValue, Term accession,
+                                String ontologyShort, String ontologyLong, int modifiedRow, String mappedTerm, java.util.List<String> metadata) {
+        this.olsSearchDone = true;
+        this.name = accession.getLabel();
+        this.accession = accession.getOntologyName().equalsIgnoreCase("ncbitaxon")
+                ? accession.getTermOBOId().getIdentifier().substring(accession.getTermOBOId().getIdentifier().indexOf(':')+1)
+                : accession.getTermOBOId().getIdentifier();
+        if (accession.getOboXRefs() != null) {
+            this.metadata = new HashMap<>();
+            Arrays.stream(accession.getOboXRefs()).parallel().forEach(oboxRef -> this.metadata.put(oboxRef.getId().substring(0, oboxRef.getId().indexOf(':')), oboxRef.getDatabase()));
+        }
+        ptmList.setListData(new String[]{this.accession + " [" + name + "]"});
         ptmList.setSelectedIndex(0);
     }
 

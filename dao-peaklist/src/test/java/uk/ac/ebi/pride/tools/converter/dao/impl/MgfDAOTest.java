@@ -78,7 +78,7 @@ public class MgfDAOTest extends TestCase {
 		// get the identifier
 		SearchResultIdentifier identifier = mgfDao.getSearchResultIdentifier();
 
-		assertEquals("f50e419835558962b9e918218365ba79", identifier.getHash());
+		assertEquals("41c22a7ef89bf8649bf5290ee531880b", identifier.getHash());
 		assertEquals(sourceFile.getAbsolutePath(),
 				identifier.getSourceFilePath());
 	}

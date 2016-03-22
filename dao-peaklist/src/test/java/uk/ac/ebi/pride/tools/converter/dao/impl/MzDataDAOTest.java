@@ -135,7 +135,7 @@ public class MzDataDAOTest extends TestCase {
 		try {
 			identifier = dao.getSearchResultIdentifier();
 			
-			assertEquals("d3c3c44ebf7478760ad592538227e930", identifier.getHash());
+			assertEquals("0676db8603ebbecf91b252862e72868b", identifier.getHash());
 			assertEquals(sourceFile.getAbsolutePath(),
 					identifier.getSourceFilePath());
 		} catch (InvalidFormatException e) {

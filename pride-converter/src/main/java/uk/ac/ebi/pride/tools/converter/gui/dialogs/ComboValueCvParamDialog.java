@@ -4,8 +4,8 @@
 
 package uk.ac.ebi.pride.tools.converter.gui.dialogs;
 
-import no.uib.olsdialog.OLSDialog;
-import no.uib.olsdialog.OLSInputable;
+import uk.ac.ebi.pride.toolsuite.ols.dialog.OLSDialog;
+import uk.ac.ebi.pride.toolsuite.ols.dialog.OLSInputable;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.error.ErrorLevel;
 import uk.ac.ebi.ols.soap.Query;
@@ -16,6 +16,7 @@ import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
 import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
+import uk.ac.ebi.pride.utilities.ols.web.service.model.Term;
 
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author User #3
@@ -604,7 +606,7 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
     private JCheckBox applyToAllSubsamplesCheckBox;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
-    @Override
+/*    @Override
     public void insertOLSResult(String field, String selectedValue, String accession, String ontologyShort, String ontologyLong, int modifiedRow, String mappedTerm, Map<String, String> metadata) {
         cvField.setText(ontologyShort);
         nameField.setSelectedItem(selectedValue);
@@ -613,6 +615,40 @@ public class ComboValueCvParamDialog extends AbstractDialog implements OLSInputa
         validateRequiredField(nameField, null);
         validateRequiredField(accessionField, null);
         okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText()) && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
+    }*/
+
+    /**
+     * Inserts the selected cv term into the parent frame or dialog. If the
+     * frame (or dialog) contains more than one OLS term, the field label can be
+     * used to separate between the two. Modified row is used if the cv terms
+     * are in a table and one of them are altered.
+     *
+     * @param field the name of the field where the CV term will be inserted
+     * @param selectedValue the value to search for
+     * @param accession the accession number to search for
+     * @param ontologyShort short name of the ontology to search in, e.g., GO or
+     * MOD
+     * @param ontologyLong long ontology name, e.g., Gene Ontology [GO]
+     * @param modifiedRow if the CV terms is going to be inserted into a table,
+     * the row number can be provided here, use -1 if inserting a new row
+     * @param mappedTerm the name of the previously mapped term, can be null
+     * @param metadata the metadata associated with the current term (can be
+     * null or empty)
+     */
+    @Override
+    public void insertOLSResult(String field, Term selectedValue, Term accession,
+                                String ontologyShort, String ontologyLong, int modifiedRow, String mappedTerm, List<String> metadata) {
+        String ontoShort = (accession.getOntologyName().equalsIgnoreCase("ncbitaxon") ? "NEWT" : accession.getOntologyName().toUpperCase());
+        cvField.setText(ontoShort);
+        nameField.setSelectedItem(accession.getLabel());
+        accessionField.setText(accession.getOntologyName().equalsIgnoreCase("ncbitaxon")
+                ? accession.getTermOBOId().getIdentifier().substring(accession.getTermOBOId().getIdentifier().indexOf(':')+1)
+                : accession.getTermOBOId().getIdentifier());
+        validateRequiredField(cvField, null);
+        validateRequiredField(nameField, null);
+        validateRequiredField(accessionField, null);
+        okButton.setEnabled(isNonNullTextField(cvField.getText()) && isNonNullTextField(accessionField.getText())
+                && nameField.getSelectedItem() != null && valueComboBox.getSelectedItem() != null);
     }
 
     @Override

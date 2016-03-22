@@ -105,7 +105,7 @@ public class XTandemDAOTest extends TestCase {
 	@Test
 	public void testGetSearchDatabaseName() {
 		assertEquals(
-				"cRAP 2009.05.01 with Sigma-Aldrich Universal Protein Standard sequences, ENSEMBL GRCh37.55",
+				"ENSEMBL GRCh37.55, cRAP 2009.05.01 with Sigma-Aldrich Universal Protein Standard sequences",
 				dao.getSearchDatabaseName());
 	}
 
@@ -126,7 +126,7 @@ public class XTandemDAOTest extends TestCase {
 
 			if (nCurDb == 0) {
 				assertEquals(
-						"../fasta/crap.fasta.pro (cRAP 2009.05.01 with Sigma-Aldrich Universal Protein Standard sequences)",
+						"../fasta/human_e.fasta.pro (ENSEMBL GRCh37.55)",
 						m.getSearchEngineDatabaseName());
 				assertEquals("", m.getSearchEngineDatabaseVersion());
 			}

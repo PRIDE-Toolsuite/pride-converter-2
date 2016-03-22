@@ -323,7 +323,7 @@ public class MascotDAOTest extends TestCase {
         // get the identifier
         SearchResultIdentifier identifier = mascotDao.getSearchResultIdentifier();
 
-        assertEquals("0cf854a929ea2c0dee60ff937df54bdc", identifier.getHash());
+        assertEquals("53d5697ddf14e4ae28f92fc71d942e90", identifier.getHash());
         assertEquals(sourceFile.getAbsolutePath(), identifier.getSourceFilePath());
     }
 

@@ -652,7 +652,7 @@ public class SpectraSTXlsDao extends AbstractDAOImpl implements DAO {
 		private Iterator<Spectrum> specIterator;
 		
 		public OnlyIdentifiedSpectrumIterator() throws InvalidFormatException {
-			specIterator = spectraDAO.getSpectrumIterator(false);
+			specIterator = getSpectraDao().getSpectrumIterator(false);
             List<Integer> identifiedSpecRefs = buildIdentifiedSpecIdsFromTitles(identifiedSpecIds);
             Collections.sort(identifiedSpecRefs);
 			specIdIterator = identifiedSpecRefs.iterator();
