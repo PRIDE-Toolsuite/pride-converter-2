@@ -1,5 +1,3 @@
-pride-converter-2
-===============
 # Quick Download
 [<img src="https://raw.githubusercontent.com/PRIDE-Toolsuite/pride-inspector/master/wiki/download.png">](http://www.ebi.ac.uk/pride/resources/tools/converter-2/latest/pride-converter-2.zip)
 
