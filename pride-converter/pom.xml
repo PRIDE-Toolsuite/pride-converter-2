@@ -333,11 +333,10 @@
     </repositories>
 
     <scm>
-        <connection>scm:svn:http://pride-converter-2.googlecode.com/svn/trunk/pride-converter</connection>
-        <developerConnection>scm:svn:https://pride-converter-2.googlecode.com/svn/trunk/pride-converter
-        </developerConnection>
+        <connection>scm:git:https://github.com/PRIDE-Toolsuite/pride-converter-2.git</connection>
+        <developerConnection>scm:git:https://github.com/PRIDE-Toolsuite/pride-converter-2.git</developerConnection>
+        <url>https://github.com/PRIDE-Toolsuite/pride-converter-2.git</url>
         <tag>HEAD</tag>
-        <url>http://code.google.com/p/pride-converter-2/source/browse/#svn%2Ftrunk%2Fpride-converter</url>
     </scm>
 
 </project>
