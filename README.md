@@ -1,8 +1,8 @@
+# PRIDE Converter 2 is no longer under active development :warning:
+This tool is no lunger under active development by the Proteomics team at EMBL-EBI. As such, please do not expect any new features, functionality or bug fixes. This is still an open-source project, so feel free to fork, branch, and submit pull requests. :warning:
+
 # Quick Download
 [<img src="https://raw.githubusercontent.com/PRIDE-Toolsuite/pride-inspector/master/wiki/download.png">](http://www.ebi.ac.uk/pride/resources/tools/converter-2/latest/pride-converter-2.zip)
-
-#PRIDE Converter 2 is no longer under active development.
-This tool is no lunger under active development by the Proteomics team at EMBL-EBI. As such, please do not expect any new features, functionality or bug fixes. This is still an open-source project, so feel free to fork, branch, and submit pull requests.
 
 #About PRIDE Converter 2
 
