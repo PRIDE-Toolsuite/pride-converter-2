@@ -8,14 +8,16 @@ import uk.ac.ebi.pride.toolsuite.ols.dialog.OLSDialog;;
 import uk.ac.ebi.pride.toolsuite.ols.dialog.OLSInputable;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.error.ErrorLevel;
-import uk.ac.ebi.ols.soap.Query;
-import uk.ac.ebi.ols.soap.QueryServiceLocator;
+
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.table.ParamTable;
 import uk.ac.ebi.pride.tools.converter.gui.interfaces.CvUpdatable;
 import uk.ac.ebi.pride.tools.converter.gui.util.error.ErrorDialogHandler;
 import uk.ac.ebi.pride.tools.converter.report.model.CvParam;
 import uk.ac.ebi.pride.tools.converter.report.model.ReportObject;
+import uk.ac.ebi.pride.utilities.ols.web.service.client.OLSClient;
+import uk.ac.ebi.pride.utilities.ols.web.service.config.OLSWsConfigProd;
+import uk.ac.ebi.pride.utilities.ols.web.service.model.Identifier;
 import uk.ac.ebi.pride.utilities.ols.web.service.model.Term;
 
 import javax.swing.*;
@@ -173,21 +175,21 @@ public class CvParamDialog extends AbstractDialog implements OLSInputable, KeyLi
                             if (cv != null && "".equals(cv.trim())) {
                                 cv = null;
                             }
-                            QueryServiceLocator olsService = new QueryServiceLocator();
-                            Query query = olsService.getOntologyQuery();
-                            Map<String, String> terms = query.getTermsByName(queryString, cv, false);
+                            OLSClient olsClient = new OLSClient(new OLSWsConfigProd());
+                            olsClient.getTermsByName(queryString, cv, false);
+                            List<Term> terms =  olsClient.getTermsByName(queryString, cv, false);
 
                             //filter out terms
-                            for (String ac : terms.keySet()) {
+                            for (Term term : terms) {
                                 //if there are no pre-set filters, keep everything
                                 if (suggestedCvLabels.isEmpty()) {
-                                    olsResults.put(terms.get(ac), ac);
+                                    olsResults.put(term.getLabel(), term.getTermOBOId().getIdentifier());
                                 } else {
                                     //otherwise only keep the desired terms
                                     for (String suggested : suggestedCvLabels) {
                                         //need to amend this check for NEWT, because the terms aren't prefixed!
-                                        if (ac.startsWith(suggested) || ("NEWT".equals(suggested) && ac.matches("[0-9]*"))) {
-                                            olsResults.put(terms.get(ac), ac);
+                                        if (term.getTermOBOId().getIdentifier().startsWith(suggested) || ("NEWT".equals(suggested) && term.getTermOBOId().getIdentifier().matches("[0-9]*"))) {
+                                            olsResults.put(term.getLabel(), term.getTermOBOId().getIdentifier());
                                             break;
                                         }
                                     }
@@ -269,10 +271,9 @@ public class CvParamDialog extends AbstractDialog implements OLSInputable, KeyLi
             return;
         }
         try {
-            QueryServiceLocator olsService = new QueryServiceLocator();
-            Query query = olsService.getOntologyQuery();
-            String termName = query.getTermById(accessionField.getText(), cvField.getText());
-            nameField.setSelectedItem(termName);
+            OLSClient olsClient = new OLSClient(new OLSWsConfigProd());
+            Term term = olsClient.getTermById(new Identifier(accessionField.getText(), Identifier.IdentifierType.OBO), cvField.getText());
+            nameField.setSelectedItem(term.getLabel());
         } catch (Exception e1) {
             logger.error("OLS Error: " + e1.getMessage(), e1);
         }

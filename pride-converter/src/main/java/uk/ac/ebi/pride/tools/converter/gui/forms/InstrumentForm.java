@@ -6,8 +6,6 @@ package uk.ac.ebi.pride.tools.converter.gui.forms;
 
 import psidev.psi.tools.validator.ValidatorException;
 import psidev.psi.tools.validator.ValidatorMessage;
-import uk.ac.ebi.ols.soap.Query;
-import uk.ac.ebi.ols.soap.QueryServiceLocator;
 import uk.ac.ebi.pride.tools.converter.gui.NavigationPanel;
 import uk.ac.ebi.pride.tools.converter.gui.component.AddTermButton;
 import uk.ac.ebi.pride.tools.converter.gui.component.combobox.CvComboBoxModel;
@@ -24,15 +22,19 @@ import uk.ac.ebi.pride.tools.converter.report.io.ReportReaderDAO;
 import uk.ac.ebi.pride.tools.converter.report.model.*;
 import uk.ac.ebi.pride.tools.converter.report.validator.ReportObjectValidator;
 import uk.ac.ebi.pride.tools.converter.utils.xml.validation.ValidatorFactory;
+import uk.ac.ebi.pride.utilities.ols.web.service.client.OLSClient;
+import uk.ac.ebi.pride.utilities.ols.web.service.config.OLSWsConfigProd;
+import uk.ac.ebi.pride.utilities.ols.web.service.model.Identifier;
+import uk.ac.ebi.pride.utilities.ols.web.service.model.Term;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.xml.rpc.ServiceException;
 import java.awt.*;
 import java.awt.event.*;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author Melih Birim
@@ -615,20 +617,14 @@ public class InstrumentForm extends AbstractForm {
     }
 
     private void initFragmentationValues() throws GUIException {
-
-        try {
-            QueryServiceLocator service = new QueryServiceLocator();
-            Query olsQuery = service.getOntologyQuery();
-            //get all children of "dissociation method"
-            Map childTerms = olsQuery.getTermRelations("MS:1000044", "MS");
-            fragmentationParamAccessions.addAll(childTerms.keySet());
-
-        } catch (ServiceException e) {
-            throw new GUIException("Could not connect to OLS", e);
-        } catch (RemoteException e) {
-            throw new GUIException("Could not connect to OLS", e);
+        OLSClient olsClient = new OLSClient(new OLSWsConfigProd());
+        //get all children of "dissociation method"
+        List<Term> childTerms = olsClient.getTermChildren(new Identifier("MS:1000044", Identifier.IdentifierType.OBO), "MS", 3);
+        Map<String, String> childAccs = new HashMap<>();
+        for (Term term : childTerms) {
+            childAccs.put(term.getTermOBOId().getIdentifier(), term.getLabel());
         }
-
+        fragmentationParamAccessions.addAll(childAccs.keySet());
     }
 
     private void loadInstrument(InstrumentDescription instrument) {
