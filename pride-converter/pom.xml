@@ -9,12 +9,12 @@
     <groupId>uk.ac.ebi.pride.tools</groupId>
     <artifactId>pride-converter</artifactId>
     <packaging>jar</packaging>
-    <version>2.0.24</version>
+    <version>2.0.25-SNAPSHOT</version>
     <name>PRIDE Converter</name>
     <description>This produces PRIDE XML files for submission from various source file formats</description>
     <!--this will be used to build the assembly for the google code repo -->
     <properties>
-        <releaseNumber>2.0.24</releaseNumber>
+        <releaseNumber>2.0.25</releaseNumber>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
