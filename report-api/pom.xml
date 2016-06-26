@@ -4,7 +4,7 @@
     <groupId>uk.ac.ebi.pride.tools.converter</groupId>
     <artifactId>report-api</artifactId>
     <packaging>jar</packaging>
-    <version>1.5-SNAPSHOT</version>
+    <version>1.5</version>
     <name>PRIDE Converter Report Object Model</name>
     <description>This is the report file object model for PRIDE Converter 2</description>
 
